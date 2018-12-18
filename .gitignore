@@ -1,0 +1,23 @@
+# dependencies
+/dop-web/node_modules
+
+# testing
+/dop-web/coverage
+
+# production
+/dop-web/build
+
+# misc
+/dop-web.DS_Store
+/dop-web.env.local
+/dop-web.env.development.local
+/dop-web.env.test.local
+/dop-web.env.production.local
+
+# idea
+/dop-web/.idea
+
+/dop-web/npm-debug.log*
+/dop-web/yarn-debug.log*
+/dop-web/yarn-error.log*
+/dop-web/yarn.lock
