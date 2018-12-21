@@ -15,7 +15,7 @@
 /dop-web/.env.production.local
 
 # idea
-.idea
+/.idea
 /dop-web/.idea
 
 /dop-web/npm-debug.log*
