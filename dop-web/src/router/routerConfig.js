@@ -4,14 +4,6 @@
 
 import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
-// import Skill from './pages/Skill';
-// import Entities from './pages/Entities';
-// import Repository from './pages/Repository';
-// import Generalization from './pages/Generalization';
-// import Function from './pages/Function';
-// import Publish from './pages/Publish';
-// import Analysis from './pages/Analysis';
-// import Setting from './pages/Setting';
 import NotFound from '../pages/NotFound';
 
 const routerConfig = [
