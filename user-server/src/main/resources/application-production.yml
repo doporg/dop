@@ -10,7 +10,7 @@ spring:
     name: user-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_user_server?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop_dba
     password: dop_dba_123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -64,3 +64,4 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://discovery.clsaa.com:8761/eureka/
+logging.path: ./logs/${spring.application.name}
