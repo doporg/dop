@@ -8,8 +8,8 @@ const getData = () => {
   return Array.from({ length: 5 }).map((item, index) => {
     return {
       appid: `0000${index + 1}`,
-      title: 'NLS',
-      desc: '智能语音小助手',
+      title: 'NJU',
+      desc: 'Devops program',
       time: '2018-09-30 14:30:19',
     };
   });

@@ -5,7 +5,7 @@ export default class Logo extends PureComponent {
   render() {
     return (
       <Link to="/" style={{ ...styles.logoStyle, ...this.props.style }}>
-        语音对话平台
+        DevOps Platform
       </Link>
     );
   }

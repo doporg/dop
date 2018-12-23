@@ -133,10 +133,10 @@ export default class Header extends Component {
                   />
                   <div className="user-profile">
                     <span className="user-name" style={{ fontSize: '13px' }}>
-                      淘小宝
+                      测试
                     </span>
                     <br />
-                    <span className="user-department">技术部</span>
+                    <span className="user-department">用户</span>
                   </div>
                   <Icon
                     type="arrow-down-filling"
