@@ -10,7 +10,7 @@ const getData = () => {
       appid: `0000${index + 1}`,
       title: 'NJU',
       desc: 'Devops program',
-      time: '2018-09-30 14:30:19',
+      time: '2018-12-20 14:30:19',
     };
   });
 };

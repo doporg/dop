@@ -8,9 +8,8 @@ import { headerMenuConfig } from '../../menuConfig';
 import Logo from '../Logo/index';
 import './index.scss';
 
-@withRouter
-
-export default class Header extends Component {
+// @withRouter
+class Header extends Component {
   static propTypes = {};
 
   static defaultProps = {};
@@ -175,3 +174,7 @@ export default class Header extends Component {
     );
   }
 }
+
+export default withRouter(Header)
+
+

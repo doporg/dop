@@ -7,9 +7,9 @@ import { asideMenuConfig } from '../../menuConfig';
 
 import './index.scss';
 
-@withRouter
+// @withRouter
 
-export default class BasicLayout extends Component {
+class BasicLayout extends Component {
   static propTypes = {};
 
   static defaultProps = {};
@@ -43,3 +43,5 @@ export default class BasicLayout extends Component {
     );
   }
 }
+
+export default withRouter(BasicLayout)
