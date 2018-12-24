@@ -36,7 +36,7 @@ public class UserController {
      * @since 2018-12-23
      */
     @ApiOperation(value = "添加用户", notes = "添加一个用户，若用户email地址已注册则不允许注册")
-    @PostMapping("/v1/user")
+    @PostMapping("/v1/users")
     public UserV1 addUserV1(@ApiParam(value = "用户姓名", required = true) @RequestParam("name") String name,
                             @ApiParam(value = "用户email地址", required = true) @RequestParam("email") String email) {
         return BeanUtils.convertType(this.userService.addUser(name, email), UserV1.class);
@@ -54,7 +54,7 @@ public class UserController {
      * @since 2018-12-23
      */
     @ApiOperation(value = "删除用户", notes = "删除一个用户，物理删除")
-    @DeleteMapping("/v1/user/{id}")
+    @DeleteMapping("/v1/users/{id}")
     public boolean deleteUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id) {
         return this.userService.deleteUserById(id);
     }
@@ -73,7 +73,7 @@ public class UserController {
      * @since 2018-12-23
      */
     @ApiOperation(value = "修改用户信息", notes = "根据id更新用户信息，只允许修改email和姓名")
-    @PutMapping("/v1/user/{id}")
+    @PutMapping("/v1/users/{id}")
     public UserV1 updateUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id,
                                    @ApiParam(value = "用户姓名", required = true) @RequestParam("name") String name,
                                    @ApiParam(value = "用户email地址", required = true) @RequestParam("email") String email) {
@@ -92,7 +92,7 @@ public class UserController {
      * @since 2018-12-23
      */
     @ApiOperation(value = "查询用户信息", notes = "根据id查询用户信息，若用户不存在返回null")
-    @GetMapping("/v1/user/{id}")
+    @GetMapping("/v1/users/{id}")
     public UserV1 findUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id) {
         return BeanUtils.convertType(this.userService.findUserById(id), UserV1.class);
     }
@@ -109,7 +109,7 @@ public class UserController {
      * @author 任贵杰 812022339@qq.com
      * @since 2018-12-23
      */
-    @GetMapping(value = "/v1/user/pagination")
+    @GetMapping(value = "/v1/users")
     public Pagination<UserV1> getUserPaginationV1(@ApiParam(value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
                                                   @ApiParam(value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         Pagination result = BeanUtils.convertType(this.userService.getUserPagination(pageNo, pageSize), Pagination.class);
