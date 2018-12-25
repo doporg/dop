@@ -10,7 +10,7 @@ export default class NotFound extends Component {
       <IceContainer>
         <div style={styles.exceptionContent} className="exception-content">
           <img
-            src={require('./images/TB1txw7bNrI8KJjy0FpXXb5hVXa-260-260.png')}
+            src={require('./images/notfound.png')}
             style={styles.image}
             className="imgException"
             alt="页面不存在"
