@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: discovery-server
-        image: docker.io/clsaa/discovery-server
+        image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/discovery-server
         ports:
         - containerPort: 8761
 ---

@@ -10,7 +10,7 @@
 
     <packaging>jar</packaging>
 
-    <name>open-eureka-server</name>
+    <name>discovery-server</name>
     <description>
         discovery-server is a discovery service for dop
     </description>

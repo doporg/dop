@@ -37,21 +37,23 @@ public class AccessTokenZuulFilter extends ZuulFilter {
 
     @PostConstruct
     void init() {
-        System.out.println("filter....init");
         this.tokenSecret = BaseEncoding.base64Url()
                 .decode(this.properties.getOauth().getAES().getTokenKey());
     }
 
     @Override
     public boolean shouldFilter() {
-        System.out.println("filter....should");
-        // 所有请求都要拦截，优先级高
+        RequestContext ctx = RequestContext.getCurrentContext();
+        System.out.println("should filter");
+        if (ctx.getRequest().getRequestURI().contains("swagger")) {
+            System.out.println("swagger 请求放行");
+            return false;
+        }
         return true;
     }
 
     @Override
     public String filterType() {
-        System.out.println("filter....type");
         return "pre";
     }
 
@@ -60,9 +62,9 @@ public class AccessTokenZuulFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        System.out.println("filter....order");
         return Integer.MIN_VALUE;
     }
+
     /**
      * 注意：AccessToken优先级最高，如果可能的话，只使用RequestHeader来进行业务判断。
      * </p>
@@ -72,7 +74,6 @@ public class AccessTokenZuulFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
-        System.out.println("filter....run");
         RequestContext ctx = RequestContext.getCurrentContext();
         // 检查是否有header
         String bearToken = ctx.getRequest().getHeader(HTTP_AUTHORIZATION_HEADER);

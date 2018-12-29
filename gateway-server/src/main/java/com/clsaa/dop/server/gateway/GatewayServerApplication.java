@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * 应用启动类
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableFeignClients
 @ComponentScan("com.clsaa")
 @EnableZuulProxy
+@EnableSwagger2
 public class GatewayServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(GatewayServerApplication.class, args);

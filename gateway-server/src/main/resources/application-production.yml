@@ -58,12 +58,13 @@ eureka:
     instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
     prefer-ip-address: true
     #续约更新时间间隔
-    lease-renewal-interval-in-seconds: 10
+    lease-renewal-interval-in-seconds: 5
     #续约到期时间
-    lease-expiration-duration-in-seconds: 30
+    lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.clsaa.com:8761/eureka/
+      defaultZone: http://discovery.dop.clsaa.com/eureka/
+    registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 hystrix:
   command:
     default:
@@ -78,4 +79,5 @@ zuul:
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
+  ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}

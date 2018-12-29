@@ -53,6 +53,22 @@ public class OauthTokenController {
         return System.currentTimeMillis();
     }
 
+    /**
+     * <p>
+     * 获取access_token
+     * </p>
+     *
+     * @param grant_type 授权类型,目前暂支持:client_credentials(直接获取AccessToken)
+     * @param client_id  客户端的唯一标识,注册时由Oauth服务颁发
+     * @param timestamp  请求发出时的时间戳，客户端必须和服务端校准时钟。
+     * @param nouce      一个只被使用一次的任意或非重复的随机串,服务端用来判定,防止被重放攻击
+     * @param signature  请求签名,通过签名算法生成
+     * @return {@link AccessTokenV1}
+     * @summary 获取access_token
+     * @author 任贵杰 812022339@qq.com
+     * @since 2018-12-30
+     */
+    @ApiOperation(value = "获取access_token", notes = "请阅读OAuth2.0接入文档:https://github.com/clsaa/dop/tree/master/.doc/coding")
     @RequestMapping(value = "/v1/oauth/token", consumes = "application/x-www-form-urlencoded", method = RequestMethod.POST)
     public AccessTokenV1 tokenEndpoint(@RequestParam(SignatureVerifier.PARAM_GRANT_TYPE) String grant_type,
                                        @RequestParam(SignatureVerifier.PARAM_CLIENT_ID) String client_id,
