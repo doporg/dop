@@ -1,5 +1,5 @@
 server:
-  port: 13100
+  port: 8888
 spring:
   http:
     encoding:
@@ -7,10 +7,10 @@ spring:
       enabled: true
       force: true
   application:
-    name: user-server
+    name: gateway-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_gateway?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop_dba
     password: dop_dba_123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -63,5 +63,19 @@ eureka:
     lease-expiration-duration-in-seconds: 30
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery.clsaa.com:8761/eureka/
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000
+zuul:
+  host:
+    socket-timeout-millis: 10000
+    connect-timeout-millis: 10000
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
 logging.path: ./logs/${spring.application.name}
