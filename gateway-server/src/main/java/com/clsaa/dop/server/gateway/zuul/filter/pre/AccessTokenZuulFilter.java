@@ -45,7 +45,8 @@ public class AccessTokenZuulFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         System.out.println("should filter");
-        if (ctx.getRequest().getRequestURI().contains("swagger")) {
+        if (ctx.getRequest().getRequestURI().contains("swagger")
+        ||ctx.getRequest().getRequestURI().contains("api-docs")) {
             System.out.println("swagger 请求放行");
             return false;
         }
