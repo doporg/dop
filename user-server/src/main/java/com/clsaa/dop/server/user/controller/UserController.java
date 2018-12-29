@@ -1,9 +1,11 @@
 package com.clsaa.dop.server.user.controller;
 
+import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.model.vo.UserV1;
 import com.clsaa.dop.server.user.util.BeanUtils;
 import com.clsaa.dop.server.user.service.UserService;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,12 @@ public class UserController {
     public UserV1 addUserV1(@ApiParam(value = "用户姓名", required = true) @RequestParam("name") String name,
                             @ApiParam(value = "用户email地址", required = true) @RequestParam("email") String email) {
         return BeanUtils.convertType(this.userService.addUser(name, email), UserV1.class);
+    }
+
+    @GetMapping("/test")
+    public boolean test() {
+        BizAssert.justDenied(BizCodes.ERROR_DELETE);
+        return true;
     }
 
     /**
