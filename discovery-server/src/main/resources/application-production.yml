@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: discovery-server  #服务名
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+server:
+  port: 8761                    # 指定该Eureka实例的端口
+eureka:
+  instance:
+    appname: ${spring.application.name}  #服务名
+  server:
+    enable-self-preservation: true
+    eviction-interval-timer-in-ms: 2000
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/
