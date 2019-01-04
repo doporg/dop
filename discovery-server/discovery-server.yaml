@@ -13,8 +13,15 @@ spec:
       containers:
       - name: discovery-server
         image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/discovery-server
+        volumeMounts:
+          - name: host-time
+            mountPath: /etc/localtime
         ports:
         - containerPort: 8761
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
 ---
 apiVersion: v1
 kind: Service
