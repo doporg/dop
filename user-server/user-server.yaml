@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: user-server
-          image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/user-server
+          image: registry.cn-hangzhou.aliyuncs.com/nju-dop/user-server
           ports:
             - containerPort: 13100
 ---
