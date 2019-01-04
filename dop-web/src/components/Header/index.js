@@ -86,7 +86,7 @@ class Header extends Component {
                     }
                     linkProps.href = nav.path;
                     return (
-                      <MenuItem key={nav.path}>
+                      <MenuItem key={index}>
                         <a {...linkProps}>
                           <span>
                             {nav.icon ? (

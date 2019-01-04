@@ -14,7 +14,7 @@ export default class Projects extends Component {
   Get(){
       let url = API.axiosGetTest + "/getTest";
       Axios.get(url).then((response)=> {
-            console.log(response)
+            // console.log(response)
       }).catch()
   }
   render() {
