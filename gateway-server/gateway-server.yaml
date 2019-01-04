@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/gateway-server
+          image: registry.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
