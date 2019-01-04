@@ -76,6 +76,7 @@ zuul:
   host:
     socket-timeout-millis: 10000
     connect-timeout-millis: 10000
+  ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
