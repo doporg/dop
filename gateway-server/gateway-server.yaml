@@ -16,12 +16,17 @@ spec:
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
           ports:
             - containerPort: 8888
       volumes:
         - name: host-time
           hostPath:
             path: /etc/localtime
+        - name: host-timezone
+          hostPath:
+            path: /etc/timezone
 ---
 apiVersion: v1
 kind: Service
