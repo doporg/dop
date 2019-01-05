@@ -80,33 +80,29 @@ function oauth(timestamp, app) {
     data = {...data, signature: signature(clientSecret, URI, "POST", data)};
     Axios.post(API.gateway + URI, Qs.stringify(data)).then((response)=>{
         app.access_token = response.data.access_token;
-        actuator(app)
+        actuator(app.access_token);
     }).catch((error)=>{
         alert(error)
     })
 }
 
-// function actuator(app) {
-//     let path = "/user-server/actuator/health";
-//     let headers ={
-//         "Authorization": "Bearer " + app.access_token,
-//     };
-//     console.log(app.access_token)
-//     Axios({
-//         method: 'get',
-//         url: API.gateway + path,
-//         headers: headers
-//     }).then((response)=>{
-//         console.log(response)
-//     }).catch((error)=>{
-//         alert(error)
-//     })
-//     Axios.get(API.gateway + path, {headers}).then((response)=>{
-//         console.log(response)
-//     }).catch((error)=>{
-//         alert(error)
-//     })
-// }
+/**
+ *  本函数用于测试携带access_token访问服务
+ *  @param access_token
+ *
+ * */
+function actuator(access_token) {
+    let path = "/user-server/actuator/health";
+    let headers ={
+        "Authorization": "Bearer " + access_token,
+    };
+    console.log(access_token);
+    Axios.get(API.gateway + path, {headers}).then((response)=>{
+        console.log(response)
+    }).catch((error)=>{
+        alert(error)
+    })
+}
 
 export {getTimeStamp}
 
