@@ -1,5 +1,5 @@
 server:
-  port: 8888
+  port: 13100
 spring:
   http:
     encoding:
@@ -7,10 +7,10 @@ spring:
       enabled: true
       force: true
   application:
-    name: gateway-server
+    name: user-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_gateway?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop_dba
     password: dop_dba_123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -63,35 +63,10 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka/
+      defaultZone: http://localhost:8761/eureka/
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 10000
-zuul:
-  host:
-    socket-timeout-millis: 10000
-    connect-timeout-millis: 10000
-  ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
   ServerListRefreshInterval: 2000
-  #正常上线下线客户端最大感知时间：eureka.client.registryFetchIntervalSeconds+ribbon. ServerListRefreshInterval = 7秒
-  #异常下线客户端最大感知时间：
-  #2*eureka.instance.leaseExpirationDurationInSeconds+
-  #eureka.server.evictionIntervalTimerInMs+
-  #eureka.client.registryFetchIntervalSeconds+
-  #ribbon. ServerListRefreshInterval = 32
 logging.path: ./logs/${spring.application.name}
-
-# oauth2
-gateway:
-  oauth:
-    AES:
-      clientKey: e5Fcq-fWX-EvE5jyM7Scsb9PUXYEC22NE0SgF9dp-3sVvLxW-_59sOJ4I5tFqgKz
-      tokenKey: APbCXRbW7Rw6JAX03GJiHKgTM5UMUQyXXhWpnPbjgIEjBnURgLCbes3ty1x_vJU7HQ==

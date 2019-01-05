@@ -12,9 +12,21 @@ spec:
     spec:
       containers:
       - name: discovery-server
-        image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/discovery-server
-        ports:
-        - containerPort: 8761
+        image: registry.cn-hangzhou.aliyuncs.com/nju-dop/discovery-server
+          volumeMounts:
+              - name: host-time
+                mountPath: /etc/localtime
+                - name: host-timezone
+                  mountPath: /etc/timezone
+          ports:
+            - containerPort: 8888
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: host-timezone
+          hostPath:
+            path: /etc/timezone
 ---
 apiVersion: v1
 kind: Service

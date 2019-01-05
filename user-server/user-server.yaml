@@ -12,9 +12,22 @@ spec:
     spec:
       containers:
         - name: user-server
-          image: registry.cn-hangzhou.aliyuncs.com/softeng-dop/user-server
+          imagePullPolicy: Always
+          image: registry.cn-hangzhou.aliyuncs.com/nju-dop/user-server:latest
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
           ports:
             - containerPort: 13100
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: host-timezone
+          hostPath:
+            path: /etc/timezone
 ---
 apiVersion: v1
 kind: Service
