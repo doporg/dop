@@ -67,7 +67,7 @@ const asideMenuConfig = [
   // }
     {
       name: '流水线管理',
-      path: 'assembly-line',
+      path: '/pipeline',
       icon: 'ol-list',
     },
     {
