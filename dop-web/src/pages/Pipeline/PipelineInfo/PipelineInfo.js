@@ -465,7 +465,7 @@ export default class PipelineInfo extends Component {
                     <div className="footer-container">
                         <Button type="primary"
                                 className="button"
-                                onClick={this.save}
+                                onClick={this.save.bind(this)}
                         >保存</Button>
                         <Link to='/pipeline'>
                             <Button type="normal"
