@@ -119,7 +119,7 @@ export default class PipelineInfo extends Component {
             self.setState({
                 pipelineInfo: response.data,
                 currentStage: response.data.stage[0]
-            })
+            });
             console.log(self.state.currentStage)
         })
     }
@@ -352,9 +352,6 @@ export default class PipelineInfo extends Component {
             })
         }
 
-
-
-        console.log(pipelineInfo);
         setTimeout(() => {
             this.setState({
                 pipelineInfo
@@ -397,6 +394,7 @@ export default class PipelineInfo extends Component {
                         </div>
                         <div className="form-item">
                             <span className="form-item-label">管理员: </span>
+                            {/*有bug需改进*/}
                             <Combobox
                                 onInputUpdate={this.onSelectAdminUpdate.bind(this)}
                                 filterLocal={false}
