@@ -95,14 +95,12 @@ export default class PipelineInfo extends Component {
 
     componentWillMount() {
         if (this.props.match.params.id) {
-            console.log("edit");
             console.log(this.props.match.params.id)
             this.getPipelineInfoById(this.props.match.params.id)
             this.setState({
                 newPipeline: false
             })
         } else {
-            console.log("new")
             console.log(this.state.currentStage)
         }
     }
@@ -114,13 +112,11 @@ export default class PipelineInfo extends Component {
         let url = API.pipeline + "/pipeline/findById?id=" + id;
         let self = this;
         Axios.get(url).then((response) => {
-            console.log(response);
             fatchAdmin(response.data.admin);
             self.setState({
                 pipelineInfo: response.data,
                 currentStage: response.data.stage[0]
             });
-            console.log(self.state.currentStage)
         })
     }
 
@@ -351,6 +347,12 @@ export default class PipelineInfo extends Component {
                 delete item.id
             })
         }
+
+        /**
+         *  检查数据
+         *  stageName不能一样
+         *
+         * */
 
         setTimeout(() => {
             this.setState({

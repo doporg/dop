@@ -52,7 +52,8 @@ export default class PipelineProject extends Component {
                     //     ]
                     // }
                 ]
-            }
+            },
+            currentStageTab: 0
         };
     }
 
@@ -64,24 +65,33 @@ export default class PipelineProject extends Component {
     /**
      * 跳转到编辑页面
      * */
-    goToEdit(){
+    goToEdit() {
         this.props.history.push("/pipeline/edit/" + this.props.match.params.id)
     }
 
     /**
      * get PipelineInfo By id
      * */
-    getPipelineInfoById(id){
+    getPipelineInfoById(id) {
         let url = API.pipeline + "/pipeline/findById?id=" + id;
         let self = this;
-        Axios.get(url).then((response)=>{
+        Axios.get(url).then((response) => {
             console.log(response);
-            if(response.status === 200){
+            if (response.status === 200) {
                 console.log(111);
                 self.setState({
                     pipelineInfo: response.data
                 });
             }
+        })
+    }
+
+    /**
+     * 查看stage
+     * */
+    viewStage(index) {
+        this.setState({
+            currentStageTab: index
         })
     }
 
@@ -103,26 +113,34 @@ export default class PipelineProject extends Component {
                     </Button>
                 </div>
                 <div className="step">
-                    {this.props.match.params.id}
-                    {(()=>{
-                        console.log(this.state.pipelineInfo)
-                        if(this.state.pipelineInfo.stage === []){
-                            console.log(11111111111);
-                            return(
-                                <div>无记录</div>
+                    {/*{this.props.match.params.id}*/}
+                    {(() => {
+                        if (this.state.pipelineInfo.stage.length === 0 || this.state.pipelineInfo === undefined) {
+                            return (
+                                <div className="no-result">
+                                    无记录
+                                </div>
                             )
-                        }else{
-                            return(
-                                this.state.pipelineInfo.stage.map((item, index)=>{
-                                    return(
-                                        <div key={index}>
-                                            item.name
+                        } else {
+                            return (
+                                this.state.pipelineInfo.stage.map((item, index) => {
+                                    let stageClass = this.state.currentStageTab === index? "have-result-active":"have-result";
+                                    return (
+                                        <div className="have-result-wrap">
+                                            <div className="line"></div>
+                                            <div className={stageClass} key={index}
+                                                 onClick={this.viewStage.bind(this, index)}>
+                                                {item.name}
+                                            </div>
                                         </div>
                                     )
                                 })
                             )
                         }
                     })()}
+                </div>
+                <div className="console">
+
                 </div>
             </div>
         );
