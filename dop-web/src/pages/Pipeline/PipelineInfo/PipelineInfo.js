@@ -8,66 +8,81 @@ import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
 import {Input, Button, Select, Step, Icon} from '@icedesign/base';
 import IceLabel from '@icedesign/label';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import jsonp from "jsonp";
-import './PipelineInfo.scss'
-
+import './PipelineInfo.scss';
+import Axios from 'axios';
+import API from '../../API';
 
 const {Combobox} = Select;
+
+const fatchAdmin = (admin) => {
+    return admin.map((item, index) => {
+        console.log(index);
+        return {
+            id: `${index}`,
+            name: `test${index}`
+        };
+    });
+}
+
 export default class PipelineInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            //判断是否为新建
+            newPipeline: true,
             // 流水线的基本信息
             pipelineInfo: {
                 name: "",
-                admin: "测试用户",
+                creator: "test",
+                admin: [{
+                    id: '1',
+                    name: 'test'
+                }],
                 //监听设置
                 monitor: "",
                 createTime: "",  //时间戳
-                stage: [{
-                    name: "test1",
-                    tasks: [{
-                        taskName: "构建maven",
-                        gitUrl: ""
-                    }, {
-                        taskName: "构建docker镜像",
-                        dockerUserName: "",
-                        repository: "",
-                        description: ""
-                    }, {
-                        taskName: "推送docker镜像",
-                        dockerUserName: "",
-                        repository: "",
-                        description: ""
-                    }]
-                }]
+                stage: [
+                    //     {
+                    //     name: "",
+                    //      tasks: [
+                    //          //{
+                    //     //     taskName: "构建maven",
+                    //     //     gitUrl: "",
+                    //     //     dockerUserName: "",
+                    //     //     repository: "",
+                    //     //     description: ""
+                    //     // }, {
+                    //     //     taskName: "构建docker镜像",
+                    //     //     gitUrl: "",
+                    //     //     dockerUserName: "",
+                    //     //     repository: "",
+                    //     //     description: ""
+                    //     // }, {
+                    //     //     taskName: "推送docker镜像",
+                    //     //     gitUrl: "",
+                    //     //     dockerUserName: "",
+                    //     //     repository: "",
+                    //     //     description: ""
+                    //     // }
+                    //     ]
+                    // }
+                ]
 
             },
 
             // 获取到的项目组成员
-            teamMember: [],
+            teamMember: [{
+                id: 1,
+                name: 'test'
+            }],
 
             monitor: ["自动触发", "手动触发"],
 
             //当前编辑的stage
-            currentStage: {
-                name: "current",
-                tasks: [{
-                    taskName: "构建maven",
-                    gitUrl: ""
-                }, {
-                    taskName: "构建docker镜像",
-                    dockerUserName: "",
-                    repository: "",
-                    description: ""
-                }, {
-                    taskName: "推送docker镜像",
-                    dockerUserName: "",
-                    repository: "",
-                    description: ""
-                }]
-            },
+            currentStage: undefined,
+
             currentStageOrder: 0,
 
             //可选的任务
@@ -79,10 +94,36 @@ export default class PipelineInfo extends Component {
     }
 
     componentWillMount() {
-        this.setState({
-            currentStage: this.state.pipelineInfo.stage[0]
+        if (this.props.match.params.id) {
+            console.log("edit");
+            console.log(this.props.match.params.id)
+            this.getPipelineInfoById(this.props.match.params.id)
+            this.setState({
+                newPipeline: false
+            })
+        } else {
+            console.log("new")
+            console.log(this.state.currentStage)
+        }
+    }
+
+    /**
+     *  findById
+     * */
+    getPipelineInfoById(id) {
+        let url = API.pipeline + "/pipeline/findById?id=" + id;
+        let self = this;
+        Axios.get(url).then((response) => {
+            console.log(response);
+            fatchAdmin(response.data.admin);
+            self.setState({
+                pipelineInfo: response.data,
+                currentStage: response.data.stage[0]
+            })
+            console.log(self.state.currentStage)
         })
     }
+
 
     /**
      *  基本信息
@@ -131,6 +172,13 @@ export default class PipelineInfo extends Component {
             pipelineInfo
         });
     }
+
+    /**
+     * 自定义管理员
+     * */
+    selectValueRender = v => {
+        return `${v.name}`;
+    };
 
     /**
      * 选择监听方式更新数据
@@ -198,8 +246,6 @@ export default class PipelineInfo extends Component {
         this.setState({
             currentStage: tempCurrent
         });
-        // console.log(tempCurrent)
-        // let tempState = this.state.pipelineInfo.stage[this.state.currentStageOrder];
     }
 
     /**
@@ -211,12 +257,16 @@ export default class PipelineInfo extends Component {
             case "构建maven":
                 newTask = {
                     taskName: "构建maven",
-                    gitUrl: ""
+                    gitUrl: "",
+                    dockerUserName: "",
+                    repository: "",
+                    description: ""
                 };
                 break;
             case "构建docker镜像":
                 newTask = {
                     taskName: "构建docker镜像",
+                    gitUrl: "",
                     dockerUserName: "",
                     repository: "",
                     description: ""
@@ -225,6 +275,7 @@ export default class PipelineInfo extends Component {
             case "推送docker镜像":
                 newTask = {
                     taskName: "推送docker镜像",
+                    gitUrl: "",
                     dockerUserName: "",
                     repository: "",
                     description: ""
@@ -255,27 +306,68 @@ export default class PipelineInfo extends Component {
     /**
      *  构建-填入git地址
      * */
-    buildMavenGit(value){
-        console.log(value)
+    buildMavenGit(value) {
         this.setState({
             test: value
         });
-        let findIndex = this.state.currentStage.tasks.findIndex((item)=>{
-            return item.taskName == this.state.chosenTask.taskName
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
         });
         this.state.currentStage.tasks[findIndex].gitUrl = value
     }
 
     /**
+     *  removeById
+     * */
+    removeById(id) {
+        let data = {id: id};
+        let url = API.pipeline + '/pipeline/remove';
+        let self = this;
+        Axios.post(
+            url,
+            data
+        ).then((response) => {
+            // self.save()
+        })
+    }
+
+    /**
      *  提交
      * */
-    save(){
-        let pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime()});
-        this.setState({
-            pipelineInfo
-        });
+    save() {
+        let pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime().toString()});
+        let url = API.pipeline + '/pipeline/save';
+        if (!this.state.newPipeline) {
+            this.removeById(this.props.match.params.id);
+
+            //预处理一下数据
+            delete pipelineInfo.id;
+            delete pipelineInfo.admin;
+            pipelineInfo.admin = [{
+                id: 1,
+                name: 'test'
+            }];
+            pipelineInfo.stage.map((item,index)=>{
+                delete item.id
+            })
+        }
+
+
+
+        console.log(pipelineInfo);
         setTimeout(() => {
-            console.log(JSON.stringify(this.state.pipelineInfo, null, 2))
+            this.setState({
+                pipelineInfo
+            });
+            Axios({
+                method: 'post',
+                url: url,
+                data: pipelineInfo,
+            }).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
         }, 0)
 
     };
@@ -283,7 +375,7 @@ export default class PipelineInfo extends Component {
     /**
      *  返回流水线主页
      * */
-    backToMain(){
+    backToMain() {
         this.push('/pipeline')
     }
 
@@ -309,7 +401,7 @@ export default class PipelineInfo extends Component {
                                 onInputUpdate={this.onSelectAdminUpdate.bind(this)}
                                 filterLocal={false}
                                 value={this.state.pipelineInfo.admin}
-                                fillProps="label"
+                                fillProps="name"
                                 multiple
                                 placeholder="请输入项目组成员"
                                 onChange={this.selectAdmin.bind(this)}
@@ -353,114 +445,122 @@ export default class PipelineInfo extends Component {
                                 />
                             </Step>
                         </div>
+
                     </div>
                 </FormBinderWrapper>
 
-                <FormBinderWrapper
-                    value={this.state.currentStage}
-                    onChange={this.currentFormChange}
-                    ref="currentForm"
-                >
-                    <div className="step-item-detail">
-                        <h3 className="header">阶段设置</h3>
-                        <div>
-                            <span className="label">名称: </span>
-                            <FormBinder name="name" required message="请输入阶段的名称">
-                                <Input
-                                    placeholder={this.state.currentStage.name}
-                                />
-                            </FormBinder>
-                            <FormError className="form-item-error" name="name"/>
-                        </div>
-                        <div className="task">
-                            <span className="task-label-set">
-                                任务设置:
-                                <p>*请注意任务顺序</p>
-                            </span>
-                            <div className="choose-task">
-                                <Combobox
-                                    filterLocal={false}
-                                    placeholder="请选择任务"
-                                    onChange={this.selectTask.bind(this)}
-                                    dataSource={this.state.task}
-                                />
-                                {
-
-                                    this.state.currentStage.tasks.map((item, index) => {
-                                        let chosenStyle = item.taskName === this.state.chosenTask.taskName?"chosen task-label" : "task-label";
-                                        return (
-                                            <div className="chosen-task" key={index}>
-                                                <IceLabel className={chosenStyle}>
+                {(() => {
+                    if (this.state.currentStage !== undefined ) {
+                        return (
+                            <FormBinderWrapper
+                                value={this.state.currentStage}
+                                onChange={this.currentFormChange}
+                                ref="currentForm"
+                            >
+                                <div className="step-item-detail">
+                                    <h3 className="header">阶段设置</h3>
+                                    <div>
+                                        <span className="label">名称: </span>
+                                        <FormBinder name="name" required message="请输入阶段的名称">
+                                            <Input
+                                                placeholder={this.state.currentStage.name}
+                                            />
+                                        </FormBinder>
+                                        <FormError className="form-item-error" name="name"/>
+                                    </div>
+                                    <div className="task">
+                                        <span className="task-label-set">
+                                            任务设置:
+                                            <p>*请注意任务顺序</p>
+                                        </span>
+                                        <div className="choose-task">
+                                            <Combobox
+                                                filterLocal={false}
+                                                placeholder="请选择任务"
+                                                onChange={this.selectTask.bind(this)}
+                                                dataSource={this.state.task}
+                                            />
+                                            {
+                                                this.state.currentStage.tasks.map((item, index) => {
+                                                    let chosenStyle = item.taskName === this.state.chosenTask.taskName ? "chosen task-label" : "task-label";
+                                                    return (
+                                                        <div className="chosen-task" key={index}>
+                                                            <IceLabel className={chosenStyle}>
                                                     <span
                                                         onClick={this.editTask.bind(this, item)}
                                                     >{item.taskName}</span>
-                                                    <Icon type="close" size="xs" className="close"
-                                                          onClick={this.closeTask.bind(this, index)}
-                                                    ></Icon>
-                                                </IceLabel>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
-                            {
-                                ( ()=>{
-                                    let className;
-                                    if(this.state.chosenTask == ""){
-                                        className = "chosen-task-detail hide"
-                                    }else{
-                                        className = "chosen-task-detail"
-                                    }
-                                    return(
-                                    <div className={className}>
+                                                                <Icon type="close" size="xs" className="close"
+                                                                      onClick={this.closeTask.bind(this, index)}
+                                                                ></Icon>
+                                                            </IceLabel>
+                                                        </div>
+                                                    )
+                                                })}
+                                        </div>
                                         {
-                                            ( ()=>{
-                                                switch (this.state.chosenTask.taskName){
-                                                    case "构建maven":
-                                                        return(
-                                                            <div>
-                                                                <h3 className="chosen-task-detail-title">构建maven</h3>
-                                                                <div className="chosen-task-detail-body">
-                                                            <span className="item">
-                                                                <span className="must">*</span>
-                                                                <span>Git地址: </span>
-                                                            </span>
-                                                                    <Input
-                                                                        onChange={this.buildMavenGit.bind(this)}
-                                                                        className="input"
-                                                                    />
-                                                                </div>
-
-                                                            </div>
-                                                        );
-                                                        break;
-                                                    case "构建docker镜像":
-                                                        return(
-                                                            <div>
-                                                                构建docker镜像
-                                                            </div>
-                                                        );
-                                                        break;
-                                                    case "推送docker镜像":
-                                                        return(
-                                                            <div>
-                                                                推送docker镜像
-                                                            </div>
-                                                        );
-                                                        break;
-
+                                            (() => {
+                                                let className;
+                                                if (this.state.chosenTask == "") {
+                                                    className = "chosen-task-detail hide"
+                                                } else {
+                                                    className = "chosen-task-detail"
                                                 }
-                                            }  )()
+                                                return (
+                                                    <div className={className}>
+                                                        {
+                                                            (() => {
+                                                                switch (this.state.chosenTask.taskName) {
+                                                                    case "构建maven":
+                                                                        return (
+                                                                            <div>
+                                                                                <h3 className="chosen-task-detail-title">构建maven</h3>
+                                                                                <div
+                                                                                    className="chosen-task-detail-body">
+                                                                                    <span className="item">
+                                                                                        <span className="must">*</span>
+                                                                                        <span>Git地址: </span>
+                                                                                    </span>
+                                                                                    <Input
+                                                                                        onChange={this.buildMavenGit.bind(this)}
+                                                                                        className="input"
+                                                                                        placeholder={this.state.chosenTask.gitUrl}
+                                                                                    />
+                                                                                </div>
+
+                                                                            </div>
+                                                                        );
+                                                                        break;
+                                                                    case "构建docker镜像":
+                                                                        return (
+                                                                            <div>
+                                                                                构建docker镜像
+                                                                            </div>
+                                                                        );
+                                                                        break;
+                                                                    case "推送docker镜像":
+                                                                        return (
+                                                                            <div>
+                                                                                推送docker镜像
+                                                                            </div>
+                                                                        );
+                                                                        break;
+
+                                                                }
+                                                            })()
+                                                        }
+                                                    </div>
+                                                )
+                                            })()
                                         }
+
                                     </div>
-                                    )
-                                })()
-                            }
 
-                        </div>
+                                </div>
+                            </FormBinderWrapper>)
+                    }
+                })()}
 
-                    </div>
-                </FormBinderWrapper>
+
                 <div className="footer">
                     <div className="footer-container">
                         <Button type="primary"

@@ -7,7 +7,6 @@
 import API from '../../pages/API'
 import UUIDV4 from 'uuid/v4'
 import CryptoJS from 'crypto-js'
-import base64url from "base64url";
 import Axios from 'axios'
 import Qs from 'qs'
 
