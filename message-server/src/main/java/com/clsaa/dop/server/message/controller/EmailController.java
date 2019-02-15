@@ -2,7 +2,6 @@ package com.clsaa.dop.server.message.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.message.model.dto.EmailDtoV1;
-import com.clsaa.dop.server.message.model.po.Email;
 import com.clsaa.dop.server.message.mq.MessageQueueException;
 import com.clsaa.dop.server.message.mq.MessageSender;
 import com.clsaa.dop.server.message.service.EmailService;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -34,7 +32,11 @@ public class EmailController {
     @Autowired
     private MessageSender messageSender;
 
-    @ApiOperation(value = "发送邮件", notes = "发送邮件，邮件内容由业务方自定义")
+    /**
+     * 同步发送邮件，仅用于测试SMTP服务器是否能成功发送邮件，业务方需直接通过MQ调用
+     */
+    @Deprecated
+    @ApiOperation(value = "发送邮件", notes = "发送邮件，仅用于测试业务方需通过")
     @PostMapping("/v1/email")
     public void addEmailV1(@ApiParam(value = "发送人", required = true) @RequestParam("from") String from,
                            @ApiParam(value = "接收人", required = true) @RequestParam("to") String to,
@@ -46,6 +48,11 @@ public class EmailController {
     @Value("${message.mq.RocketMQ.emailTopic}")
     private String topic;
 
+    /**
+     * 通过MQ异步发送邮件，仅用于测试MQ是否可用，业务方需直接通过MQ调用
+     * 调用MQ方法可参考本接口实现
+     */
+    @Deprecated
     @ApiOperation(value = "发送邮件", notes = "发送邮件，邮件内容由业务方自定义")
     @PostMapping("/v2/email")
     public void addEmailV2(@ApiParam(value = "发送人", required = true) @RequestParam("from") String from,

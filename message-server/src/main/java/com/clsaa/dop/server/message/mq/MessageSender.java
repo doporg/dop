@@ -6,7 +6,7 @@ package com.clsaa.dop.server.message.mq;
  * </p>
  *
  * @author 任贵杰 812022339@qq.com
- * @since 2018/9/1
+ * @since 2019-02-15
  */
 public interface MessageSender {
     /**
@@ -19,7 +19,7 @@ public interface MessageSender {
      * @param data      消息数据(消息内容/消息body), 一般为JSON格式的字符串
      * @summary 发送消息
      * @author 任贵杰 812022339@qq.com
-     * @since 2018/9/1
+     * @since 2019-02-15
      */
     void send(String queue, String messageId, String data) throws MessageQueueException;
 }
