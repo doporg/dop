@@ -2,7 +2,6 @@ package com.clsaa.dop.server.user.service;
 
 import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.dao.UserDao;
-import com.clsaa.dop.server.user.enums.UserType;
 import com.clsaa.dop.server.user.model.bo.UserBoV1;
 import com.clsaa.dop.server.user.model.po.User;
 import com.clsaa.dop.server.user.util.BeanUtils;

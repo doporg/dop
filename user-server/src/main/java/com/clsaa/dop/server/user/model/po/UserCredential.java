@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 用户持久层对象
+ * 用户凭据持久层对象
  * </p>
  *
  * @author 任贵杰 812022339@qq.com
- * @since 2018-12-23
+ * @since 2019-02-20
  */
 @Getter
 @Setter
@@ -20,59 +20,52 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_user", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})},
-        indexes = {@Index(columnList = "email")})
-public class User implements Serializable {
+@Table(name = "t_user_credential", schema = "db_dop_user_server",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"identifier"})},
+        indexes = {@Index(columnList = "identifier")})
+public class UserCredential implements Serializable {
     /**
-     * 用户类型枚举
+     * 用户凭据类型枚举
      *
      * @author 任贵杰
      */
-    public enum Status {
-
+    public enum Type {
         /**
-         * 正常的
+         * DOP EMAIL类型登录凭据
          */
-        NORMAL("NORMAL"),
-        /**
-         * 禁止的
-         */
-        FORBIDDEN("FORBIDDEN"),
-        ;
-
+        DOP_LOGIN_EMAIL("DOP_LOGIN_EMAIL");
         private String code;
 
-        Status(String code) {
+        Type(String code) {
         }
     }
 
     private static final long serialVersionUID = 6906097418517275871L;
     /**
-     * 用户id
+     * 用户凭据id
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     /**
-     * 用户姓名
+     * 所属用户id
      */
     @Basic
-    @Column(name = "name")
-    private String name;
+    @Column(name = "userId")
+    private Long userId;
     /**
-     * 用户email地址
+     * 标识（手机号、邮箱、用户名或第三方应用的唯一标识）
      */
     @Basic
-    @Column(name = "email")
-    private String email;
+    @Column(name = "identifier")
+    private String identifier;
     /**
-     * 用户头像URL
+     * 凭据(密码或token)
      */
     @Basic
-    @Column(name = "avatar_url")
-    private String avatarURL;
+    @Column(name = "credential")
+    private String credential;
     /**
      * 创建时间
      */
@@ -86,10 +79,10 @@ public class User implements Serializable {
     @Column(name = "mtime")
     private LocalDateTime mtime;
     /**
-     * 用户状态
+     * 用户认证类型
      */
     @Basic
-    @Column(name = "status")
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Type type;
 }

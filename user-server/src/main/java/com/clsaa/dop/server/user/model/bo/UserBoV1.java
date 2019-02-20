@@ -1,6 +1,5 @@
 package com.clsaa.dop.server.user.model.bo;
 
-import com.clsaa.dop.server.user.enums.UserType;
 import lombok.Getter;
 import lombok.Setter;
 
