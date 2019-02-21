@@ -5,8 +5,8 @@ pipeline{
 	environment {
 		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="gateway-server"
-		DOCKER_REGISTRY_HOST="registry-vpc.cn-hangzhou.aliyuncs.com"
-		DOCKER_REGISTRY="registry-vpc.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server"
+		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
+		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/gateway-server"
 	}
 
 	stages {
@@ -44,13 +44,13 @@ pipeline{
 			}
 		}
 
-        stage('推送镜像') {
+       stage('推送镜像') {
             steps {
                 echo "start push image"
                 dir(SERVICE_DIR){
                   sh "ls -l"
-                  withCredentials([usernamePassword(credentialsId: 'aliyun', passwordVariable: 'aliyunPassword', usernameVariable: 'aliyunUsername')]) {
-                      sh "docker login -u ${aliyunUsername} -p ${aliyunPassword} ${DOCKER_REGISTRY_HOST}"
+                  withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'docker_registryPassword', usernameVariable: 'docker_registryUsername')]) {
+                      sh "docker login -u ${docker_registryUsername} -p ${docker_registryPassword} ${DOCKER_REGISTRY_HOST}"
                       sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
                   }
                 }
