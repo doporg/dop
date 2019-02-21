@@ -11,7 +11,7 @@ spec:
         app: discovery-server
     spec:
       containers:
-      - name: discovery-server
+        - name: discovery-server
           image: registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
           volumeMounts:
             - name: host-time
