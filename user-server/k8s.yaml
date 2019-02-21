@@ -13,7 +13,7 @@ spec:
       containers:
         - name: user-server
           imagePullPolicy: Always
-          image: registry.cn-hangzhou.aliyuncs.com/nju-dop/user-server:latest
+          image: registry.cn-hangzhou.aliyuncs.com/nju-dop/user-server:<BUILD_TAG>
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime

@@ -1,0 +1,81 @@
+#!/groovy
+pipeline{
+	agent any
+
+	environment {
+		REPOSITORY="https://github.com/clsaa/dop.git"
+		SERVICE_DIR="gateway-server"
+		DOCKER_REGISTRY_HOST="registry-internal.cn-hangzhou.aliyuncs.com"
+		DOCKER_REGISTRY="registry-internal.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server"
+	}
+
+	stages {
+		stage('获取代码') {
+			steps {
+				echo "start fetch code from git:${REPOSITORY}"
+				deleteDir()
+				git "${REPOSITORY}"
+                script {
+                    time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
+                    git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
+                    build_tag = time+git_version
+                }
+			}
+		}
+
+		stage('编译+单元测试') {
+			steps {
+                echo "star compile"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "mvn -U -am clean package"
+                }
+			}
+		}
+
+		stage('构建镜像') {
+			steps {
+                echo "start build image"
+                echo "image tag : ${build_tag}"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
+                }
+			}
+		}
+
+        stage('推送镜像') {
+            steps {
+                echo "start push image"
+                dir(SERVICE_DIR){
+                  sh "ls -l"
+                  withCredentials([usernamePassword(credentialsId: 'aliyun', passwordVariable: 'aliyunPassword', usernameVariable: 'aliyunUsername')]) {
+                      sh "docker login -u ${aliyunUsername} -p ${aliyunPassword} ${DOCKER_REGISTRY_HOST}"
+                      sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
+                  }
+                }
+            }
+        }
+
+        stage('更新YAML镜像版本') {
+            steps{
+                echo "start change yaml image tag"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
+                    sh "cat k8s.yaml"
+                }
+            }
+        }
+
+		stage('发布系统') {
+			steps {
+				echo "start deploy"
+				dir(SERVICE_DIR){
+				    sh "ls -l"
+				    sh "kubectl apply -f k8s.yaml"
+				}
+			}
+		}
+	}
+}
