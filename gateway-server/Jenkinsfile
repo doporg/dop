@@ -6,7 +6,7 @@ pipeline{
 		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="gateway-server"
 		DOCKER_REGISTRY_HOST="registry.cn-hangzhou.aliyuncs.com"
-		DOCKER_REGISTRY="registry-internal.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server"
+		DOCKER_REGISTRY="registry-vpc.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server"
 	}
 
 	stages {
