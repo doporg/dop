@@ -15,10 +15,6 @@ pipeline{
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
 				git "${REPOSITORY}"
-				sh "pwd"
-				dir(SERVICE_DIR){
-				    sh "ls -l"
-				}
                 script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
@@ -29,51 +25,56 @@ pipeline{
 
 		stage('编译+单元测试') {
 			steps {
-                sh "cd ${SERVICE_DIR}"
-			    sh "ls -l"
-				echo "star compile"
-				sh "mvn -U -am clean package"
+                echo "star compile"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "mvn -U -am clean package"
+                }
 			}
 		}
 
 		stage('构建镜像') {
 			steps {
-                sh "cd ${SERVICE_DIR}"
-                sh "ls -l"
-				echo "start build image"
+                echo "start build image"
                 echo "image tag : ${build_tag}"
-				sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
+                }
 			}
 		}
 
         stage('推送镜像') {
             steps {
-                sh "cd ${SERVICE_DIR}"
-			    sh "ls -l"
                 echo "start push image"
-                withCredentials([usernamePassword(credentialsId: 'aliyun', passwordVariable: 'aliyunPassword', usernameVariable: 'aliyunUsername')]) {
-                    sh "docker login -u ${aliyunUsername} -p ${aliyunPassword} ${DOCKER_REGISTRY_HOST}"
-                    sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
+                dir(SERVICE_DIR){
+                  sh "ls -l"
+                  withCredentials([usernamePassword(credentialsId: 'aliyun', passwordVariable: 'aliyunPassword', usernameVariable: 'aliyunUsername')]) {
+                      sh "docker login -u ${aliyunUsername} -p ${aliyunPassword} ${DOCKER_REGISTRY_HOST}"
+                      sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
+                  }
                 }
             }
         }
 
         stage('更新YAML镜像版本') {
             steps{
-                sh "cd ${SERVICE_DIR}"
-			    sh "ls -l"
                 echo "start change yaml image tag"
-                sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
-                sh "cat k8s.yaml"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
+                    sh "cat k8s.yaml"
+                }
             }
         }
 
 		stage('发布系统') {
 			steps {
-                sh "cd ${SERVICE_DIR}"
-			    sh "ls -l"
 				echo "start deploy"
-				sh "kubectl apply -f k8s.yaml"
+				dir(SERVICE_DIR){
+				    sh "ls -l"
+				    sh "kubectl apply -f k8s.yaml"
+				}
 			}
 		}
 	}
