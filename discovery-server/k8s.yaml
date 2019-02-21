@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: discovery-server
-        image: registry.cn-hangzhou.aliyuncs.com/nju-dop/discovery-server
+        image: registry.cn-hangzhou.aliyuncs.com/nju-dop/discovery-server:<BUILD_TAG>
           volumeMounts:
               - name: host-time
                 mountPath: /etc/localtime
