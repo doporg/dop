@@ -20,7 +20,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_group_user_mapping", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id, group_id"})},
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "group_id"})},
         indexes = {@Index(columnList = "user_id, group_id")})
 public class GroupUserMapping implements Serializable {
 

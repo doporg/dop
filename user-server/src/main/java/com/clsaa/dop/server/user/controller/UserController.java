@@ -6,6 +6,7 @@ import com.clsaa.dop.server.user.util.BeanUtils;
 import com.clsaa.dop.server.user.service.UserService;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
+import com.google.common.hash.Hashing;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserController {
 
     /**
      * <p>
-     * 添加用户，若用户email地址已注册则不允许注册
+     * 注册用户，若用户email地址已注册则不允许注册
      * </p>
      *
      * @param name  用户姓名
@@ -40,7 +41,8 @@ public class UserController {
     @ApiOperation(value = "添加用户", notes = "添加一个用户，若用户email地址已注册则不允许注册")
     @PostMapping("/v1/users")
     public UserV1 addUserV1(@ApiParam(value = "用户姓名", required = true) @RequestParam("name") String name,
-                            @ApiParam(value = "用户email地址", required = true) @RequestParam("email") String email) {
+                            @ApiParam(value = "用户email地址", required = true) @RequestParam("email") String email,
+                            @ApiParam(value = "用户登录密码，经过HMac256计算过的密文") String password) {
         return BeanUtils.convertType(this.userService.addUser(name, email), UserV1.class);
     }
 
@@ -102,7 +104,7 @@ public class UserController {
     @ApiOperation(value = "查询用户信息", notes = "根据id查询用户信息，若用户不存在返回null")
     @GetMapping("/v1/users/{id}")
     public UserV1 findUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id) {
-        return BeanUtils.convertType(this.userService.findUserById(id), UserV1.class);
+        return this.userService.findUserById(id);
     }
 
     /**

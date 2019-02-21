@@ -20,7 +20,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_organization_user_mapping", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id, organization_id"})},
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "organization_id"})},
         indexes = {@Index(columnList = "user_id, organization_id")})
 public class OrganizationUserMapping implements Serializable {
 
@@ -37,7 +37,7 @@ public class OrganizationUserMapping implements Serializable {
      */
     @Basic
     @Column(name = "organization_id")
-    private Long groupId;
+    private Long organizationId;
     /**
      * 用户id
      */

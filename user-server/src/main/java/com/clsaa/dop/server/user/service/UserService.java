@@ -1,14 +1,16 @@
 package com.clsaa.dop.server.user.service;
 
 import com.clsaa.dop.server.user.config.BizCodes;
+import com.clsaa.dop.server.user.config.CacheConfig;
 import com.clsaa.dop.server.user.dao.UserDao;
 import com.clsaa.dop.server.user.model.bo.UserBoV1;
 import com.clsaa.dop.server.user.model.po.User;
+import com.clsaa.dop.server.user.model.vo.UserV1;
 import com.clsaa.dop.server.user.util.BeanUtils;
-import com.clsaa.dop.server.user.util.TimestampUtil;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +38,7 @@ public class UserService {
 
     /**
      * <p>
-     * 添加新用户，如果邮箱已经被注册则会抛出异常，用户默认类型为 {@link UserType#PROGRAMMER}
+     * 添加新用户，如果邮箱已经被注册则会抛出异常
      * </p>
      *
      * @author 任贵杰 812022339@qq.com
@@ -45,14 +48,12 @@ public class UserService {
     public UserBoV1 addUser(String name, String email) {
         User existUser = this.userDao.findUserByEmail(email);
         BizAssert.allowed(existUser == null, BizCodes.REPETITIVE_USER_EMAIL);
-        User user = User.builder()
-                .id(null)
-                .name(name)
-                .email(email)
-                .ctime(TimestampUtil.now())
-                .mtime(TimestampUtil.now())
-                .type(UserType.PROGRAMMER)
-                .build();
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setStatus(User.Status.FORBIDDEN);
+        user.setCtime(LocalDateTime.now());
+        user.setMtime(LocalDateTime.now());
         return BeanUtils.convertType(this.userDao.saveAndFlush(user), UserBoV1.class);
     }
 
@@ -80,7 +81,6 @@ public class UserService {
         //修改信息
         existUser.setName(name);
         existUser.setEmail(email);
-        existUser.setMtime(TimestampUtil.now());
         //保存、更新
         this.userDao.saveAndFlush(existUser);
         return BeanUtils.convertType(existUser, UserBoV1.class);
@@ -89,8 +89,9 @@ public class UserService {
     /**
      * 根据id查询用户，若不存在返回null
      */
-    public UserBoV1 findUserById(Long id) {
-        return BeanUtils.convertType(this.userDao.findUsersById(id), UserBoV1.class);
+    @Cacheable(value = CacheConfig.CacheNames.CACHE_EXPIRED_15_MINS)
+    public UserV1 findUserById(Long id) {
+        return BeanUtils.convertType(this.userDao.findUsersById(id), UserV1.class);
     }
 
     /**

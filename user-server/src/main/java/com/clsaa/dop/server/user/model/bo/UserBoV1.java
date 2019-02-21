@@ -3,7 +3,7 @@ package com.clsaa.dop.server.user.model.bo;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -31,13 +31,9 @@ public class UserBoV1 {
     /**
      * 创建时间
      */
-    private Timestamp ctime;
+    private LocalDateTime ctime;
     /**
      * 修改时间
      */
-    private Timestamp mtime;
-    /**
-     * 用户类型
-     */
-    private UserType type;
+    private LocalDateTime mtime;
 }

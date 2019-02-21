@@ -40,9 +40,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
-spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+  redis:
+    database: 0
+    host: redis.dop.clsaa.com
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
 
 project:
   groupId: @project.groupId@
