@@ -15,7 +15,8 @@ pipeline{
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
 				git "${REPOSITORY}"
-				dir(path: './${SERVICE_DIR}'){
+				sh "pwd"
+				dir(SERVICE_DIR){
 				    sh "ls -l"
 				}
                 script {
