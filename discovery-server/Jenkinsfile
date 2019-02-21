@@ -26,6 +26,7 @@ pipeline{
 
 		stage('编译+单元测试') {
 			steps {
+			    sh "ls -l"
 				echo "star compile"
 				sh "mvn -U -am clean package"
 			}
