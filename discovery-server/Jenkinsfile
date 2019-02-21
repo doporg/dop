@@ -15,7 +15,7 @@ pipeline{
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
 				git "${REPOSITORY}"
-				sh "cd ${SERVICE_DIR}"
+				cd ${SERVICE_DIR}
                 sh "ls -l"
                 script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
