@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: registry-vpc.cn-hangzhou.aliyuncs.com/nju-dop/gateway-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/gateway-server:<BUILD_TAG>
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime

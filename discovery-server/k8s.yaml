@@ -12,12 +12,12 @@ spec:
     spec:
       containers:
       - name: discovery-server
-        image: registry.cn-hangzhou.aliyuncs.com/nju-dop/discovery-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
           volumeMounts:
-              - name: host-time
-                mountPath: /etc/localtime
-                - name: host-timezone
-                  mountPath: /etc/timezone
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
           ports:
             - containerPort: 8888
       volumes:
