@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
-import {Input, Button, Select, Step, Icon} from '@icedesign/base';
+import {Input, Button, Select, Step, Icon, Dialog} from '@icedesign/base';
 import IceLabel from '@icedesign/label';
 import {Link} from 'react-router-dom';
 import jsonp from "jsonp";
@@ -228,9 +228,11 @@ export default class PipelineInfo extends Component {
             pipelineInfo
         });
         this.setState({
+            currentStage: newStage
+        });
+        this.setState({
             currentStageOrder: this.state.pipelineInfo.stage.length
         });
-
     }
 
     /**
@@ -255,6 +257,7 @@ export default class PipelineInfo extends Component {
                     taskName: "构建maven",
                     gitUrl: "",
                     dockerUserName: "",
+                    dockerPassword: "",
                     repository: "",
                     description: ""
                 };
@@ -264,6 +267,7 @@ export default class PipelineInfo extends Component {
                     taskName: "构建docker镜像",
                     gitUrl: "",
                     dockerUserName: "",
+                    dockerPassword: "",
                     repository: "",
                     description: ""
                 };
@@ -273,6 +277,7 @@ export default class PipelineInfo extends Component {
                     taskName: "推送docker镜像",
                     gitUrl: "",
                     dockerUserName: "",
+                    dockerPassword: "",
                     repository: "",
                     description: ""
                 };
@@ -303,19 +308,22 @@ export default class PipelineInfo extends Component {
      *  构建-填入git地址
      * */
     buildMavenGit(value) {
-        this.setState({
-            test: value
-        });
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
         this.state.currentStage.tasks[findIndex].gitUrl = value
     }
+    buildRepository(value){
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
+        });
+        this.state.currentStage.tasks[findIndex].repository = value
+    }
 
     /**
-     *  removeById
+     *  removeByIdSQL
      * */
-    removeById(id) {
+    removeByIdSQL(id) {
         let data = {id: id};
         let url = API.pipeline + '/pipeline/remove';
         let self = this;
@@ -327,14 +335,44 @@ export default class PipelineInfo extends Component {
         })
     }
 
+    deletePipeline(pipelineInfo){
+        console.log(pipelineInfo)
+        let url = API.pipeline + '/pipeline/jenkins/deleteJob';
+        let self = this;
+        Axios({
+            method: 'post',
+            url: url,
+            data: pipelineInfo
+        }).then((response)=>{
+            console.log(response);
+            if(response.data){
+                self.createPipeline(pipelineInfo);
+            }
+        })
+    }
+
+    createPipeline(pipelineInfo){
+        let urlPipeline = API.pipeline + '/pipeline/jenkins/createJob';
+        Axios({
+            method: 'post',
+            url: urlPipeline,
+            data: pipelineInfo,
+        }).then((response) => {
+            console.log(response)
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
     /**
      *  提交
      * */
     save() {
-        let pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime().toString()});
-        let url = API.pipeline + '/pipeline/save';
+        let pipelineInfo = this.state.pipelineInfo;
+        let urlSQL = API.pipeline + '/pipeline/save';
+        let self = this;
         if (!this.state.newPipeline) {
-            this.removeById(this.props.match.params.id);
+            this.removeByIdSQL(this.props.match.params.id);
 
             //预处理一下数据
             delete pipelineInfo.id;
@@ -345,30 +383,52 @@ export default class PipelineInfo extends Component {
             }];
             pipelineInfo.stage.map((item,index)=>{
                 delete item.id
-            })
-        }
-
-        /**
-         *  检查数据
-         *  stageName不能一样
-         *
-         * */
-
-        setTimeout(() => {
-            this.setState({
-                pipelineInfo
             });
-            Axios({
-                method: 'post',
-                url: url,
-                data: pipelineInfo,
-            }).then((response) => {
-                console.log(response)
-            }).catch((error) => {
-                console.log(error)
-            })
-        }, 0)
+            this.deletePipeline(pipelineInfo);
+            setTimeout(() => {
+                this.setState({
+                    pipelineInfo
+                });
+                // add SQL
+                Axios({
+                    method: 'post',
+                    url: urlSQL,
+                    data: pipelineInfo,
+                }).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                });
 
+            }, 0)
+        }else{
+            //new pipeline add createTime
+            pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime().toString()});
+            /**
+             *  检查数据
+             *  stageName不能一样
+             *
+             * */
+
+            setTimeout(() => {
+                this.setState({
+                    pipelineInfo
+                });
+                // add SQL
+                Axios({
+                    method: 'post',
+                    url: urlSQL,
+                    data: pipelineInfo,
+                }).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                }).finally(()=>{
+                    self.createPipeline(pipelineInfo);
+                });
+
+            }, 0)
+        }
     };
 
     /**
@@ -533,7 +593,20 @@ export default class PipelineInfo extends Component {
                                                                     case "构建docker镜像":
                                                                         return (
                                                                             <div>
-                                                                                构建docker镜像
+                                                                                <h3 className="chosen-task-detail-title">构建docker镜像</h3>
+                                                                                <div className="chosen-task-detail-body">
+                                                                                    <span className="item">
+                                                                                        <span className="must">*</span>
+                                                                                        <span>ImageName: </span>
+                                                                                    </span>
+                                                                                    <Input
+                                                                                        onChange={this.buildRepository.bind(this)}
+                                                                                        className="input"
+                                                                                        placeholder={this.state.chosenTask.repository}
+                                                                                    />
+                                                                                </div>
+
+
                                                                             </div>
                                                                         );
                                                                         break;

@@ -5,10 +5,10 @@
  * */
 
 import React, {Component} from 'react';
-import {Input, Button, Select, Step, Icon} from '@icedesign/base';
+import {Button, Progress, Icon} from '@icedesign/base';
 import Axios from 'axios';
+import jsonp from 'jsonp';
 import API from '../../API';
-import {Link} from 'react-router-dom';
 import './PipelineProject.scss'
 
 
@@ -53,8 +53,95 @@ export default class PipelineProject extends Component {
                     // }
                 ]
             },
-            currentStageTab: 0
-        };
+            currentStageTab: -1,
+            currentStageName: "",
+            buildResult: [
+                {
+                    id: "",
+                    stageName: "",
+                    result: "",
+                    outputText: ""
+                }
+            ],
+            output: "",
+            jenkinsRuns: {
+                durationMillis: "",
+                endTimeMillis: "",
+                id: "",
+                name: "",
+                pauseDurationMillis: "",
+                queueDurationMillis: "",
+                stages: [{
+                    _links: {
+                        self: {
+                            href: ""
+                        }
+                    },
+                    id: "",
+                    name: "",
+                    execNode: "",
+                    status: "",
+                    error: {
+                        message: "",
+                        type: ""
+                    },
+                    startTimeMillis: "",
+                    durationMillis: "",
+                    pauseDurationMillis: 0
+                }],
+                startTimeMillis: "",
+                status: "",
+                _links:
+                    {
+                        self: {
+                            href: ""
+                        }
+                    }
+            },
+            stageDescription: [{
+                durationMillis: "",
+                error: {
+                    message: "",
+                    type: ""
+                },
+                execNode: "",
+                id: "",
+                name: "",
+                pauseDurationMillis: "",
+                stageFlowNodes: [{
+                    _links: {
+                        self: {
+                            href: ""
+                        },
+                        log: {
+                            href: ""
+                        }
+                    },
+                    id: "",
+                    name: "",
+                    execNode: "",
+                    status: "",
+                    error: {
+                        message: "",
+                        type: ""
+                    },
+                    parameterDescription: "",
+                    startTimeMillis: "",
+                    durationMillis: "",
+                    pauseDurationMillis: "",
+                    parentNodes: []
+                }],
+
+                length: "",
+                status: "",
+                _links: {
+                    self: {
+                        href: ""
+                    }
+                },
+                startTimeMillis: "",
+            }]
+        }
     }
 
     componentWillMount() {
@@ -89,9 +176,100 @@ export default class PipelineProject extends Component {
     /**
      * 查看stage
      * */
-    viewStage(index) {
+    viewStage(index, name) {
         this.setState({
-            currentStageTab: index
+            currentStageTab: index,
+            currentStageName: name
+        })
+    }
+
+    /**
+     * build pipeline
+     * */
+    buildPipeline() {
+        let url = API.pipeline + '/pipeline/jenkins/build';
+        let self = this;
+        let pipelineInfo = this.state.pipelineInfo;
+        delete pipelineInfo.id;
+        delete pipelineInfo.admin;
+        pipelineInfo.admin = [{
+            id: 1,
+            name: 'test'
+        }];
+        pipelineInfo.stage.map((item, index) => {
+            delete item.id
+        });
+        console.log(pipelineInfo);
+        Axios({
+            method: 'post',
+            url: url,
+            data: pipelineInfo
+        }).then((response) => {
+            console.log(response);
+            self.getJenkinsRuns();
+        })
+    }
+
+
+    getJenkinsRuns() {
+        let url = API.jenkins +
+            '/job/' +
+            this.state.pipelineInfo.name + '_' + this.state.pipelineInfo.createTime + '_' + this.state.pipelineInfo.creator +
+            '/wfapi/runs';
+        // let url = "http://jenkins.dop.clsaa.com/job/simple-java-maven-app/wfapi/runs"
+        let self = this;
+        self.setState({
+            stageDescription: []
+        });
+        Axios.get(url).then((response) => {
+            if (response.data) {
+                self.setState({
+                    jenkinsRuns: response.data[0]
+                });
+                self.state.jenkinsRuns.stages.map((item, index) => {
+                    self.getStageDescribe(index);
+                });
+            }
+        })
+
+    }
+
+    getStageDescribe(index) {
+        let url = API.jenkins + this.state.jenkinsRuns.stages[index]._links.self.href;
+        let self = this;
+        let stageDescription = self.state.stageDescription;
+        Axios.get(url).then((response) => {
+            if (response.data) {
+                stageDescription.push(response.data);
+                self.setState({
+                    stageDescription
+                });
+            }
+        });
+    }
+
+    getStageLog(index) {
+        let self = this;
+        self.setState({
+            output: ""
+        });
+        let text = "";
+        console.log(self.state.stageDescription);
+        self.state.stageDescription[index].stageFlowNodes.map((item, index) => {
+            if (item.name === 'Shell Script') {
+                let url = API.jenkins + item._links.log.href;
+                console.log(url);
+                Axios.get(url).then((response) => {
+                    if (response.data) {
+                        console.log(response.data.text)
+                        response.data.text = response.data.text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&apos;/g, "\'");
+                        text += response.data.text;
+                        self.setState({
+                            output: text
+                        })
+                    }
+                })
+            }
         })
     }
 
@@ -99,7 +277,7 @@ export default class PipelineProject extends Component {
         return (
             <div className="body">
                 <div className="operate">
-                    <Button type="primary" className="button">
+                    <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
                         <Icon type="play"/>
                         运行流水线
                     </Button>
@@ -115,7 +293,7 @@ export default class PipelineProject extends Component {
                 <div className="step">
                     {/*{this.props.match.params.id}*/}
                     {(() => {
-                        if (this.state.pipelineInfo.stage.length === 0 || this.state.pipelineInfo === undefined) {
+                        if (this.state.pipelineInfo.stage.length === 0) {
                             return (
                                 <div className="no-result">
                                     无记录
@@ -124,13 +302,52 @@ export default class PipelineProject extends Component {
                         } else {
                             return (
                                 this.state.pipelineInfo.stage.map((item, index) => {
-                                    let stageClass = this.state.currentStageTab === index? "have-result-active":"have-result";
+                                    let stageClass = this.state.currentStageTab === index ? "have-result have-result-active" : "have-result";
+                                    const successPrefix = <Icon type="select" size="small"
+                                                                style={{color: "green"}}/>;
+                                    const errorPrefix = <Icon type="close" size="small" style={{color: "red"}}/>;
                                     return (
-                                        <div className="have-result-wrap">
+                                        <div className="have-result-wrap" key={index}
+                                             onClick={this.getStageLog.bind(this, index)}>
                                             <div className="line"></div>
                                             <div className={stageClass} key={index}
-                                                 onClick={this.viewStage.bind(this, index)}>
-                                                {item.name}
+                                                 onClick={this.viewStage.bind(this, index, item.name)}>
+                                                <p className="title">{item.name}</p>
+                                                {(() => {
+                                                    if (this.state.jenkinsRuns.stages.length > 1) {
+                                                        if (this.state.jenkinsRuns.stages[index].status === "FAILED") {
+                                                            return (
+                                                                <Progress
+                                                                    className="progress"
+                                                                    percent={100}
+                                                                    shape="circle"
+                                                                    type="progressive"
+                                                                    suffix={errorPrefix}
+                                                                />
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <Progress
+                                                                    className="progress"
+                                                                    percent={100}
+                                                                    shape="circle"
+                                                                    type="progressive"
+                                                                    suffix={successPrefix}
+                                                                />
+                                                            )
+                                                        }
+                                                    } else {
+                                                        return (
+                                                            <Progress
+                                                                className="progress"
+                                                                percent={0}
+                                                                shape="circle"
+                                                                type="progressive"
+                                                            />
+                                                        )
+                                                    }
+                                                })()}
+
                                             </div>
                                         </div>
                                     )
@@ -139,9 +356,16 @@ export default class PipelineProject extends Component {
                         }
                     })()}
                 </div>
-                <div className="console">
+                {(() => {
+                    if (this.state.currentStageTab !== -1) {
+                        return (
+                            <div className="console">
+                                {this.state.output}
+                            </div>
+                        )
+                    }
+                })()}
 
-                </div>
             </div>
         );
     }

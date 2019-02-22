@@ -32,12 +32,15 @@ export default class  PipelineTable extends Component{
         let url = API.pipeline + '/pipeline/findAll';
         let self = this;
         Axios.get(url).then((response)=>{
+            let dataSource = response.data.sort((a, b)=>{
+                return (a.name - b.name)
+            });
             self.setState({
-                dataSource: response.data
+                dataSource
             });
         })
     }
-    removeById(id){
+    removeByIdSQL(id){
         let data = {id: id};
         let url = API.pipeline + '/pipeline/remove';
         let self = this;
@@ -56,6 +59,29 @@ export default class  PipelineTable extends Component{
                 })
             }
         })
+    }
+    deletePipeline(pipelineInfo) {
+        let url = API.pipeline + '/pipeline/jenkins/deleteJob';
+        let self = this;
+        let id = pipelineInfo.id
+        delete pipelineInfo.id;
+        delete pipelineInfo.admin;
+        pipelineInfo.admin = [{
+            id: 1,
+            name: 'test'
+        }];
+        pipelineInfo.stage.map((item,index)=>{
+            delete item.id
+        });
+        Axios({
+            method: 'post',
+            url: url,
+            data: pipelineInfo
+        }).then((response) => {
+            console.log(response);
+        }).finally(() => {
+            self.removeByIdSQL(id);
+        });
     }
 
     /**
@@ -85,7 +111,7 @@ export default class  PipelineTable extends Component{
                     shape="warning"
                     size="small"
                     style={styles.button}
-                    onClick={this.removeById.bind(this, record.id)}
+                    onClick={this.deletePipeline.bind(this, record)}
                 >删除</Button>
             </div>
         );
