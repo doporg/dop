@@ -13,9 +13,9 @@ spring:
       uri: mongodb://mongo.dop.clsaa.com:27017/db_message
   #邮箱配置
   mail:
-    host: smtp.163.com
-    username: softeng_dop@163.com
-    password: dop123
+    host: smtp.qq.com
+    username: renguijie1996@vip.qq.com
+    password: gvwxcssaemrkbbai
     default-encoding: UTF-8
     properties:
       mail:
@@ -26,7 +26,7 @@ spring:
             required: true
           ssl:
             enable: true
-            trust: smtp.163.com
+            trust: smtp.qq.com
           socketFactory.clsaa: javax.net.ssl.SSLSocketFactory
     port: 465
 

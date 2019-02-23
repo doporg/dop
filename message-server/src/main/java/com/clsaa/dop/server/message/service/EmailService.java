@@ -72,7 +72,6 @@ public class EmailService {
         Aggregation aggregation = Aggregation.newAggregation(sample(1), match(Criteria.where("status").is(Email.Status.SENDING)));
         AggregationResults<Email> email = this.mongoTemplate.aggregate(aggregation, "email", Email.class);
         if (email.getUniqueMappedResult() != null) {
-            LOGGER.info("SEND EMAIL ", email.getUniqueMappedResult().toString());
             sendEmail(email.getUniqueMappedResult());
         } else {
             LOGGER.info("NO EMAIL TO SEND!");
@@ -86,6 +85,7 @@ public class EmailService {
      */
     private void sendEmail(Email email) {
         try {
+            LOGGER.info("SEND EMAIL {}", email.toString());
             this.sendSimpleEmail(email.getFrom(), email.getTo(), email.getSubject(), email.getText());
             email.setStatus(Email.Status.SENT);
             email.setMtime(LocalDateTime.now());
