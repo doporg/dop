@@ -1,5 +1,5 @@
 server:
-  port: 13200
+  port: 14000
 spring:
   http:
     encoding:
@@ -7,10 +7,10 @@ spring:
       enabled: true
       force: true
   application:
-    name: login-server
+    name: image-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_login?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_image?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop_dba
     password: dop_dba_123456
     driver-class-name: com.mysql.jdbc.Driver
@@ -45,14 +45,14 @@ spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: open.dop.clsaa.com/@project.name@
+  host: localhost:${server.port}
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
   name: @project.name@
   description: @project.description@
   url: @project.url@
-swagger.enable: false
+swagger.enable: true
 eureka:
   instance:
     appname: ${spring.application.name}
@@ -64,7 +64,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka/
+      defaultZone: http://localhost:8761/eureka/
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000
