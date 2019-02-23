@@ -128,7 +128,7 @@
             <artifactId>standard-result</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <!--swagger for webflux-->
+        <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
