@@ -38,10 +38,10 @@ public class EmailController {
         return "test1";
     }
 
-    @PostMapping("/test1")
+    @PostMapping("/test2")
     public String test1(@RequestParam("from") String from) {
-        System.out.println("test1" + from);
-        return "test1" + from;
+        System.out.println("test2" + from);
+        return "test2" + from;
     }
 
     /**
