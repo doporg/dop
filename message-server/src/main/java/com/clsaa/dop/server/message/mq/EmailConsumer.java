@@ -45,8 +45,6 @@ public class EmailConsumer implements MessageListenerConcurrently {
 
     /**
      * 初始化
-     *
-     * @throws MQClientException 异常
      */
     @PostConstruct
     public void start() {
@@ -55,8 +53,8 @@ public class EmailConsumer implements MessageListenerConcurrently {
                     namesrvAddr, topic, emailConsumerGroup);
             consumer = new DefaultMQPushConsumer(this.emailConsumerGroup);
             consumer.setNamesrvAddr(namesrvAddr);
-            // 从消息队列头开始消费
-            consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+            // 从消息队列尾部消费
+            consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
             // 集群消费模式
             consumer.setMessageModel(MessageModel.CLUSTERING);
             // 订阅主题
