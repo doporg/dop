@@ -53,6 +53,7 @@ spring:
     timeout: 5000
 
 project:
+  host: open.dop.clsaa.com/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
