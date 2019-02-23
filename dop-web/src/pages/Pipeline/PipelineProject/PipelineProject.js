@@ -5,12 +5,12 @@
  * */
 
 import React, {Component} from 'react';
-import {Button, Progress, Icon} from '@icedesign/base';
+import {Button, Icon} from '@icedesign/base';
+import {Loading, Form, Input} from '@alifd/next';
 import Axios from 'axios';
-import jsonp from 'jsonp';
 import API from '../../API';
+import Iframe from '../components/Iframe'
 import './PipelineProject.scss'
-
 
 export default class PipelineProject extends Component {
     constructor(props) {
@@ -53,99 +53,12 @@ export default class PipelineProject extends Component {
                     // }
                 ]
             },
-            currentStageTab: -1,
-            currentStageName: "",
-            buildResult: [
-                {
-                    id: "",
-                    stageName: "",
-                    result: "",
-                    outputText: ""
-                }
-            ],
-            output: "",
-            jenkinsRuns: {
-                durationMillis: "",
-                endTimeMillis: "",
-                id: "",
-                name: "",
-                pauseDurationMillis: "",
-                queueDurationMillis: "",
-                stages: [{
-                    _links: {
-                        self: {
-                            href: ""
-                        }
-                    },
-                    id: "",
-                    name: "",
-                    execNode: "",
-                    status: "",
-                    error: {
-                        message: "",
-                        type: ""
-                    },
-                    startTimeMillis: "",
-                    durationMillis: "",
-                    pauseDurationMillis: 0
-                }],
-                startTimeMillis: "",
-                status: "",
-                _links:
-                    {
-                        self: {
-                            href: ""
-                        }
-                    }
-            },
-            stageDescription: [{
-                durationMillis: "",
-                error: {
-                    message: "",
-                    type: ""
-                },
-                execNode: "",
-                id: "",
-                name: "",
-                pauseDurationMillis: "",
-                stageFlowNodes: [{
-                    _links: {
-                        self: {
-                            href: ""
-                        },
-                        log: {
-                            href: ""
-                        }
-                    },
-                    id: "",
-                    name: "",
-                    execNode: "",
-                    status: "",
-                    error: {
-                        message: "",
-                        type: ""
-                    },
-                    parameterDescription: "",
-                    startTimeMillis: "",
-                    durationMillis: "",
-                    pauseDurationMillis: "",
-                    parentNodes: []
-                }],
-
-                length: "",
-                status: "",
-                _links: {
-                    self: {
-                        href: ""
-                    }
-                },
-                startTimeMillis: "",
-            }]
+            iframeSrc: "",
+            visible: true,
         }
     }
 
     componentWillMount() {
-        // console.log(this.props.match.params.id)
         this.getPipelineInfoById(this.props.match.params.id)
     }
 
@@ -165,21 +78,11 @@ export default class PipelineProject extends Component {
         Axios.get(url).then((response) => {
             console.log(response);
             if (response.status === 200) {
-                console.log(111);
                 self.setState({
                     pipelineInfo: response.data
                 });
+                self.getRun(response.data.name + "_" + response.data.createTime + "_" + response.data.creator)
             }
-        })
-    }
-
-    /**
-     * 查看stage
-     * */
-    viewStage(index, name) {
-        this.setState({
-            currentStageTab: index,
-            currentStageName: name
         })
     }
 
@@ -189,6 +92,7 @@ export default class PipelineProject extends Component {
     buildPipeline() {
         let url = API.pipeline + '/pipeline/jenkins/build';
         let self = this;
+        self.setState({visible: true})
         let pipelineInfo = this.state.pipelineInfo;
         delete pipelineInfo.id;
         delete pipelineInfo.admin;
@@ -199,78 +103,45 @@ export default class PipelineProject extends Component {
         pipelineInfo.stage.map((item, index) => {
             delete item.id
         });
-        console.log(pipelineInfo);
         Axios({
             method: 'post',
             url: url,
             data: pipelineInfo
         }).then((response) => {
             console.log(response);
-            self.getJenkinsRuns();
+            if (response.data === "BuildSuccess") {
+                self.getRun(pipelineInfo.name + "_" + pipelineInfo.createTime + "_" + pipelineInfo.creator);
+            }
         })
     }
 
-
-    getJenkinsRuns() {
-        let url = API.jenkins +
-            '/job/' +
-            this.state.pipelineInfo.name + '_' + this.state.pipelineInfo.createTime + '_' + this.state.pipelineInfo.creator +
-            '/wfapi/runs';
-        // let url = "http://jenkins.dop.clsaa.com/job/simple-java-maven-app/wfapi/runs"
+    getRun(name) {
+        let url = API.jenkins + '/blue/rest/organizations/jenkins/pipelines/' + name + '/runs';
         let self = this;
-        self.setState({
-            stageDescription: []
-        });
         Axios.get(url).then((response) => {
+            console.log(response);
             if (response.data) {
+                let iframeSrc = API.jenkins +
+                    "/blue/organizations/jenkins/" +
+                    name + "/detail/" + name + "/" +
+                    response.data.length + "/pipeline";
                 self.setState({
-                    jenkinsRuns: response.data[0]
+                    iframeSrc: iframeSrc
                 });
-                self.state.jenkinsRuns.stages.map((item, index) => {
-                    self.getStageDescribe(index);
-                });
+                console.log(iframeSrc)
             }
         })
-
     }
 
-    getStageDescribe(index) {
-        let url = API.jenkins + this.state.jenkinsRuns.stages[index]._links.self.href;
+    onLoad(visible) {
         let self = this;
-        let stageDescription = self.state.stageDescription;
-        Axios.get(url).then((response) => {
-            if (response.data) {
-                stageDescription.push(response.data);
-                self.setState({
-                    stageDescription
-                });
-            }
-        });
-    }
+        setTimeout(() => {
+            self.setState({
+                visible,
+            })
+        }, 6000)
+        console.log(111)
 
-    getStageLog(index) {
-        let self = this;
-        self.setState({
-            output: ""
-        });
-        let text = "";
-        console.log(self.state.stageDescription);
-        self.state.stageDescription[index].stageFlowNodes.map((item, index) => {
-            if (item.name === 'Shell Script') {
-                let url = API.jenkins + item._links.log.href;
-                console.log(url);
-                Axios.get(url).then((response) => {
-                    if (response.data) {
-                        console.log(response.data.text)
-                        response.data.text = response.data.text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&apos;/g, "\'");
-                        text += response.data.text;
-                        self.setState({
-                            output: text
-                        })
-                    }
-                })
-            }
-        })
     }
 
     render() {
@@ -290,81 +161,10 @@ export default class PipelineProject extends Component {
                         删除流水线
                     </Button>
                 </div>
-                <div className="step">
-                    {/*{this.props.match.params.id}*/}
-                    {(() => {
-                        if (this.state.pipelineInfo.stage.length === 0) {
-                            return (
-                                <div className="no-result">
-                                    无记录
-                                </div>
-                            )
-                        } else {
-                            return (
-                                this.state.pipelineInfo.stage.map((item, index) => {
-                                    let stageClass = this.state.currentStageTab === index ? "have-result have-result-active" : "have-result";
-                                    const successPrefix = <Icon type="select" size="small"
-                                                                style={{color: "green"}}/>;
-                                    const errorPrefix = <Icon type="close" size="small" style={{color: "red"}}/>;
-                                    return (
-                                        <div className="have-result-wrap" key={index}
-                                             onClick={this.getStageLog.bind(this, index)}>
-                                            <div className="line"></div>
-                                            <div className={stageClass} key={index}
-                                                 onClick={this.viewStage.bind(this, index, item.name)}>
-                                                <p className="title">{item.name}</p>
-                                                {(() => {
-                                                    if (this.state.jenkinsRuns.stages.length > 1) {
-                                                        if (this.state.jenkinsRuns.stages[index].status === "FAILED") {
-                                                            return (
-                                                                <Progress
-                                                                    className="progress"
-                                                                    percent={100}
-                                                                    shape="circle"
-                                                                    type="progressive"
-                                                                    suffix={errorPrefix}
-                                                                />
-                                                            )
-                                                        } else {
-                                                            return (
-                                                                <Progress
-                                                                    className="progress"
-                                                                    percent={100}
-                                                                    shape="circle"
-                                                                    type="progressive"
-                                                                    suffix={successPrefix}
-                                                                />
-                                                            )
-                                                        }
-                                                    } else {
-                                                        return (
-                                                            <Progress
-                                                                className="progress"
-                                                                percent={0}
-                                                                shape="circle"
-                                                                type="progressive"
-                                                            />
-                                                        )
-                                                    }
-                                                })()}
-
-                                            </div>
-                                        </div>
-                                    )
-                                })
-                            )
-                        }
-                    })()}
+                <div className="iframe">
+                    <Iframe src={this.state.iframeSrc} onLoad={visible => this.onLoad(visible)}/>
                 </div>
-                {(() => {
-                    if (this.state.currentStageTab !== -1) {
-                        return (
-                            <div className="console">
-                                {this.state.output}
-                            </div>
-                        )
-                    }
-                })()}
+
 
             </div>
         );

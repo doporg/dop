@@ -86,7 +86,7 @@ export default class PipelineInfo extends Component {
             currentStageOrder: 0,
 
             //可选的任务
-            task: ["构建maven", "构建docker镜像", "推送docker镜像"],
+            task: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像"],
             //所选的task
             chosenTask: "",
 
@@ -95,8 +95,7 @@ export default class PipelineInfo extends Component {
 
     componentWillMount() {
         if (this.props.match.params.id) {
-            console.log(this.props.match.params.id)
-            this.getPipelineInfoById(this.props.match.params.id)
+            this.getPipelineInfoById(this.props.match.params.id);
             this.setState({
                 newPipeline: false
             })
@@ -252,9 +251,29 @@ export default class PipelineInfo extends Component {
     selectTask(value) {
         let newTask;
         switch (value) {
+            case "拉取代码" :
+                newTask = {
+                    taskName: "拉取代码",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    description: ""
+                };
+                break;
             case "构建maven":
                 newTask = {
                     taskName: "构建maven",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    description: ""
+                };
+                break;
+            case "构建node":
+                newTask = {
+                    taskName: "构建node",
                     gitUrl: "",
                     dockerUserName: "",
                     dockerPassword: "",
@@ -336,7 +355,7 @@ export default class PipelineInfo extends Component {
     }
 
     deletePipeline(pipelineInfo){
-        console.log(pipelineInfo)
+        console.log(pipelineInfo);
         let url = API.pipeline + '/pipeline/jenkins/deleteJob';
         let self = this;
         Axios({
@@ -447,13 +466,29 @@ export default class PipelineInfo extends Component {
                     ref="form"
                 >
                     <div className="form-body">
-                        <div className="form-item">
-                            <span className="form-item-label">流水线名称: </span>
-                            <FormBinder name="name" required message="请输入流水线的名称">
-                                <Input placeholder="请输入流水线的名称"/>
-                            </FormBinder>
-                            <FormError className="form-item-error" name="name"/>
-                        </div>
+                        {(()=>{
+                            if(this.state.newPipeline){
+                                return (
+                                    <div className="form-item">
+                                        <span className="form-item-label">流水线名称: </span>
+                                        <FormBinder name="name" required message="请输入流水线的名称">
+                                            <Input placeholder="请输入流水线的名称"/>
+                                        </FormBinder>
+                                        <FormError className="form-item-error" name="name"/>
+                                    </div>
+                                )
+                            }else{
+                                return (
+                                    <div className="form-item">
+                                        <span className="form-item-label">流水线名称: </span>
+                                        <FormBinder name="name" required message="请输入流水线的名称">
+                                            <Input placeholder="请输入流水线的名称" disabled/>
+                                        </FormBinder>
+                                        <FormError className="form-item-error" name="name"/>
+                                    </div>
+                                )
+                            }
+                        })()}
                         <div className="form-item">
                             <span className="form-item-label">管理员: </span>
                             {/*有bug需改进*/}
@@ -570,10 +605,10 @@ export default class PipelineInfo extends Component {
                                                         {
                                                             (() => {
                                                                 switch (this.state.chosenTask.taskName) {
-                                                                    case "构建maven":
+                                                                    case "拉取代码":
                                                                         return (
                                                                             <div>
-                                                                                <h3 className="chosen-task-detail-title">构建maven</h3>
+                                                                                <h3 className="chosen-task-detail-title">拉取代码</h3>
                                                                                 <div
                                                                                     className="chosen-task-detail-body">
                                                                                     <span className="item">
@@ -585,6 +620,36 @@ export default class PipelineInfo extends Component {
                                                                                         className="input"
                                                                                         placeholder={this.state.chosenTask.gitUrl}
                                                                                     />
+                                                                                </div>
+
+                                                                            </div>
+                                                                        );
+                                                                        break;
+                                                                    case "构建maven":
+                                                                        return (
+                                                                            <div>
+                                                                                <h3 className="chosen-task-detail-title">构建maven</h3>
+                                                                                <div
+                                                                                    className="chosen-task-detail-body">
+                                                                                    默认执行 <br />
+                                                                                     'mvn --version'  <br />
+                                                                                     'mvn clean package -Dmaven.test.skip=true' <br />
+                                                                                     'mvn package' <br />
+                                                                                </div>
+
+                                                                            </div>
+                                                                        );
+                                                                        break;
+                                                                    case "构建node":
+                                                                        return (
+                                                                            <div>
+                                                                                <h3 className="chosen-task-detail-title">构建node</h3>
+                                                                                <div
+                                                                                    className="chosen-task-detail-body">
+                                                                                    默认执行 <br />
+                                                                                    'npm --version'  <br />
+                                                                                    'node --version'  <br />
+                                                                                    'npm install' <br />
                                                                                 </div>
 
                                                                             </div>
