@@ -123,5 +123,6 @@ public class UserService {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "未注册邮箱"));
         String strongPassword = StrongPassword.encrypt(password).getContent();
         this.userCredentialService.updateUserCredentialByUserIdAndType(user.getId(), strongPassword, UserCredential.Type.DOP_LOGIN_EMAIL);
+        this.redisTemplate.delete(AccountService.RESET_BY_EMAIL_KEY_PREFIX + email);
     }
 }

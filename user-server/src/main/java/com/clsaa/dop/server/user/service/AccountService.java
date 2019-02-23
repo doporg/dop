@@ -87,7 +87,7 @@ public class AccountService {
             this.redisTemplate.delete(REGISTER_EMAIL_KEY_PREFIX + email);
         }
         //准备code
-        byte[] byteCode = new byte[512];
+        byte[] byteCode = new byte[128];
         SecureRandom random = new SecureRandom();
         random.nextBytes(byteCode);
         String code = BaseEncoding.base64Url().encode(byteCode);

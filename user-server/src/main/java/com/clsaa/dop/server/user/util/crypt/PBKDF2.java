@@ -33,7 +33,6 @@ public final class PBKDF2 {
             SecretKeyFactory kFactory = SecretKeyFactory.getInstance(algorithm);
             SecretKey secretKey = kFactory.generateSecret(pbeKeySpec);
             byte[] byteCipher = secretKey.getEncoded();
-            System.out.println(byteCipher.length);
             byte[] byteResult = Bytes.concat(byteCipher, salt);
             String base64URLResult = BaseEncoding.base64Url()
                     .encode(byteResult);
