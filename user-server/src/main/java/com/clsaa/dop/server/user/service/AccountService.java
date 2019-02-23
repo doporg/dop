@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.user.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.CacheConfig;
@@ -31,10 +32,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class AccountService {
-    public static final String REGISTER_CODE_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.register.code.";
-    public static final String REGISTER_EMAIL_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.register.email.";
-    public static final String RESET_BY_EMAIL_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.reset.email.";
-    public static final String RESET_NEW_PASSWORD_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.reset.password.";
+    static final String REGISTER_CODE_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.register.code.";
+    static final String REGISTER_EMAIL_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.register.email.";
+    static final String RESET_BY_EMAIL_KEY_PREFIX = CacheConfig.CacheNames.CACHE_EXPIRED_30_MINS + ".account.reset.email.";
 
     @Autowired
     private UserService userService;
@@ -93,7 +93,8 @@ public class AccountService {
         String code = BaseEncoding.base64Url().encode(byteCode);
         //发送邮件
         try {
-            this.messageSender.send(this.emailTopic, UUID.randomUUID().toString(), this.registerContent.replace(":code", code));
+            EmailDtoV1 emailDtoV1 = new EmailDtoV1(emailFrom, email, "您正在注册DOP系统", this.registerContent.replace(":code", code));
+            this.messageSender.send(this.emailTopic, UUID.randomUUID().toString(), JSON.toJSONString(emailDtoV1));
         } catch (MessageQueueException e) {
             e.printStackTrace();
             return;
@@ -124,7 +125,8 @@ public class AccountService {
         this.redisTemplate.opsForValue().set(RESET_BY_EMAIL_KEY_PREFIX + email, code, 5, TimeUnit.MINUTES);
         //发送邮件
         try {
-            this.messageSender.send(this.emailTopic, UUID.randomUUID().toString(), this.resetContent.replace(":code", code));
+            EmailDtoV1 emailDtoV1 = new EmailDtoV1(emailFrom, email, "您正在修改DOP系统密码", this.resetContent.replace(":code", code));
+            this.messageSender.send(this.emailTopic, UUID.randomUUID().toString(), JSON.toJSONString(emailDtoV1));
         } catch (MessageQueueException e) {
             e.printStackTrace();
         }

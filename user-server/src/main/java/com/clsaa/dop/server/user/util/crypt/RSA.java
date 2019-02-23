@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public class RSA {
     //非对称密钥算法
-    public static final String KEY_ALGORITHM = "RSA";
+    private static final String KEY_ALGORITHM = "RSA";
 
 
     /**
@@ -137,7 +137,7 @@ public class RSA {
      * @param key  Base64URL编码过的密钥
      * @return {@link CryptoResult} 加密数据
      */
-    public static CryptoResult encryptByPublicKey(String data, String key) {
+    private static CryptoResult encryptByPublicKey(String data, String key) {
         byte[] byteKey = BaseEncoding.base64Url().decode(key);
         byte[] byteData = data.getBytes(StandardCharsets.UTF_8);
         try {
@@ -250,7 +250,7 @@ public class RSA {
      * @param keyMap 密钥map
      * @return {@link String} 私钥
      */
-    public static String getBase64URLPrivateKey(Map<String, Object> keyMap) {
+    private static String getBase64URLPrivateKey(Map<String, Object> keyMap) {
         return BaseEncoding.base64Url().encode(RSA.getPrivateKey(keyMap));
     }
 
@@ -288,7 +288,6 @@ public class RSA {
         String privateKeyStr = RSA.getBase64URLPrivateKey(keyMap);
         System.out.println("公钥 str：\n" + publicKeyStr);
         System.out.println("私钥 str：\n" + privateKeyStr);
-
         String data = "12343123210385438958345";
         CryptoResult cryptoResult = RSA.encryptByPublicKey(data, publicKeyStr);
         System.out.println("加密结果：" + cryptoResult.getContent());
@@ -327,5 +326,17 @@ public class RSA {
         byte[] decode2 = RSA.decryptByPrivateKey(code2, privateKey);
 
         System.out.println("甲方解密后的数据：" + new String(decode2));
+
+        publicKeyStr = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA50CR3EdT0EpCs7YbakOfoRe2Q" +
+                "QMQ1qvDWwS8ts1E98NCunPI8ozigtuNl7ZqtpP_VP_MR66B3TnDwGvDfbj7VoYIDURwyu_KzfsfuTq" +
+                "5jH3D1hSxzqsXp6zyp8s9pkhn0zwIr2AK90lX3lUY4DsFQTUOpqtfJ9PFFWsHUBtK7CfT2mJhnf3JtVLG" +
+                "6rEJk8JQvEg3M0loqHQBo8TP35jXWYeEi-oULNed1eLEKk1Gzg-DLB8C5I_stsHhgzYmcFr4ZMwsmEb1hPsgs" +
+                "ZHLEPDXnSvmFPMuT0hi3Qx6lPrle-6dUrKBp48Wb7HZqIt5S2g45HvLnFh3FZKZM3mjqNm09QIDAQAB";
+        privateKeyStr = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDnQJHcR1PQSkKzthtqQ5-hF7ZBAxDWq8NbBLy2zUT3w0K6c8jyjOKC242Xtmq2k_9U_8xHroHdOcPAa8N9uPtWhggNRHDK78rN-x-5OrmMfcPWFLHOqxenrPKnyz2mSGfTPAivYAr3SVfeVRjgOwVBNQ6mq18n08UVawdQG0rsJ9PaYmGd_cm1UsbqsQmTwlC8SDczSWiodAGjxM_fmNdZh4SL6hQs153V4sQqTUbOD4MsHwLkj-y2weGDNiZwWvhkzCyYRvWE-yCxkcsQ8NedK-YU8y5PSGLdDHqU-uV77p1SsoGnjxZvsdmoi3lLaDjke8ucWHcVkpkzeaOo2bT1AgMBAAECggEAZK5LEuGHDxdVxRJTC0fX1vYQ5mskSKJNknIUi24BSfGcOrswUNGfyKM4GUZVXZo_v00DLm4-ogeFP2Bro3AHFVuTY9tZVDFkVZuw6x8zK4SR38Hwy-7XhKwalY06EQxTD7eCfIBPJeyrsePQycdIeWRVNaFE830SwElxzKGlU_0LFmtoPfZqiRKriLpII2hAiRedNvrvlNpAUGtgGCpahRCGQmpFTM2FRD-F7ChLnY-wAVa88zsMcLpwVTchx6t6inxsnI6QEHfhUsFrio_a-nvLE_Lh7I_rSWIzPXiwdbuUVo1LbQl9TphtGekvHn8SUlSJJ7Bg8NkjACoXHqlO4QKBgQD7mn_ZiS_yMbrRQ-EJad62GyogmM6y-rNA9cjh9uNk_QCJdLOehjRJ8HOk8b-YMdyVbvHJLHs8gAqL9u4o5c75CZgcTYQRZOdef5Usk15E933tHowKNAHLZC5ubvFNrUdihMcIFEwfFFAyTwmXsWSqqekhAFALFcK7_JfyIl32zQKBgQDrSwhg9_0lqAb-EFf27Nk95mO3vtLmarlgSWReWeDf1bi4FC80J3gyyEtwQm4DQQEOjLGkQPDUdn_pxQZ-jWXNL02o-pXYg-IJiRJtcwkpKNgi3UgN0OF6VAF4-UbGLhkFlLVPjA7KY2DCXIvboQvY74ONmc2T0LU6N1RTtzKmyQKBgHEH7ZvKt9F0adsNRZG3ECh7d6eBPorFebYbNQ3enjWGO7GEzhTPcbot3aYiPNKgw9oWJ2UbKJn7Y8GRQ1j4NM1IdB9y63vs-sxHQLrv0Y_mJ5pY-My0pIG9FebizGD7EXC--bM1eyUTORwAyext8y2Ae40p2MvCEOPnDFPpAJGZAoGBAKK3bwHwPcau3rcQgmSnAs1F6KwHcT4bjDtERf7h1Ru2Z1oVy1cb_InR7imiJwZlC-AN-EOJDYNAt9Doikc2bbJqBiDXuozTF5xUiMPcC_fE4UOrF8tGKsg4FBSe_wzKkE9FueVbDFd2RlHjQm0OgGzzplxkgsC4UrwBy3VhecvRAoGBAIJsHSZzoALIis_rIGxsq8ENiCP52C6SiQ4hS90BcUcXmhZ2AeOFpyB0yyVaCRMm3B8uIDjymfEIl6-EUMX1Qj-CY_CncD2ZCscSJp3kWVQdiYkeVEduHZZZ4JUcgg6cgp00QSKXO_nfm17ciIFBcOmsO_JciwNS8TxEvs-Qz8cF";
+        CryptoResult en = RSA.encryptByPublicKey("RENguijie1996.", publicKeyStr);
+        System.out.println(en.getContent());
+        CryptoResult de = RSA.decryptByPrivateKey(en.getContent(),privateKeyStr);
+        System.out.println(de.getContent());
+
     }
 }
