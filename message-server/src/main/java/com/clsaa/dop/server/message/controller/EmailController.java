@@ -42,6 +42,7 @@ public class EmailController {
                            @ApiParam(value = "接收人", required = true) @RequestParam("to") String to,
                            @ApiParam(value = "主题", required = true) @RequestParam("subject") String subject,
                            @ApiParam(value = "内容", required = true) @RequestParam("text") String text) {
+        System.out.println("send an email " + from);
         this.emailService.addEmail(from, to, subject, text);
     }
 
