@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan("com.clsaa")
 public class MessageServerApplication {
     public static void main(String[] args) {
+        System.out.println("new========================");
         SpringApplication.run(MessageServerApplication.class, args);
     }
 }

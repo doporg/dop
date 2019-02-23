@@ -69,6 +69,7 @@ public class EmailService {
     }
 
     public void sendAnEmail() {
+        LOGGER.info("GET AN EMAIL TO SEND!");
         Aggregation aggregation = Aggregation.newAggregation(sample(1), match(Criteria.where("status").is(Email.Status.SENDING)));
         AggregationResults<Email> email = this.mongoTemplate.aggregate(aggregation, "email", Email.class);
         if (email.getUniqueMappedResult() != null) {
