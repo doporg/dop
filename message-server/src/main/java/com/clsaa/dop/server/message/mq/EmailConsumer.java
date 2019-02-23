@@ -58,7 +58,7 @@ public class EmailConsumer implements MessageListenerConcurrently {
             // 从消息队列头开始消费
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
             // 集群消费模式
-            consumer.setMessageModel(MessageModel.BROADCASTING);
+            consumer.setMessageModel(MessageModel.CLUSTERING);
             // 订阅主题
             consumer.subscribe(topic, "*");
             // 注册消息监听器
