@@ -32,6 +32,18 @@ public class EmailController {
     @Autowired
     private MessageSender messageSender;
 
+    @PostMapping("/test1")
+    public String test1() {
+        System.out.println("test1");
+        return "test1";
+    }
+
+    @PostMapping("/test1")
+    public String test1(@RequestParam("from") String from) {
+        System.out.println("test1" + from);
+        return "test1" + from;
+    }
+
     /**
      * 同步发送邮件，仅用于测试SMTP服务器是否能成功发送邮件，业务方需直接通过MQ调用
      */
