@@ -24,6 +24,11 @@ spring:
           starttls:
             enable: true
             required: true
+          ssl:
+            enable: true
+            trust: smtp.163.com
+          socketFactory.clsaa: javax.net.ssl.SSLSocketFactory
+    port: 465
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
