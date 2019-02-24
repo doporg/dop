@@ -114,14 +114,15 @@
           .item{
             display: inline-block;
             width: 90px;
-            text-align: right;
+            text-align: left;
             margin-right: 10px;
             .must{
               color: red;
             }
           }
           .input{
-            width: 300px;
+            width: 250px;
+            margin-left: 40px;
           }
         }
       }

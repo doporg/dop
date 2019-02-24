@@ -1,14 +1,18 @@
 .body {
   padding: 30px;
-
-  .operate {
-    padding: 10px 0;
-    .button {
-      margin-right: 20px;
+  .my-loading {
+    display: block;
+    height: 500px;
+    .operate {
+      padding: 10px 0;
+      .button {
+        margin-right: 20px;
+      }
+    }
+    .iframe {
+      margin-top: 50px;
     }
   }
-  .iframe {
-    margin-top: 50px;
-  }
+
 
 }

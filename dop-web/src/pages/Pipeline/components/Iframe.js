@@ -5,10 +5,19 @@ export default class Iframe extends Component{
     constructor(props){
         super(props);
     }
+    componentDidMount(){
+        console.log(11)
+        setTimeout(()=>{
+            document.getElementById("iframe").src = this.props.src
+        },1000)
+    }
     componentWillReceiveProps(){
         setTimeout(()=>{
             document.getElementById("iframe").src = this.props.src
-        },0)
+        },1000)
+    }
+    onLoad(){
+        this.props.onLoad(false)
     }
     render(){
         return (
@@ -32,7 +41,7 @@ const style = {
     iframe : {
         position: "relative",
         top: "-130px",
-        width: "100%",
+        width: "102%",
         height: "100%"
     }
 };

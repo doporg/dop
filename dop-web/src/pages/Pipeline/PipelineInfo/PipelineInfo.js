@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
-import {Input, Button, Select, Step, Icon, Dialog} from '@icedesign/base';
+import {Input, Button, Select, Step, Icon, Feedback} from '@icedesign/base';
 import IceLabel from '@icedesign/label';
 import {Link} from 'react-router-dom';
 import jsonp from "jsonp";
@@ -15,6 +15,7 @@ import Axios from 'axios';
 import API from '../../API';
 
 const {Combobox} = Select;
+const { toast } = Feedback;
 
 const fatchAdmin = (admin) => {
     return admin.map((item, index) => {
@@ -36,40 +37,11 @@ export default class PipelineInfo extends Component {
             pipelineInfo: {
                 name: "",
                 creator: "test",
-                admin: [{
-                    id: '1',
-                    name: 'test'
-                }],
+                admin: ['1'],
                 //监听设置
                 monitor: "",
                 createTime: "",  //时间戳
-                stage: [
-                    //     {
-                    //     name: "",
-                    //      tasks: [
-                    //          //{
-                    //     //     taskName: "构建maven",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }, {
-                    //     //     taskName: "构建docker镜像",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }, {
-                    //     //     taskName: "推送docker镜像",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }
-                    //     ]
-                    // }
-                ]
-
+                stage: []
             },
 
             // 获取到的项目组成员
@@ -258,6 +230,7 @@ export default class PipelineInfo extends Component {
                     dockerUserName: "",
                     dockerPassword: "",
                     repository: "",
+                    repositoryVersion: "",
                     description: ""
                 };
                 break;
@@ -268,6 +241,7 @@ export default class PipelineInfo extends Component {
                     dockerUserName: "",
                     dockerPassword: "",
                     repository: "",
+                    repositoryVersion: "",
                     description: ""
                 };
                 break;
@@ -278,6 +252,7 @@ export default class PipelineInfo extends Component {
                     dockerUserName: "",
                     dockerPassword: "",
                     repository: "",
+                    repositoryVersion: "",
                     description: ""
                 };
                 break;
@@ -288,6 +263,7 @@ export default class PipelineInfo extends Component {
                     dockerUserName: "",
                     dockerPassword: "",
                     repository: "",
+                    repositoryVersion: "",
                     description: ""
                 };
                 break;
@@ -298,6 +274,7 @@ export default class PipelineInfo extends Component {
                     dockerUserName: "",
                     dockerPassword: "",
                     repository: "",
+                    repositoryVersion: "",
                     description: ""
                 };
                 break;
@@ -332,11 +309,32 @@ export default class PipelineInfo extends Component {
         });
         this.state.currentStage.tasks[findIndex].gitUrl = value
     }
-    buildRepository(value){
+
+    buildRepository(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
         this.state.currentStage.tasks[findIndex].repository = value
+    }
+
+    buildDockerUsrName(value) {
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
+        });
+        this.state.currentStage.tasks[findIndex].dockerUserName = value
+    }
+
+    buildRepositoryVersion(value) {
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
+        });
+        this.state.currentStage.tasks[findIndex].repositoryVersion = value
+    }
+    buildDockerPassword(value){
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
+        });
+        this.state.currentStage.tasks[findIndex].dockerPassword = value
     }
 
     /**
@@ -354,7 +352,7 @@ export default class PipelineInfo extends Component {
         })
     }
 
-    deletePipeline(pipelineInfo){
+    deletePipeline(pipelineInfo) {
         console.log(pipelineInfo);
         let url = API.pipeline + '/pipeline/jenkins/deleteJob';
         let self = this;
@@ -362,24 +360,36 @@ export default class PipelineInfo extends Component {
             method: 'post',
             url: url,
             data: pipelineInfo
-        }).then((response)=>{
+        }).then((response) => {
             console.log(response);
-            if(response.data){
+            if (response.data) {
                 self.createPipeline(pipelineInfo);
             }
         })
     }
 
-    createPipeline(pipelineInfo){
+    createPipeline(pipelineInfo) {
         let urlPipeline = API.pipeline + '/pipeline/jenkins/createJob';
+        let self = this;
         Axios({
             method: 'post',
             url: urlPipeline,
             data: pipelineInfo,
         }).then((response) => {
-            console.log(response)
+            if(response.data === "CreateJobSuccess"){
+                toast.show({
+                    type: "success",
+                    content: "创建成功",
+                    duration: 1000
+                });
+                self.props.history.push('/pipeline');
+            }
         }).catch((error) => {
-            console.log(error)
+            toast.show({
+                type: "error",
+                content: error + ", 创建失败",
+                duration: 1000
+            });
         })
     }
 
@@ -392,35 +402,10 @@ export default class PipelineInfo extends Component {
         let self = this;
         if (!this.state.newPipeline) {
             this.removeByIdSQL(this.props.match.params.id);
-
             //预处理一下数据
             delete pipelineInfo.id;
-            delete pipelineInfo.admin;
-            pipelineInfo.admin = [{
-                id: 1,
-                name: 'test'
-            }];
-            pipelineInfo.stage.map((item,index)=>{
-                delete item.id
-            });
             this.deletePipeline(pipelineInfo);
-            setTimeout(() => {
-                this.setState({
-                    pipelineInfo
-                });
-                // add SQL
-                Axios({
-                    method: 'post',
-                    url: urlSQL,
-                    data: pipelineInfo,
-                }).then((response) => {
-                    console.log(response)
-                }).catch((error) => {
-                    console.log(error)
-                });
-
-            }, 0)
-        }else{
+        } else {
             //new pipeline add createTime
             pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime().toString()});
             /**
@@ -429,25 +414,30 @@ export default class PipelineInfo extends Component {
              *
              * */
 
-            setTimeout(() => {
-                this.setState({
-                    pipelineInfo
-                });
-                // add SQL
-                Axios({
-                    method: 'post',
-                    url: urlSQL,
-                    data: pipelineInfo,
-                }).then((response) => {
-                    console.log(response)
-                }).catch((error) => {
-                    console.log(error)
-                }).finally(()=>{
-                    self.createPipeline(pipelineInfo);
-                });
-
-            }, 0)
         }
+        setTimeout(() => {
+            this.setState({
+                pipelineInfo
+            });
+            // add SQL
+            Axios({
+                method: 'post',
+                url: urlSQL,
+                data: pipelineInfo,
+            }).then((response) => {
+                console.log(response)
+                if(response.data === "success"){
+                    self.createPipeline(pipelineInfo);
+                }
+            }).catch((error) => {
+                toast.show({
+                    type: "error",
+                    content: error + ", 创建失败",
+                    duration: 1000
+                });
+            });
+
+        }, 0)
     };
 
     /**
@@ -466,8 +456,8 @@ export default class PipelineInfo extends Component {
                     ref="form"
                 >
                     <div className="form-body">
-                        {(()=>{
-                            if(this.state.newPipeline){
+                        {(() => {
+                            if (this.state.newPipeline) {
                                 return (
                                     <div className="form-item">
                                         <span className="form-item-label">流水线名称: </span>
@@ -477,7 +467,7 @@ export default class PipelineInfo extends Component {
                                         <FormError className="form-item-error" name="name"/>
                                     </div>
                                 )
-                            }else{
+                            } else {
                                 return (
                                     <div className="form-item">
                                         <span className="form-item-label">流水线名称: </span>
@@ -545,7 +535,7 @@ export default class PipelineInfo extends Component {
                 </FormBinderWrapper>
 
                 {(() => {
-                    if (this.state.currentStage !== undefined ) {
+                    if (this.state.currentStage !== undefined) {
                         return (
                             <FormBinderWrapper
                                 value={this.state.currentStage}
@@ -621,7 +611,6 @@ export default class PipelineInfo extends Component {
                                                                                         placeholder={this.state.chosenTask.gitUrl}
                                                                                     />
                                                                                 </div>
-
                                                                             </div>
                                                                         );
                                                                         break;
@@ -631,10 +620,11 @@ export default class PipelineInfo extends Component {
                                                                                 <h3 className="chosen-task-detail-title">构建maven</h3>
                                                                                 <div
                                                                                     className="chosen-task-detail-body">
-                                                                                    默认执行 <br />
-                                                                                     'mvn --version'  <br />
-                                                                                     'mvn clean package -Dmaven.test.skip=true' <br />
-                                                                                     'mvn package' <br />
+                                                                                    默认执行 <br/>
+                                                                                    'mvn --version' <br/>
+                                                                                    'mvn clean package
+                                                                                    -Dmaven.test.skip=true' <br/>
+                                                                                    'mvn package' <br/>
                                                                                 </div>
 
                                                                             </div>
@@ -646,12 +636,11 @@ export default class PipelineInfo extends Component {
                                                                                 <h3 className="chosen-task-detail-title">构建node</h3>
                                                                                 <div
                                                                                     className="chosen-task-detail-body">
-                                                                                    默认执行 <br />
-                                                                                    'npm --version'  <br />
-                                                                                    'node --version'  <br />
-                                                                                    'npm install' <br />
+                                                                                    默认执行 <br/>
+                                                                                    'npm --version' <br/>
+                                                                                    'node --version' <br/>
+                                                                                    'npm install' <br/>
                                                                                 </div>
-
                                                                             </div>
                                                                         );
                                                                         break;
@@ -659,15 +648,34 @@ export default class PipelineInfo extends Component {
                                                                         return (
                                                                             <div>
                                                                                 <h3 className="chosen-task-detail-title">构建docker镜像</h3>
-                                                                                <div className="chosen-task-detail-body">
+                                                                                <div
+                                                                                    className="chosen-task-detail-body">
                                                                                     <span className="item">
                                                                                         <span className="must">*</span>
-                                                                                        <span>ImageName: </span>
+                                                                                        <span>DockerUserName: </span>
+                                                                                    </span>
+                                                                                    <Input
+                                                                                        onChange={this.buildDockerUsrName.bind(this)}
+                                                                                        className="input"
+                                                                                        placeholder={this.state.chosenTask.dockerUserName}
+                                                                                    />
+                                                                                    <span className="item">
+                                                                                        <span className="must">*</span>
+                                                                                        <span>Repository: </span>
                                                                                     </span>
                                                                                     <Input
                                                                                         onChange={this.buildRepository.bind(this)}
                                                                                         className="input"
                                                                                         placeholder={this.state.chosenTask.repository}
+                                                                                    />
+                                                                                    <span className="item">
+                                                                                        <span className="must">*</span>
+                                                                                        <span>Version: </span>
+                                                                                    </span>
+                                                                                    <Input
+                                                                                        onChange={this.buildRepositoryVersion.bind(this)}
+                                                                                        className="input"
+                                                                                        placeholder={this.state.chosenTask.repositoryVersion}
                                                                                     />
                                                                                 </div>
 
@@ -678,7 +686,49 @@ export default class PipelineInfo extends Component {
                                                                     case "推送docker镜像":
                                                                         return (
                                                                             <div>
-                                                                                推送docker镜像
+                                                                                <div>
+                                                                                    <h3 className="chosen-task-detail-title">构建docker镜像</h3>
+                                                                                    <div
+                                                                                        className="chosen-task-detail-body">
+                                                                                        <span className="item">
+                                                                                            <span className="must">*</span>
+                                                                                            <span>DockerUserName: </span>
+                                                                                        </span>
+                                                                                        <Input
+                                                                                            onChange={this.buildDockerUsrName.bind(this)}
+                                                                                            className="input"
+                                                                                            placeholder={this.state.chosenTask.dockerUserName}
+                                                                                        />
+                                                                                        <span className="item">
+                                                                                            <span className="must">*</span>
+                                                                                            <span>Repository: </span>
+                                                                                        </span>
+                                                                                        <Input
+                                                                                            onChange={this.buildRepository.bind(this)}
+                                                                                            className="input"
+                                                                                            placeholder={this.state.chosenTask.repository}
+                                                                                        />
+                                                                                        <span className="item">
+                                                                                            <span className="must">*</span>
+                                                                                            <span>Version: </span>
+                                                                                        </span>
+                                                                                        <Input
+                                                                                            onChange={this.buildRepositoryVersion.bind(this)}
+                                                                                            className="input"
+                                                                                            placeholder={this.state.chosenTask.repositoryVersion}
+                                                                                        />
+                                                                                        <span className="item">
+                                                                                            <span className="must">*</span>
+                                                                                            <span>DockerPassWord: </span>
+                                                                                        </span>
+                                                                                        <Input
+                                                                                            onChange={this.buildDockerPassword.bind(this)}
+                                                                                            className="input"
+                                                                                            placeholder={this.state.chosenTask.dockerPassword}
+                                                                                            htmlType="password"
+                                                                                        />
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         );
                                                                         break;

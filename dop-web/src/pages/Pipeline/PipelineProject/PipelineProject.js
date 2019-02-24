@@ -5,8 +5,7 @@
  * */
 
 import React, {Component} from 'react';
-import {Button, Icon} from '@icedesign/base';
-import {Loading, Form, Input} from '@alifd/next';
+import {Button, Icon, Loading} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
 import Iframe from '../components/Iframe'
@@ -19,10 +18,7 @@ export default class PipelineProject extends Component {
             pipelineInfo: {
                 name: "",
                 creator: "",
-                admin: [{
-                    id: '1',
-                    name: 'test'
-                }],
+                admin: ["1"],
                 //监听设置
                 monitor: "",
                 createTime: "",  //时间戳
@@ -54,7 +50,7 @@ export default class PipelineProject extends Component {
                 ]
             },
             iframeSrc: "",
-            visible: true,
+            visible: false
         }
     }
 
@@ -92,17 +88,10 @@ export default class PipelineProject extends Component {
     buildPipeline() {
         let url = API.pipeline + '/pipeline/jenkins/build';
         let self = this;
-        self.setState({visible: true})
+
         let pipelineInfo = this.state.pipelineInfo;
         delete pipelineInfo.id;
-        delete pipelineInfo.admin;
-        pipelineInfo.admin = [{
-            id: 1,
-            name: 'test'
-        }];
-        pipelineInfo.stage.map((item, index) => {
-            delete item.id
-        });
+
         Axios({
             method: 'post',
             url: url,
@@ -118,6 +107,11 @@ export default class PipelineProject extends Component {
     getRun(name) {
         let url = API.jenkins + '/blue/rest/organizations/jenkins/pipelines/' + name + '/runs';
         let self = this;
+
+        self.setState({
+            visible: true
+        });
+
         Axios.get(url).then((response) => {
             console.log(response);
             if (response.data) {
@@ -128,45 +122,39 @@ export default class PipelineProject extends Component {
                 self.setState({
                     iframeSrc: iframeSrc
                 });
-                console.log(iframeSrc)
+                setTimeout(() => {
+                    self.setState({
+                        visible: false
+                    })
+                }, 7000);
             }
         })
-    }
-
-    onLoad(visible) {
-        let self = this;
-        setTimeout(() => {
-            self.setState({
-                visible,
-            })
-        }, 6000)
-        console.log(111)
-
     }
 
     render() {
         return (
             <div className="body">
-                <div className="operate">
-                    <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
-                        <Icon type="play"/>
-                        运行流水线
-                    </Button>
-                    <Button type="normal" className="button" onClick={this.goToEdit.bind(this)}>
-                        <Icon type="edit"/>
-                        编辑流水线
-                    </Button>
-                    <Button type="secondary" shape="warning" className="button">
-                        <Icon type="ashbin"/>
-                        删除流水线
-                    </Button>
-                </div>
-                <div className="iframe">
-                    <Iframe src={this.state.iframeSrc} onLoad={visible => this.onLoad(visible)}/>
-                </div>
-
-
+                <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
+                    <div className="operate">
+                        <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
+                            <Icon type="play"/>
+                            运行流水线
+                        </Button>
+                        <Button type="normal" className="button" onClick={this.goToEdit.bind(this)}>
+                            <Icon type="edit"/>
+                            编辑流水线
+                        </Button>
+                        <Button type="secondary" shape="warning" className="button">
+                            <Icon type="ashbin"/>
+                            删除流水线
+                        </Button>
+                    </div>
+                    <div className="iframe">
+                        <Iframe src={this.state.iframeSrc} onLoad={loading => this.onLoad(loading)}/>
+                    </div>
+                </Loading>
             </div>
+
         );
     }
 }

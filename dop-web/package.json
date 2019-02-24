@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "该项目基于 create-react-app 创建，使用 react-app-rewired 进行自定义配置，是南京大学软件学院Devops运行平台",
   "dependencies": {
-    "@alifd/next": "^1.12.3",
+    "@alifd/next": "^1.13.2",
     "@icedesign/base": "^0.2.5",
     "@icedesign/container": "^0.1.4",
     "@icedesign/form-binder": "^0.1.7",

@@ -4,7 +4,7 @@
 
 import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
-import {Pipeline, PipelineInfo, PipelineProject} from '../pages/Pipeline';
+import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 
 const routerConfig = [
@@ -28,7 +28,12 @@ const routerConfig = [
         path: '/pipeline/edit/:id',
         layout: BasicLayout,
         component: PipelineInfo,
-    }, {
+    },{
+        path: '/pipeline/test',
+        layout: BasicLayout,
+        component: PipelineTest,
+    }
+    , {
         path: '*',
         layout: BasicLayout,
         component: NotFound,
