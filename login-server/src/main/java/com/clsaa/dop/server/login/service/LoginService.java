@@ -134,4 +134,28 @@ public class LoginService {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 校验token
+     *
+     * @param token token
+     * @return 校验通过返回true
+     */
+    public boolean verifyToken(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(this.loginProperties.getJwt().getSecret())).build();
+            DecodedJWT jwt = verifier.verify(token);
+            Long userId = jwt.getClaim("userId").asLong();
+            String client = jwt.getClaim("client").asString();
+            String existToken = this.redisTemplate.opsForValue().get(LoginService.JWT_TOKEN_CACHE_PREFIX + ":" + client + ":" + +userId);
+            if (existToken == null) {
+                return false;
+            }
+            return token.equals(existToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 }

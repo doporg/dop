@@ -26,16 +26,20 @@ public class LoginController {
                 loginDtoV1.getLoginIp(), loginDtoV1.getDeviceId(), loginDtoV1.getClient());
     }
 
-    @ApiOperation(value = "查询X-Login-Token", notes = "根据userId和客户端类型查询X-Login-Token")
+    @ApiOperation(value = "校验X-Login-Token", notes = "校验X-Login-Token")
     @GetMapping("/v1/login/token")
-    public String findUserLoginToken(@RequestParam("userId") Long userId,
-                                     @RequestParam("client") Client client) {
-        return this.loginService.findUserLoginToken(userId, client);
+    public boolean verifyToken(@RequestParam("token") String token) {
+        return this.loginService.verifyToken(token);
     }
 
     @ApiOperation(value = "登出", notes = "用户登出，清除登录缓存")
     @DeleteMapping("/v1/logout")
     public void logout(@RequestHeader(HttpHeaders.X_LOGIN_TOKEN) String token) {
         this.loginService.logout(token);
+    }
+
+    @GetMapping("/test")
+    public void testHaveUserIdHeader(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long id) {
+        System.out.println(id);
     }
 }

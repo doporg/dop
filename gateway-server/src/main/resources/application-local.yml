@@ -94,3 +94,5 @@ gateway:
     AES:
       clientKey: e5Fcq-fWX-EvE5jyM7Scsb9PUXYEC22NE0SgF9dp-3sVvLxW-_59sOJ4I5tFqgKz
       tokenKey: APbCXRbW7Rw6JAX03GJiHKgTM5UMUQyXXhWpnPbjgIEjBnURgLCbes3ty1x_vJU7HQ==
+  jwt:
+    secret: ANBgkqhkiG9w0BAQEDANBgkqhkiG9w0BAQE
