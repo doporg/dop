@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_credential", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"identifier", "type"})},
-        indexes = {@Index(columnList = "identifier")})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "type"})},
+        indexes = {@Index(columnList = "userId")})
 public class UserCredential implements Serializable {
     /**
      * 用户凭据类型枚举

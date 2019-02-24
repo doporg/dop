@@ -5,6 +5,7 @@ import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.UserProperties;
 import com.clsaa.dop.server.user.dao.UserRepository;
 import com.clsaa.dop.server.user.model.bo.UserBoV1;
+import com.clsaa.dop.server.user.model.bo.UserCredentialBoV1;
 import com.clsaa.dop.server.user.model.po.User;
 import com.clsaa.dop.server.user.model.po.UserCredential;
 import com.clsaa.dop.server.user.util.BeanUtils;
@@ -73,6 +74,7 @@ public class UserService {
                     .ctime(LocalDateTime.now())
                     .mtime(LocalDateTime.now())
                     .status(User.Status.NORMAL)
+                    .avatarURL("")
                     .build();
             User savedUser = this.userRepository.saveAndFlush(user);
             try {
@@ -121,8 +123,31 @@ public class UserService {
         User user = this.userRepository.findUserByEmail(email);
         BizAssert.validParam(user != null,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "未注册邮箱"));
-        String strongPassword = StrongPassword.encrypt(password).getContent();
+        String strongPassword = StrongPassword.encrypt(realPassword.getContent()).getContent();
+        System.out.println("strong password : " + strongPassword);
         this.userCredentialService.updateUserCredentialByUserIdAndType(user.getId(), strongPassword, UserCredential.Type.DOP_LOGIN_EMAIL);
         this.redisTemplate.delete(AccountService.RESET_BY_EMAIL_KEY_PREFIX + email);
+    }
+
+    public UserBoV1 findUserByEmailAndPassword(String email, String password) {
+        User user = this.userRepository.findUserByEmail(email);
+        BizAssert.validParam(user != null,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "未注册邮箱"));
+        UserCredentialBoV1 userCredentialBoV1 = this.userCredentialService
+                .findUserCredentialByUserIdAndType(user.getId(), UserCredential.Type.DOP_LOGIN_EMAIL);
+        BizAssert.validParam(userCredentialBoV1 != null,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "未找到对应用户凭据"));
+        BizAssert.validParam(email.equals(userCredentialBoV1.getIdentifier()),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户凭据中的邮箱与用户邮箱不一致"));
+        CryptoResult realPassword = RSA.decryptByPrivateKey(password, this.userProperties.getAccount().getSecret().getRSAPrivateKey());
+        BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
+        System.out.println(realPassword.getContent());
+        System.out.println(userCredentialBoV1.getCredential());
+        boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
+        System.out.println(verifyResult);
+        if (verifyResult) {
+            return BeanUtils.convertType(user, UserBoV1.class);
+        }
+        return null;
     }
 }

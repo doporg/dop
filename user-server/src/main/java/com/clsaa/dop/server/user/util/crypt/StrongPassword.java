@@ -25,7 +25,7 @@ public final class StrongPassword {
     /**
      * 迭代次数
      */
-    private static final int PBKDF2_ITERATIONS = 5000;
+    private static final int PBKDF2_ITERATIONS = 1000;
 
     private StrongPassword() {
         throw new UnsupportedOperationException();
@@ -52,5 +52,12 @@ public final class StrongPassword {
         byte[] byteResult = BaseEncoding.base64Url().decode(storedPassword);
         byte[] salt = Arrays.copyOfRange(byteResult, byteResult.length - SALT_SIZE, byteResult.length);
         return PBKDF2.hash(PBKDF2_ALGORITHM, password, salt, PBKDF2_ITERATIONS, HASH_SIZE).getContent().equals(storedPassword);
+    }
+
+    public static void main(String[] args) {
+        String password = "RENguijie1996.";
+        CryptoResult cryptoResult = encrypt(password);
+        System.out.println(cryptoResult.getContent());
+        System.out.println(verify(password, "ZX28oxmkph1g8gPrl4YD19SJf47iBSwNhveF_ES-DVbyZw1FZB2jykj3TB-B7HZ7NOpJ-8j8Yq14lOCkgqeKgLtkN6TP6ti-VLRy5ymD7pLwqdVp-CNe7frPyEdn99Fk44eHETdpTCWQZjK6_A1SN0CuhmsKGbR8l3ne3UiR-Urgd8pxjl8TnnjjJ904IDOb1JFnuRbCLD9ogroAMSb7Yw=="));
     }
 }

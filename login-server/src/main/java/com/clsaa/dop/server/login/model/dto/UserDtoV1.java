@@ -1,10 +1,9 @@
-package com.clsaa.dop.server.user.model.vo;
+package com.clsaa.dop.server.login.model.dto;
 
-import com.clsaa.dop.server.user.model.po.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.clsaa.dop.server.login.model.bo.UserBoV1;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -16,7 +15,8 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class UserV1 {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserDtoV1 {
     /**
      * 用户id
      */
@@ -34,15 +34,7 @@ public class UserV1 {
      */
     private String avatarURL;
     /**
-     * 创建时间
-     */
-    private LocalDateTime ctime;
-    /**
-     * 修改时间
-     */
-    private LocalDateTime mtime;
-    /**
      * 用户状态
      */
-    private User.Status status;
+    private UserBoV1.Status status;
 }

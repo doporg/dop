@@ -45,9 +45,17 @@ public class UserController {
     }
 
 
-    @ApiOperation(value = "查询用户信息", notes = "根据id查询用户信息，若用户不存在返回null")
+    @ApiOperation(value = "根据id查询用户信息", notes = "根据id查询用户信息，若用户不存在返回null")
     @GetMapping("/v1/users/{id}")
     public UserV1 findUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id) {
         return BeanUtils.convertType(this.userService.findUserById(id), UserV1.class);
+    }
+
+    @ApiOperation(value = "根据邮箱和密码查询用户信息", notes = "根据邮箱和密码查询用户信息，若密码错误或用户不存在返回null," +
+            "密码经过RSA加密且进行BASE64URL编码，此接口一般给登陆服务使用")
+    @GetMapping("/v1/users/byCredential")
+    public UserV1 findUserByEmailAndPassword(@RequestParam("email") String email,
+                                             @RequestParam("password") String password) {
+        return BeanUtils.convertType(this.userService.findUserByEmailAndPassword(email, password), UserV1.class);
     }
 }

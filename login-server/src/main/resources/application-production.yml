@@ -40,6 +40,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  redis:
+    database: 0
+    host: redis.dop.clsaa.com
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
@@ -52,7 +63,7 @@ project:
   name: @project.name@
   description: @project.description@
   url: @project.url@
-swagger.enable: false
+swagger.enable: true
 eureka:
   instance:
     appname: ${spring.application.name}
@@ -71,3 +82,13 @@ ribbon:
   ConnectTimeout: 10000
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
+
+login:
+  jwt:
+    typ: JWT #类型
+    alg: HS256 #算法
+    iss: DOP-SSO #签发者
+    aud: DOP-WEB #接收方
+    sub: USER #颁发对象
+    exp: 1800 #过期时间，单位：秒
+    secret: ANBgkqhkiG9w0BAQEDANBgkqhkiG9w0BAQE

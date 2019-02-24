@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.user.model.bo;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.clsaa.dop.server.user.model.po.User;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserBoV1 {
     /**
      * 用户id
@@ -29,6 +32,10 @@ public class UserBoV1 {
      */
     private String email;
     /**
+     * 用户头像URL
+     */
+    private String avatarURL;
+    /**
      * 创建时间
      */
     private LocalDateTime ctime;
@@ -36,4 +43,8 @@ public class UserBoV1 {
      * 修改时间
      */
     private LocalDateTime mtime;
+    /**
+     * 用户状态
+     */
+    private User.Status status;
 }
