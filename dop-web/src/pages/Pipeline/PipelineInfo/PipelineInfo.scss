@@ -124,6 +124,22 @@
             width: 250px;
             margin-left: 40px;
           }
+          .textarea{
+            overflow: hidden;
+            .title{
+              float: left;
+              .must{
+                color: red;
+              }
+            }
+            .area-wrap{
+              margin-left: 140px;
+              .area{
+                width: 250px;
+              }
+            }
+          }
+
         }
       }
     }

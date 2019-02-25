@@ -126,7 +126,7 @@ export default class PipelineProject extends Component {
                     self.setState({
                         visible: false
                     })
-                }, 7000);
+                }, 4000);
             }
         })
     }

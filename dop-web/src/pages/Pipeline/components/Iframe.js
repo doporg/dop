@@ -6,16 +6,11 @@ export default class Iframe extends Component{
         super(props);
     }
     componentDidMount(){
-        console.log(11)
         setTimeout(()=>{
             document.getElementById("iframe").src = this.props.src
         },1000)
     }
-    componentWillReceiveProps(){
-        setTimeout(()=>{
-            document.getElementById("iframe").src = this.props.src
-        },1000)
-    }
+
     onLoad(){
         this.props.onLoad(false)
     }
@@ -24,7 +19,7 @@ export default class Iframe extends Component{
             <div style={style.wrapper}>
                 <iframe
                     id = "iframe"
-                    frameborder = "0"
+                    frameBorder= "0"
                     scrolling = "yes"
                     style={style.iframe}
                 />

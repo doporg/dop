@@ -55,7 +55,7 @@ function getTimeStamp(app) {
         app.timestamp = response.data;
         oauth(app.timestamp + new Date().getTime() - pre, app);
     }).catch((error) => {
-        alert(error)
+        console.log(error)
     });
 }
 /**
@@ -81,7 +81,7 @@ function oauth(timestamp, app) {
         app.access_token = response.data.access_token;
         actuator(app.access_token);
     }).catch((error)=>{
-        alert(error)
+        console.log(error)
     })
 }
 
@@ -99,7 +99,7 @@ function actuator(access_token) {
     Axios.get(API.gateway + path, {headers}).then((response)=>{
         console.log(response)
     }).catch((error)=>{
-        alert(error)
+        console.log(error)
     })
 }
 

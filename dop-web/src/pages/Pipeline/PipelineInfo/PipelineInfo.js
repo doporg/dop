@@ -15,7 +15,7 @@ import Axios from 'axios';
 import API from '../../API';
 
 const {Combobox} = Select;
-const { toast } = Feedback;
+const {toast} = Feedback;
 
 const fatchAdmin = (admin) => {
     return admin.map((item, index) => {
@@ -58,7 +58,8 @@ export default class PipelineInfo extends Component {
             currentStageOrder: 0,
 
             //可选的任务
-            task: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像"],
+            task: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本"],
+            myscript: ["shell"],
             //所选的task
             chosenTask: "",
 
@@ -278,6 +279,17 @@ export default class PipelineInfo extends Component {
                     description: ""
                 };
                 break;
+            case "自定义脚本":
+                newTask = {
+                    taskName: "自定义脚本",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    repositoryVersion: "",
+                    description: ""
+                };
+                break;
         }
         let currentStage = this.state.currentStage;
         let findIndex = currentStage.tasks.findIndex((item) => {
@@ -330,11 +342,19 @@ export default class PipelineInfo extends Component {
         });
         this.state.currentStage.tasks[findIndex].repositoryVersion = value
     }
-    buildDockerPassword(value){
+
+    buildDockerPassword(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
         this.state.currentStage.tasks[findIndex].dockerPassword = value
+    }
+    buildDescription(value){
+        let findIndex = this.state.currentStage.tasks.findIndex((item) => {
+            return item.taskName === this.state.chosenTask.taskName
+        });
+        this.state.currentStage.tasks[findIndex].description = value
+        console.log(value)
     }
 
     /**
@@ -376,7 +396,7 @@ export default class PipelineInfo extends Component {
             url: urlPipeline,
             data: pipelineInfo,
         }).then((response) => {
-            if(response.data === "CreateJobSuccess"){
+            if (response.data === "CreateJobSuccess") {
                 toast.show({
                     type: "success",
                     content: "创建成功",
@@ -426,7 +446,7 @@ export default class PipelineInfo extends Component {
                 data: pipelineInfo,
             }).then((response) => {
                 console.log(response)
-                if(response.data === "success"){
+                if (response.data === "success") {
                     self.createPipeline(pipelineInfo);
                 }
             }).catch((error) => {
@@ -691,7 +711,8 @@ export default class PipelineInfo extends Component {
                                                                                     <div
                                                                                         className="chosen-task-detail-body">
                                                                                         <span className="item">
-                                                                                            <span className="must">*</span>
+                                                                                            <span
+                                                                                                className="must">*</span>
                                                                                             <span>DockerUserName: </span>
                                                                                         </span>
                                                                                         <Input
@@ -700,7 +721,8 @@ export default class PipelineInfo extends Component {
                                                                                             placeholder={this.state.chosenTask.dockerUserName}
                                                                                         />
                                                                                         <span className="item">
-                                                                                            <span className="must">*</span>
+                                                                                            <span
+                                                                                                className="must">*</span>
                                                                                             <span>Repository: </span>
                                                                                         </span>
                                                                                         <Input
@@ -709,7 +731,8 @@ export default class PipelineInfo extends Component {
                                                                                             placeholder={this.state.chosenTask.repository}
                                                                                         />
                                                                                         <span className="item">
-                                                                                            <span className="must">*</span>
+                                                                                            <span
+                                                                                                className="must">*</span>
                                                                                             <span>Version: </span>
                                                                                         </span>
                                                                                         <Input
@@ -718,7 +741,8 @@ export default class PipelineInfo extends Component {
                                                                                             placeholder={this.state.chosenTask.repositoryVersion}
                                                                                         />
                                                                                         <span className="item">
-                                                                                            <span className="must">*</span>
+                                                                                            <span
+                                                                                                className="must">*</span>
                                                                                             <span>DockerPassWord: </span>
                                                                                         </span>
                                                                                         <Input
@@ -727,6 +751,46 @@ export default class PipelineInfo extends Component {
                                                                                             placeholder={this.state.chosenTask.dockerPassword}
                                                                                             htmlType="password"
                                                                                         />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        );
+                                                                        break;
+                                                                    case "自定义脚本":
+                                                                        return (
+                                                                            <div>
+                                                                                <div>
+                                                                                    <h3 className="chosen-task-detail-title">自定义脚本</h3>
+                                                                                    <div
+                                                                                        className="chosen-task-detail-body">
+                                                                                        <span className="item">
+                                                                                            <span
+                                                                                                className="must">*</span>
+                                                                                            <span>脚本类型: </span>
+                                                                                        </span>
+                                                                                        <Combobox
+                                                                                            className="input"
+                                                                                            filterLocal={false}
+                                                                                            placeholder="请脚本类型"
+                                                                                            dataSource={this.state.myscript}
+                                                                                        /> <br/>
+
+
+                                                                                        <div className="textarea">
+                                                                                            <div className="title">
+                                                                                                <span className="must">*</span>
+                                                                                                脚本内容:
+                                                                                            </div>
+                                                                                            <div className="area-wrap">
+                                                                                                <Input
+                                                                                                    multiple
+                                                                                                    placeholder=""
+                                                                                                    className="area"
+                                                                                                    onChange={this.buildDescription.bind(this)}
+                                                                                                />
+                                                                                            </div>
+                                                                                        </div>
+
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
