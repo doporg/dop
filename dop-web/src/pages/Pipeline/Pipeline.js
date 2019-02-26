@@ -5,15 +5,36 @@
  * */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Axios from 'axios'
+import { Button } from '@icedesign/base';
+import PipelineTable  from './components/Table'
+import API from '../API'
+
 
 
 export default class Pipeline extends Component {
 
+    constructor(){
+        super();
+        this.state = {
+            isLoading: false,
+            dataSource: [],
+            current: 1,
+        };
+    }
+    componentWillMount(){
+    }
+
+
     render(){
         return (
-            <Link to='/pipeline/new'>
-                <button >new</button>
-            </Link>
+            <div>
+                <Link to='/pipeline/new'>
+                    <Button type="primary">新建流水线</Button><br /><br/>
+                </Link>
+
+                <PipelineTable/>
+            </div>
         )
     };
 }

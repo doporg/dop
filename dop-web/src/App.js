@@ -1,7 +1,7 @@
-import {Component, defaultProps} from 'react';
+import {Component} from 'react';
 import './App.css';
 import router from './router/router'
-import {getTimeStamp, actuator} from './components/oauth/oauth'
+import {getTimeStamp} from './components/oauth/oauth'
 
 class App extends Component {
     constructor() {

@@ -41,6 +41,12 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  #mongo配置
+  data:
+    mongodb:
+      database: pipeline
+      uri: mongodb://mongo.dop.clsaa.com:27017
+
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
