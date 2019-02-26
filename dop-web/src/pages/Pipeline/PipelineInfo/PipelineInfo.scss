@@ -99,7 +99,7 @@
       }
       .chosen-task-detail{
         background-color: #ececec;
-        width: 550px;
+        width: 500px;
         height: 400px;
         padding-left: 30px;
         border: 1px solid #C4C6CF;
@@ -114,15 +114,32 @@
           .item{
             display: inline-block;
             width: 90px;
-            text-align: right;
+            text-align: left;
             margin-right: 10px;
             .must{
               color: red;
             }
           }
           .input{
-            width: 300px;
+            width: 250px;
+            margin-left: 40px;
           }
+          .textarea{
+            overflow: hidden;
+            .title{
+              float: left;
+              .must{
+                color: red;
+              }
+            }
+            .area-wrap{
+              margin-left: 140px;
+              .area{
+                width: 250px;
+              }
+            }
+          }
+
         }
       }
     }

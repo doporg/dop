@@ -7,7 +7,6 @@
 import API from '../../pages/API'
 import UUIDV4 from 'uuid/v4'
 import CryptoJS from 'crypto-js'
-import base64url from "base64url";
 import Axios from 'axios'
 import Qs from 'qs'
 
@@ -56,7 +55,7 @@ function getTimeStamp(app) {
         app.timestamp = response.data;
         oauth(app.timestamp + new Date().getTime() - pre, app);
     }).catch((error) => {
-        alert(error)
+        console.log(error)
     });
 }
 /**
@@ -82,7 +81,7 @@ function oauth(timestamp, app) {
         app.access_token = response.data.access_token;
         actuator(app.access_token);
     }).catch((error)=>{
-        alert(error)
+        console.log(error)
     })
 }
 
@@ -100,7 +99,7 @@ function actuator(access_token) {
     Axios.get(API.gateway + path, {headers}).then((response)=>{
         console.log(response)
     }).catch((error)=>{
-        alert(error)
+        console.log(error)
     })
 }
 
