@@ -26,4 +26,8 @@ public interface BizCodes {
      * 数据库更新失败
      */
     BizCode ERROR_UPDATE = new BizCode(1012, "更新失败");
+    /**
+     * 登录失败
+     */
+    BizCode LOGIN_FAIL = new BizCode(13200, "登录失败，用户名密码错误");
 }

@@ -1,10 +1,9 @@
 package com.clsaa.dop.server.user.model.bo;
 
-import com.clsaa.dop.server.user.enums.UserType;
-import lombok.Getter;
-import lombok.Setter;
+import com.clsaa.dop.server.user.model.po.User;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -16,6 +15,9 @@ import java.sql.Timestamp;
  */
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserBoV1 {
     /**
      * 用户id
@@ -30,15 +32,19 @@ public class UserBoV1 {
      */
     private String email;
     /**
+     * 用户头像URL
+     */
+    private String avatarURL;
+    /**
      * 创建时间
      */
-    private Timestamp ctime;
+    private LocalDateTime ctime;
     /**
      * 修改时间
      */
-    private Timestamp mtime;
+    private LocalDateTime mtime;
     /**
-     * 用户类型
+     * 用户状态
      */
-    private UserType type;
+    private User.Status status;
 }

@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: user-server
+  namespace: dop
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: user-server
+    spec:
+      containers:
+        - name: user-server
+          imagePullPolicy: Always
+          image: registry.dop.clsaa.com/dop/user-server:<BUILD_TAG>
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
+          ports:
+            - containerPort: 13100
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: host-timezone
+          hostPath:
+            path: /etc/timezone
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-server
+  namespace: dop
+  labels:
+    app: user-server
+spec:
+  ports:
+    - port: 13100
+      protocol: TCP
+      targetPort: 13100
+  selector:
+    app: user-server

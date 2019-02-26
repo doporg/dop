@@ -1,11 +1,10 @@
 package com.clsaa.dop.server.user.model.po;
 
-import com.clsaa.dop.server.user.enums.UserType;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -21,8 +20,33 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_user", schema = "db_dop_user_server")
+@Table(name = "t_user", schema = "db_dop_user_server",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})},
+        indexes = {@Index(columnList = "email")})
 public class User implements Serializable {
+    /**
+     * 用户类型枚举
+     *
+     * @author 任贵杰
+     */
+    public enum Status {
+
+        /**
+         * 正常的
+         */
+        NORMAL("NORMAL"),
+        /**
+         * 禁止的
+         */
+        FORBIDDEN("FORBIDDEN"),
+        ;
+
+        private String code;
+
+        Status(String code) {
+        }
+    }
+
     private static final long serialVersionUID = 6906097418517275871L;
     /**
      * 用户id
@@ -44,22 +68,28 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
     /**
+     * 用户头像URL
+     */
+    @Basic
+    @Column(name = "avatar_url")
+    private String avatarURL;
+    /**
      * 创建时间
      */
     @Basic
     @Column(name = "ctime")
-    private Timestamp ctime;
+    private LocalDateTime ctime;
     /**
      * 修改时间
      */
     @Basic
     @Column(name = "mtime")
-    private Timestamp mtime;
+    private LocalDateTime mtime;
     /**
-     * 用户类型
+     * 用户状态
      */
     @Basic
-    @Column(name = "type")
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private UserType type;
+    private Status status;
 }

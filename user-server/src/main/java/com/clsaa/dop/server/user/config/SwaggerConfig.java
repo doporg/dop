@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.user.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -21,23 +22,27 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 public class SwaggerConfig {
 
     private static final String API_PACKAGE_NAME = SwaggerConfig.class.getPackage().getName().replace("config", "controller");
-
-    @Value("project.groupId")
+    @Value("${project.host}")
+    private String host;
+    @Value("${project.groupId}")
     private String groupId;
-    @Value("project.artifactId")
+    @Value("${project.artifactId}")
     private String artifactId;
-    @Value("project.version")
+    @Value("${project.version}")
     private String version;
-    @Value("project.name")
+    @Value("${project.name}")
     private String name;
-    @Value("project.description")
+    @Value("${project.description}")
     private String description;
-    @Value("project.url")
+    @Value("${project.url}")
     private String url;
-
+    @Value("${swagger.enable}")
+    private boolean enableShow;
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .enable(enableShow)
+                .host(host)
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(API_PACKAGE_NAME))

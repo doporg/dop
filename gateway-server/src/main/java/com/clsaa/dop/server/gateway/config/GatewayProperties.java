@@ -2,7 +2,6 @@ package com.clsaa.dop.server.gateway.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +29,9 @@ public class GatewayProperties {
 	@NotNull
 	@Valid
 	private Oauth oauth;
+	@NotNull
+	@Valid
+	private Jwt jwt;
 
 
 	@Getter
@@ -48,4 +50,11 @@ public class GatewayProperties {
 		}
 	}
 
+	@Getter
+	@Setter
+	public static class Jwt {
+		@NotNull
+		@Valid
+		private String secret;
+	}
 }

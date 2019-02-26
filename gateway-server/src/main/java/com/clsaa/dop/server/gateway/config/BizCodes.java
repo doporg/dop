@@ -76,4 +76,9 @@ public interface BizCodes {
      * 内部错误，如数据库未成功插入；参数合法情况下，加解密失败等，客户端可改变参数后进行重试
      */
     BizCode INNER_ERROR = new BizCode(100250, "Oauth网关内部错误");
+
+    /**
+     * 登入token失效或错误
+     */
+    BizCode INVALID_LOGIN_TOKEN = new BizCode(100350, "登入token失效或错误，请重新登入");
 }

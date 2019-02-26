@@ -13,9 +13,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author 任贵杰
  */
 @SpringBootApplication
-@EnableScheduling
 @EnableAsync
 @EnableFeignClients
+@EnableScheduling
 @ComponentScan("com.clsaa")
 public class MessageServerApplication {
     public static void main(String[] args) {

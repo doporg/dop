@@ -46,7 +46,7 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         System.out.println("should filter");
         if (ctx.getRequest().getRequestURI().contains("swagger")
-        ||ctx.getRequest().getRequestURI().contains("api-docs")) {
+                || ctx.getRequest().getRequestURI().contains("api-docs")) {
             System.out.println("swagger 请求放行");
             return false;
         }
@@ -90,6 +90,8 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         BizAssert.validParam(cryptoResult.isOK(), BizCodes.INVALID_ACCESS_TOKEN);
         // 查找token
         AccessTokenBoV1 token = this.accessTokenService.findAccessTokenByToken(cryptoResult.getContent());
+        System.out.println("current_time: " + System.currentTimeMillis() +
+                " - " + "token expired:" + token.getExpires().getTime());
         // 是否失效
         BizAssert.authorized(token != null && !token.isExpired(), BizCodes.ACCESS_TOKEN_EXPIRED);
         return null;

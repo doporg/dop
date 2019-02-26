@@ -1,10 +1,10 @@
 package com.clsaa.dop.server.user.model.vo;
 
-import com.clsaa.dop.server.user.enums.UserType;
+import com.clsaa.dop.server.user.model.po.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -30,15 +30,19 @@ public class UserV1 {
      */
     private String email;
     /**
+     * 用户头像URL
+     */
+    private String avatarURL;
+    /**
      * 创建时间
      */
-    private Timestamp ctime;
+    private LocalDateTime ctime;
     /**
      * 修改时间
      */
-    private Timestamp mtime;
+    private LocalDateTime mtime;
     /**
-     * 用户类型
+     * 用户状态
      */
-    private UserType type;
+    private User.Status status;
 }
