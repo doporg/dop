@@ -6,13 +6,17 @@ import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
+import {Login, Register} from '../pages/Login'
 
 const routerConfig = [
     {
         path: '/',
         layout: BasicLayout,
         component: Projects,
-    },{
+    },
+
+    //pipeline
+    {
         path: '/pipeline',
         layout: BasicLayout,
         component: Pipeline,
@@ -32,8 +36,22 @@ const routerConfig = [
         path: '/pipeline/test',
         layout: BasicLayout,
         component: PipelineTest,
-    }
-    , {
+    },
+
+
+
+    //login
+    {
+        path: '/login',
+        component: Login,
+    },
+    {
+        path: '/register',
+        component: Register,
+    },
+
+
+    {
         path: '*',
         layout: BasicLayout,
         component: NotFound,
