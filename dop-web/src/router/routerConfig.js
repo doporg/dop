@@ -6,13 +6,24 @@ import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
+import {Login, Register} from '../pages/Login'
 
-const routerConfig = [
+const baseConfig = [
     {
         path: '/',
         layout: BasicLayout,
         component: Projects,
-    },{
+    },
+    {
+        path: '*',
+        layout: BasicLayout,
+        component: NotFound,
+    },
+];
+
+const pipelineConfig = [
+    //pipeline
+    {
         path: '/pipeline',
         layout: BasicLayout,
         component: Pipeline,
@@ -32,12 +43,20 @@ const routerConfig = [
         path: '/pipeline/test',
         layout: BasicLayout,
         component: PipelineTest,
-    }
-    , {
-        path: '*',
-        layout: BasicLayout,
-        component: NotFound,
     },
 ];
+
+const loginConfig = [
+    {
+        path: '/login',
+        component: Login,
+    },
+    {
+        path: '/register',
+        component: Register,
+    }
+];
+
+const routerConfig = [...pipelineConfig, ...loginConfig,...baseConfig];
 
 export default routerConfig;
