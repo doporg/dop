@@ -57,6 +57,6 @@ const loginConfig = [
     }
 ];
 
-const routerConfig = [...baseConfig, ...pipelineConfig, ...loginConfig];
+const routerConfig = [...pipelineConfig, ...loginConfig,...baseConfig];
 
 export default routerConfig;
