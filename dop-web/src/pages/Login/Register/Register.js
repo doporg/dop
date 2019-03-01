@@ -2,19 +2,28 @@ import React, {Component} from 'react';
 import './Register.scss';
 import Logo from '../../../components/Logo'
 import Footer from "../../../components/Footer";
-import { Form, Input, Button, Radio, Field } from "@icedesign/base";
+import { Form, Input, Button, Field } from "@icedesign/base";
+import API from "../../API";
+import Axios from "axios/index";
 const { Item: FormItem } = Form;
-const { Group: RadioGroup } = Radio;
+
+
 
 export default class Register extends Component{
     constructor(props){
         super(props);
         this.field = new Field(this);
+        this.state = {
+            access_token: ""
+        }
     }
-    componentDidMount(){
 
-    }
-
+    RSA = ()=>{
+        let url = API.gateway + '/user-server/v1/account/RSAPublicKey';
+        Axios.get(url).then((response)=>{
+            console.log(response)
+        })
+    };
     handleReset(e) {
         e.preventDefault();
         this.field.reset();
@@ -22,6 +31,7 @@ export default class Register extends Component{
 
     handleSubmit(e) {
         e.preventDefault();
+        this.RSA()
         this.field.validate((errors, values) => {
             if (errors) {
                 console.log("Errors in form!!!");

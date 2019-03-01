@@ -77,9 +77,11 @@ function oauth(timestamp, app) {
     };
 
     data = {...data, signature: signature(clientSecret, URI, "POST", data)};
+
     Axios.post(API.gateway + URI, Qs.stringify(data)).then((response)=>{
         app.access_token = response.data.access_token;
-        actuator(app.access_token);
+        console.log(response.data.access_token);
+        Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.access_token;
     }).catch((error)=>{
         console.log(error)
     })
@@ -92,11 +94,8 @@ function oauth(timestamp, app) {
  * */
 function actuator(access_token) {
     let path = "/user-server/actuator/health";
-    let headers ={
-        "Authorization": "Bearer " + access_token,
-    };
-    console.log(access_token);
-    Axios.get(API.gateway + path, {headers}).then((response)=>{
+
+    Axios.get(API.gateway + path).then((response)=>{
         console.log(response)
     }).catch((error)=>{
         console.log(error)

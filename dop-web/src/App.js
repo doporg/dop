@@ -3,11 +3,11 @@ import './App.css';
 import router from './router/router'
 import {getTimeStamp} from './components/oauth/oauth'
 
+
 class App extends Component {
     constructor() {
         super();
         this.timestamp = 0;
-        this.access_token = '';
     }
 
     componentWillMount() {
@@ -18,5 +18,4 @@ class App extends Component {
         return router;
     }
 }
-
 export default App;
