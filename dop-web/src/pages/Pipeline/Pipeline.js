@@ -5,10 +5,8 @@
  * */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Axios from 'axios'
 import { Button } from '@icedesign/base';
 import PipelineTable  from './components/Table'
-import API from '../API'
 
 
 

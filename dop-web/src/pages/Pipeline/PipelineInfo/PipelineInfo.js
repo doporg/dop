@@ -25,7 +25,7 @@ const fatchAdmin = (admin) => {
             name: `test${index}`
         };
     });
-}
+};
 
 export default class PipelineInfo extends Component {
     constructor(props) {
@@ -293,9 +293,9 @@ export default class PipelineInfo extends Component {
         }
         let currentStage = this.state.currentStage;
         let findIndex = currentStage.tasks.findIndex((item) => {
-            return item.taskName == newTask.taskName
+            return item.taskName === newTask.taskName
         });
-        if (findIndex == -1) {
+        if (findIndex === -1) {
             currentStage.tasks.push(newTask);
             this.setState({
                 currentStage

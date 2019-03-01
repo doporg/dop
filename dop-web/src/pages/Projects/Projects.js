@@ -8,15 +8,6 @@ import Card from './components/Card';
 export default class Projects extends Component {
   static displayName = 'Projects';
 
-  componentWillMount(){
-      this.Get()
-  }
-  Get(){
-      let url = API.axiosGetTest + "/getTest";
-      Axios.get(url).then((response)=> {
-            // console.log(response)
-      }).catch()
-  }
   render() {
     return (
       <div>
