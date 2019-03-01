@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableFeignClients
 @ComponentScan("com.clsaa")
-public class PiplineServerApplication {
+public class piplineServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(PiplineServerApplication.class, args);
     }

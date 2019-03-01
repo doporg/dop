@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.clsaa.dop.server.pipline</groupId>
-    <artifactId>pipline-server</artifactId>
+    <artifactId>pipeline-server</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>pipline-server</name>
-    <description>pipline service for dop</description>
+    <name>pipeline-server</name>
+    <description>pipeline service for dop</description>
     <url>https://github.com/clsaa/dop</url>
 
     <licenses>
@@ -159,7 +159,7 @@
                 <configuration>
                     <fork>true</fork>
                     <executable>true</executable>
-                    <mainClass>com.clsaa.dop.server.pipline.PiplineServerApplication</mainClass>
+                    <mainClass>com.clsaa.dop.server.pipline.piplineServerApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
