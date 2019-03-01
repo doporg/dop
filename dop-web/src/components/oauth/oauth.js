@@ -50,7 +50,7 @@ function signature(clientSecret, URI, method, obj) {
 
 function getTimeStamp(app) {
     let path = "/v1/time/epoch";
-    let pre = new Date().getTime()
+    let pre = new Date().getTime();
     Axios.get(API.gateway + path).then((response) => {
         app.timestamp = response.data;
         oauth(app.timestamp + new Date().getTime() - pre, app);
