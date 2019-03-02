@@ -41,7 +41,7 @@ project:
   name: @project.name@
   description: @project.description@
   url: @project.url@
-swagger.enable: false
+swagger.enable: true
 eureka:
   instance:
     appname: ${spring.application.name}
@@ -60,7 +60,6 @@ ribbon:
   ConnectTimeout: 10000
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
-
 
 
 logging.level.org .springframework.data.mongodb.core: DEBUG
