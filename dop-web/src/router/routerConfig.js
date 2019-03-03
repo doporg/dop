@@ -6,7 +6,7 @@ import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
-import {Login, Register} from '../pages/Login'
+import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 
 const baseConfig = [
     {
@@ -54,6 +54,14 @@ const loginConfig = [
     {
         path: '/register',
         component: Register,
+    },
+    {
+        path: '/register/transfer',
+        component: RegisterTransfer,
+    },
+    {
+        path: '/modifyPwd',
+        component: ModifyPwd,
     }
 ];
 

@@ -319,42 +319,72 @@ export default class PipelineInfo extends Component {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].gitUrl = value
+        // this.state.currentStage.tasks[findIndex].gitUrl = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].gitUrl = value;
+        this.setState({
+            currentStage
+        })
+
     }
 
     buildRepository(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].repository = value
+        // this.state.currentStage.tasks[findIndex].repository = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].repository = value;
+        this.setState({
+            currentStage
+        })
     }
 
     buildDockerUsrName(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].dockerUserName = value
+        // this.state.currentStage.tasks[findIndex].dockerUserName = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].dockerUserName = value;
+        this.setState({
+            currentStage
+        })
     }
 
     buildRepositoryVersion(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].repositoryVersion = value
+        // this.state.currentStage.tasks[findIndex].repositoryVersion = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].repositoryVersion = value;
+        this.setState({
+            currentStage
+        })
     }
 
     buildDockerPassword(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].dockerPassword = value
+        // this.state.currentStage.tasks[findIndex].dockerPassword = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].dockerPassword = value;
+        this.setState({
+            currentStage
+        })
     }
     buildDescription(value){
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        this.state.currentStage.tasks[findIndex].description = value
-        console.log(value)
+        // this.state.currentStage.tasks[findIndex].description = value
+        let currentStage = this.state.currentStage;
+        currentStage.tasks[findIndex].description = value;
+        this.setState({
+            currentStage
+        })
     }
 
     /**
@@ -363,7 +393,6 @@ export default class PipelineInfo extends Component {
     removeByIdSQL(id) {
         let data = {id: id};
         let url = API.pipeline + '/pipeline/remove';
-        let self = this;
         Axios.post(
             url,
             data
@@ -605,7 +634,7 @@ export default class PipelineInfo extends Component {
                                         {
                                             (() => {
                                                 let className;
-                                                if (this.state.chosenTask == "") {
+                                                if (this.state.chosenTask === "") {
                                                     className = "chosen-task-detail hide"
                                                 } else {
                                                     className = "chosen-task-detail"
@@ -633,7 +662,6 @@ export default class PipelineInfo extends Component {
                                                                                 </div>
                                                                             </div>
                                                                         );
-                                                                        break;
                                                                     case "构建maven":
                                                                         return (
                                                                             <div>
@@ -649,7 +677,6 @@ export default class PipelineInfo extends Component {
 
                                                                             </div>
                                                                         );
-                                                                        break;
                                                                     case "构建node":
                                                                         return (
                                                                             <div>
@@ -663,7 +690,6 @@ export default class PipelineInfo extends Component {
                                                                                 </div>
                                                                             </div>
                                                                         );
-                                                                        break;
                                                                     case "构建docker镜像":
                                                                         return (
                                                                             <div>
@@ -702,7 +728,6 @@ export default class PipelineInfo extends Component {
 
                                                                             </div>
                                                                         );
-                                                                        break;
                                                                     case "推送docker镜像":
                                                                         return (
                                                                             <div>
@@ -755,7 +780,6 @@ export default class PipelineInfo extends Component {
                                                                                 </div>
                                                                             </div>
                                                                         );
-                                                                        break;
                                                                     case "自定义脚本":
                                                                         return (
                                                                             <div>
@@ -795,7 +819,6 @@ export default class PipelineInfo extends Component {
                                                                                 </div>
                                                                             </div>
                                                                         );
-                                                                        break;
 
                                                                 }
                                                             })()
