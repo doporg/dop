@@ -7,7 +7,7 @@ import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
-
+import Ciadjust from '../pages/Ciadjust';
 const baseConfig = [
     {
         path: '/',
@@ -65,6 +65,15 @@ const loginConfig = [
     }
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig,...baseConfig];
+const ciadjustConfig = [
+    //ci-adjust
+    {
+        path: '/ciadjust',
+        layout: BasicLayout,
+        component: Ciadjust,
+    }
+];
+
+const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...baseConfig];
 
 export default routerConfig;
