@@ -55,7 +55,10 @@ export default class Login extends Component {
     }
 
     register() {
-        this.props.history.push('/register')
+        this.props.history.push('/register');
+    }
+    modify(){
+        this.props.history.push('/modifyPwd');
     }
 
     loginIp(){
@@ -183,7 +186,7 @@ export default class Login extends Component {
                                             登陆
                                         </Button>
                                         <div className="register-content">
-                                            <span>忘记密码</span>
+                                            <span onClick={this.modify.bind(this)}>忘记密码</span>
                                             <span onClick={this.register.bind(this)}>免费注册</span>
                                         </div>
                                     </FormItem>

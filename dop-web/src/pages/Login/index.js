@@ -1,6 +1,7 @@
 import Login from './Login/Login'
 import Register from './Register/Register';
 import RegisterTransfer from './Transfer/RegisterTransfer';
+import ModifyPwd from './ModifyPwd/ModifyPwd';
 import {getTimeStamp, oauth} from '../../components/oauth/oauth'
 import base64url from 'base64url'
 import API from "../API";
@@ -38,4 +39,4 @@ function PublicKey() {
 }
 
 
-export {Login, Register, RegisterTransfer, RSA, Encryption, PublicKey};
+export {Login, Register, RegisterTransfer, ModifyPwd, RSA, Encryption, PublicKey};

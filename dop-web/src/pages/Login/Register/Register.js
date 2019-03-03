@@ -72,6 +72,12 @@ export default class Register extends Component {
                     });
                 }
                 self.props.history.push('/login');
+            }).catch((error)=>{
+                toast.show({
+                    type: "error",
+                    content: error,
+                    duration: 1000
+                });
             })
         }).catch((error) => {
             toast.show({
