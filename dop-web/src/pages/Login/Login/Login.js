@@ -90,7 +90,6 @@ export default class Login extends Component {
             }).then((response) => {
                 if (response.status === 200) {
                     Axios.defaults.headers.common['x-login-token'] = response.data;
-
                     self.props.history.push('/')
                 } else {
                     toast.show({

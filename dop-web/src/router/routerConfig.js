@@ -6,12 +6,13 @@ import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
-import {Login, Register} from '../pages/Login'
+import {Login, Register, RegisterTransfer} from '../pages/Login'
 
 const baseConfig = [
     {
         path: '/',
-        component: Login,
+        layout: BasicLayout,
+        component: Projects,
     },
     {
         path: '*',
@@ -53,6 +54,10 @@ const loginConfig = [
     {
         path: '/register',
         component: Register,
+    },
+    {
+        path: '/register/transfer',
+        component: RegisterTransfer,
     }
 ];
 
