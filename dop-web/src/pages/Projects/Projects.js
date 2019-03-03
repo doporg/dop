@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Axios from 'axios';
-import API from '../API';
 import { Input } from '@icedesign/base';
 import TopBar from '../../components/TopBar';
 import Card from './components/Card';

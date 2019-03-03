@@ -1,7 +1,6 @@
 import {Component} from 'react';
 import './App.css';
 import router from './router/router'
-import {getTimeStamp} from './components/oauth/oauth'
 
 
 class App extends Component {
@@ -11,7 +10,6 @@ class App extends Component {
     }
 
     componentWillMount() {
-        getTimeStamp(this);
     }
 
     render() {

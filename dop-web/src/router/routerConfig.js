@@ -11,8 +11,7 @@ import {Login, Register} from '../pages/Login'
 const baseConfig = [
     {
         path: '/',
-        layout: BasicLayout,
-        component: Projects,
+        component: Login,
     },
     {
         path: '*',

@@ -6,7 +6,7 @@ import Axios from "axios/index";
 
 const { toast } = Feedback;
 const timetrans = (timestamp) => {
-    timestamp = timestamp.length === 13 ? parseInt(timestamp) : parseInt(timestamp) * 1000;
+    timestamp = timestamp.length === 13 ? parseInt(timestamp, 10) : parseInt(timestamp, 10) * 1000;
     let date = new Date(timestamp);//如果date为13位不需要乘1000
     let Y = date.getFullYear() + '-';
     let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';

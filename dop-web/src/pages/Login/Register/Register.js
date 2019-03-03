@@ -2,15 +2,18 @@ import React, {Component} from 'react';
 import './Register.scss';
 import Logo from '../../../components/Logo'
 import Footer from "../../../components/Footer";
-import { Form, Input, Button, Field } from "@icedesign/base";
+import {Form, Input, Button, Field, Feedback} from "@icedesign/base";
 import API from "../../API";
 import Axios from "axios/index";
-const { Item: FormItem } = Form;
+import {Encryption, PublicKey} from '../index'
 
 
+const {Item: FormItem} = Form;
+const {toast} = Feedback;
 
-export default class Register extends Component{
-    constructor(props){
+
+export default class Register extends Component {
+    constructor(props) {
         super(props);
         this.field = new Field(this);
         this.state = {
@@ -18,12 +21,6 @@ export default class Register extends Component{
         }
     }
 
-    RSA = ()=>{
-        let url = API.gateway + '/user-server/v1/account/RSAPublicKey';
-        Axios.get(url).then((response)=>{
-            console.log(response)
-        })
-    };
     handleReset(e) {
         e.preventDefault();
         this.field.reset();
@@ -31,49 +28,93 @@ export default class Register extends Component{
 
     handleSubmit(e) {
         e.preventDefault();
-        this.RSA()
-        this.field.validate((errors, values) => {
+        let self = this
+        self.field.validate((errors, values) => {
             if (errors) {
-                console.log("Errors in form!!!");
+                toast.show({
+                    type: "error",
+                    content: "表单错误",
+                    duration: 1000
+                });
                 return;
             }
             console.log("Submit!!!");
-            console.log(values);
+            self.submit(values);
         });
     }
 
+    submit(data) {
+        let url = API.gateway + '/user-server/v1/account/register';
+        let self = this;
+        delete data.rePasswd;
+        PublicKey().then((publicKey) => {
+            console.log(data.passwd)
+            data.password = Encryption(data.passwd, publicKey);
+            delete data.passwd;
+            console.log(data);
+            Axios({
+                url: url,
+                method: 'post',
+                data: data
+            }).then((response) => {
+                console.log(response)
+                if (response.status === 200) {
+                    toast.show({
+                        type: "success",
+                        content: "请注意检查邮箱",
+                        duration: 2000
+                    });
+                } else {
+                    toast.show({
+                        type: "error",
+                        content: "发生未知错误",
+                        duration: 1000
+                    });
+                }
+                self.props.history.push('/login');
+            })
+        }).catch((error) => {
+            toast.show({
+                type: "error",
+                content: error,
+                duration: 2000
+            });
+        })
+
+    }
+
     userExists(rule, value, callback) {
-        console.log(value);
         let reg = /^(?!.*?_$)[a-zA-Z0-9_]+$/;
-        if(reg.test(value)){
+        if (reg.test(value)) {
             callback();
-        }else{
+        } else {
             callback([new Error(" 至少一个数字、字母、下划线，不能以下划线结尾")]);
         }
     }
 
     checkPass(rule, value, callback) {
-        const { validate } = this.field;
+        const {validate} = this.field;
         let reg = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%.-=])[0-9a-zA-Z!@#$%.-=]{4,20}$/;
-        if(reg.test(value)){
+        if (reg.test(value)) {
             validate(["rePasswd"]);
             callback();
-        }else{
+        } else {
             callback([new Error("长度至少为6个字符，最大长度为20, 必须包含一个数字 0-9、包含一个小写字符、包含一个大写字符、包含一个的特殊字符@#$%.-=")]);
         }
 
     }
 
     checkPass2(rule, value, callback) {
-        const { getValue } = this.field;
+        const {getValue} = this.field;
         if (value && value !== getValue("passwd")) {
             callback("两次输入密码不一致！");
         } else {
             callback();
         }
     }
-    render(){
-        const { init, getError, getState } = this.field;
+
+    render() {
+        const {init, getError, getState} = this.field;
         const formItemLayout = {
             labelCol: {
                 span: 6
@@ -107,8 +148,8 @@ export default class Register extends Component{
                                 placeholder="请输入用户名"
                                 {...init("name", {
                                     rules: [
-                                        { required: true, message: "至少一个数字、字母、下划线，不能以下划线结尾" },
-                                        { validator: this.userExists }
+                                        {required: true, message: "至少一个数字、字母、下划线，不能以下划线结尾"},
+                                        {validator: this.userExists}
                                     ]
                                 })}
                             />
@@ -120,7 +161,7 @@ export default class Register extends Component{
                                 placeholder="请输入邮箱"
                                 {...init("email", {
                                     rules: [
-                                        { required: true, trigger: "onBlur" },
+                                        {required: true, trigger: "onBlur"},
                                         {
                                             type: "email",
                                             message: <span>请输入正确的邮箱地址</span>,
@@ -138,8 +179,8 @@ export default class Register extends Component{
                                 htmlType="password"
                                 {...init("passwd", {
                                     rules: [
-                                        { required: true, whitespace: true ,min: 6, message: "密码用至少为 6 个字符"},
-                                        { validator: this.checkPass.bind(this) }
+                                        {required: true, whitespace: true, min: 6, message: "密码用至少为 6 个字符"},
+                                        {validator: this.checkPass.bind(this)}
                                     ]
                                 })}
                             />
@@ -164,7 +205,7 @@ export default class Register extends Component{
                             />
                         </FormItem>
 
-                        <FormItem wrapperCol={{ offset: 6 }}>
+                        <FormItem wrapperCol={{offset: 6}}>
                             <Button type="primary" onClick={this.handleSubmit.bind(this)}>
                                 确定
                             </Button>
