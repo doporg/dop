@@ -1,6 +1,7 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
+import { Icon } from '@icedesign/base';
 
 const headerMenuConfig = [
   {
