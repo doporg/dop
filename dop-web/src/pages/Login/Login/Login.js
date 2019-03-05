@@ -91,10 +91,11 @@ export default class Login extends Component {
                 method: 'post',
                 data: data
             }).then((response) => {
+                console.log(response)
                 if (response.status === 200) {
+                    console.log(1111)
                     Axios.defaults.headers.common['x-login-token'] = response.data;
                     window.sessionStorage.setItem("userId", response.data);
-                    window.sessionStorage.
                     self.props.history.push('/project')
                 } else {
                     toast.show({
