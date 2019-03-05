@@ -55,14 +55,17 @@ const loginConfig = [
     {
         path: '/register',
         component: Register,
+        isLogin: true
     },
     {
         path: '/register/transfer',
         component: RegisterTransfer,
+        isLogin: true
     },
     {
         path: '/modifyPwd',
         component: ModifyPwd,
+        isLogin: true
     }
 ];
 
