@@ -23,16 +23,6 @@ pipeline{
 			}
 		}
 
-		stage('编译+单元测试') {
-			steps {
-                echo "star compile"
-                dir(SERVICE_DIR){
-                    sh "ls -l"
-                    sh "npm install"
-                }
-			}
-		}
-
 		stage('构建镜像') {
 			steps {
                 echo "start build image"
