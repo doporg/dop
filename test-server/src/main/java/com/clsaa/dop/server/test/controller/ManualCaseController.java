@@ -1,7 +1,8 @@
 package com.clsaa.dop.server.test.controller;
 
-import com.clsaa.dop.server.test.model.dto.ManualCaseRepository;
+import com.clsaa.dop.server.test.dao.ManualCaseRepository;
 import com.clsaa.dop.server.test.model.po.ManualCase;
+import com.clsaa.dop.server.test.service.ManualCaseCreateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,10 @@ public class ManualCaseController {
     @Autowired
     private ManualCaseRepository manualCaseRepository;
 
+
     @PostMapping("/manualCase")
     public ManualCase createCase(@RequestBody ManualCase manualCase) {
         return manualCaseRepository.save(manualCase);
     }
+
 }

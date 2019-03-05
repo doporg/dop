@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.model.po;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +14,16 @@ import java.time.LocalDateTime;
  * @since 04/03/2019
  */
 @Data
+@Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "manual_case", schema = "db_dop_test",
+@Table(name = "interface_case", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_name", "application_id"})},
         indexes = {@Index(columnList = "case_name,application_id", unique = true),
                 @Index(columnList = "application_id,case_name", unique = false)})
-public class ManualCase {
+public class InterfaceCase {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +52,10 @@ public class ManualCase {
     @Column(name = "application_id")
     private Long applicationId;
 
-    // 备注内容 在mongo 中的key
-    @Column(name = "comment_key")
-    private String commentKey;
+    private String steps;
+
+    @Column(name = "predicate_result")
+    private String predicateResult;
 
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
