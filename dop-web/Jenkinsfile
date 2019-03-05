@@ -3,7 +3,7 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="https://github.com/zhangfuli/simple-node-pipeline.git"
+		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="dop-web"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/dop-web"
