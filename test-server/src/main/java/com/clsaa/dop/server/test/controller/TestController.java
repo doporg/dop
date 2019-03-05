@@ -1,12 +1,9 @@
 package com.clsaa.dop.server.test.controller;
 
-import com.clsaa.dop.server.test.dao.CaseResultRepository;
-import com.clsaa.dop.server.test.dao.InterfaceRepository;
-import com.clsaa.dop.server.test.dao.ManualCaseRepository;
-import com.clsaa.dop.server.test.dao.TestStepRepository;
-import com.clsaa.dop.server.test.model.po.CaseResult;
-import com.clsaa.dop.server.test.model.po.InterfaceCase;
-import com.clsaa.dop.server.test.model.po.TestStep;
+import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
+import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
+import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
+import com.clsaa.dop.server.test.service.ManualCaseCreateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,29 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @Autowired
-    private CaseResultRepository caseResultRepository;
+    private InterfaceCaseCreateService interfaceCaseCreateService;
 
     @Autowired
-    private InterfaceRepository interfaceRepository;
-
-    @Autowired
-    private ManualCaseRepository manualCaseRepository;
-
-    @Autowired
-    private TestStepRepository testStepRepository;
+    private ManualCaseCreateService manualCaseCreateService;
 
     @PostMapping("/interfaceCase")
-    public InterfaceCase createCase(@RequestBody InterfaceCase interfaceCase) {
-        return interfaceRepository.save(interfaceCase);
+    public InterfaceCaseDto createCase(@RequestBody InterfaceCaseDto interfaceCase) {
+        return interfaceCaseCreateService.create(interfaceCase);
     }
 
-    @PostMapping("/caseResult")
-    public CaseResult createCaseResult(@RequestBody CaseResult caseResult) {
-        return caseResultRepository.save(caseResult);
-    }
-
-    @PostMapping("/testStep")
-    public TestStep createTestStep(@RequestBody TestStep testStep) {
-        return testStepRepository.save(testStep);
+    @PostMapping("/manualCase")
+    public ManualCaseDto createCase(@RequestBody ManualCaseDto manualCase) {
+        return manualCaseCreateService.create(manualCase);
     }
 }

@@ -2,18 +2,18 @@ package com.clsaa.dop.server.test.mapper;
 
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
 import com.clsaa.dop.server.test.model.po.ManualCase;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Component
-public interface ManualCaseServiceMapper<ManualCase,ManualCaseDto> implements ServiceMapper<ManualCase, ManualCaseDto> {
+@Mapper
+public abstract class ManualCaseServiceMapper implements ServiceMapper<ManualCase, ManualCaseDto> {
 
-    @Override
-    public ManualCase downgrade(ManualCaseDto manualCaseDto) {
-        return null;
-    }
+    public static ManualCaseServiceMapper MAPPER = Mappers.getMapper(ManualCaseServiceMapper.class);
 
     @Override
-    public ManualCaseDto upgrade(ManualCase manualCase) {
-        return null;
-    }
+    public abstract ManualCase downgrade(ManualCaseDto dto);
+
+    @Override
+    public abstract ManualCaseDto upgrade(ManualCase po);
+
 }
