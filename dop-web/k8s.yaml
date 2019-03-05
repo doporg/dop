@@ -19,7 +19,7 @@ spec:
             - name: host-timezone
               mountPath: /etc/timezone
           ports:
-            - containerPort: 3000
+            - containerPort: 80
       volumes:
         - name: host-time
           hostPath:
@@ -37,9 +37,9 @@ metadata:
     app: dop-web
 spec:
   ports:
-    - port: 14000
+    - port: 14237
       protocol: TCP
-      targetPort: 3000
+      targetPort: 80
   selector:
     app: dop-web
 ---
@@ -55,4 +55,4 @@ spec:
         paths:
           - backend:
               serviceName: dop-web
-              servicePort: 14000
+              servicePort: 14237
