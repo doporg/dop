@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline;
+package com.clsaa.dop.server.pipeline;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,8 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableFeignClients
 @ComponentScan("com.clsaa")
-public class piplineServerApplication {
+public class PipelineServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PiplineServerApplication.class, args);
+        SpringApplication.run(PipelineServerApplication.class, args);
     }
 }
