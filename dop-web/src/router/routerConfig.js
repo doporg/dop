@@ -8,6 +8,7 @@ import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pi
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
+import {Permission} from "../pages/Permissions";
 const baseConfig = [
     {
         path: '/',
@@ -74,6 +75,20 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...baseConfig];
+const permissionConfig = [
+    //permission
+    {
+        path: '/permissions',
+        layout: BasicLayout,
+        component: Permission,
+    },
+    // {
+    //     path: '/permissions/newPermission',
+    //     layout: BasicLayout,
+    //     component: PipelineInfo,
+    // },
+];
+
+const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...permissionConfig , ...baseConfig];
 
 export default routerConfig;

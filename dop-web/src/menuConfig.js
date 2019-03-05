@@ -80,11 +80,31 @@ const asideMenuConfig = [
         path: '/application',
         icon: 'publish',
     },
-     {
+    {
          name: '自调节集成',
          path: '/ciadjust',
          icon: 'cascades',
-     }
+    },
+    {
+
+        name: '功能点管理',     // 二级导航名称
+        path: '/permissions',  // 二级导航路径
+        icon: 'box' , // 二级导航权限配置
+    },
+    {
+        name: '角色管理',
+        path: '/roles',
+        icon: 'account',
+    },
+    // {
+    //     name: '用户管理',
+    //     path: '/roles',
+    //     icon: 'account',
+    // },
+
+
+
+
 ];
 
 export { headerMenuConfig, asideMenuConfig };
