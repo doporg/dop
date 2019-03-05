@@ -93,7 +93,9 @@ export default class Login extends Component {
             }).then((response) => {
                 if (response.status === 200) {
                     Axios.defaults.headers.common['x-login-token'] = response.data;
-                    self.props.history.push('/')
+                    window.sessionStorage.setItem("userId", response.data);
+                    window.sessionStorage.
+                    self.props.history.push('/project')
                 } else {
                     toast.show({
                         type: "error",

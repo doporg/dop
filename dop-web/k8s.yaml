@@ -1,25 +1,25 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: discovery-server
+  name: dop-web
   namespace: dop
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: discovery-server
+        app: dop-web
     spec:
       containers:
-        - name: discovery-server
-          image: registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
+        - name: dop-web
+          image: registry.dop.clsaa.com/dop/dop-web:<BUILD_TAG>
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
             - name: host-timezone
               mountPath: /etc/timezone
           ports:
-            - containerPort: 8888
+            - containerPort: 3000
       volumes:
         - name: host-time
           hostPath:
@@ -31,28 +31,29 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: discovery-server
+  name: dop-web
   namespace: dop
   labels:
-    app: discovery-server
+    app: dop-web
 spec:
   ports:
-  - port: 8761
-    protocol: TCP
-    targetPort: 8761
+    - port: 14000
+      protocol: TCP
+      targetPort: 3000
   selector:
-    app: discovery-server
+    app: dop-web
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: discovery-server
+  name: dop-web
   namespace: dop
 spec:
   rules:
-  - host: discovery.dop.clsaa.com
-    http:
-      paths:
-      - backend:
-          serviceName: discovery-server
-          servicePort: 8761
+    - host: www.dop.clsaa.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: dop-web
+              servicePort: 14000
