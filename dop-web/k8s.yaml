@@ -53,7 +53,6 @@ spec:
     - host: www.dop.clsaa.com
       http:
         paths:
-          - path: /
-            backend:
+          - backend:
               serviceName: dop-web
               servicePort: 14000
