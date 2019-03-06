@@ -5,10 +5,6 @@ import Footer from "../../../components/Footer";
 
 
 export default class LoginTransfer extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <div className="register-body">

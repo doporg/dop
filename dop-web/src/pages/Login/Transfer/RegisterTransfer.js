@@ -9,9 +9,6 @@ import {RSA} from "../index";
 const {toast} = Feedback;
 
 export default class RegisterTransfer extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentWillMount(){
         let self = this;
