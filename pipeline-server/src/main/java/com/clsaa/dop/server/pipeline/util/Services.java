@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline.util;
+package com.clsaa.dop.server.pipeline.util;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline.config;
+package com.clsaa.dop.server.pipeline.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 
-/**
+/**e
  * Druid数据源配置类
  *
  * @author 任贵杰

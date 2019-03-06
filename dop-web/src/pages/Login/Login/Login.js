@@ -107,10 +107,9 @@ export default class Login extends Component {
                     visible: false
                 });
             }).catch((error)=>{
-                console.log(error.message);
                 toast.show({
                     type: "error",
-                    content: "请检查您的密码",
+                    content: error.message,
                     duration: 3000
                 });
                 self.setState({
@@ -120,7 +119,7 @@ export default class Login extends Component {
         }).catch((error) => {
             toast.show({
                 type: "error",
-                content: error,
+                content: error.message,
                 duration: 2000
             });
         })
