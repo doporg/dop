@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @since 06/03/2019
  */
 @Component
-public class InterfaceCaseCreateService extends CreateServiceImpl<InterfaceCase, InterfaceCaseDto, Long> {
+public class InterfaceCaseCreateService extends CommonCreateServiceImpl<InterfaceCase, InterfaceCaseDto, Long> {
 
     @Autowired
     public InterfaceCaseCreateService(ServiceMapper<InterfaceCase, InterfaceCaseDto> serviceMapper, JpaRepository<InterfaceCase, Long> repository) {

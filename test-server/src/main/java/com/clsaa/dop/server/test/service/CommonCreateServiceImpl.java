@@ -10,12 +10,12 @@ import java.util.Optional;
  * @version 1.0
  * @since 06/03/2019
  */
-public class CreateServiceImpl<PO, DTO, ID> implements CreateService<DTO> {
+public class CommonCreateServiceImpl<PO, DTO, ID> implements CreateService<DTO> {
 
     private ServiceMapper<PO, DTO> serviceMapper;
     private JpaRepository<PO, ID> jpaRepository;
 
-    public CreateServiceImpl(ServiceMapper<PO, DTO> serviceMapper, JpaRepository<PO, ID> repository) {
+    public CommonCreateServiceImpl(ServiceMapper<PO, DTO> serviceMapper, JpaRepository<PO, ID> repository) {
         this.serviceMapper = serviceMapper;
         this.jpaRepository = repository;
     }

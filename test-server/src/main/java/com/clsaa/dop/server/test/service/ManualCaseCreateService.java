@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @since 06/03/2019
  */
 @Component
-public class ManualCaseCreateService extends CreateServiceImpl<ManualCase, ManualCaseDto, Long> {
+public class ManualCaseCreateService extends CommonCreateServiceImpl<ManualCase, ManualCaseDto, Long> {
 
     @Autowired
     public ManualCaseCreateService(ServiceMapper<ManualCase, ManualCaseDto> serviceMapper, JpaRepository<ManualCase, Long> repository) {
