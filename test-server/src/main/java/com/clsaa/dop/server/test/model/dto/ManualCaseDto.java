@@ -8,27 +8,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author xihao
+ * @version 1.0
+ * @since 06/03/2019
+ */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ManualCaseDto {
-
-    public ManualCaseDto(Long id, LocalDateTime ctime, LocalDateTime mtime, Long cuser, Long muser, boolean deleted, String caseName, String caseDesc, String preCondition, Long applicationId, String commentKey, CaseStatus status) {
-        this.id = id;
-        this.ctime = ctime;
-        this.mtime = mtime;
-        this.cuser = cuser;
-        this.muser = muser;
-        this.deleted = deleted;
-        this.caseName = caseName;
-        this.caseDesc = caseDesc;
-        this.preCondition = preCondition;
-        this.applicationId = applicationId;
-        this.commentKey = commentKey;
-        this.status = status;
-    }
-
-    public ManualCaseDto() {
-    }
 
     private Long id;
 

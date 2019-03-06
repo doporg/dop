@@ -1,36 +1,23 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.model.po.CaseStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author xihao
+ * @version 1.0
+ * @since 06/03/2019
+ */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InterfaceCaseDto {
-
-    public InterfaceCaseDto(Long id, LocalDateTime ctime, LocalDateTime mtime, Long cuser,
-                            Long muser, boolean deleted, String caseName, String caseDesc,
-                            String preCondition, Long applicationId, String steps, String predicateResult,
-                            CaseStatus status) {
-        this.id = id;
-        this.ctime = ctime;
-        this.mtime = mtime;
-        this.cuser = cuser;
-        this.muser = muser;
-        this.deleted = deleted;
-        this.caseName = caseName;
-        this.caseDesc = caseDesc;
-        this.preCondition = preCondition;
-        this.applicationId = applicationId;
-        this.steps = steps;
-        this.predicateResult = predicateResult;
-        this.status = status;
-    }
-
-    public InterfaceCaseDto() {
-    }
 
     private Long id;
 
@@ -57,4 +44,5 @@ public class InterfaceCaseDto {
     private String predicateResult;
 
     private CaseStatus status;
+
 }

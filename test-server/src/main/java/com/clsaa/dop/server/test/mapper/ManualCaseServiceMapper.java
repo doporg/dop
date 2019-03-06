@@ -2,18 +2,23 @@ package com.clsaa.dop.server.test.mapper;
 
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
 import com.clsaa.dop.server.test.model.po.ManualCase;
-import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper
-public abstract class ManualCaseServiceMapper implements ServiceMapper<ManualCase, ManualCaseDto> {
-
-    public static ManualCaseServiceMapper MAPPER = Mappers.getMapper(ManualCaseServiceMapper.class);
+/**
+ * @author xihao
+ * @version 1.0
+ * @since 06/03/2019
+ */
+@Component
+public class ManualCaseServiceMapper extends AbstractCommonServiceMapper<ManualCase, ManualCaseDto> {
 
     @Override
-    public abstract ManualCase downgrade(ManualCaseDto dto);
+    Class<ManualCase> getPOClass() {
+        return ManualCase.class;
+    }
 
     @Override
-    public abstract ManualCaseDto upgrade(ManualCase po);
-
+    Class<ManualCaseDto> getDTOClass() {
+        return ManualCaseDto.class;
+    }
 }

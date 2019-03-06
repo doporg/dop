@@ -2,26 +2,25 @@ package com.clsaa.dop.server.test.mapper;
 
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mappings;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper
-public abstract class InterfaceCaseMapper implements ServiceMapper<InterfaceCase, InterfaceCaseDto> {
-
-    public static InterfaceCaseMapper MAPPER = Mappers.getMapper(InterfaceCaseMapper.class);
-
-    @Override
-    @Mappings(value = {
-
-    })
-    public abstract InterfaceCase downgrade(InterfaceCaseDto interfaceCaseDto);
+/**
+ * @author xihao
+ * @version 1.0
+ * @since 06/03/2019
+ */
+@Component
+public class InterfaceCaseMapper extends AbstractCommonServiceMapper<InterfaceCase, InterfaceCaseDto> {
 
     @Override
-    @Mappings(value = {
+    Class<InterfaceCase> getPOClass() {
+        return InterfaceCase.class;
+    }
 
-    })
-    public abstract InterfaceCaseDto upgrade(InterfaceCase interfaceCase);
+    @Override
+    Class<InterfaceCaseDto> getDTOClass() {
+        return InterfaceCaseDto.class;
+    }
 
 }
 

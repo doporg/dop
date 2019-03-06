@@ -24,7 +24,6 @@ import java.time.LocalDateTime;
                 @Index(columnList = "application_id,case_name", unique = false)})
 public class InterfaceCase {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
