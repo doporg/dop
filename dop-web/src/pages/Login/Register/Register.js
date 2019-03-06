@@ -99,7 +99,7 @@ export default class Register extends Component {
 
     checkPass(rule, value, callback) {
         const {validate} = this.field;
-        let reg = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%.-=])[0-9a-zA-Z!@#$%.-=]{4,20}$/;
+        let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=\-]).{6,20}$/;
         if (reg.test(value)) {
             validate(["rePasswd"]);
             callback();

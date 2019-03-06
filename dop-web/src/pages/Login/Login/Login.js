@@ -9,24 +9,25 @@ import Axios from "axios/index";
 import jsonp from "jsonp";
 
 const {Item: FormItem} = Form;
-const { toast } = Feedback;
+const {toast} = Feedback;
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.field = new Field(this);
         this.state = {
-            visible: true
+            visible: true,
+            ip: '0.0.0.0'
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let self = this;
-        RSA().then((data)=>{
+        RSA().then((data) => {
             self.setState({
                 visible: false
             });
-        }).catch((error)=>{
+        }).catch((error) => {
             toast.show({
                 type: "error",
                 content: error.message,
@@ -57,30 +58,26 @@ export default class Login extends Component {
     register() {
         this.props.history.push('/register');
     }
-    modify(){
+
+    modify() {
         this.props.history.push('/modifyPwd');
     }
 
-    loginIp(){
-        return new Promise((resolve, reject)=>{
-            jsonp('https://api.ipify.org?format=jsonp', (error, data)=>{
-                if(error){
-                    reject(error)
-                }else{
-                    resolve(data.ip)
-                }
-            })
-        });
-
+    loginIp() {
+        let self = this;
+        jsonp('https://api.ipify.org?format=jsonp', (error, data) => {
+            if (!error) {
+                self.setState({
+                    ip: data
+                })
+            }
+        })
     }
 
-    submit(data){
+    submit(data) {
         let url = API.gateway + '/login-server/v1/login';
         let self = this;
-        self.loginIp().then((ip)=>{
-            data.loginIp = ip;
-            return PublicKey()
-        }).then((publicKey) => {
+        PublicKey().then((publicKey) => {
             data.password = Encryption(data.passwd, publicKey);
             delete data.passwd;
             data.client = "DOP_WEB";
@@ -106,7 +103,7 @@ export default class Login extends Component {
                 self.setState({
                     visible: false
                 });
-            }).catch((error)=>{
+            }).catch((error) => {
                 toast.show({
                     type: "error",
                     content: error.message,
@@ -147,7 +144,8 @@ export default class Login extends Component {
                         </div>
                     </div>
                     <div className="right">
-                        <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
+                        <Loading shape="fusion-reactor" visible={this.state.visible}
+                                 className="next-loading my-loading">
                             <div className="form">
                                 <div className="title">
                                     密码登陆
