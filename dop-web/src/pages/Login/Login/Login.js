@@ -29,7 +29,7 @@ export default class Login extends Component {
         }).catch((error)=>{
             toast.show({
                 type: "error",
-                content: "网络请求失败",
+                content: error.message,
                 duration: 1000
             });
         })
@@ -85,17 +85,16 @@ export default class Login extends Component {
             delete data.passwd;
             data.client = "DOP_WEB";
             data.deviceId = data.email;
-            console.log(data);
             Axios({
                 url: url,
                 method: 'post',
                 data: data
             }).then((response) => {
-                console.log(response)
                 if (response.status === 200) {
-                    console.log(1111)
                     Axios.defaults.headers.common['x-login-token'] = response.data;
-                    window.sessionStorage.setItem("userId", response.data);
+                    Axios.defaults.headers.common['x-login-user'] = response.data;
+                    window.sessionStorage.setItem("x-login-token", response.data);
+                    window.sessionStorage.setItem("x-login-user", response.data);
                     self.props.history.push('/project')
                 } else {
                     toast.show({
@@ -108,6 +107,7 @@ export default class Login extends Component {
                     visible: false
                 });
             }).catch((error)=>{
+                console.log(error.message);
                 toast.show({
                     type: "error",
                     content: "请检查您的密码",
