@@ -28,17 +28,6 @@ public class InterfaceCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime ctime;
-
-    private LocalDateTime mtime;
-
-    private Long cuser;
-
-    private Long muser;
-
-    @Column(name = "is_deleted")
-    private boolean deleted;
-
     @Column(name = "case_name")
     private String caseName;
 
@@ -59,4 +48,15 @@ public class InterfaceCase {
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
 
+    // ----------- common property ---------
+    private LocalDateTime ctime;
+
+    private LocalDateTime mtime;
+
+    private Long cuser;
+
+    private Long muser;
+
+    @Column(name = "is_deleted")
+    private boolean deleted;
 }

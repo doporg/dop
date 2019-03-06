@@ -39,7 +39,7 @@ public class ManualCaseDto {
 
     private Long applicationId;
 
-    private String commentKey;
+    private String comment;
 
     private CaseStatus status;
 }

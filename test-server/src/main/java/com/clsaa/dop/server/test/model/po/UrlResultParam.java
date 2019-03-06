@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.test.model.po;
 
+import com.clsaa.dop.server.test.enums.ParamType;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,30 +11,33 @@ import java.time.LocalDateTime;
 /**
  * @author xihao
  * @version 1.0
- * @since 05/03/2019
+ * @since 04/03/2019
  */
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "test_step", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "step_index"})},
-        indexes = {@Index(columnList = "case_id,step_index", unique = true)})
-public class TestStep {
+@NoArgsConstructor
+@Table(name = "url_result_param", schema = "db_dop_test",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"url_id", "name"})},
+        indexes = {@Index(columnList = "url_id,name", unique = true)})
+public class UrlResultParam {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "case_id")
-    private Long caseId;
+    @Enumerated(value = EnumType.STRING)
+    private ParamType paramType;
 
-    @Column(name = "step_index")
-    private int stepIndex;
+    private String name;
 
-    //todo 图片上传支持
-    @Column(name = "desc")
+    @Column(name = "raw_value")
+    private String rawValue;
+
     private String desc;
+
+    @Column(name = "url_id")
+    private Long urlId;
 
     // ------ common property ------------
     private LocalDateTime ctime;

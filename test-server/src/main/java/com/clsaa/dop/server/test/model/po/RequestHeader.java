@@ -11,32 +11,32 @@ import java.time.LocalDateTime;
 /**
  * @author xihao
  * @version 1.0
- * @since 05/03/2019
+ * @since 06/03/2019
  */
 @Data
+@Builder
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "test_step", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "step_index"})},
-        indexes = {@Index(columnList = "case_id,step_index", unique = true)})
-public class TestStep {
+@NoArgsConstructor
+@Table(name = "interface_request_header", schema = "db_dop_test",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"url_id", "name"})},
+        indexes = {@Index(columnList = "url_id,name", unique = true)})
+public class RequestHeader {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "case_id")
-    private Long caseId;
+    // ----------- main property ---------
 
-    @Column(name = "step_index")
-    private int stepIndex;
+    private String name;
 
-    //todo 图片上传支持
-    @Column(name = "desc")
-    private String desc;
+    private String value;
 
-    // ------ common property ------------
+    @Column(name = "url_id")
+    private Long urlId;
+
+    // ----------- common property ---------
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;

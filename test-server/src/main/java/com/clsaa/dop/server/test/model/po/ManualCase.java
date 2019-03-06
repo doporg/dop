@@ -26,17 +26,6 @@ public class ManualCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime ctime;
-
-    private LocalDateTime mtime;
-
-    private Long cuser;
-
-    private Long muser;
-
-    @Column(name = "is_deleted")
-    private boolean deleted;
-
     @Column(name = "case_name")
     private String caseName;
 
@@ -49,11 +38,22 @@ public class ManualCase {
     @Column(name = "application_id")
     private Long applicationId;
 
-    // 备注内容 在mongo 中的key
-    @Column(name = "comment_key")
-    private String commentKey;
+    //todo 图片上传支持
+    @Column(name = "comment")
+    private String comment;
 
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
 
+    // ------ common property ------------
+    private LocalDateTime ctime;
+
+    private LocalDateTime mtime;
+
+    private Long cuser;
+
+    private Long muser;
+
+    @Column(name = "is_deleted")
+    private boolean deleted;
 }

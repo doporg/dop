@@ -1,5 +1,7 @@
 package com.clsaa.dop.server.test.model.po;
 
+
+import com.clsaa.dop.server.test.enums.CheckPointOperation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,32 +13,33 @@ import java.time.LocalDateTime;
 /**
  * @author xihao
  * @version 1.0
- * @since 05/03/2019
+ * @since 06/03/2019
  */
 @Data
+@Builder
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "test_step", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "step_index"})},
-        indexes = {@Index(columnList = "case_id,step_index", unique = true)})
-public class TestStep {
+@NoArgsConstructor
+@Table(name = "interface_request_check_point", schema = "db_dop_test",
+        indexes = {@Index(columnList = "url_id")})
+public class RequestCheckPoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "case_id")
-    private Long caseId;
+    // ----------- main property ---------
+    private String property;
 
-    @Column(name = "step_index")
-    private int stepIndex;
+    @Enumerated(value = EnumType.STRING)
+    private CheckPointOperation operation;
 
-    //todo 图片上传支持
-    @Column(name = "desc")
-    private String desc;
+    private String value;
 
-    // ------ common property ------------
+    @Column(name = "url_id")
+    private Long urlId;
+
+    // ----------- common property ---------
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;

@@ -1,5 +1,5 @@
 package com.clsaa.dop.server.test.model.po;
-
+import com.clsaa.dop.server.test.enums.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,32 +11,26 @@ import java.time.LocalDateTime;
 /**
  * @author xihao
  * @version 1.0
- * @since 05/03/2019
+ * @since 06/03/2019
  */
 @Data
+@Builder
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "test_step", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "step_index"})},
-        indexes = {@Index(columnList = "case_id,step_index", unique = true)})
-public class TestStep {
+@NoArgsConstructor
+@Table(name = "interface_script", schema = "db_dop_test")
+public class InterfaceScript {
+    // ----------- main property ---------
+    @Enumerated(value = EnumType.STRING)
+    private Stage stage;
 
+
+
+    // ----------- common property ---------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "case_id")
-    private Long caseId;
-
-    @Column(name = "step_index")
-    private int stepIndex;
-
-    //todo 图片上传支持
-    @Column(name = "desc")
-    private String desc;
-
-    // ------ common property ------------
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;
@@ -47,4 +41,5 @@ public class TestStep {
 
     @Column(name = "is_deleted")
     private boolean deleted;
+
 }
