@@ -34,6 +34,7 @@ export default class Login extends Component {
                 duration: 1000
             });
         })
+        self.loginIp()
     }
 
     handleSubmit(e) {
@@ -117,7 +118,7 @@ export default class Login extends Component {
             toast.show({
                 type: "error",
                 content: error.message,
-                duration: 2000
+                duration: 3000
             });
         })
     }
