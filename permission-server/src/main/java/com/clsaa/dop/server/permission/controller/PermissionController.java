@@ -2,7 +2,10 @@ package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.model.po.Permission;
 
+import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.service.PermissionService;
+import com.clsaa.dop.server.permission.util.BeanUtils;
+import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,19 +69,29 @@ public class PermissionController {
 
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
     @GetMapping("/v1/permissions")
-    public Permission findById(@ApiParam(name = "id",value = "功能点ID",required = true)
+    public PermissionV1 findById(@ApiParam(name = "id",value = "功能点ID",required = true)
                                    @RequestParam(value = "id", required = true)Long id)
     {
-        return permissionService.findById(id);
+        return BeanUtils.convertType(this.permissionService.findById(id), PermissionV1.class);
+//        return permissionService.findById(id);
     }
 
+    @ApiOperation(value = "分页查询所有功能点", notes = "分页查询所有功能点")
+    @GetMapping("/v1/permissions/pagealldata")
+    public Pagination<PermissionV1> getPermissionV1Pagination(
+            @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
+            @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
+            @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
+            @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size)
+    {
+        return this.permissionService.getPermissionV1Pagination(page,size);
+    }
     @ApiOperation(value = "查询所有功能点", notes = "查询所有功能点")
     @GetMapping("/v1/permissions/alldata")
-    public List<Permission> findAll()
-    {
-        return permissionService.findAll();
-    }
+    public List<PermissionV1> findAll(){
 
+        return this.permissionService.findAll();
+    }
 
     @ApiOperation(value="根据ID删除功能点",notes = "根据ID删除功能点")
     @DeleteMapping("v1/permissions")
