@@ -1,9 +1,8 @@
 package com.clsaa.dop.server.application.model.bo;
 
-import com.clsaa.dop.server.application.model.po.projectManagement.Project;
+import com.clsaa.dop.server.application.model.po.Project;
 import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 

@@ -3,7 +3,7 @@
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 
 import BasicLayout from '../layouts/BasicLayout';
-import Projects from '../pages/Projects';
+import {Projects, Application} from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 
@@ -13,6 +13,10 @@ const routerConfig = [
         layout: BasicLayout,
         component: Projects,
     },{
+        path: '/application',
+        layout: BasicLayout,
+        component: Application,
+    }, {
         path: '/pipeline',
         layout: BasicLayout,
         component: Pipeline,

@@ -1,7 +1,6 @@
 import React, {PureComponent} from 'react';
 import {Button} from '@icedesign/base';
 import PropTypes from 'prop-types';
-import CreateProjectDialog from "../CreateProjectDialog"
 
 export default class TopBar extends PureComponent {
 

@@ -1,13 +1,9 @@
-/**
- * 展示项目列表
- * @author Bowen
- **/
-
 import React, {Component} from 'react';
 import {Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
-
-import API from '../../../API';
+import {Icon} from '@icedesign/base';
+import API from "../../../../API.js"
+import {Col} from "@alifd/next/lib/grid";
 
 
 const {Row} = Grid;
@@ -25,9 +21,9 @@ const {Row} = Grid;
 //     });
 // };
 
-// async function getProjectData (current){
+// async function getApplicationData (current){
 //
-//     let url = API.application + '/projects';
+//     let url = API.application + '/applications';
 //     let data = await Axios.get(url, {
 //         params: {
 //             pageNo: current,
@@ -38,7 +34,7 @@ const {Row} = Grid;
 //         .then(function (response){
 //            return response.data
 //
-//             console.log("getproject");
+//             console.log("getApplication");
 //
 //
 //         })
@@ -47,10 +43,14 @@ const {Row} = Grid;
 //         });
 // }
 
-//项目展示列表
-export default class ProjectList extends Component {
+/**
+ * 展示应用的列表
+ * @author Bowen
+ **/
 
-    static displayName = 'ProjectList';
+export default class ApplicationList extends Component {
+
+    static displayName = 'ApplicationList';
 
 
     constructor(props) {
@@ -65,46 +65,37 @@ export default class ProjectList extends Component {
 
     }
 
-    // componentDidMount() {
-    //
-    //     let url = API.application + '/projects';
-    //     let _this = this;
-    //     Axios.get(url, {
-    //         params: {
-    //             pageNo: this.state.current,
-    //             pageSize: 9,
-    //             includeFinished: false
-    //         }
-    //     })
-    //         .then(function (response){
-    //             _this.setState({
-    //                 currentData:response.data
-    //             })
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
-
     componentWillReceiveProps(nextProps, nextContext) {
-        let url = API.application + '/projects';
+
+        for (let i = 0; i < nextProps.currentData.length; i++) {
+            let tmpTime = nextProps.currentData[i].ctime;
+            if (tmpTime[0].length < 4) break;
+            nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
+        }
         this.setState({
             currentData: nextProps.currentData
         });
     }
 
-
+// titleRender= function(title){
+//         return <a href = {"http://localhost:3000/ApplicationList?ApplicationId="+String(title)}>{title}</a>
+// }
     render() {
         return (
             <Row wrap gutter="20">
-                <Table dataSource={this.state.currentData}>
-                    <Table.Column title="项目名称" dataIndex="title"/>
-                    <Table.Column title="创建人" dataIndex="cuser"/>
-                    <Table.Column title="创建时间" dataIndex="ctime"/>
-                </Table>
+                <Col>
+                    <Table dataSource={this.state.currentData}>
+                        <Table.Column title="ID" dataIndex="id"/>
+                        <Table.Column title="应用名称" dataIndex="title"/>
+                        <Table.Column title="拥有者" dataIndex="ouser"/>
+                        <Table.Column title="创建时间" dataIndex="ctime"/>
+                        <Table.Column title="应用描述" dataIndex="description"/>
+                    </Table>
+                </Col>
             </Row>
         );
     }
+
 }
 
 const styles = {

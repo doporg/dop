@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.application.model.vo;
 
-import com.clsaa.dop.server.application.model.po.Project;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,38 +8,30 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ProjectV1 {
+public class AppV1 {
     /**
-     * 项目Id
+     * 应用id
      */
     private Long id;
 
+    /**
+     * 应用拥有者
+     */
+    private Long ouser;
 
     /**
-     * 项目名称
+     * 应用名称
      */
     private String title;
 
     /**
-     * 创建人
-     */
-    private Long cuser;
-
-
-    /**
-     * 创建日期
+     * 创建时间
      */
     private LocalDateTime ctime;
 
-
     /**
-     * 项目状态
-     */
-    private Project.Status status;
-
-    /**
-     * 项目描述
+     * 应用描述
      */
     private String description;
-}
 
+}

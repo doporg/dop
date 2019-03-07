@@ -1,23 +1,21 @@
 package com.clsaa.dop.server.application.service;
 
-import com.clsaa.dop.server.application.config.BizCodes;
-import com.clsaa.dop.server.application.dao.projectManagement.ProjectRepository;
+import com.clsaa.dop.server.application.dao.ProjectRepository;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
-import com.clsaa.dop.server.application.model.po.projectManagement.Project;
+import com.clsaa.dop.server.application.model.po.Project;
 import com.clsaa.dop.server.application.util.BeanUtils;
-import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service(value = "projectService")
@@ -25,26 +23,79 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    public List<ProjectBoV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished) {
+    /**
+     * 分页查询项目
+     *
+     * @param pageNo          页号
+     * @param pageSize        页大小
+     * @param includeFinished 是否包含已结项目
+     * @param queryKey        查询关键字
+     * @return {@link Pagination< ProjectBoV1>}
+     */
+    public Pagination<ProjectBoV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        //
-        Page<Project> projectPage = projectRepository.findAllByStatus(Project.Status.NORMAL, pageable);
-        List<Project> projectList = projectPage.getContent();
-        Integer totalPage = projectPage.getTotalPages();
-        if (includeFinished) {
-            projectList = projectRepository.findAll(pageable).getContent();
+
+
+        Page<Project> projectPage;
+        List<Project> projectList;
+        Integer totalCount;
+
+        /*
+         *如果有查询关键字 则调用可以带检索的查询
+         */
+        if (!queryKey.equals("")) {
+            //如果包含已结项目则不带状态查询
+            if (includeFinished) {
+                projectList = projectRepository.findAllByTitleStartingWith(queryKey, pageable).getContent();
+
+                //这一句是为了获得所有条目的数量
+                totalCount = projectRepository.findAllByTitleStartingWith(queryKey).size();
+            } else {
+                projectList = projectRepository.findAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey, pageable).getContent();
+                totalCount = projectRepository.findAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey).size();
+            }
         }
-        List<ProjectBoV1> projectBoV1List = new ArrayList<>();
-        for (Project item : projectList) {
-            projectBoV1List.add(BeanUtils.convertType(item, ProjectBoV1.class));
+        /*
+         *如果没有，则调用全部查询
+         */
+        else {
+            if (includeFinished) {
+
+                projectList = projectRepository.findAll(pageable).getContent();
+                totalCount = projectRepository.findAll().size();
+            } else {
+                projectList = projectRepository.findAllByStatus(Project.Status.NORMAL, pageable).getContent();
+                totalCount = projectRepository.findAllByStatus(Project.Status.NORMAL).size();
+            }
         }
 
-        return projectBoV1List;
+        //新建BO层对象 并赋值
+        Pagination<ProjectBoV1> pagination = new Pagination<>();
+        pagination.setTotalCount(totalCount);
+        if (projectList.size() == 0) {
+            pagination.setPageList(Collections.emptyList());
+            return pagination;
+        }
+
+        pagination.setPageList(projectList.stream().map(l -> BeanUtils.convertType(l, ProjectBoV1.class)).collect(Collectors.toList()));
+
+        //for (Project item : projectList) {
+        //    projectBoV1List.add(BeanUtils.convertType(item, ProjectBoV1.class));
+        //}
+
+        return pagination;
     }
 
-    public boolean createProjects(String title, String description) {
+    /**
+     * 创建项目
+     *
+     * @param title       项目名称
+     * @param description 项目描述
+     * @return {@link Pagination< ProjectBoV1>}
+     */
+    public void createProjects(String title, String description) {
         Long cuser = 1234L;
         Long muser = 1234L;
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
@@ -54,14 +105,14 @@ public class ProjectService {
                 .description(description)
                 .cuser(cuser)
                 .muser(muser)
-                .deleted(false)
+                .is_deleted(false)
                 .organizationId(123L)
                 .status(Project.Status.NORMAL)
                 .ctime(ctime)
                 .mtime(mtime)
                 .build();
         this.projectRepository.saveAndFlush(project);
-        return true;
+        return;
     }
 
 

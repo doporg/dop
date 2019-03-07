@@ -7,10 +7,10 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import API from '../API';
 import {Button, Input} from '@icedesign/base';
-import TopBar from './components/TopBar';
-import ProjectList from './components/ProjectList';
-import Pagination from './components/ProjectPagination'
-import CreateProjectDialog from './components/CreateProjectDialog'
+import TopBar from './components/projectManagement/TopBar';
+import ProjectList from './components/projectManagement/ProjectList';
+import Pagination from './components/projectManagement/ProjectPagination'
+import CreateProjectDialog from './components/projectManagement/CreateProjectDialog'
 export default class Projects extends Component {
     static displayName = 'Projects';
 
@@ -29,7 +29,8 @@ export default class Projects extends Component {
         this.state = {
             //通知子组件刷新的boolean变量
             //因为获取项目列表数据需要翻页器的数据，如果在父组件中操作比较复杂，我这里就直接传一个消息让子组件刷新一下
-            createdProjectNeedRefresh: false
+            createdProjectNeedRefresh: false,
+            searchKey: ""
         }
     }
 
@@ -48,6 +49,12 @@ export default class Projects extends Component {
         console.log("refreshProjectList");
     }
 
+    onSearch(value) {
+        this.setState({
+            searchKey: value
+        })
+    }
+
     render() {
         return (
             <div>
@@ -57,13 +64,16 @@ export default class Projects extends Component {
                             size="large"
                             placeholder="请输入关键字进行搜索"
                             style={{width: '240px'}}
+                            // hasClear
+                            onChange={this.onSearch.bind(this)}
                         />
                     }
                     extraAfter={< CreateProjectDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
                     }
                 />
                 <Pagination createdProjectNeedRefresh={this.state.createdProjectNeedRefresh}
-                            refreshFinished={this.refreshFinished.bind(this)}/>
+                            refreshFinished={this.refreshFinished.bind(this)}
+                            searchKey={this.state.searchKey}/>
             </div>
 
         );

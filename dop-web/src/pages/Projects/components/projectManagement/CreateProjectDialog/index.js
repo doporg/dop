@@ -18,8 +18,7 @@ import {
 
 import React, {Component} from 'react';
 import Axios from "axios";
-import API from "../../../API";
-
+import API from "../../../../API.js"
 const FormItem = Form.Item;
 const {Row, Col} = Grid;
 const {Group: RadioGroup} = Radio;
@@ -61,6 +60,7 @@ class PrivateController extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
+    //与Filed组件通信
     componentWillReceiveProps(nextProps) {
         if ("value" in nextProps) {
             this.setState({
@@ -68,7 +68,6 @@ class PrivateController extends Component {
             });
         }
     }
-
 
     onChange(value) {
         this.setState({
