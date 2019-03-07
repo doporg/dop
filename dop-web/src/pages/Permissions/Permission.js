@@ -7,10 +7,10 @@ import React, { Component } from 'react';
 
 import Axios from 'axios';
 import API from '../API';
-import {Table, Button, Dialog, Radio, Field} from '@icedesign/base';
+import {Table, Button, Dialog, Radio, Field, Feedback} from '@icedesign/base';
 import Pagination from "@icedesign/base/lib/pagination";
 import Form from "@icedesign/base/lib/form";
-
+import BalloonConfirm from "@icedesign/balloon-confirm";
 import Input from "@icedesign/base/lib/input";
 import Select, {Option} from "@icedesign/base/lib/select";
 
@@ -30,6 +30,7 @@ export default class Permission extends Component {
             },
             currentData : [],
             visible:false,
+            deletevisible:false,
             InputInfo:
                 {
                     parentId:"",
@@ -39,7 +40,10 @@ export default class Permission extends Component {
                     isPravte:"",
                     description:"",
                     isdeleted:false
-                }
+                },
+            pageNo:1,
+            pageSize:8,
+            totalCount:0
         };
 
     }
@@ -48,28 +52,49 @@ export default class Permission extends Component {
         this.field.reset();
     }
 
-    //验证名称是否重复
-    // userExists(rule, value, callback) {
-    //     if (!value) {
-    //         callback();
-    //     } else {
-    //         setTimeout(() => {
-    //             if (value === "frank") {
-    //                 callback([new Error("抱歉，该用户名已被占用。")]);
-    //             } else {
-    //                 callback();
-    //             }
-    //         }, 1000);
-    //     }
-    // }
+    // 验证名称是否重复
+    userExists(rule, value, callback) {
+        if (!value) {
+            callback();
+        } else {
+            setTimeout(() => {
 
-    //弹窗
+                let url = API.permission + "/v1/permissions/alldata" ;
+
+                Axios.get(url).then((response) => {
+                    // handle success
+                    // 去get已经存储的数据
+                    response.data.forEach((val)=>
+                    {
+                        //对response.data进行遍历，取每个数组的name项进行比较
+                        console.log(val.name)
+                     if(value==val.name)
+                        {
+                            callback([new Error("抱歉，该功能点名称已被使用。")]);
+                        }
+                    })
+                    callback();
+                }).catch((error)=>{
+                    // handle error
+                    console.log(error);
+                });
+            }, 1000);
+        }
+    }
+
+    //取消删除操作
+    onCancel = () => {
+        console.log('取消删除');
+        Feedback.toast.error('删除已取消！')
+    }
+
+    //弹出创建功能点弹窗
     onOpen = () => {
         this.setState({
             visible: true
         });
     };
-    //关闭弹窗
+    //关闭功能点弹窗
     onClose = reason => {
         console.log(reason);
 
@@ -78,11 +103,28 @@ export default class Permission extends Component {
         });
     };
 
-    onChange(v) {
-        console.log(v);
-        this.setState({
-            control: v
+    onChange=currentPage=> {
+
+        let url = API.permission + "/v1/permissions/pagealldata" ;
+        let params=
+            {
+                pageNo:currentPage,
+                pageSize:this.state.pageSize
+            }
+        // console.log(params)
+        Axios.get(url,{params:(params)}).then((response) => {
+            // handle success
+            console.log(response);
+            this.setState({currentData:response.data.pageList,
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount}
+               );
+
+        }).catch((error)=>{
+            // handle error
+            console.log(error);
         });
+        console.log(this.state.pageNo)
     }
 
     onKeyDown(e, opts) {
@@ -92,12 +134,20 @@ export default class Permission extends Component {
 
     //每次访问的刷新
     componentDidMount() {
-        let url = API.permission + "/v1/permissions/alldata" ;
-
-        Axios.get(url).then((response) => {
+        let url = API.permission + "/v1/permissions/pagealldata" ;
+        let params=
+            {
+                pageNo:this.state.pageNo,
+                pageSize:this.state.pageSize
+            }
+            // console.log(params)
+        Axios.get(url,{params:(params)}).then((response) => {
             // handle success
-            console.log(response);
-            this.setState({currentData:response.data});
+            console.log(response.data);
+            this.setState({currentData:response.data.pageList,
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount});
+
         }).catch((error)=>{
             // handle error
             console.log(error);
@@ -107,24 +157,11 @@ export default class Permission extends Component {
         });
     }
 
-    //查询所有功能点的函数
-    findAllPermission() {
-        let url = API.permission + "/v1/permissions/alldata" ;
-
-        Axios.get(url).then((response) => {
-            // handle success
-            console.log(response);
-            this.setState({currentData:response.data});
-        }).catch((error)=>{
-            // handle error
-            console.log(error);
-        }).then(()=>{
-            // always executed
-
-        });
-    }
     //创建功能点
     handleSubmit(e) {
+        this.setState({
+            visible: false
+        });
         e.preventDefault();
         this.field.validate((errors, values) => {
             if (errors) {
@@ -142,35 +179,36 @@ export default class Permission extends Component {
                     name:values.name,
                     parentId: 0,
                 }
+
             console.log("Submit!!!");
             console.log(values);
 
             Axios.post(url, {},{params:(params)}
             )
                 .then((response)=>{
-                    this.state.currentData+=response;
                 console.log(response);
             }).catch((error)=> {
                 console.log(error);
 
             });
-            this.setState({
-                visible: false
-            });
-
         });
     }
 
+    //确认删除操作以及
     //删除功能点
-    onRemove = id => {
+    onConfirm = id => {
+
         const { dataSource } = this.state;
         let url = API.permission + "/v1/permissions" ;
-        let params=
-            {
-                id:this.state.currentData.id
-            }
-
-
+        let params= {id:id}
+        Axios.delete(url,{params:(params)}
+        )
+            .then((response)=>{
+                Feedback.toast.success('成功删除！')
+                console.log(response);
+            }).catch((error)=> {
+            console.log(error);
+        });
     };
 
     render() {
@@ -193,7 +231,14 @@ export default class Permission extends Component {
         //删除操作定义
         const renderdelete = (value, index, record) => {
             return (
-                <button onClick={this.onRemove.bind(this, record.id)}>Remove</button>
+                <BalloonConfirm
+                    onConfirm={this.onConfirm.bind(this, record.id)}
+                    onCancel={this.onCancel}
+                    title="您真的要删除吗？"
+                >
+                    <button >删除</button>
+                </BalloonConfirm>
+
             );
         }
         return (
@@ -222,7 +267,7 @@ export default class Permission extends Component {
                         <Input
                             maxLength={10}
                             hasLimitHint
-                            placeholder="实时校验，输入 frank 看看"
+                            placeholder="请输入名称"
                             {...init("name", {
                                 rules: [
                                     { required: true, min: 1, message: "名称不能为空！" },
@@ -263,7 +308,7 @@ export default class Permission extends Component {
                             multiple
                             maxLength={30}
                             hasLimitHint
-                            placeholder="随便写"
+                            placeholder="请描述该功能点具体内容"
                             {...init("description", {
                                 rules: [{ required: true, message: "真的不打算写点什么吗？" }]
                             })}
@@ -301,9 +346,15 @@ export default class Permission extends Component {
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人" dataIndex="cuser"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
-                {/*<Table.Column cell={renderdelete} width="20%" />*/}
+                <Table.Column title="删除操作" cell={renderdelete} width="20%" />
+
             </Table>
-            <Pagination onChange={this.onChange} className="page-demo" />
+            <Pagination total={this.state.totalCount}
+                        current={this.state.pageNo}
+                        onChange={this.onChange}
+                        pageSize={this.state.pageSize
+                }
+            className="page-demo" />
         </div>
 
 
