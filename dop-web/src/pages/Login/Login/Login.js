@@ -23,7 +23,11 @@ export default class Login extends Component {
 
     componentWillMount() {
         let self = this;
-        RSA().then((data) => {
+        window.sessionStorage.removeItem("Authorization");
+        window.sessionStorage.removeItem("x-login-token");
+        window.sessionStorage.removeItem("x-login-user");
+        document.addEventListener("keydown",this.handleEnterKey);
+        RSA().then(() => {
             self.setState({
                 visible: false
             });
@@ -33,9 +37,15 @@ export default class Login extends Component {
                 content: error.message,
                 duration: 1000
             });
-        })
+        });
         self.loginIp()
     }
+
+    handleEnterKey = (e) => {
+        if(e.keyCode === 13){
+            this.handleSubmit(e)
+        }
+    };
 
     handleSubmit(e) {
         e.preventDefault();
@@ -182,8 +192,12 @@ export default class Login extends Component {
                                     </FormItem>
 
                                     <FormItem className="submit">
-                                        <Button type="primary" onClick={this.handleSubmit.bind(this)} size="large"
-                                                className="login-form-button">
+                                        <Button type="primary"
+                                                onClick={this.handleSubmit.bind(this)}
+
+                                                size="large"
+                                                className="login-form-button"
+                                        >
                                             登陆
                                         </Button>
                                         <div className="register-content">
