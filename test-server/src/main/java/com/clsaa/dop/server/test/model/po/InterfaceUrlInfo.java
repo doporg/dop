@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.model.po;
 
 import com.clsaa.dop.server.test.enums.HttpMethod;
+import com.clsaa.dop.server.test.enums.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,9 @@ public class InterfaceUrlInfo {
 
     @Column(name = "retry_interval")
     private Long retryInterval;
+
+    @Enumerated(value = EnumType.STRING)
+    private OperationType operationType;
 
     // ----------- common property ---------
     @Id

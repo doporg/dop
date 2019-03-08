@@ -34,7 +34,8 @@ public class UrlResultParam {
     @Column(name = "raw_value")
     private String rawValue;
 
-    private String desc;
+    @Column(name = "param_desc")
+    private String paramDesc;
 
     @Column(name = "url_id")
     private Long urlId;

@@ -17,22 +17,16 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "script_order", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"script_id", "operation_order"})},
-        indexes = {@Index(columnList = "script_id,operation_order", unique = true)})
-public class ScriptOrder {
-
-    @Column(name = "script_id")
-    private Long scriptId;
-
-    @Column(name = "operation_order")
-    private int order;
-
-    @Column(name = "operation_id")
-    private Long operationId;
+@Table(name = "wait_operation", schema = "db_dop_test")
+public class WaitOperation {
 
     @Enumerated(value = EnumType.STRING)
-    private OperationType type;
+    private OperationType operationType;
+
+    /**
+     * 单位为毫秒
+     */
+    private int waitTime;
 
     // ----------- common property ---------
     @Id

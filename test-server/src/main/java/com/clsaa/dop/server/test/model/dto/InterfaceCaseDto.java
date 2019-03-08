@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.model.po.CaseStatus;
+import com.clsaa.dop.server.test.model.po.InterfaceCase;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,30 +20,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class InterfaceCaseDto {
 
-    private Long id;
+    private InterfaceCase interfaceCase;
 
-    private LocalDateTime ctime;
 
-    private LocalDateTime mtime;
-
-    private Long cuser;
-
-    private Long muser;
-
-    private boolean deleted;
-
-    private String caseName;
-
-    private String caseDesc;
-
-    private String preCondition;
-
-    private Long applicationId;
-
-    private String steps;
-
-    private String predicateResult;
-
-    private CaseStatus status;
 
 }

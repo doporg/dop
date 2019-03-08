@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
+ * Attention!
+ * 一个该对象代表的是一个接口测试用例的一个阶段
  * @author xihao
  * @version 1.0
  * @since 06/03/2019
@@ -18,13 +20,16 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "interface_script", schema = "db_dop_test")
+@Table(name = "interface_script", schema = "db_dop_test",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "stage"})},
+        indexes = {@Index(columnList = "case_id,stage", unique = true)})
 public class InterfaceScript {
     // ----------- main property ---------
     @Enumerated(value = EnumType.STRING)
     private Stage stage;
 
-
+    @Column(name = "case_id")
+    private Long caseId;
 
     // ----------- common property ---------
     @Id

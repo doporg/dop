@@ -33,8 +33,8 @@ public class TestStep {
     private int stepIndex;
 
     //todo 图片上传支持
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "step_desc")
+    private String stepDesc;
 
     // ------ common property ------------
     private LocalDateTime ctime;
