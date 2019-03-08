@@ -2,6 +2,7 @@ package com.clsaa.dop.server.user.controller;
 
 import com.alibaba.druid.sql.visitor.functions.If;
 import com.clsaa.dop.server.user.config.BizCodes;
+import com.clsaa.dop.server.user.config.HttpHeaders;
 import com.clsaa.dop.server.user.model.dto.ResetDtoV1;
 import com.clsaa.dop.server.user.model.vo.UserV1;
 import com.clsaa.dop.server.user.util.BeanUtils;
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     private int deleteUser(String id) {
-        return id.equals("123456") ? 1 : 0;
+        return "123456".equals(id) ? 1 : 0;
     }
 
     @ApiOperation(value = "更新用户密码", notes = "用户必须先获取修改密码所需验证码，通过验证码更新密码")
@@ -63,6 +64,12 @@ public class UserController {
     @ApiOperation(value = "根据id查询用户信息", notes = "根据id查询用户信息，若用户不存在返回null")
     @GetMapping("/v1/users/{id}")
     public UserV1 findUserByIdV1(@ApiParam(value = "用户id") @PathVariable("id") Long id) {
+        return BeanUtils.convertType(this.userService.findUserById(id), UserV1.class);
+    }
+
+    @ApiOperation(value = "查询已登录用户信息", notes = "查询已登录用户信息，若用户不存在返回null")
+    @GetMapping("/v1/users")
+    public UserV1 findLoginUserByIdV1(@ApiParam(value = "用户id") @RequestHeader(HttpHeaders.X_LOGIN_USER) Long id) {
         return BeanUtils.convertType(this.userService.findUserById(id), UserV1.class);
     }
 

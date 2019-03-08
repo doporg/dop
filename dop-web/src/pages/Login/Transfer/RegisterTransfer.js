@@ -9,9 +9,6 @@ import {RSA} from "../index";
 const {toast} = Feedback;
 
 export default class RegisterTransfer extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentWillMount(){
         let self = this;
@@ -27,20 +24,23 @@ export default class RegisterTransfer extends Component {
     }
     activation(){
         let self = this;
-        let url = API.gateway + '/user-server/v1/users';
         let data = self.props.location.search.substr(6);
-        Axios.post(url,data).then((response)=>{
+        let url = API.gateway + '/user-server/v1/users?code=' + data;
+        Axios.post(url).then((response)=>{
             if(response.status === 200){
                 toast.show({
                     type: "success",
                     content: "注册成功",
                     duration: 5000
                 });
+            }else{
+                console.log(response)
             }
         }).catch((error)=>{
+            console.log(error.response)
             toast.show({
                 type: "error",
-                content: "注册失败, 激活通道已失效",
+                content: error.response.data.message,
                 duration: 3000
             });
         });

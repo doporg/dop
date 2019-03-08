@@ -10,7 +10,7 @@ import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 const baseConfig = [
     {
-        path: '/',
+        path: '/project',
         layout: BasicLayout,
         component: Projects,
     },
@@ -50,18 +50,22 @@ const loginConfig = [
     {
         path: '/login',
         component: Login,
+        isLogin: true
     },
     {
         path: '/register',
         component: Register,
+        isLogin: true
     },
     {
         path: '/register/transfer',
         component: RegisterTransfer,
+        isLogin: true
     },
     {
         path: '/modifyPwd',
         component: ModifyPwd,
+        isLogin: true
     }
 ];
 

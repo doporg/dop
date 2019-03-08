@@ -29,7 +29,7 @@ function signature(clientSecret, URI, method, obj) {
 
     let code = URI + method;
     Object.entries(newObj).forEach(([key, value]) => {
-        code += `${key}` + `=` + `${value}` + `&`
+        code += key + '=' + value + '&';
     });
     code =  code.substring(0, code.length - 1);
 
@@ -83,6 +83,7 @@ function oauth(timestamp) {
     return new Promise((resolve, reject)=>{
         Axios.post(API.gateway + URI, Qs.stringify(data)).then((response)=>{
             Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.access_token;
+            window.sessionStorage.setItem("Authorization", response.data.access_token);
             resolve(response.data.access_token)
         }).catch((error)=>{
             reject(error)
