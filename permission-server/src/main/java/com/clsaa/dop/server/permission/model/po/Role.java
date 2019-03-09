@@ -1,11 +1,8 @@
 package com.clsaa.dop.server.permission.model.po;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.format.annotation.DateTimeFormat;
-
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,12 +10,13 @@ import java.time.LocalDateTime;
 
 
 /**
- * 功能点持久层对象，对应功能点表中每条数据
+ * 角色持久层对象，对应角色表中每条数据
  *
  * @author lzy
  *
+
  *
- * since :2019.3.1
+ * since :2019.3.7
  */
 
 @Entity
@@ -27,42 +25,30 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_permission") //引入@Table注解，name赋值为表名
+@Table(name = "t_role") //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_permission set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_role set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class Permission implements Serializable {
+public class Role implements Serializable {
 
-    private static final long serialVersionUID = 552000264L;
+    private static final long serialVersionUID = 552000263L;
+
     /**
-     * 功能点ID
+     * 角色ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
     /**
-     * 父功能点ID
-     */
-    @Basic
-    @Column(name="parent_id")
-    private Long parentId;
-    /**
-     * 功能点名称
+     * 角色名称
      */
     @Basic
     @Column(name="name")
     private String name;
     /**
-     * 是否私有
+     * 角色描述
      */
-    @Basic
-    @Column(name="is_private")
-    private Integer isPrivate;
-    /**
-     * 功能点描述
-     */
-
     @Basic
     @Column(name="description")
     private String description;

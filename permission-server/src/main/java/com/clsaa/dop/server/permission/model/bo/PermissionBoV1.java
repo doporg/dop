@@ -3,6 +3,7 @@ package com.clsaa.dop.server.permission.model.bo;
 import lombok.*;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 /**
  * 功能点业务层对象
@@ -18,40 +19,49 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermissionBoV1 {
-/*
- *    功能点ID
- *    父功能点ID
- *    功能点名称
- *    是否私有
- *    功能点描述
- *    创建时间
- *    修改时间
- *    创建人
- *    修改人
- *    删除标记
- */
+public class PermissionBoV1 implements Serializable {
+
+    /**
+     * 功能点ID
+     */
     private Long id;
-
-
+    /**
+     * 父功能点ID
+     */
     private Long parentId;
-
+    /**
+     * 功能点名称
+     */
     private String name;
-
+    /**
+     * 是否私有
+     */
     private Integer isPrivate;
-
+    /**
+     * 功能点描述
+     */
     private String description;
 
     /* 表里都要有的字段*/
-
+    /**
+     * 创建时间
+     */
     private LocalDateTime ctime;
-
+    /**
+     * 修改时间
+     */
     private LocalDateTime mtime;
-
+    /**
+     * 创建者
+     */
     private Long cuser;
-
+    /**
+     * 修改者
+     */
     private Long muser;
-
+    /**
+     * 删除标记
+     */
     private Boolean deleted;
     /* 表里都要有的字段*/
 }

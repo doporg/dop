@@ -26,4 +26,8 @@ public interface BizCodes {
      * 数据库更新失败
      */
     BizCode ERROR_UPDATE = new BizCode(1012, "更新失败");
+    /**
+     * 功能点名称重复
+     */
+    BizCode REPETITIVE_PERMISSION_NAME = new BizCode(1100, "创建失败，功能点名称重复");
 }

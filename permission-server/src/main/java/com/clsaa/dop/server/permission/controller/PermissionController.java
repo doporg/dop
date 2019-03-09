@@ -1,5 +1,7 @@
 package com.clsaa.dop.server.permission.controller;
 
+import com.clsaa.dop.server.permission.config.HttpHeaders;
+import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.po.Permission;
 
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
@@ -10,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,22 +24,21 @@ import java.util.List;
  * @author lzy
  *
  *   /*
- *  * @param id            功能点ID
- *  * @param parentId     父功能点ID
- *  * @param name          功能点名称
- *  * @param isPrivate         是否私有
- *  * @param description     功能点描述
- *  * @param ctime     创建时间
- *  * @param mtime     修改时间
- *  * @param cuser     创建人
- *  * @param muser     修改人
- *  * @param deleted     删除标记
- *
+ *  * @param id 功能点ID
+ *  * @param parentId 父功能点ID
+ *  * @param name 功能点名称
+ *  * @param isPrivate 是否私有
+ *  * @param description 功能点描述
+ *  * @param ctime 创建时间
+ *  * @param mtime 修改时间
+ *  * @param cuser 创建人
+ *  * @param muser 修改人
+ *  * @param deleted 删除标记
  *
  *
  *since :2019.3.2
  */
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 @EnableAutoConfiguration
 public class PermissionController {
@@ -45,6 +47,7 @@ public class PermissionController {
 
     @ApiOperation(value = "创建功能点", notes = "创建功能点")
     @PostMapping("/v1/permissions")
+
     public void  createPermission(
             @ApiParam(name = "parentId",value = "父功能点ID",required = false,defaultValue = "0")
             @RequestParam(value = "parentId", required = false, defaultValue = "0") Long parentId,
@@ -54,30 +57,30 @@ public class PermissionController {
             @RequestParam(value = "isPrivate", required = true) Integer isPrivate,
             @ApiParam(name = "description",value = "功能点描述",required = true)
             @RequestParam(value = "description", required = true) String description,
-            @ApiParam(name = "cuser",value = "创建者",required = true)
-            @RequestParam(value = "cuser", required = true) Long cuser,
-            @ApiParam(name = "muser",value = "修改者",required = true)
-            @RequestParam(value = "muser", required = true) Long muser,
-            @ApiParam(name = "deleted",value = "删除标记",required = false,defaultValue = "false")
-            @RequestParam(value = "deleted", required = false,defaultValue ="false") Boolean deleted
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
         )
     {
+        System.out.println(cuser);
         permissionService.createPermission(parentId,name,isPrivate,
-                description,cuser,muser,false);
-
+                description,cuser,muser);
+    }
+    @GetMapping("/test")
+    public void testHaveUserIdHeader(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long id) {
+        System.out.println(id);
     }
 
+
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
-    @GetMapping("/v1/permissions")
+    @GetMapping("/v1/permissions/{id}")
     public PermissionV1 findById(@ApiParam(name = "id",value = "功能点ID",required = true)
                                    @RequestParam(value = "id", required = true)Long id)
     {
         return BeanUtils.convertType(this.permissionService.findById(id), PermissionV1.class);
-//        return permissionService.findById(id);
     }
 
     @ApiOperation(value = "分页查询所有功能点", notes = "分页查询所有功能点")
-    @GetMapping("/v1/permissions/pagealldata")
+    @GetMapping("/v1/permissions")
     public Pagination<PermissionV1> getPermissionV1Pagination(
             @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
@@ -86,27 +89,23 @@ public class PermissionController {
     {
         return this.permissionService.getPermissionV1Pagination(page,size);
     }
-    @ApiOperation(value = "查询所有功能点", notes = "查询所有功能点")
-    @GetMapping("/v1/permissions/alldata")
-    public List<PermissionV1> findAll(){
-
-        return this.permissionService.findAll();
+    @ApiOperation(value = "根据名称查询功能点", notes = "根据名称查询功能点")
+    @GetMapping("/v1/permissions/byName")
+    public PermissionV1 findByName(@ApiParam(name = "name",value = "功能点名称",required = true)
+                                       @RequestParam(value = "name", required = true)String name)
+    {
+        return BeanUtils.convertType(this.permissionService.findByName(name), PermissionV1.class);
     }
 
+
     @ApiOperation(value="根据ID删除功能点",notes = "根据ID删除功能点")
-    @DeleteMapping("v1/permissions")
+    @DeleteMapping("v1/permissions/{id}")
     public void deleteById(@ApiParam(name = "id",value = "功能点ID",required = true)
                                @RequestParam(value = "id", required = true)Long id)
     {
         permissionService.deleteById(id);
     }
 
-    @ApiOperation(value="删除所有功能点",notes = "删除所有功能点")
-    @DeleteMapping("v1/permissions/alldata")
-    public void deleteAll()
-    {
-        permissionService.deleteAll();
-    }
 
 
 }
