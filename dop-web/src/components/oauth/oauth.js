@@ -82,6 +82,7 @@ function oauth(timestamp) {
     data = {...data, signature: signature(clientSecret, URI, "POST", data)};
     return new Promise((resolve, reject)=>{
         Axios.post(API.gateway + URI, Qs.stringify(data)).then((response)=>{
+            console.log(response);
             Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.access_token;
             window.sessionStorage.setItem("Authorization", response.data.access_token);
             resolve(response.data.access_token)
