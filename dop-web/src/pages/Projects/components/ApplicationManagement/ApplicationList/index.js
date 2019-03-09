@@ -4,6 +4,7 @@ import {Grid} from '@icedesign/base';
 import {Icon} from '@icedesign/base';
 import API from "../../../../API.js"
 import {Col} from "@alifd/next/lib/grid";
+import Axios from "axios";
 
 
 const {Row} = Grid;
@@ -67,20 +68,51 @@ export default class ApplicationList extends Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
 
-        for (let i = 0; i < nextProps.currentData.length; i++) {
-            let tmpTime = nextProps.currentData[i].ctime;
-            if (tmpTime[0].length < 4) break;
-            nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
-        }
+        // for (let i = 0; i < nextProps.currentData.length; i++) {
+        //     let tmpTime = nextProps.currentData[i].ctime;
+        //     if (tmpTime[0].length < 4) break;
+        //     nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
+        // }
         this.setState({
             currentData: nextProps.currentData
         });
     }
 
-// titleRender= function(title){
-//         return <a href = {"http://localhost:3000/ApplicationList?ApplicationId="+String(title)}>{title}</a>
-// }
+    handleDlete(id) {
+        let url = API.application + '/applications';
+        let _this = this;
+        let current = this.state.current;
+        Axios.delete(url, {
+            params: {
+                projectId: this.state.projectId
+            }
+        })
+            .then(function (response) {
+                }
+            )
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     render() {
+        const renderOpr = (value, index, record) => {
+            let id = record.id;
+            const onDelete = (id) => {
+                this.handleDlete(id);
+            }
+            return <div>{record.ctime}
+                <Icon onClick={onDelete.bind(this)} type="ashbin" style={{
+                    cursor: "pointer",
+                    color: "#FFA003",
+                    marginRight: "10px",
+                    position: "absolute",
+                    justifyContent: "right"
+                }}/>
+
+            </div>
+        }
+
         return (
             <Row wrap gutter="20">
                 <Col>
@@ -88,8 +120,7 @@ export default class ApplicationList extends Component {
                         <Table.Column title="ID" dataIndex="id"/>
                         <Table.Column title="应用名称" dataIndex="title"/>
                         <Table.Column title="拥有者" dataIndex="ouser"/>
-                        <Table.Column title="创建时间" dataIndex="ctime"/>
-                        <Table.Column title="应用描述" dataIndex="description"/>
+                        <Table.Column cell={renderOpr} title="创建时间" dataIndex="ctime"/>
                     </Table>
                 </Col>
             </Row>

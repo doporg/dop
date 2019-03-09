@@ -24,11 +24,11 @@ const {Row, Col} = Grid;
 const {Group: RadioGroup} = Radio;
 const list = [
     {
-        value: "public",
+        value: "PUBLIC",
         label: "公开"
     },
     {
-        value: "private",
+        value: "PRIVATE",
         label: "私人"
     },
 ];

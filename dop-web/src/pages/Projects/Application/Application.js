@@ -10,6 +10,15 @@ import TopBar from "../components/ApplicationManagement/TopBar";
 import {Input} from "@icedesign/base";
 import CreateApplicationDialog from "../components/ApplicationManagement/CreateApplicationDialog";
 import Pagination from "../components/ApplicationManagement/ApplicationPagination";
+import {Tab} from "@icedesign/base";
+
+const TabPane = Tab.TabPane;
+
+const tabs = [
+    {tab: "基本信息", key: "home", content: ""},
+    {tab: "环境配置", key: "env", content: "zzzzz"},
+    {tab: "变量管理", key: "var"}
+];
 
 export default class Application extends Component {
     static displayName = 'Application';
@@ -19,8 +28,23 @@ export default class Application extends Component {
         console.log(props);
         this.state = {
             projectId: props.location.state.projectId,
-            searchKey: ""
+            searchKey: "",
+            createdApplicationNeedRefresh: false,
         }
+    }
+
+    refreshFinished() {
+        this.setState({
+            createdApplicationNeedRefresh: false
+        })
+    }
+
+//回调函数传给创建项目的窗口，创建项目成功后调用该函数刷新项目列表
+    refreshApplicationList() {
+        this.setState({
+            createdApplicationNeedRefresh: true
+        });
+        console.log("refreshProjectList");
     }
 
     onSearch(value) {
@@ -40,9 +64,14 @@ export default class Application extends Component {
             <div>
                 <TopBar
                     extraBefore={
+                        <CreateApplicationDialog refreshApplicationList={this.refreshApplicationList.bind(this)}
+                                                 projectId={this.state.projectId}/>
+
+                    }
+                    extraAfter={
                         <Input
                             size="large"
-                            placeholder="请输入关键字进行搜索"
+                            placeholder="请输入应用名称进行搜索"
                             style={{width: '240px'}}
                             // hasClear
                             onChange={this.onSearch.bind(this)}
@@ -50,7 +79,8 @@ export default class Application extends Component {
                     }
 
                 />
-                <Pagination searchKey={this.state.searchKey}
+                <Pagination createdApplicationNeedRefresh={this.state.createdApplicationNeedRefresh}
+                            refreshFinished={this.refreshFinished.bind(this)} searchKey={this.state.searchKey}
                             projectId={this.state.projectId}/>
             </div>
 

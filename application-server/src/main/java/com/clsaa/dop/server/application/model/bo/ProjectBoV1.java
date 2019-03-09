@@ -3,6 +3,7 @@ package com.clsaa.dop.server.application.model.bo;
 import com.clsaa.dop.server.application.model.po.Project;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
@@ -19,7 +20,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectBoV1 {
+public class ProjectBoV1 implements Serializable {
+
+    private static final long serialVersionUID = 6906097418517275448L;
     /**
      * 项目id
      */

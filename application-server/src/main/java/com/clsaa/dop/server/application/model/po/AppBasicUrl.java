@@ -3,6 +3,8 @@ package com.clsaa.dop.server.application.model.po;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @AllArgsConstructor
+@SQLDelete(sql = "update app_basic_url set is_deleted = true where id = ?")
+@Where(clause = "is_deleted =false")
 public class AppBasicUrl {
     @Id
     @GeneratedValue
@@ -38,6 +42,12 @@ public class AppBasicUrl {
 
     @Column(nullable = false, name = "mtime")
     private LocalDateTime mtime;
+
+    /**
+     * 是否删除
+     */
+    @Column(nullable = false, name = "is_deleted")
+    private boolean is_deleted;
 
     @Column(nullable = false, name = "warehouse_url")
     private String warehouseUrl;

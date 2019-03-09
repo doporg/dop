@@ -116,33 +116,34 @@ export default class ApplicationPagination extends Component {
             });
 
         //
-        // if (nextProps.createdApplicationNeedRefresh) {
-        //     console.log("going to handle change");
-        //
-        //     let url = API.application + '/applications';
-        //     let _this = this;
-        //     let current = this.state.current;
-        //     Axios.get(url, {
-        //         params: {
-        //             pageNo:current ,
-        //             pageSize: 15,
-        //             projectId:nextProps.projectId
-        //         }
-        //     })
-        //         .then(function (response) {
-        //             console.log(response);
-        //             _this.setState({
-        //                 currentData: response.data.pageList,
-        //                 totalCount: response.data.totalCount,
-        //                 pageSize: response.data.pageSize
-        //                 // searchData: response.data.pageList
-        //             });
-        //         })
-        //         .catch(function (error) {
-        //             console.log(error);
-        //         });
-        //     nextProps.refreshFinished();
-        // }
+        if (nextProps.createdApplicationNeedRefresh) {
+            console.log("going to handle change");
+
+            let _this = this;
+            let url = API.application + '/applications';
+            let current = this.state.current
+            Axios.get(url, {
+                params: {
+                    pageNo: 1,
+                    pageSize: 15,
+                    queryKey: key,
+                    projectId: this.state.projectId
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                    _this.setState({
+                        currentData: response.data.pageList,
+                        totalCount: response.data.totalCount,
+                        pageSize: response.data.pageSize
+                        // searchData: response.data.pageList
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            nextProps.refreshFinished();
+        }
     }
 
     /*

@@ -14,17 +14,16 @@ import java.time.LocalDateTime;
  *
  * @author ZhengBowen
  * @version v1
- * @summary 应用环境信息实体类（还未使用）
+ * @summary 应用变量实体类（还未使用）
  * @since 2019-3-7
  */
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
-@SQLDelete(sql = "update app_environment set is_deleted = true where id = ?")
+@SQLDelete(sql = "update app_variable set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class AppEnvironment {
-
+public class AppVariable {
     @Id
     @GeneratedValue
     private Long id;
@@ -50,29 +49,5 @@ public class AppEnvironment {
     @Column(nullable = false, name = "app_id")
     private Long appId;
 
-    public enum ProductMode {
 
-        /**
-         * 分支模式
-         */
-        BRANCH("BRANCH"),
-        /**
-         * 自由模式
-         */
-        FREE("FREE"),
-        ;
-
-        private String code;
-
-        ProductMode(String code) {
-            this.code = code;
-        }
-    }
-
-    ;
-
-
-    @Column(nullable = false, name = "status")
-    @Enumerated(EnumType.STRING)
-    private AppEnvironment.ProductMode productMode;
 }

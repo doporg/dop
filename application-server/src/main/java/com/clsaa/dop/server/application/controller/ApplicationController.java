@@ -5,8 +5,10 @@ import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.service.ApplicationService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
@@ -73,12 +75,19 @@ public class ApplicationController {
     public void createApp(
             @ApiParam(name = "projectId", value = "项目Id", required = true) @RequestParam(value = "projectId") Long projectId,
             @ApiParam(name = "title", value = "应用名称", required = true) @RequestParam(value = "title") String title,
-            @ApiParam(name = "projectDescription", value = "应用描述", defaultValue = "") @RequestParam(value = "appDescription", required = false) String appDescription) {
+            @ApiParam(name = "appDescription", value = "应用描述", defaultValue = "") @RequestParam(value = "appDescription", required = false) String appDescription,
+            @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode", required = false) String productMode,
+            @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl) {
 
 
-        this.applicationService.createApp(projectId, title, appDescription);
+        this.applicationService.createApp(projectId, title, appDescription, productMode, gitUrl);
         return;
     }
 
-
+    @ApiOperation(value = "删除应用", notes = "删除应用")
+    @DeleteMapping(value = "/applications")
+    public void deleteApp(
+            @ApiParam(name = "id", value = "项目Id", required = true) @RequestParam(value = "id") Long id) {
+        this.applicationService.deleteApp(id);
+    }
 }

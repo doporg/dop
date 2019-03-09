@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.checker.units.qual.C;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -22,7 +25,11 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class App {
+@SQLDelete(sql = "update app set is_deleted = true where id = ?")
+@Where(clause = "is_deleted =false")
+public class App implements Serializable {
+
+    private static final long serialVersionUID = 6906097418517275446L;
     /**
      * ID
      */

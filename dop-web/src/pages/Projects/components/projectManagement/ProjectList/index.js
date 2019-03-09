@@ -33,12 +33,12 @@ export default class ProjectList extends Component {
 
 
     componentWillReceiveProps(nextProps, nextContext) {
-        let url = API.application + '/projects';
-        for (let i = 0; i < nextProps.currentData.length; i++) {
-            let tmpTime = nextProps.currentData[i].ctime;
-            if (tmpTime[0].length < 4) break;
-            nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
-        }
+        // let url = API.application + '/projects';
+        // for (let i = 0; i < nextProps.currentData.length; i++) {
+        //     let tmpTime = nextProps.currentData[i].ctime;
+        //     if (tmpTime[0].length < 4) break;
+        //     nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
+        // }
         this.setState({
             currentData: nextProps.currentData
         });

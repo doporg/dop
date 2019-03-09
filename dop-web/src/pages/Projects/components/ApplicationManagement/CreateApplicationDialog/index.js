@@ -25,12 +25,12 @@ const {Row, Col} = Grid;
 const {Group: RadioGroup} = Radio;
 const list = [
     {
-        value: "public",
-        label: "公开"
+        value: "FREE",
+        label: "自由模式"
     },
     {
-        value: "private",
-        label: "私人"
+        value: "BRANCH",
+        label: "分支模式"
     },
 ];
 const style = {
@@ -48,7 +48,7 @@ const formItemLayout = {
  *    私密性单选按钮
  *
  * */
-class PrivateController extends Component {
+class ProductModeController extends Component {
     constructor(props) {
         super(props);
 
@@ -99,6 +99,9 @@ class ApplicationForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.field = new Field(this);
+        this.state = {
+            projectId: props.projectId
+        }
     }
 
     /**
@@ -114,12 +117,14 @@ class ApplicationForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.application + '/Applications';
+                let url = API.application + '/applications';
                 Axios.post(url, {}, {
                         params: {
+                            projectId: this.state.projectId,
                             title: this.field.getValue('title'),
-                            // private: this.field.getValue('title'),
-                            // ApplicationDescription:this.field.getValue('description')}
+                            productMode: this.field.getValue('productMode'),
+                            appDescription: this.field.getValue('description'),
+                            gitUrl: this.field.getValue('gitUrl')
                         }
                     }
                 )
@@ -148,8 +153,6 @@ class ApplicationForm extends Component {
 
     render() {
         const {init, getValue} = this.field;
-        // const {init, getValue} = this.field;
-
         return (
             <div>
                 <Form
@@ -157,19 +160,21 @@ class ApplicationForm extends Component {
                     style={style}
                 >
                     <FormItem {...formItemLayout} validateStatus={this.field.getError("title") ? "error" : ""}
-                              help={this.field.getError("title") ? "请输入名称" : ""} label="项目名称：" required>
+                              help={this.field.getError("title") ? "请输入名称" : ""} label="应用名称：" required>
                         <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
                                placeholder="请输入项目名称"/>
-
                     </FormItem>
-                    <FormItem {...formItemLayout} validateStatus={this.field.getError("private") ? "error" : ""}
-                              help={this.field.getError("private") ? "请选择公开性" : ""} label="公开性：" required>
-                        <PrivateController   {...init('private', {
-                            rules: [{required: true, initValue: "public"}]
+                    <FormItem {...formItemLayout} validateStatus={this.field.getError("productMode") ? "error" : ""}
+                              help={this.field.getError("productMode") ? "请选择开发模式" : ""} label="开发模式：" required>
+                        <ProductModeController {...init('productMode', {
+                            rules: [{required: true, initValue: "BRANCH"}]
                         })}/>
                     </FormItem>
-                    <FormItem {...formItemLayout} label="项目描述：">
-                        <Input  {...init('description')} multiple placeholder="项目描述"/>
+                    <FormItem {...formItemLayout} label="git仓库地址：">
+                        <Input  {...init('gitUrl')} placeholder="git仓库地址"/>
+                    </FormItem>
+                    <FormItem {...formItemLayout} label="应用描述：">
+                        <Input  {...init('description')} multiple placeholder="应用描述"/>
                     </FormItem>
                 </Form>
             </div>
@@ -224,7 +229,8 @@ export default class CreateApplicationDialog extends Component {
                 width: "10%"
             },
             createDialogVisible: false,
-            refreshApplicationList: props.refreshApplicationList
+            refreshApplicationList: props.refreshApplicationList,
+            projectId: props.projectId
         }
     };
 
@@ -247,18 +253,19 @@ export default class CreateApplicationDialog extends Component {
         return (
             <span>
                 <Button onClick={this.onOpen} type="primary">
-          创建项目
+          创建应用
         </Button>
         <Dialog
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="创建项目"
+            title="创建应用"
             style={this.state.style}
             footerAlign={this.state.footerAlign}
         >
-          <ApplicationForm isSubmit={this.state.isSubmit} finished={this.finished.bind(this)}/>
+          <ApplicationForm isSubmit={this.state.isSubmit} finished={this.finished.bind(this)}
+                           projectId={this.state.projectId}/>
         </Dialog>
 
 <Dialog visible={this.state.createDialogVisible}

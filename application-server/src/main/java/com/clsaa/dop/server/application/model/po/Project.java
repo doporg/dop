@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.*;
@@ -27,6 +29,8 @@ import java.util.Arrays;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "update project set is_deleted = true where id = ?")
+@Where(clause = "is_deleted =false")
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 6906097418517275444L;

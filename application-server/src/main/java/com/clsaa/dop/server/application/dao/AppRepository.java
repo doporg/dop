@@ -3,13 +3,16 @@ package com.clsaa.dop.server.application.dao;
 import com.clsaa.dop.server.application.model.po.App;
 import com.clsaa.dop.server.application.model.po.Project;
 import javafx.application.Application;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ApplicationRepository extends JpaRepository<App, Long> {
+
+public interface AppRepository extends JpaRepository<App, Long> {
 
 
     /**
