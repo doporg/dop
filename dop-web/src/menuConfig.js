@@ -23,7 +23,7 @@ const headerMenuConfig = [
 const asideMenuConfig = [
     {
         name: '全部项目',
-        path: '/',
+        path: '/project',
         icon: 'home2',
     },
     {

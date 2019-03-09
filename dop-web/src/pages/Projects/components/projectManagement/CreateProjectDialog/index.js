@@ -113,10 +113,10 @@ class ProjectForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.application + '/projects';
+                let url = API.gateway + '/application-server/project';
                 Axios.post(url, {}, {
                         params: {
-                            title: this.field.getValue('title'),
+                            title: this.field.getValue('title')
                             // private: this.field.getValue('title'),
                             // projectDescription:this.field.getValue('description')}
                         }

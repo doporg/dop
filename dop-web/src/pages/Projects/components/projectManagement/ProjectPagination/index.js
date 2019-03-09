@@ -28,6 +28,7 @@ export default class ProjectPagination extends Component {
             currentData: [],
             //总页数
             totalPage: 1,
+            queryKey: props.searchKey
             // searchData: [],
             // searchKey: ""
         };
@@ -40,7 +41,8 @@ export default class ProjectPagination extends Component {
      * 当处理改变（分页器改变、父组件请求刷新）
      */
     handleChange(current) {
-        let url = API.application + '/projects';
+        let tmpData = [];
+        let url = API.gateway + '/application-server/project';
         let _this = this;
         Axios.get(url, {
             params: {
@@ -54,9 +56,28 @@ export default class ProjectPagination extends Component {
                 console.log(response)
                 _this.setState({
                     current: current,
-                    currentData: response.data.pageList,
                     pageSize: response.data.pageSize
                 });
+                tmpData = response.data.pageList;
+
+                console.log(tmpData)
+                let getList = []
+                for (let i = 0; i < tmpData.length; i++) {
+                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
+                    getList.push(Axios.get(nameUrl));
+                }
+
+                Axios.all(getList).then(Axios.spread(function (...resList) {
+                    console.log(resList);
+                    for (let i = 0; i < resList.length; i++) {
+                        if (resList[i].data != "")
+                            tmpData[i].cuser = resList[1].data.name;
+                    }
+                    console.log(tmpData);
+                    _this.setState({
+                        currentData: tmpData
+                    });
+                }))
 
             })
             .catch(function (error) {
@@ -86,10 +107,10 @@ export default class ProjectPagination extends Component {
         let key = nextProps.searchKey;
         console.log(key);
         // this.searchInData(key);
-
+        let tmpData = [];
         console.log("searching" + key);
         let _this = this;
-        let url = API.application + '/projects';
+        let url = API.gateway + '/application-server/project';
         let current = this.state.current
         Axios.get(url, {
             params: {
@@ -102,55 +123,93 @@ export default class ProjectPagination extends Component {
             .then(function (response) {
                 console.log(response);
                 _this.setState({
-                    currentData: response.data.pageList,
                     totalCount: response.data.totalCount,
                     pageSize: response.data.pageSize,
                     queryKey: key
                     // searchData: response.data.pageList
                 });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                tmpData = response.data.pageList;
 
-
-        if (nextProps.createdProjectNeedRefresh) {
-            console.log("going to handle change");
-
-            let url = API.application + '/projects';
-            let _this = this;
-            let current = this.state.current;
-            Axios.get(url, {
-                params: {
-                    pageNo: current,
-                    pageSize: 15,
-                    includeFinished: false
+                console.log(tmpData)
+                let getList = []
+                for (let i = 0; i < tmpData.length; i++) {
+                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
+                    getList.push(Axios.get(nameUrl));
                 }
-            })
-                .then(function (response) {
-                    console.log(response);
+
+                Axios.all(getList).then(Axios.spread(function (...resList) {
+                    console.log(resList);
+                    for (let i = 0; i < resList.length; i++) {
+                        if (resList[i].data != "")
+                            tmpData[i].cuser = resList[1].data.name;
+                    }
+                    console.log(tmpData);
                     _this.setState({
-                        currentData: response.data.pageList,
-                        totalCount: response.data.totalCount,
-                        pageSize: response.data.pageSize
-                        // searchData: response.data.pageList
+                        currentData: tmpData
                     });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            nextProps.refreshFinished();
-        }
+
+                }))
+            })
     }
+
+    //
+    //
+    // if (nextProps.createdProjectNeedRefresh) {
+    //     console.log("going to handle change");
+    //     let tmpData = [];
+    //     let url = API.gateway + '/application-server/project';
+    //     let _this = this;
+    //     let current = this.state.current;
+    //     Axios.get(url, {
+    //         params: {
+    //             pageNo: current,
+    //             pageSize: 15,
+    //             includeFinished: false
+    //         }
+    //     })
+    //         .then(function (response) {
+    //             console.log(response);
+    //             _this.setState({
+    //                 totalCount: response.data.totalCount,
+    //                 pageSize: response.data.pageSize
+    //                 // searchData: response.data.pageList
+    //             });
+    //             tmpData = response.data.pageList;
+    //
+    //             console.log(tmpData)
+    //             let getList = []
+    //             for (let i = 0; i < tmpData.length; i++) {
+    //                 let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
+    //                 getList.push(Axios.get(nameUrl));
+    //             }
+    //
+    //             Axios.all(getList).then(Axios.spread(function (...resList) {
+    //                 console.log(resList);
+    //                 for (let i = 0; i < resList.length; i++) {
+    //                     if (resList[i].data != "")
+    //                         tmpData[i].cuser = resList[1].data.name;
+    //                 }
+    //                 console.log(tmpData);
+    //                 _this.setState({
+    //                     currentData: tmpData
+    //                 });
+    //
+    //             }))
+    //         }
+    //
+    //     nextProps.refreshFinished();
+    // }
+
 
     /*
     *加载初始数据
      */
     componentDidMount() {
 
-        let url = API.application + '/projects';
+        let url = API.gateway + '/application-server/project';
         let _this = this;
         let current = this.state.current;
+        let tmpData = [];
         Axios.get(url, {
             params: {
                 pageNo: current,
@@ -159,16 +218,36 @@ export default class ProjectPagination extends Component {
             }
         })
             .then(function (response) {
+                console.log(response)
                 _this.setState({
-                    currentData: response.data.pageList,
                     totalCount: response.data.totalCount,
                     pageSize: response.data.pageSize
                     // searchData: response.data.pageList
                 })
+                tmpData = response.data.pageList;
+
+                console.log(tmpData)
+                let getList = []
+                for (let i = 0; i < tmpData.length; i++) {
+                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
+                    getList.push(Axios.get(nameUrl));
+                }
+
+                Axios.all(getList).then(Axios.spread(function (...resList) {
+                    console.log(resList);
+                    for (let i = 0; i < resList.length; i++) {
+                        if (resList[i].data != "")
+                            tmpData[i].cuser = resList[1].data.name;
+                    }
+                    console.log(tmpData);
+                    _this.setState({
+                        currentData: tmpData
+                    });
+
+                }))
+
+                console.log("didmount");
             })
-            .catch(function (error) {
-                console.log(error);
-            });
     }
 
     render() {

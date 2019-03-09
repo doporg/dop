@@ -34,7 +34,7 @@ public class ProjectController {
 
 
     @ApiOperation(value = "分页查询项目信息", notes = "分页查询项目信息, never return null")
-    @GetMapping(value = "/projects")
+    @GetMapping(value = "/project")
     public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(@ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                                  @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                                  @ApiParam(name = "includeFinished", value = "是否包含已结项目", required = true, defaultValue = "false") @RequestParam(value = "includeFinished", defaultValue = "false") Boolean includeFinished,
@@ -59,15 +59,25 @@ public class ProjectController {
         return paginationV1;
     }
 
-
+    public interface HttpHeaders {
+        /**
+         * 用户登录Token请求头
+         */
+        String X_LOGIN_TOKEN = "x-login-token";
+        /**
+         * 登录用户id
+         */
+        String X_LOGIN_USER = "x-login-user";
+    }
     @ApiOperation(value = "创建项目", notes = "创建项目")
-    @PostMapping(value = "/projects")
+    @PostMapping(value = "/project")
 
-    public void createProject(@ApiParam(name = "title", value = "项目名称", required = true) @RequestParam(value = "title") String title,
+    public void createProject(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
+                              @ApiParam(name = "title", value = "项目名称", required = true) @RequestParam(value = "title") String title,
                               @ApiParam(name = "projectDescription", value = "项目描述", defaultValue = "") @RequestParam(value = "projectDescription", required = false) String projectDescription) {
 
 
-        this.projectService.createProjects(title, projectDescription);
+        this.projectService.createProjects(cuser, title, projectDescription);
         return;
     }
 

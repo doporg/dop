@@ -99,10 +99,8 @@ public class ApplicationService {
      * @param description 应用描述
      *
      */
-    public void createApp(Long projectId, String title, String description, String productMode, String gitUrl) {
-        Long cuser = 1234L;
-        Long muser = 1234L;
-        Long ouser = 1111L;
+    public void createApp(Long cuser, Long projectId, String title, String description, String productMode, String gitUrl) {
+
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         App app = App.builder()
@@ -110,8 +108,8 @@ public class ApplicationService {
                 .title(title)
                 .description(description)
                 .cuser(cuser)
-                .muser(muser)
-                .ouser(ouser)
+                .muser(cuser)
+                .ouser(cuser)
                 .is_deleted(false)
                 .ctime(ctime)
                 .mtime(mtime)
@@ -125,7 +123,7 @@ public class ApplicationService {
                 .ctime(ctime)
                 .cuser(cuser)
                 .mtime(mtime)
-                .muser(muser)
+                .muser(cuser)
                 .is_deleted(false)
                 .build();
 
@@ -136,7 +134,7 @@ public class ApplicationService {
                 .cuser(cuser)
                 .is_deleted(false)
                 .mtime(mtime)
-                .muser(muser)
+                .muser(cuser)
                 .productMode(AppEnvironment.ProductMode.valueOf(productMode))
                 .build();
 
@@ -146,7 +144,7 @@ public class ApplicationService {
                 .cuser(cuser)
                 .is_deleted(false)
                 .mtime(mtime)
-                .muser(muser)
+                .muser(cuser)
                 .warehouseUrl(gitUrl)
                 .build();
         return;

@@ -95,16 +95,15 @@ public class ProjectService {
      * @param description 项目描述
      * @return {@link Pagination< ProjectBoV1>}
      */
-    public void createProjects(String title, String description) {
-        Long cuser = 1234L;
-        Long muser = 1234L;
+    public void createProjects(Long cuser, String title, String description) {
+
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         Project project = Project.builder()
                 .title(title)
                 .description(description)
                 .cuser(cuser)
-                .muser(muser)
+                .muser(cuser)
                 .is_deleted(false)
                 .organizationId(123L)
                 .status(Project.Status.NORMAL)

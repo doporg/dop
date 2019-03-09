@@ -42,7 +42,7 @@ export default class ApplicationPagination extends Component {
      * 当处理改变（分页器改变、父组件请求刷新）
      */
     handleChange(current) {
-        let url = API.application + '/applications';
+        let url = API.gateway + '/application-server/application';
         let _this = this;
         Axios.get(url, {
             params: {
@@ -92,7 +92,7 @@ export default class ApplicationPagination extends Component {
 
         console.log("searching" + key);
         let _this = this;
-        let url = API.application + '/applications';
+        let url = API.gateway + '/application-server/application';
         let current = this.state.current
         Axios.get(url, {
             params: {
@@ -120,7 +120,7 @@ export default class ApplicationPagination extends Component {
             console.log("going to handle change");
 
             let _this = this;
-            let url = API.application + '/applications';
+            let url = API.gateway + '/application-server/application';
             let current = this.state.current
             Axios.get(url, {
                 params: {
@@ -151,7 +151,7 @@ export default class ApplicationPagination extends Component {
      */
     componentDidMount() {
 
-        let url = API.application + '/applications';
+        let url = API.gateway + '/application-server/application';
         let _this = this;
         let current = this.state.current;
         Axios.get(url, {

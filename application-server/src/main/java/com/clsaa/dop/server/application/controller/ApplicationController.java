@@ -34,7 +34,7 @@ public class ApplicationController {
 
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")
-    @GetMapping(value = "/applications")
+    @GetMapping(value = "/application")
     public Pagination<AppV1> findApplicationByProjectId(@ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                         @ApiParam(name = "projectId", value = "项目ID", required = true) @RequestParam(value = "projectId") Long projectId,
@@ -71,8 +71,9 @@ public class ApplicationController {
     }
 
     @ApiOperation(value = "创建应用", notes = "创建应用")
-    @PostMapping(value = "/applications")
-    public void createApp(
+    @PostMapping(value = "/application")
+    @ResponseBody
+    public void createApp(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
             @ApiParam(name = "projectId", value = "项目Id", required = true) @RequestParam(value = "projectId") Long projectId,
             @ApiParam(name = "title", value = "应用名称", required = true) @RequestParam(value = "title") String title,
             @ApiParam(name = "appDescription", value = "应用描述", defaultValue = "") @RequestParam(value = "appDescription", required = false) String appDescription,
@@ -80,12 +81,12 @@ public class ApplicationController {
             @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl) {
 
 
-        this.applicationService.createApp(projectId, title, appDescription, productMode, gitUrl);
+        this.applicationService.createApp(cuser, projectId, title, appDescription, productMode, gitUrl);
         return;
     }
 
     @ApiOperation(value = "删除应用", notes = "删除应用")
-    @DeleteMapping(value = "/applications")
+    @DeleteMapping(value = "/application")
     public void deleteApp(
             @ApiParam(name = "id", value = "项目Id", required = true) @RequestParam(value = "id") Long id) {
         this.applicationService.deleteApp(id);

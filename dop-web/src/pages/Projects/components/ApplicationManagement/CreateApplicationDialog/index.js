@@ -117,7 +117,7 @@ class ApplicationForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.application + '/applications';
+                let url = API.application + '/application-server/application';
                 Axios.post(url, {}, {
                         params: {
                             projectId: this.state.projectId,

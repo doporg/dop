@@ -10,6 +10,13 @@ import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 const baseConfig = [
     {
+        path: '*',
+        layout: BasicLayout,
+        component: NotFound,
+    },
+];
+const projectConfig = [
+    {
         path: '/project',
         layout: BasicLayout,
         component: Projects,
@@ -17,15 +24,8 @@ const baseConfig = [
         path: '/application',
         layout: BasicLayout,
         component: Application,
-    }, {
     },
-    {
-        path: '*',
-        layout: BasicLayout,
-        component: NotFound,
-    },
-];
-
+]
 const pipelineConfig = [
     //pipeline
     {
@@ -83,6 +83,6 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
 
 export default routerConfig;
