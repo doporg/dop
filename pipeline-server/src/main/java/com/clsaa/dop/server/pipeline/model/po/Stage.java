@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class Stage {
+public class Stage {
 
     @SerializedName("id")
     private String id;

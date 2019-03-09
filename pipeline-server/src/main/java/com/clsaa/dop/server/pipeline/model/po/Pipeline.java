@@ -2,10 +2,14 @@ package com.clsaa.dop.server.pipeline.model.po;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -20,11 +24,12 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "pipeline")
+@Document(collection = "dop_pipeline_server")
 public class Pipeline {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SerializedName("id")
-    private Long id;
+    private ObjectId id;
 
     /**
      * 流水线名称
