@@ -55,13 +55,11 @@ export default class ModifyPwd extends Component {
                 });
                 return;
             }
-            console.log("Submit!!!");
             self.code(values);
         });
     }
 
     code(data) {
-        console.log(data)
         let url = API.gateway + '/user-server/v1/account/reset?email=' + data.email;
         let self = this;
         Axios.post(url).then((response) => {

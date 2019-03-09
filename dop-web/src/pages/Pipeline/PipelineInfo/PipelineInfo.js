@@ -290,6 +290,17 @@ export default class PipelineInfo extends Component {
                     description: ""
                 };
                 break;
+            default:
+                newTask = {
+                    taskName: "default",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    repositoryVersion: "",
+                    description: ""
+                };
+                break;
         }
         let currentStage = this.state.currentStage;
         let findIndex = currentStage.tasks.findIndex((item) => {
@@ -819,6 +830,7 @@ export default class PipelineInfo extends Component {
                                                                                 </div>
                                                                             </div>
                                                                         );
+                                                                    default:
 
                                                                 }
                                                             })()

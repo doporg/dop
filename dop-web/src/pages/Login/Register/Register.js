@@ -57,18 +57,17 @@ export default class Register extends Component {
                 method: 'post',
                 data: data
             }).then((response) => {
-                console.log(response)
                 if (response.status === 200) {
                     toast.show({
                         type: "success",
-                        content: "请注意检查邮箱",
-                        duration: 2000
+                        content: "已发送激活邮箱, 请注意检查邮箱",
+                        duration: 5000
                     });
                 } else {
                     toast.show({
                         type: "error",
                         content: "发生未知错误",
-                        duration: 1000
+                        duration: 5000
                     });
                 }
                 self.props.history.push('/login');
@@ -100,7 +99,7 @@ export default class Register extends Component {
 
     checkPass(rule, value, callback) {
         const {validate} = this.field;
-        let reg = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%.-=])[0-9a-zA-Z!@#$%.-=]{4,20}$/;
+        let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=\-]).{6,20}$/;
         if (reg.test(value)) {
             validate(["rePasswd"]);
             callback();

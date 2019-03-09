@@ -9,31 +9,43 @@ import Axios from "axios/index";
 import jsonp from "jsonp";
 
 const {Item: FormItem} = Form;
-const { toast } = Feedback;
+const {toast} = Feedback;
 
 export default class Login extends Component {
     constructor(props) {
         super(props);
         this.field = new Field(this);
         this.state = {
-            visible: true
+            visible: true,
+            ip: '0.0.0.0'
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let self = this;
-        RSA().then((data)=>{
+        window.sessionStorage.removeItem("Authorization");
+        window.sessionStorage.removeItem("x-login-token");
+        window.sessionStorage.removeItem("x-login-user");
+        document.addEventListener("keydown",this.handleEnterKey);
+        RSA().then(() => {
             self.setState({
                 visible: false
             });
-        }).catch((error)=>{
+        }).catch((error) => {
             toast.show({
                 type: "error",
-                content: "网络请求失败",
+                content: error.message,
                 duration: 1000
             });
-        })
+        });
+        self.loginIp()
     }
+
+    handleEnterKey = (e) => {
+        if(e.keyCode === 13){
+            this.handleSubmit(e)
+        }
+    };
 
     handleSubmit(e) {
         e.preventDefault();
@@ -57,35 +69,30 @@ export default class Login extends Component {
     register() {
         this.props.history.push('/register');
     }
-    modify(){
+
+    modify() {
         this.props.history.push('/modifyPwd');
     }
 
-    loginIp(){
-        return new Promise((resolve, reject)=>{
-            jsonp('https://api.ipify.org?format=jsonp', (error, data)=>{
-                if(error){
-                    reject(error)
-                }else{
-                    resolve(data.ip)
-                }
-            })
-        });
-
+    loginIp() {
+        let self = this;
+        jsonp('https://api.ipify.org?format=jsonp', (error, data) => {
+            if (!error) {
+                self.setState({
+                    ip: data
+                })
+            }
+        })
     }
 
-    submit(data){
+    submit(data) {
         let url = API.gateway + '/login-server/v1/login';
         let self = this;
-        self.loginIp().then((ip)=>{
-            data.loginIp = ip;
-            return PublicKey()
-        }).then((publicKey) => {
+        PublicKey().then((publicKey) => {
             data.password = Encryption(data.passwd, publicKey);
             delete data.passwd;
             data.client = "DOP_WEB";
             data.deviceId = data.email;
-            console.log(data);
             Axios({
                 url: url,
                 method: 'post',
@@ -93,7 +100,10 @@ export default class Login extends Component {
             }).then((response) => {
                 if (response.status === 200) {
                     Axios.defaults.headers.common['x-login-token'] = response.data;
-                    self.props.history.push('/')
+                    Axios.defaults.headers.common['x-login-user'] = response.data;
+                    window.sessionStorage.setItem("x-login-token", response.data);
+                    window.sessionStorage.setItem("x-login-user", response.data);
+                    self.props.history.push('/project')
                 } else {
                     toast.show({
                         type: "error",
@@ -104,10 +114,10 @@ export default class Login extends Component {
                 self.setState({
                     visible: false
                 });
-            }).catch((error)=>{
+            }).catch((error) => {
                 toast.show({
                     type: "error",
-                    content: "请检查您的密码",
+                    content: error.message,
                     duration: 3000
                 });
                 self.setState({
@@ -117,8 +127,8 @@ export default class Login extends Component {
         }).catch((error) => {
             toast.show({
                 type: "error",
-                content: error,
-                duration: 2000
+                content: error.message,
+                duration: 3000
             });
         })
     }
@@ -145,7 +155,8 @@ export default class Login extends Component {
                         </div>
                     </div>
                     <div className="right">
-                        <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
+                        <Loading shape="fusion-reactor" visible={this.state.visible}
+                                 className="next-loading my-loading">
                             <div className="form">
                                 <div className="title">
                                     密码登陆
@@ -181,8 +192,12 @@ export default class Login extends Component {
                                     </FormItem>
 
                                     <FormItem className="submit">
-                                        <Button type="primary" onClick={this.handleSubmit.bind(this)} size="large"
-                                                className="login-form-button">
+                                        <Button type="primary"
+                                                onClick={this.handleSubmit.bind(this)}
+
+                                                size="large"
+                                                className="login-form-button"
+                                        >
                                             登陆
                                         </Button>
                                         <div className="register-content">

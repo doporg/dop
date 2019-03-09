@@ -3,6 +3,7 @@
  */
 import { Switch, Route, HashRouter as Router } from 'react-router-dom';
 import React from 'react';
+import PrivateRoute from './privateRoute'
 
 import routerConfig from './routerConfig';
 
@@ -17,6 +18,7 @@ function recursiveRouterConfigV4(config = []) {
       path: item.path,
       layout: item.layout,
       component: item.component,
+      isLogin: item.isLogin,
     };
     if (Array.isArray(item.children)) {
       route.childRoutes = recursiveRouterConfigV4(item.children);
@@ -55,10 +57,97 @@ function renderRouterConfigV4(container, router, contextPath) {
       routePath = `/${routeContextPath}/${routeItem.path}`.replace(/\/+/g, '/');
     }
 
+    if(routeItem.isLogin){
+        if (routeItem.layout && routeItem.component) {
+            routeChildren.push(
+                <Route
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    render={(props) => {
+                        return React.createElement(
+                            routeItem.layout,
+                            props,
+                            React.createElement(routeItem.component, props)
+                        );
+                    }}
+                />
+            );
+        } else if (routeContainer && routeItem.component) {
+            // 使用上层节点作为 container
+            routeChildren.push(
+                <Route
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    render={(props) => {
+                        return React.createElement(
+                            routeContainer,
+                            props,
+                            React.createElement(routeItem.component, props)
+                        );
+                    }}
+                />
+            );
+        } else {
+            routeChildren.push(
+                <Route
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    component={routeItem.component}
+                />
+            );
+        }
+    }else{
+        // 优先使用当前定义的 layout
+        if (routeItem.layout && routeItem.component) {
+            routeChildren.push(
+                <PrivateRoute
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    render={(props) => {
+                        return React.createElement(
+                            routeItem.layout,
+                            props,
+                            React.createElement(routeItem.component, props)
+                        );
+                    }}
+                />
+            );
+        } else if (routeContainer && routeItem.component) {
+            // 使用上层节点作为 container
+            routeChildren.push(
+                <PrivateRoute
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    render={(props) => {
+                        return React.createElement(
+                            routeContainer,
+                            props,
+                            React.createElement(routeItem.component, props)
+                        );
+                    }}
+                />
+            );
+        } else {
+            routeChildren.push(
+                <PrivateRoute
+                    key={routePath}
+                    exact
+                    path={routePath}
+                    component={routeItem.component}
+                />
+            );
+        }
+    }
+
     // 优先使用当前定义的 layout
     if (routeItem.layout && routeItem.component) {
       routeChildren.push(
-        <Route
+        <PrivateRoute
           key={routePath}
           exact
           path={routePath}
@@ -74,7 +163,7 @@ function renderRouterConfigV4(container, router, contextPath) {
     } else if (routeContainer && routeItem.component) {
       // 使用上层节点作为 container
       routeChildren.push(
-        <Route
+        <PrivateRoute
           key={routePath}
           exact
           path={routePath}
@@ -89,7 +178,7 @@ function renderRouterConfigV4(container, router, contextPath) {
       );
     } else {
       routeChildren.push(
-        <Route
+        <PrivateRoute
           key={routePath}
           exact
           path={routePath}
@@ -111,7 +200,10 @@ function renderRouterConfigV4(container, router, contextPath) {
     renderRoute(container, r, contextPath);
   });
 
-  return <Switch>{routeChildren}</Switch>;
+  return <Switch>
+
+      {routeChildren}
+      </Switch>;
 }
 
 const routerWithReactRouter4 = recursiveRouterConfigV4(routerConfig);

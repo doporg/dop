@@ -9,9 +9,11 @@ import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 import {Permission} from "../pages/Permissions";
+import {Role,RolePermissionMapping} from "../pages/Roles";
+
 const baseConfig = [
     {
-        path: '/',
+        path: '/project',
         layout: BasicLayout,
         component: Projects,
     },
@@ -51,18 +53,22 @@ const loginConfig = [
     {
         path: '/login',
         component: Login,
+        isLogin: true
     },
     {
         path: '/register',
         component: Register,
+        isLogin: true
     },
     {
         path: '/register/transfer',
         component: RegisterTransfer,
+        isLogin: true
     },
     {
         path: '/modifyPwd',
         component: ModifyPwd,
+        isLogin: true
     }
 ];
 
@@ -88,7 +94,20 @@ const permissionConfig = [
     //     component: PipelineInfo,
     // },
 ];
+const roleConfig = [
+    //role
+    {
+        path: '/roles',
+        layout: BasicLayout,
+        component: Role,
+    },
+    {
+        path: '/roles/rolewithpermission',
+        layout: BasicLayout,
+        component: RolePermissionMapping,
+    },
+];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...permissionConfig , ...baseConfig];
+const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
 
 export default routerConfig;

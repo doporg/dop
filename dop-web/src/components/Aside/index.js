@@ -4,6 +4,7 @@ import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
 import { asideMenuConfig } from '../../menuConfig';
+import { Icon } from '@icedesign/base';
 
 import './index.scss';
 
@@ -32,7 +33,9 @@ class BasicLayout extends Component {
               <MenuItem key={nav.path}>
                 <Link to={nav.path} className="ice-menu-link">
                   {nav.icon ? (
-                    <FoundationSymbol size="small" type={nav.icon} />
+                      <FoundationSymbol size="small" type={nav.icon} >
+                          <Icon size="small" type={nav.icon} />
+                      </FoundationSymbol>
                   ) : null}
                   <span className="ice-menu-item-text">{nav.name}</span>
                 </Link>

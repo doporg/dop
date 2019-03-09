@@ -39,7 +39,6 @@ export default class Permission extends Component {
                     cuser:"",
                     isPravte:"",
                     description:"",
-                    isdeleted:false
                 },
             pageNo:1,
             pageSize:8,
@@ -52,35 +51,6 @@ export default class Permission extends Component {
         this.field.reset();
     }
 
-    // 验证名称是否重复
-    userExists(rule, value, callback) {
-        if (!value) {
-            callback();
-        } else {
-            setTimeout(() => {
-
-                let url = API.permission + "/v1/permissions/alldata" ;
-
-                Axios.get(url).then((response) => {
-                    // handle success
-                    // 去get已经存储的数据
-                    response.data.forEach((val)=>
-                    {
-                        //对response.data进行遍历，取每个数组的name项进行比较
-                        console.log(val.name)
-                     if(value==val.name)
-                        {
-                            callback([new Error("抱歉，该功能点名称已被使用。")]);
-                        }
-                    })
-                    callback();
-                }).catch((error)=>{
-                    // handle error
-                    console.log(error);
-                });
-            }, 1000);
-        }
-    }
 
     //取消删除操作
     onCancel = () => {
@@ -105,7 +75,7 @@ export default class Permission extends Component {
 
     onChange=currentPage=> {
 
-        let url = API.permission + "/v1/permissions/pagealldata" ;
+        let url = API.permission + "/v1/permissions" ;
         let params=
             {
                 pageNo:currentPage,
@@ -134,7 +104,7 @@ export default class Permission extends Component {
 
     //每次访问的刷新
     componentDidMount() {
-        let url = API.permission + "/v1/permissions/pagealldata" ;
+        let url = API.permission + "/v1/permissions" ;
         let params=
             {
                 pageNo:this.state.pageNo,
@@ -144,6 +114,7 @@ export default class Permission extends Component {
         Axios.get(url,{params:(params)}).then((response) => {
             // handle success
             console.log(response.data);
+            console.log(response.data.pageList[3].ctime)
             this.setState({currentData:response.data.pageList,
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount});
@@ -159,38 +130,61 @@ export default class Permission extends Component {
 
     //创建功能点
     handleSubmit(e) {
-        this.setState({
-            visible: false
-        });
+
+
         e.preventDefault();
         this.field.validate((errors, values) => {
             if (errors) {
                 console.log("Errors in form!!!");
                 return;
             }
-            let url = API.permission + "/v1/permissions" ;
+            //检测重复的url以及参数
+            let byNameurl=API.permission+"/v1/permissions/byName"
+            let byNameparams=
+                {name:values.name}
+            //创建的url
+            // let url = API.permission + "/v1/permissions" ;
+            let url= API.gateway + '/permission-server/v1/permissions';
             let params=
                 {
-                    cuser: values.cuser,
-                    deleted: false,
+                    // cuser: values.cuser,
                     description: values.description,
                     isPrivate: values.isPrivate,
-                    muser: values.cuser,
+                    // muser: values.cuser,
                     name:values.name,
                     parentId: 0,
                 }
+             //先检测是否重复
+                Axios.get(byNameurl,{params:(byNameparams)}
+                ).then((response) => {
+                    // handle success
+                    console.log("监测重复返回的东西："+response.data.name);
+                    if(response.data.name==values.name)
+                    {
+                        Feedback.toast.error("功能点名称重复！")
+                    }
+                    else
+                    {
+                        this.setState({
+                        visible: false
+                    });
+                        Axios.post(url, {},{params:(params)}
+                        )
+                            .then((response)=>{
+                                console.log(response);
+                            }).catch((error)=> {
+                            console.log(error);
+                        });
 
-            console.log("Submit!!!");
-            console.log(values);
-
-            Axios.post(url, {},{params:(params)}
-            )
-                .then((response)=>{
-                console.log(response);
-            }).catch((error)=> {
-                console.log(error);
-
-            });
+                        console.log("Submit!!!");
+                        console.log(values);
+                    }
+                }).catch((error)=>{
+                    // handle error
+                    console.log(error);
+                }).then(()=>{
+                    // always executed
+                });
         });
     }
 
@@ -199,7 +193,7 @@ export default class Permission extends Component {
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.permission + "/v1/permissions" ;
+        let url = API.permission + "/v1/permissions/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -272,27 +266,11 @@ export default class Permission extends Component {
                                 rules: [
                                     { required: true, min: 1, message: "名称不能为空！" },
                                     //检验名称是否重复
-                                    { validator: this.userExists }
                                 ]
                             })}
                         />
                     </FormItem>
-                    <FormItem
-                        label="创建者："
-                        {...formItemLayout}
 
-                    >
-                        <Input
-                            maxLength={10}
-                            hasLimitHint
-                            {...init("cuser", {
-                                rules: [
-                                    { required: true, min: 1, message: "必须注明创建者！" },
-
-                                ]
-                            })}
-                        />
-                    </FormItem>
                     <FormItem label="是否私有：" hasFeedback {...formItemLayout}>
                         <RadioGroup
                             {...init("isPrivate", {
