@@ -6,17 +6,24 @@ import BasicLayout from '../layouts/BasicLayout';
 import {Projects, Application} from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
-
-const routerConfig = [
+import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
+import Ciadjust from '../pages/Ciadjust';
+const baseConfig = [
     {
-        path: '/',
+        path: '/project',
         layout: BasicLayout,
         component: Projects,
-    },{
-        path: '/application',
+    },
+    {
+        path: '*',
         layout: BasicLayout,
-        component: Application,
-    }, {
+        component: NotFound,
+    },
+];
+
+const pipelineConfig = [
+    //pipeline
+    {
         path: '/pipeline',
         layout: BasicLayout,
         component: Pipeline,
@@ -36,12 +43,41 @@ const routerConfig = [
         path: '/pipeline/test',
         layout: BasicLayout,
         component: PipelineTest,
-    }
-    , {
-        path: '*',
-        layout: BasicLayout,
-        component: NotFound,
     },
 ];
+
+const loginConfig = [
+    {
+        path: '/login',
+        component: Login,
+        isLogin: true
+    },
+    {
+        path: '/register',
+        component: Register,
+        isLogin: true
+    },
+    {
+        path: '/register/transfer',
+        component: RegisterTransfer,
+        isLogin: true
+    },
+    {
+        path: '/modifyPwd',
+        component: ModifyPwd,
+        isLogin: true
+    }
+];
+
+const ciadjustConfig = [
+    //ci-adjust
+    {
+        path: '/ciadjust',
+        layout: BasicLayout,
+        component: Ciadjust,
+    }
+];
+
+const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...baseConfig];
 
 export default routerConfig;
