@@ -1,49 +1,15 @@
 import React, {Component} from 'react';
-import {Table} from '@icedesign/base';
+import {Table, Dialog} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Icon} from '@icedesign/base';
 import API from "../../../../API.js"
 import {Col} from "@alifd/next/lib/grid";
 import Axios from "axios";
+import {Link} from "react-router-dom";
 
-
+import {Feedback} from '@icedesign/base';
 const {Row} = Grid;
-
-
-// MOCK 数据，实际业务按需进行替换
-// function getData() {
-//     return Array.from({length: 5}).map((item, index) => {
-//         return {
-//             appid: `0000${index + 1}`,
-//             title: 'NJU',
-//             desc: 'Devops program',
-//             time: '2018-12-20 14:30:19',
-//         };
-//     });
-// };
-
-// async function getApplicationData (current){
-//
-//     let url = API.application + '/applications';
-//     let data = await Axios.get(url, {
-//         params: {
-//             pageNo: current,
-//             pageSize: 9,
-//             includeFinished: false
-//         }
-//     })
-//         .then(function (response){
-//            return response.data
-//
-//             console.log("getApplication");
-//
-//
-//         })
-//         .catch(function (error) {
-//             console.log(error);
-//         });
-// }
-
+const Toast = Feedback.toast;
 /**
  * 展示应用的列表
  * @author Bowen
@@ -60,54 +26,67 @@ export default class ApplicationList extends Component {
         console.log(props.currentData)
         //接受来自分页器的参数即当前页数据
         this.state = {
-            currentData: props.currentData
+            isVisible: false,
+            currentData: props.currentData,
+            deletedCallRefresh: props.deletedCallRefresh,
+            searchKey: props.searchKey == undefined ? "" : props.searchKey
         };
         console.log("constructor");
 
     }
 
+    //接受来自分页器的参数即当前页数据
     componentWillReceiveProps(nextProps, nextContext) {
-
-        // for (let i = 0; i < nextProps.currentData.length; i++) {
-        //     let tmpTime = nextProps.currentData[i].ctime;
-        //     if (tmpTime[0].length < 4) break;
-        //     nextProps.currentData[i].ctime = tmpTime[0] + "/" + tmpTime[1] + "/" + tmpTime[2] + " " + tmpTime[3] + ":" + tmpTime[4];
-        // }
         this.setState({
             currentData: nextProps.currentData
         });
     }
 
-    handleDlete(id) {
-        let url = API.application + '/applications';
+    popupConfirm = (id) => {
+        console.log(id)
+        Dialog.confirm({
+            content: "你确定要删除该应用吗？",
+            title: "确认删除",
+            onOk: this.onDelete.bind(this, id)
+        });
+    };
+
+    //删除按钮响应函数
+    onDelete = (id) => {
+
+
+        let url = API.gateway + '/application-server/application/' + id;
         let _this = this;
-        let current = this.state.current;
-        Axios.delete(url, {
-            params: {
-                projectId: this.state.projectId
-            }
-        })
+        console.log("id", id)
+        Axios.delete(url)
             .then(function (response) {
+                Toast.success("删除成功")
+                _this.state.deletedCallRefresh();
                 }
             )
             .catch(function (error) {
                 console.log(error);
             });
+
+
+    }
+
+    //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
+    idRender = function (id) {
+        return <Link to={"/applicationDetail?appId=" + id}
+        >{id}</Link>
     }
 
     render() {
         const renderOpr = (value, index, record) => {
             let id = record.id;
-            const onDelete = (id) => {
-                this.handleDlete(id);
-            }
+            console.log("record:", record, value)
+
             return <div>{record.ctime}
-                <Icon onClick={onDelete.bind(this)} type="ashbin" style={{
+                <Icon onClick={this.popupConfirm.bind(this, record.id)} type="ashbin" style={{
                     cursor: "pointer",
                     color: "#FFA003",
-                    marginRight: "10px",
-                    position: "absolute",
-                    justifyContent: "right"
+                    float: "right"
                 }}/>
 
             </div>
@@ -117,10 +96,19 @@ export default class ApplicationList extends Component {
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column title="ID" dataIndex="id"/>
-                        <Table.Column title="应用名称" dataIndex="title"/>
-                        <Table.Column title="拥有者" dataIndex="ouser"/>
-                        <Table.Column cell={renderOpr} title="创建时间" dataIndex="ctime"/>
+                        <Table.Column cell={this.idRender}
+                                      title="ID"
+                                      dataIndex="id"/>
+
+                        <Table.Column title="应用名称"
+                                      dataIndex="title"/>
+
+                        <Table.Column title="拥有者"
+                                      dataIndex="ouser"/>
+
+                        <Table.Column cell={renderOpr}
+                                      title="创建时间"
+                                      dataIndex="ctime"/>
                     </Table>
                 </Col>
             </Row>

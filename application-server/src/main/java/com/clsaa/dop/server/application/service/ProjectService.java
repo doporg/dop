@@ -3,6 +3,7 @@ package com.clsaa.dop.server.application.service;
 import com.clsaa.dop.server.application.dao.ProjectRepository;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
 import com.clsaa.dop.server.application.model.po.Project;
+import com.clsaa.dop.server.application.model.vo.ProjectV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class ProjectService {
      * @param queryKey        查询关键字
      * @return {@link Pagination< ProjectBoV1>}
      */
-    public Pagination<ProjectBoV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
+    public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
@@ -71,19 +72,16 @@ public class ProjectService {
             }
         }
 
-        //新建BO层对象 并赋值
-        Pagination<ProjectBoV1> pagination = new Pagination<>();
+        //新建VO层对象 并赋值
+        Pagination<ProjectV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
+        pagination.setPageNo(pageNo);
+        pagination.setPageSize(pageSize);
         if (projectList.size() == 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-
-        pagination.setPageList(projectList.stream().map(l -> BeanUtils.convertType(l, ProjectBoV1.class)).collect(Collectors.toList()));
-
-        //for (Project item : projectList) {
-        //    projectBoV1List.add(BeanUtils.convertType(item, ProjectBoV1.class));
-        //}
+        pagination.setPageList(projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList()));
 
         return pagination;
     }
@@ -95,7 +93,7 @@ public class ProjectService {
      * @param description 项目描述
      * @return {@link Pagination< ProjectBoV1>}
      */
-    public void createProjects(Long cuser, String title, String description) {
+    public void createProjects(Long cuser, String title, Long origanizationId, String description) {
 
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
@@ -105,7 +103,7 @@ public class ProjectService {
                 .cuser(cuser)
                 .muser(cuser)
                 .is_deleted(false)
-                .organizationId(123L)
+                .organizationId(origanizationId)
                 .status(Project.Status.NORMAL)
                 .ctime(ctime)
                 .mtime(mtime)

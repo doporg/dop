@@ -1,7 +1,4 @@
-/**
- * 应用列表翻页器
- * @author Bowen
- **/
+
 import {Pagination} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API.js"
@@ -17,6 +14,11 @@ const styles = {
         justifyContent: 'center',
     }
 }
+
+/**
+ * 应用列表翻页器
+ * @author Bowen
+ **/
 export default class ApplicationPagination extends Component {
     constructor(props) {
         super(props);
@@ -30,54 +32,94 @@ export default class ApplicationPagination extends Component {
             totalPage: 1,
             //当前页面显示的应用所属的项目id
             projectId: props.projectId,
-            // searchData: [],
+            // 搜索的Key
             searchKey: props.searchKey
         };
-        console.log(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    /*
-     *
-     * 当处理改变（分页器改变、父组件请求刷新）
-     */
-    handleChange(current) {
-        let url = API.gateway + '/application-server/application';
+
+    //刷新列表数据
+    refreshList(currentPage, searchKey) {
+        let url = API.gateway + '/application-server/application/' + this.state.projectId;
         let _this = this;
+        let tmpData = [];
         Axios.get(url, {
             params: {
-                pageNo: current,
+                pageNo: currentPage,
                 pageSize: 15,
-                projectId: this.state.projectId,
-                queryKey: this.state.searchKey
+                queryKey: searchKey
             }
         })
             .then(function (response) {
                 console.log(response)
                 _this.setState({
-                    current: current,
-                    currentData: response.data.pageList,
-                    pageSize: response.data.pageSize
+                    current: currentPage,
+                    pageSize: response.data.pageSize,
+                    searchKey: searchKey,
+                    totalCount: response.data.totalCount
                 });
+                tmpData = response.data.pageList;
 
+                //获取用户数据
+
+
+                //使用SET数组去重，获取所有不重复的用户ID
+                let userIdList = new Set();
+                for (let i = 0; i < tmpData.length; i++) {
+                    userIdList.add(tmpData[i].ouser);
+                }
+
+
+                //存放所有请求URL的数组
+                let getList = []
+                for (let id of userIdList) {
+                    let nameUrl = API.gateway + '/user-server/v1/users/' + id;
+                    getList.push(Axios.get(nameUrl));
+                }
+
+                //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
+                let finalList = [];
+
+                //将所有URL请求发出
+                Axios.all(getList).then(Axios.spread(function (...resList) {
+
+
+                    for (let i = 0; i < resList.length; i++) {
+                        //如果该值不为空则添加到哈希表中
+                        if (resList[i].data != "") {
+                            finalList[resList[i].data.id] = resList[i].data.name;
+                        } else {
+                            finalList[resList[i].data.id] = "";
+                        }
+                    }
+
+                    //将所有ID置换为NAME
+                    for (let i = 0; i < tmpData.length; i++) {
+                        tmpData[i].ouser = finalList[tmpData[i].ouser];
+                    }
+
+
+                    //赋值
+                    _this.setState({
+                        currentData: tmpData
+                    });
+                }))
             })
             .catch(function (error) {
                 console.log(error);
             });
-        // let key = this.state.key;
-        // this.searchInData(key);
     }
 
-// searchInData(key){
-//         this.setState({
-//             searchKey:key,
-//             searchData: this.state.currentData.filter( record => {
-//                 return (String(record.ctime).indexOf(key) > -1||String(record.title).indexOf(key) > -1||String(record.cuser).indexOf(key) > -1)
-//             }),
-//             totalCount: this.state.searchData.length
-//         })
-//
-// }
+
+    /*
+     *
+     * 分页器改变页码时
+     */
+    handleChange(current) {
+        this.refreshList(current, this.state.searchKey);
+    }
+
 
     /**
      *
@@ -85,94 +127,20 @@ export default class ApplicationPagination extends Component {
      *
      */
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps);
         let key = nextProps.searchKey;
-        console.log(key);
-        // this.searchInData(key);
-
-        console.log("searching" + key);
-        let _this = this;
-        let url = API.gateway + '/application-server/application';
-        let current = this.state.current
-        Axios.get(url, {
-            params: {
-                pageNo: 1,
-                pageSize: 15,
-                queryKey: key,
-                projectId: this.state.projectId
-            }
-        })
-            .then(function (response) {
-                console.log(response);
-                _this.setState({
-                    currentData: response.data.pageList,
-                    totalCount: response.data.totalCount,
-                    pageSize: response.data.pageSize
-                    // searchData: response.data.pageList
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-        //
-        if (nextProps.createdApplicationNeedRefresh) {
-            console.log("going to handle change");
-
-            let _this = this;
-            let url = API.gateway + '/application-server/application';
-            let current = this.state.current
-            Axios.get(url, {
-                params: {
-                    pageNo: 1,
-                    pageSize: 15,
-                    queryKey: key,
-                    projectId: this.state.projectId
-                }
-            })
-                .then(function (response) {
-                    console.log(response);
-                    _this.setState({
-                        currentData: response.data.pageList,
-                        totalCount: response.data.totalCount,
-                        pageSize: response.data.pageSize
-                        // searchData: response.data.pageList
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            nextProps.refreshFinished();
-        }
+        this.refreshList(1, key);
     }
 
     /*
     *加载初始数据
      */
     componentDidMount() {
+        this.refreshList(1, this.state.searchKey);
+    }
 
-        let url = API.gateway + '/application-server/application';
-        let _this = this;
-        let current = this.state.current;
-        Axios.get(url, {
-            params: {
-                pageNo: current,
-                pageSize: 15,
-                queryKey: this.state.searchKey,
-                projectId: this.state.projectId
-            }
-        })
-            .then(function (response) {
-                _this.setState({
-                    currentData: response.data.pageList,
-                    totalCount: response.data.totalCount,
-                    pageSize: response.data.pageSize
-                    // searchData: response.data.pageList
-                })
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    //删除应用后请求刷新
+    deletedCallRefresh() {
+        this.refreshList(1, this.state.searchKey);
     }
 
     render() {
@@ -181,11 +149,15 @@ export default class ApplicationPagination extends Component {
          */
         return (
             <div>
-                <ApplicationList currentData={this.state.currentData}/>
+                <ApplicationList currentData={this.state.currentData}
+                                 deletedCallRefresh={this.deletedCallRefresh.bind(this)}/>
 
 
-                <Pagination style={styles.body} current={this.state.current} onChange={this.handleChange}
-                            pageSize={this.state.pageSize} total={this.state.totalCount}/>
+                <Pagination style={styles.body}
+                            current={this.state.current}
+                            onChange={this.handleChange}
+                            pageSize={this.state.pageSize}
+                            total={this.state.totalCount}/>
             </div>
         )
     }

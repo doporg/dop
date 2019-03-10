@@ -1,12 +1,16 @@
 package com.clsaa.dop.server.application.service;
 
 
+import com.clsaa.dop.server.application.dao.AppUrlInfoRepository;
+import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.dao.AppRepository;
+import com.clsaa.dop.server.application.dao.AppVarRepository;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
 import com.clsaa.dop.server.application.model.po.App;
-import com.clsaa.dop.server.application.model.po.AppBasicUrl;
+import com.clsaa.dop.server.application.model.po.AppUrlInfo;
 import com.clsaa.dop.server.application.model.po.AppEnvironment;
 import com.clsaa.dop.server.application.model.po.AppVariable;
+import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,10 @@ import java.util.stream.Collectors;
 public class ApplicationService {
     @Autowired
     private AppRepository appRepository;
+    @Autowired
+    private AppUrlInfoService appUrlInfoService;
+    @Autowired
+    private AppEnvService appEnvService;
 
     /**
      * 通过projectId分页查询应用
@@ -35,7 +43,7 @@ public class ApplicationService {
      * @param queryKey  查询关键字
      * @return {@link Pagination< AppBoV1>}
      */
-    public Pagination<AppBoV1> findApplicationByProjectIdOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
+    public Pagination<AppV1> findApplicationByProjectIdOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
@@ -62,18 +70,15 @@ public class ApplicationService {
         }
 
         //新建BO层对象 并赋值
-        Pagination<AppBoV1> pagination = new Pagination<>();
+        Pagination<AppV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
+        pagination.setPageNo(pageNo);
+        pagination.setPageSize(pageSize);
         if (applicationList.size() == 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-
-        pagination.setPageList(applicationList.stream().map(l -> BeanUtils.convertType(l, AppBoV1.class)).collect(Collectors.toList()));
-
-        //for (Application item : applicationList) {
-        //    ApplicationBoV1List.add(BeanUtils.convertType(item, AppBoV1.class));
-        //}
+        pagination.setPageList(applicationList.stream().map(l -> BeanUtils.convertType(l, AppV1.class)).collect(Collectors.toList()));
 
         return pagination;
 
@@ -83,10 +88,27 @@ public class ApplicationService {
     /**
      * 删除应用
      *
-     * @param id 项目Id
+     * @param id appId
      */
     public void deleteApp(Long id) {
         this.appRepository.deleteById(id);
+        //appUrlInfoService.deleteAppUrlInfo(id);
+        //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
+        //AppUrlInfoService.deleteAppUrlInfo(String sId);
+    }
+
+    /**
+     * 删除应用
+     *
+     * @param id appId
+     */
+    public void updateApp(Long id, String description) {
+        App app = this.appRepository.findById(id).orElse(null);
+        app.setDescription(description);
+        this.appRepository.saveAndFlush(app);
+        //appUrlInfoService.deleteAppUrlInfo(id);
+        //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
+        //AppUrlInfoService.deleteAppUrlInfo(String sId);
     }
 
 
@@ -110,23 +132,15 @@ public class ApplicationService {
                 .cuser(cuser)
                 .muser(cuser)
                 .ouser(cuser)
+
                 .is_deleted(false)
                 .ctime(ctime)
                 .mtime(mtime)
+                .productMode(App.ProductMode.valueOf(productMode))
                 .build();
         this.appRepository.saveAndFlush(app);
 
         Long appId = app.getId();
-
-        AppVariable appVariable = AppVariable.builder()
-                .appId(appId)
-                .ctime(ctime)
-                .cuser(cuser)
-                .mtime(mtime)
-                .muser(cuser)
-                .is_deleted(false)
-                .build();
-
 
         AppEnvironment appEnvironment = AppEnvironment.builder()
                 .appId(appId)
@@ -135,10 +149,13 @@ public class ApplicationService {
                 .is_deleted(false)
                 .mtime(mtime)
                 .muser(cuser)
-                .productMode(AppEnvironment.ProductMode.valueOf(productMode))
+                .deploymentStrategy(AppEnvironment.DeploymentStrategy.KUBERNETES)
+                .title("日常开发")
+                .environmentLevel(AppEnvironment.EnvironmentLevel.DAILY)
                 .build();
+        this.appEnvService.createAppEnv(appEnvironment);
 
-        AppBasicUrl appBasicUrl = AppBasicUrl.builder()
+        AppUrlInfo appUrlInfo = AppUrlInfo.builder()
                 .appId(appId)
                 .ctime(ctime)
                 .cuser(cuser)
@@ -147,6 +164,20 @@ public class ApplicationService {
                 .muser(cuser)
                 .warehouseUrl(gitUrl)
                 .build();
+        this.appUrlInfoService.createAppUrlInfo(appUrlInfo);
+
         return;
+    }
+
+    /**
+     * 查询应用
+     *
+     * @param id id
+     * @return @return {@link AppBoV1}
+     */
+    public AppBoV1 findAppById(Long id) {
+        System.out.print(this.appRepository.findById(id).orElse(null));
+        return BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
+
     }
 }

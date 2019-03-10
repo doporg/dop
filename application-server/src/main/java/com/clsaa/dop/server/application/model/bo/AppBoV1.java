@@ -7,10 +7,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 项目业务层对象
+ * 应用业务层对象
  *
  * @author Bowen
- * @since 2019-3-7
+ * @since 2019-3-12
  **/
 @Getter
 @Setter

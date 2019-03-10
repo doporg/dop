@@ -3,7 +3,8 @@
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 
 import BasicLayout from '../layouts/BasicLayout';
-import {Projects, Application} from '../pages/Projects';
+import {Projects, Application, ApplicationDetail} from '../pages/Projects';
+import {ApplicationEnvironmentDetail} from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
@@ -25,6 +26,16 @@ const projectConfig = [
         layout: BasicLayout,
         component: Application,
     },
+    {
+        path: '/applicationDetail',
+        layout: BasicLayout,
+        component: ApplicationDetail,
+    },
+    {
+        path: '/application/environment/detail',
+        layout: BasicLayout,
+        component: ApplicationEnvironmentDetail
+    }
 ]
 const pipelineConfig = [
     //pipeline

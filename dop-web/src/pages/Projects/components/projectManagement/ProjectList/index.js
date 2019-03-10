@@ -1,7 +1,3 @@
-/**
- * 展示项目列表
- * @author Bowen
- **/
 
 import React, {Component} from 'react';
 import {Table} from '@icedesign/base';
@@ -13,7 +9,12 @@ import {Link} from 'react-router-dom';
 
 const {Row} = Grid;
 
-//项目展示列表
+
+/**
+ * 展示项目列表
+ * @author Bowen
+ **/
+
 export default class ProjectList extends Component {
 
     static displayName = 'ProjectList';
@@ -46,10 +47,7 @@ export default class ProjectList extends Component {
 
     //链接 点击后跳转到对应projectId所包含的所有应用列表的页面
     idRender = function (id) {
-        return <Link to={{
-            pathname: '/application',
-            state: {projectId: id}
-        }}
+        return <Link to={"/application?projectId=" + id}
         >{id}</Link>
     }
     render() {
@@ -57,13 +55,19 @@ export default class ProjectList extends Component {
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender} title="项目ID" dataIndex="id"/>
-                        <Table.Column title="项目名称" dataIndex="title"/>
-                        <Table.Column title="创建人" dataIndex="cuser"/>
-                        <Table.Column title="创建时间" dataIndex="ctime"/>
+                        <Table.Column cell={this.idRender}
+                                      title="项目ID"
+                                      dataIndex="id"/>
+
+                        <Table.Column title="项目名称"
+                                      dataIndex="title"/>
+
+                        <Table.Column title="创建人"
+                                      dataIndex="cuser"/>
+
+                        <Table.Column title="创建时间"
+                                      dataIndex="ctime"/>
                     </Table>
-                </Col>
-                <Col>
                 </Col>
             </Row>
         );
