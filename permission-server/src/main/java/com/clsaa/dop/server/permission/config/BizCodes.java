@@ -30,4 +30,9 @@ public interface BizCodes {
      * 功能点名称重复
      */
     BizCode REPETITIVE_PERMISSION_NAME = new BizCode(1100, "创建失败，功能点名称重复");
+    /**
+     * 角色名称重复
+     */
+    BizCode REPETITIVE_ROLE_NAME = new BizCode(1101, "创建失败，角色名称重复");
+
 }

@@ -61,15 +61,9 @@ public class PermissionController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
         )
     {
-        System.out.println(cuser);
         permissionService.createPermission(parentId,name,isPrivate,
                 description,cuser,muser);
     }
-    @GetMapping("/test")
-    public void testHaveUserIdHeader(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long id) {
-        System.out.println(id);
-    }
-
 
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
     @GetMapping("/v1/permissions/{id}")

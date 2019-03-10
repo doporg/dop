@@ -2,6 +2,7 @@ package com.clsaa.dop.server.permission.model.bo;
 
 import lombok.*;
 
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 /**
@@ -23,6 +24,10 @@ public class RoleBoV1 implements Serializable {
      * 角色ID
      */
     private Long id;
+    /**
+     * 父级角色ID
+     */
+    private Long parentId;
     /**
      * 角色名称
      */

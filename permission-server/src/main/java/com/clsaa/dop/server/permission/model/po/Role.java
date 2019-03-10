@@ -41,6 +41,12 @@ public class Role implements Serializable {
     @Column(name="id")
     private Long id;
     /**
+     * 父级角色ID
+     */
+    @Basic
+    @Column(name="parent_id")
+    private Long parentId;
+    /**
      * 角色名称
      */
     @Basic

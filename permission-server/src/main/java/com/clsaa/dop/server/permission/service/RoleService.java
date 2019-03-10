@@ -42,6 +42,7 @@ public class RoleService {
     /* *
      *
      *  * @param id 角色ID
+     *  * @param parentId 父角色ID
      *  * @param name 角色名称
      *  * @param description 角色描述
      *
@@ -56,12 +57,12 @@ public class RoleService {
 
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    public void createRole(String name,String description, Long cuser,Long muser)
+    public void createRole(Long parentId,String name,String description, Long cuser,Long muser)
     {
-
         Role existRole=this.roleRepository.findByName(name);
-        BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_PERMISSION_NAME);
+        BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
         Role role= Role.builder()
+                .parentId(parentId)
                 .name(name)
                 .description(description)
                 .cuser(cuser)
@@ -106,7 +107,11 @@ public class RoleService {
 
         return pagination;
     }
-
+    //根据name查询角色
+    public RoleBoV1 findByName(String name)
+    {
+        return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
+    }
     //根据ID删除角色
     @Transactional
     public void deleteById(Long id)
