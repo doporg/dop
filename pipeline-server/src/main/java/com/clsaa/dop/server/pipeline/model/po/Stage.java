@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class Stage {
 
     @SerializedName("id")
-    private String id;
+    private Long id;
 
     /**
      * 流水线阶段名称

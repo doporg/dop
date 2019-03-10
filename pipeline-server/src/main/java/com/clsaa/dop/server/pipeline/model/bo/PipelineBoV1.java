@@ -1,23 +1,31 @@
-package com.clsaa.dop.server.pipeline.model.vo;
+package com.clsaa.dop.server.pipeline.model.bo;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
  *
- * 流水线信息视图层对象
+ * 流水线信息业务层对象
  * @author 张富利
  * @since 2019-03-09
  */
 @Getter
 @Setter
-public class PipelineV1 {
+@Builder
+public class PipelineBoV1 {
+    /**
+     * 流水线id
+     */
+    @SerializedName("id")
+    private String id;
 
     /**
      * 流水线名称
@@ -42,4 +50,26 @@ public class PipelineV1 {
      */
     @SerializedName("cuser")
     private Long cuser;
+
+    /**
+     * 创建时间
+     */
+    @Field("ctime")
+    @SerializedName("ctime")
+    private LocalDateTime ctime;
+
+    /**
+     * 修改时间
+     */
+    @Field("mtime")
+    @SerializedName("mtime")
+    private LocalDateTime mtime;
+
+
+    /**
+     * 是否删除
+     */
+    @Field("isDeleted")
+    @SerializedName("isDeleted")
+    private Boolean isDeleted;
 }

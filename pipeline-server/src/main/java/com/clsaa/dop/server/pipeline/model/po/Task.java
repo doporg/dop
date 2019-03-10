@@ -15,7 +15,7 @@ import lombok.*;
 @AllArgsConstructor
 class Task {
     @SerializedName("id")
-    private String id;
+    private Long id;
 
     /**
      * 任务名称
