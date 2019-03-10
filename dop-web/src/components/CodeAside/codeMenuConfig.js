@@ -7,7 +7,7 @@ const codeAsideMenuConfig=[
     },
     {
         name: '首页',
-        path: '/code/projects',
+        path: '/code/projects/personal',
         icon: 'home2'
     },
     {

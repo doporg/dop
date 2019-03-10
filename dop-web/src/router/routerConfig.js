@@ -9,7 +9,9 @@ import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pi
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
-import Code from '../pages/Code'
+import {Code,PersonalProjects,StarredProjects,AllProjects} from '../pages/Code'
+
+
 const baseConfig = [
     {
         path: '/project',
@@ -83,9 +85,21 @@ const ciadjustConfig = [
 
 const codeConfig = [
     {
-        path: '/code/projects',
+        path: '/code/projects/personal',
         layout: CodeLayout,
-        component:Code
+        component:PersonalProjects
+
+    },
+    {
+        path: '/code/projects/starred',
+        layout: CodeLayout,
+        component:StarredProjects
+
+    },
+    {
+        path: '/code/projects/all',
+        layout: CodeLayout,
+        component:AllProjects
 
     },
     {
