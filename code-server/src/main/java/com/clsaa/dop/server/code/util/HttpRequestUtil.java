@@ -16,29 +16,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * 发送请求到gitlab的工具类
+ *
+ * @author wsy
+ */
 public class HttpRequestUtil {
 
-    private static final String api="http://gitlab.dop.clsaa.com/api/v4";
-    private static final String privateToken="y5MJTK9yisBKfNF1t-gd";
+    //api地址
+    private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
+    //管理员的token
+    private static final String privateToken = "y5MJTK9yisBKfNF1t-gd";
 
-    public static void main(String[] args) throws Exception {
-        String result=httpGet(api+"/projects?private_token="+privateToken);
+    public static void main(String[] args){
+        String result = httpGet("/users/waszqt/projects?&simple=true");
         FormatUtil.printJson(result);
 
     }
 
 
+    /**
+     * 发送get请求到gitlab
+     * @param path 路径
+     * @return json字符串
+     */
+    public static String httpGet(String path) {
 
-    public static String httpGet(String url){
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "private_token=" + privateToken;
 
-        CloseableHttpClient httpclients=HttpClients.createDefault();
+        CloseableHttpClient httpclients = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
-        CloseableHttpResponse response=null;
+        CloseableHttpResponse response = null;
 
         try {
-            response=httpclients.execute(httpGet);
+            response = httpclients.execute(httpGet);
 
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -65,23 +80,23 @@ public class HttpRequestUtil {
     }
 
 
-    public static String httpPost(String url,List<NameValuePair> formparams) throws Exception {
+    public static String httpPost(String url, List<NameValuePair> formparams) throws Exception {
         CloseableHttpClient httpclients = HttpClients.createDefault();
 
         HttpPost httpPost = new HttpPost(url);
 
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams,Consts.UTF_8);
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
 
         httpPost.setEntity(entity);
         CloseableHttpResponse response = httpclients.execute(httpPost);
         HttpEntity entity1 = response.getEntity();
 
-        try{
+        try {
             HttpEntity entity5 = response.getEntity();
-            if(entity != null) {
+            if (entity != null) {
                 InputStream is = entity.getContent();
             }
-        }finally{
+        } finally {
             response.close();
             httpclients.close();
         }
@@ -89,15 +104,6 @@ public class HttpRequestUtil {
         return EntityUtils.toString(entity1);
 
     }
-
-
-
-
-
-
-
-
-
 
 
 }
