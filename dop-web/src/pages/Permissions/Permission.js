@@ -35,8 +35,6 @@ export default class Permission extends Component {
                 {
                     parentId:"",
                     name:"",
-                    muser:"",
-                    cuser:"",
                     isPravte:"",
                     description:"",
                 },
@@ -84,11 +82,13 @@ export default class Permission extends Component {
         // console.log(params)
         Axios.get(url,{params:(params)}).then((response) => {
             // handle success
-            console.log(response);
-            this.setState({currentData:response.data.pageList,
+            this.setState({
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount}
                );
+            Axios.all(this.getcusername(response.data.pageList)).then(()=>{
+                this.setState({currentData:response.data.pageList})
+            })
 
         }).catch((error)=>{
             // handle error
@@ -101,6 +101,17 @@ export default class Permission extends Component {
         console.log('onKeyDown', opts);
     }
 
+    //通过get请求中的userid获取username的函数
+    getcusername=(data)=>{
+        let axiosList=[]
+        data.forEach(item=>{
+            let url = API.gateway + "/user-server/v1/users/"+item.cuser
+            axiosList.push(Axios.get(url).then((response) => {
+                item.cuser=response.data.name
+            }))
+        })
+        return axiosList
+    }
 
     //每次访问的刷新
     componentDidMount() {
@@ -110,27 +121,24 @@ export default class Permission extends Component {
                 pageNo:this.state.pageNo,
                 pageSize:this.state.pageSize
             }
-            // console.log(params)
         Axios.get(url,{params:(params)}).then((response) => {
-            // handle success
-            console.log(response.data);
-            console.log(response.data.pageList[3].ctime)
-            this.setState({currentData:response.data.pageList,
-                pageNo:response.data.pageNo,
-                totalCount:response.data.totalCount});
-
+                this.setState({
+                                        pageNo:response.data.pageNo,
+                                        totalCount:response.data.totalCount})
+                //先不要set currentdata,先用 response.data.pageList
+                Axios.all(this.getcusername(response.data.pageList)).then(()=>{
+                   this.setState({currentData:response.data.pageList})
+                })
         }).catch((error)=>{
             // handle error
             console.log(error);
         }).then(()=>{
             // always executed
-
         });
     }
 
     //创建功能点
     handleSubmit(e) {
-
 
         e.preventDefault();
         this.field.validate((errors, values) => {
@@ -142,15 +150,14 @@ export default class Permission extends Component {
             let byNameurl=API.permission+"/v1/permissions/byName"
             let byNameparams=
                 {name:values.name}
+            //获取创建者名称的url
+            let urlcuser=API.gateway+"/user-server/v1/users"
             //创建的url
-            // let url = API.permission + "/v1/permissions" ;
             let url= API.gateway + '/permission-server/v1/permissions';
             let params=
                 {
-                    // cuser: values.cuser,
                     description: values.description,
                     isPrivate: values.isPrivate,
-                    // muser: values.cuser,
                     name:values.name,
                     parentId: 0,
                 }
@@ -171,7 +178,7 @@ export default class Permission extends Component {
                         Axios.post(url, {},{params:(params)}
                         )
                             .then((response)=>{
-                                console.log(response);
+                                console.log("创建时的response："+response)
                             }).catch((error)=> {
                             console.log(error);
                         });
@@ -222,6 +229,7 @@ export default class Permission extends Component {
                 取消
             </a>
         );
+
         //删除操作定义
         const renderdelete = (value, index, record) => {
             return (
@@ -318,11 +326,10 @@ export default class Permission extends Component {
 
             {/*<Button onClick={}>查询所有功能点</Button>*/}
 
-
             <Table dataSource={this.state.currentData}>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
-                <Table.Column title="创建人" dataIndex="cuser"/>
+                <Table.Column title="创建人"   dataIndex="cuser"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
                 <Table.Column title="删除操作" cell={renderdelete} width="20%" />
 
