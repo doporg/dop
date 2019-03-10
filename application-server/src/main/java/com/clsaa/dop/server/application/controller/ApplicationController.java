@@ -1,14 +1,15 @@
 package com.clsaa.dop.server.application.controller;
 
+import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
+import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
+import com.clsaa.dop.server.application.service.AppUrlInfoService;
 import com.clsaa.dop.server.application.service.ApplicationService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 /**
  * <p>
  * 应用API接口实现类
@@ -31,64 +33,73 @@ import java.util.stream.Collectors;
 public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
+    @Autowired
+    private AppUrlInfoService appUrlInfoService;
 
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")
-    @GetMapping(value = "/application")
+    @GetMapping(value = "/application/{projectId}")
     public Pagination<AppV1> findApplicationByProjectId(@ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                        @ApiParam(name = "projectId", value = "项目ID", required = true) @RequestParam(value = "projectId") Long projectId,
+                                                        @ApiParam(name = "projectId", value = "项目ID", required = true) @PathVariable(value = "projectId") Long projectId,
                                                         @ApiParam(name = "queryKey", value = "搜索关键字", defaultValue = "") @RequestParam(value = "queryKey", defaultValue = "") String queryKey) {
 
-
-        Pagination<AppBoV1> paginationBoV1 = this.applicationService.findApplicationByProjectIdOrderByCtimeWithPage(pageNo, pageSize, projectId, queryKey);
-        List<AppBoV1> AppBoV1List = paginationBoV1.getPageList();
-        Integer totalCount = paginationBoV1.getTotalCount();
-
-        //新建VO层对象 并赋值
-        Pagination<AppV1> paginationV1 = new Pagination<>();
-        paginationV1.setPageNo(pageNo);
-        paginationV1.setPageSize(pageSize);
-        paginationV1.setTotalCount(totalCount);
-        if (totalCount == 0) {
-            paginationV1.setPageList(Collections.emptyList());
-            return paginationV1;
-        }
-        paginationV1.setPageList(AppBoV1List.stream().map(l -> BeanUtils.convertType(l, AppV1.class)).collect(Collectors.toList()));
-
-        return paginationV1;
+        return this.applicationService.findApplicationByProjectIdOrderByCtimeWithPage(pageNo, pageSize, projectId, queryKey);
     }
 
-    public interface HttpHeaders {
-        /**
-         * 用户登录Token请求头
-         */
-        String X_LOGIN_TOKEN = "x-login-token";
-        /**
-         * 登录用户id
-         */
-        String X_LOGIN_USER = "x-login-user";
+    @ApiOperation(value = "根据ID查询应用信息", notes = "根据ID查询应用项目")
+    @GetMapping(value = "/applicationDetail/{id}")
+    public AppBasicInfoV1 findAppById(@ApiParam(name = "id", value = "id", required = true) @PathVariable(value = "id") Long id) {
+        System.out.print(id);
+        AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);
+        AppBoV1 app = this.applicationService.findAppById(id);
+        System.out.print(app);
+        System.out.print(app.getCtime());
+        AppBasicInfoV1 appBasicInfoV1 = AppBasicInfoV1.builder()
+                .ctime(app.getCtime())
+                .title(app.getTitle())
+                .description(app.getDescription())
+                .ouser(app.getOuser())
+                .warehouseUrl(appUrlInfoBoV1.getWarehouseUrl())
+                .productionDbUrl(appUrlInfoBoV1.getProductionDbUrl())
+                .testDbUrl(appUrlInfoBoV1.getTestDbUrl())
+                .productionDomain(appUrlInfoBoV1.getProductionDomain())
+                .testDomain(appUrlInfoBoV1.getTestDomain())
+                .build();
+
+        return appBasicInfoV1;
+
     }
+
+
+
+
 
     @ApiOperation(value = "创建应用", notes = "创建应用")
-    @PostMapping(value = "/application")
+    @PostMapping(value = "/application/{projectId}")
     @ResponseBody
-    public void createApp(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
-            @ApiParam(name = "projectId", value = "项目Id", required = true) @RequestParam(value = "projectId") Long projectId,
-            @ApiParam(name = "title", value = "应用名称", required = true) @RequestParam(value = "title") String title,
-            @ApiParam(name = "appDescription", value = "应用描述", defaultValue = "") @RequestParam(value = "appDescription", required = false) String appDescription,
-            @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode", required = false) String productMode,
-            @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl) {
-
-
-        this.applicationService.createApp(cuser, projectId, title, appDescription, productMode, gitUrl);
+    public void createApp(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+                          @ApiParam(name = "projectId", value = "项目Id", required = true) @PathVariable(value = "projectId") Long projectId,
+                          @ApiParam(name = "title", value = "应用名称", required = true) @RequestParam(value = "title") String title,
+                          @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", required = false) String description,
+                          @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode") String productMode,
+                          @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl) {
+        this.applicationService.createApp(cuser, projectId, title, description, productMode, gitUrl);
         return;
     }
 
+    @ApiOperation(value = "更新应用", notes = "更新应用")
+    @PutMapping(value = "/application/{id}")
+    public void updateApp(@ApiParam(name = "id", value = "应用Id", required = true) @PathVariable(value = "id") Long id,
+                          @ApiParam(name = "description", value = "应用描述", required = true) @RequestParam(value = "description") String description) {
+        this.applicationService.updateApp(id, description);
+    }
+
     @ApiOperation(value = "删除应用", notes = "删除应用")
-    @DeleteMapping(value = "/application")
+    @DeleteMapping(value = "/application/{id}")
     public void deleteApp(
-            @ApiParam(name = "id", value = "项目Id", required = true) @RequestParam(value = "id") Long id) {
+            @ApiParam(name = "id", value = "项目Id", required = true) @PathVariable(value = "id") Long id) {
         this.applicationService.deleteApp(id);
+
     }
 }

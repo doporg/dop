@@ -1,7 +1,4 @@
-/**
- * 项目列表翻页器
- * @author Bowen
- **/
+
 import {Pagination} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API.js"
@@ -17,6 +14,11 @@ const styles = {
         justifyContent: 'center',
     }
 }
+
+/**
+ * 项目列表翻页器
+ * @author Bowen
+ **/
 export default class ProjectPagination extends Component {
     constructor(props) {
         super(props);
@@ -36,11 +38,9 @@ export default class ProjectPagination extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    /*
-     *
-     * 当处理改变（分页器改变、父组件请求刷新）
-     */
-    handleChange(current) {
+    //刷新数据列表
+
+    refreshList(current, key) {
         let tmpData = [];
         let url = API.gateway + '/application-server/project';
         let _this = this;
@@ -49,31 +49,58 @@ export default class ProjectPagination extends Component {
                 pageNo: current,
                 pageSize: 15,
                 includeFinished: false,
-                queryKey: this.state.searchKey
+                queryKey: key
             }
         })
             .then(function (response) {
                 console.log(response)
                 _this.setState({
                     current: current,
-                    pageSize: response.data.pageSize
+                    pageSize: response.data.pageSize,
+                    totalCount: response.data.totalCount
                 });
+
+                //获取用户数据
                 tmpData = response.data.pageList;
 
+                //使用SET数组去重，获取所有不重复的用户ID
+                let userIdList = new Set();
                 console.log(tmpData)
-                let getList = []
                 for (let i = 0; i < tmpData.length; i++) {
-                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
+                    userIdList.add(tmpData[i].cuser);
+                }
+                console.log("userIdList", userIdList)
+
+                //存放所有请求URL的数组
+                let getList = []
+                for (let id of userIdList) {
+                    let nameUrl = API.gateway + '/user-server/v1/users/' + id;
                     getList.push(Axios.get(nameUrl));
                 }
+                console.log("getList", getList)
 
+                //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
+                let finalList = [];
+
+                //将所有URL请求发出
                 Axios.all(getList).then(Axios.spread(function (...resList) {
-                    console.log(resList);
+                    console.log("resList", resList);
                     for (let i = 0; i < resList.length; i++) {
-                        if (resList[i].data != "")
-                            tmpData[i].cuser = resList[1].data.name;
+                        //如果该值不为空则添加到哈希表中
+                        if (resList[i].data != "") {
+                            finalList[resList[i].data.id] = resList[i].data.name;
+                        } else {
+                            finalList[resList[i].data.id] = "";
+                        }
+                    }
+                    console.log("finalList", finalList)
+
+                    //将所有ID置换为NAME
+                    for (let i = 0; i < tmpData.length; i++) {
+                        tmpData[i].cuser = finalList[tmpData[i].cuser];
                     }
                     console.log(tmpData);
+                    //赋值
                     _this.setState({
                         currentData: tmpData
                     });
@@ -83,171 +110,33 @@ export default class ProjectPagination extends Component {
             .catch(function (error) {
                 console.log(error);
             });
-        // let key = this.state.key;
-        // this.searchInData(key);
+
     }
 
-// searchInData(key){
-//         this.setState({
-//             searchKey:key,
-//             searchData: this.state.currentData.filter( record => {
-//                 return (String(record.ctime).indexOf(key) > -1||String(record.title).indexOf(key) > -1||String(record.cuser).indexOf(key) > -1)
-//             }),
-//             totalCount: this.state.searchData.length
-//         })
-//
-// }
+    /*
+     *
+     * 当处理改变（分页器改变、父组件请求刷新）
+     */
+    handleChange(current) {
+        this.refreshList(current, this.state.searchKey);
+    }
+
     /**
      *
      * 接受来自父组件的刷新请求
      *
      */
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps);
         let key = nextProps.searchKey;
-        console.log(key);
-        // this.searchInData(key);
-        let tmpData = [];
-        console.log("searching" + key);
-        let _this = this;
-        let url = API.gateway + '/application-server/project';
-        let current = this.state.current
-        Axios.get(url, {
-            params: {
-                pageNo: 1,
-                pageSize: 15,
-                includeFinished: false,
-                queryKey: key
-            }
-        })
-            .then(function (response) {
-                console.log(response);
-                _this.setState({
-                    totalCount: response.data.totalCount,
-                    pageSize: response.data.pageSize,
-                    queryKey: key
-                    // searchData: response.data.pageList
-                });
-                tmpData = response.data.pageList;
-
-                console.log(tmpData)
-                let getList = []
-                for (let i = 0; i < tmpData.length; i++) {
-                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
-                    getList.push(Axios.get(nameUrl));
-                }
-
-                Axios.all(getList).then(Axios.spread(function (...resList) {
-                    console.log(resList);
-                    for (let i = 0; i < resList.length; i++) {
-                        if (resList[i].data != "")
-                            tmpData[i].cuser = resList[1].data.name;
-                    }
-                    console.log(tmpData);
-                    _this.setState({
-                        currentData: tmpData
-                    });
-
-                }))
-            })
+        this.refreshList(1, key);
     }
-
-    //
-    //
-    // if (nextProps.createdProjectNeedRefresh) {
-    //     console.log("going to handle change");
-    //     let tmpData = [];
-    //     let url = API.gateway + '/application-server/project';
-    //     let _this = this;
-    //     let current = this.state.current;
-    //     Axios.get(url, {
-    //         params: {
-    //             pageNo: current,
-    //             pageSize: 15,
-    //             includeFinished: false
-    //         }
-    //     })
-    //         .then(function (response) {
-    //             console.log(response);
-    //             _this.setState({
-    //                 totalCount: response.data.totalCount,
-    //                 pageSize: response.data.pageSize
-    //                 // searchData: response.data.pageList
-    //             });
-    //             tmpData = response.data.pageList;
-    //
-    //             console.log(tmpData)
-    //             let getList = []
-    //             for (let i = 0; i < tmpData.length; i++) {
-    //                 let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
-    //                 getList.push(Axios.get(nameUrl));
-    //             }
-    //
-    //             Axios.all(getList).then(Axios.spread(function (...resList) {
-    //                 console.log(resList);
-    //                 for (let i = 0; i < resList.length; i++) {
-    //                     if (resList[i].data != "")
-    //                         tmpData[i].cuser = resList[1].data.name;
-    //                 }
-    //                 console.log(tmpData);
-    //                 _this.setState({
-    //                     currentData: tmpData
-    //                 });
-    //
-    //             }))
-    //         }
-    //
-    //     nextProps.refreshFinished();
-    // }
 
 
     /*
     *加载初始数据
      */
     componentDidMount() {
-
-        let url = API.gateway + '/application-server/project';
-        let _this = this;
-        let current = this.state.current;
-        let tmpData = [];
-        Axios.get(url, {
-            params: {
-                pageNo: current,
-                pageSize: 15,
-                includeFinished: false
-            }
-        })
-            .then(function (response) {
-                console.log(response)
-                _this.setState({
-                    totalCount: response.data.totalCount,
-                    pageSize: response.data.pageSize
-                    // searchData: response.data.pageList
-                })
-                tmpData = response.data.pageList;
-
-                console.log(tmpData)
-                let getList = []
-                for (let i = 0; i < tmpData.length; i++) {
-                    let nameUrl = API.gateway + '/user-server/v1/users/' + tmpData[i].cuser;
-                    getList.push(Axios.get(nameUrl));
-                }
-
-                Axios.all(getList).then(Axios.spread(function (...resList) {
-                    console.log(resList);
-                    for (let i = 0; i < resList.length; i++) {
-                        if (resList[i].data != "")
-                            tmpData[i].cuser = resList[1].data.name;
-                    }
-                    console.log(tmpData);
-                    _this.setState({
-                        currentData: tmpData
-                    });
-
-                }))
-
-                console.log("didmount");
-            })
+        this.refreshList(1, "");
     }
 
     render() {
@@ -257,8 +146,11 @@ export default class ProjectPagination extends Component {
          */
             <div>
                 <ProjectList currentData={this.state.currentData}/>
-                <Pagination style={styles.body} current={this.state.current} onChange={this.handleChange}
-                            pageSize={this.state.pageSize} total={this.state.totalCount}/>
+                <Pagination style={styles.body}
+                            current={this.state.current}
+                            onChange={this.handleChange}
+                            pageSize={this.state.pageSize}
+                            total={this.state.totalCount}/>
             </div>
         )
     }

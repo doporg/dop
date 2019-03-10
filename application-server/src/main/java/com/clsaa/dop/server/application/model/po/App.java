@@ -87,4 +87,33 @@ public class App implements Serializable {
     @Column(nullable = false, name = "is_deleted")
     private boolean is_deleted;
 
+    /**
+     * 开发模式
+     */
+    @Column(name = "product_mode")
+    @Enumerated(EnumType.STRING)
+    private App.ProductMode productMode;
+
+
+    public enum ProductMode {
+
+        /**
+         * 分支模式
+         */
+        BRANCH("BRANCH"),
+        /**
+         * 自由模式
+         */
+        FREE("FREE"),
+        ;
+
+        private String code;
+
+        ProductMode(String code) {
+            this.code = code;
+        }
+    }
+
+    ;
+
 }
