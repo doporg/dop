@@ -52,12 +52,6 @@ public class Role implements Serializable {
     @Basic
     @Column(name="name")
     private String name;
-    /**
-     * 角色描述
-     */
-    @Basic
-    @Column(name="description")
-    private String description;
 
     /* 表里都要有的字段*/
     /**

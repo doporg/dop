@@ -44,7 +44,6 @@ public class RoleService {
      *  * @param id 角色ID
      *  * @param parentId 父角色ID
      *  * @param name 角色名称
-     *  * @param description 角色描述
      *
      *  * @param ctime 创建时间
      *  * @param mtime 修改时间
@@ -57,14 +56,13 @@ public class RoleService {
 
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    public void createRole(Long parentId,String name,String description, Long cuser,Long muser)
+    public void createRole(Long parentId,String name, Long cuser,Long muser)
     {
         Role existRole=this.roleRepository.findByName(name);
         BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
         Role role= Role.builder()
                 .parentId(parentId)
                 .name(name)
-                .description(description)
                 .cuser(cuser)
                 .muser(muser)
                 .ctime(LocalDateTime.now())
@@ -76,9 +74,14 @@ public class RoleService {
     }
 
     //根据ID查询角色
-    public RoleBoV1 findById(Long id)
+    public Role findById(Long id)
     {
-        return BeanUtils.convertType(this.roleRepository.findById(id),RoleBoV1.class);
+        Optional<Role> role=roleRepository.findById(id);
+        if(role.isPresent())
+        {
+            return role.get();
+        }
+        return null;
     }
     //根据name查询角色
     public RoleBoV1 findByname(String name)

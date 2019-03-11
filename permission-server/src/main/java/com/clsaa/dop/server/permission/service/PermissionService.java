@@ -8,7 +8,6 @@ import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
-import com.clsaa.rest.result.bizassert.BizCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,8 +59,8 @@ public class PermissionService {
 
         Permission existPermission=this.permissionRepository.findByName(name);
         BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
-        Permission permission= Permission.builder().
-                parentId(parentId)
+        Permission permission= Permission.builder()
+                .parentId(parentId)
                 .name(name)
                 .isPrivate(isPrivate)
                 .description(description)
@@ -112,13 +111,15 @@ public class PermissionService {
     {
        return BeanUtils.convertType(this.permissionRepository.findByName(name), PermissionBoV1.class);
     }
+
     //根据ID删除功能点
     @Transactional
     public void deleteById(Long id)
     {
         permissionRepository.deleteById(id);
     }
-    //删除所有功能点
+
+    //根据角色删除联系关系
     public void deleteAll()
     {
         permissionRepository.deleteAll();

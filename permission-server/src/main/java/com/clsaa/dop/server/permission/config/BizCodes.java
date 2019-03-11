@@ -34,5 +34,8 @@ public interface BizCodes {
      * 角色名称重复
      */
     BizCode REPETITIVE_ROLE_NAME = new BizCode(1101, "创建失败，角色名称重复");
-
+    /**
+     * 关联关系重复
+     */
+    BizCode REPETITIVE_MAPPING = new BizCode(1102, "创建失败，该关联关系已存在");
 }

@@ -100,6 +100,4 @@ public class PermissionController {
         permissionService.deleteById(id);
     }
 
-
-
 }

@@ -20,7 +20,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>
      * 根据name查询角色
      *
      * @param name 角色名称
-     * @return {@link Permission}
+     * @return {@link Role}
      */
     Role findByName(String name);
 

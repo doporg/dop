@@ -46,13 +46,11 @@ public class RoleController {
             @RequestParam(value = "parentId", required = false, defaultValue = "0") Long parentId,
             @ApiParam(name = "name",value = "名称",required = true)
             @RequestParam(value = "name", required = true) String name,
-            @ApiParam(name = "description",value = "角色描述",required = true)
-            @RequestParam(value = "description", required = true) String description,
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
     )
     {
-        roleService.createRole(parentId,name, description,cuser,muser);
+        roleService.createRole(parentId,name,cuser,muser);
     }
 
     @ApiOperation(value = "根据ID查询角色", notes = "根据ID查询角色")
