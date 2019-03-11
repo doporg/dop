@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * 流水线业务实现类
+ * 流水线信息业务实现类
  *
  * @author 张富利
  * @since 2019-03-09
@@ -29,8 +29,9 @@ public class PipelineService {
      * 添加流水线信息
      */
     public void addPipeline(PipelineVoV1 pipelineV1) {
+        ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
-                .id(new ObjectId())
+                .id(id)
                 .name(pipelineV1.getName())
                 .monitor(pipelineV1.getMonitor())
                 .stages(pipelineV1.getStages())

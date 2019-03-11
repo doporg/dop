@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-class Task {
+public class Task {
     @SerializedName("id")
     private Long id;
 
