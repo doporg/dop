@@ -71,6 +71,29 @@ export default class Permission extends Component {
         });
     };
 
+    //每次访问的刷新
+    componentDidMount() {
+        let url = API.permission + "/v1/permissions" ;
+        let params=
+            {
+                pageNo:this.state.pageNo,
+                pageSize:this.state.pageSize
+            }
+        Axios.get(url,{params:(params)}).then((response) => {
+            this.setState({
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount})
+            //先不要set currentdata,先用 response.data.pageList
+            Axios.all(this.getcusername(response.data.pageList)).then(()=>{
+                this.setState({currentData:response.data.pageList})
+            })
+        }).catch((error)=>{
+            // handle error
+            console.log(error);
+        }).then(()=>{
+            // always executed
+        });
+    }
     onChange=currentPage=> {
 
         let url = API.permission + "/v1/permissions" ;
@@ -113,29 +136,7 @@ export default class Permission extends Component {
         return axiosList
     }
 
-    //每次访问的刷新
-    componentDidMount() {
-        let url = API.permission + "/v1/permissions" ;
-        let params=
-            {
-                pageNo:this.state.pageNo,
-                pageSize:this.state.pageSize
-            }
-        Axios.get(url,{params:(params)}).then((response) => {
-                this.setState({
-                                        pageNo:response.data.pageNo,
-                                        totalCount:response.data.totalCount})
-                //先不要set currentdata,先用 response.data.pageList
-                Axios.all(this.getcusername(response.data.pageList)).then(()=>{
-                   this.setState({currentData:response.data.pageList})
-                })
-        }).catch((error)=>{
-            // handle error
-            console.log(error);
-        }).then(()=>{
-            // always executed
-        });
-    }
+
 
     //创建功能点
     handleSubmit(e) {
