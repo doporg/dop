@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.gateway.zuul.filter.pre;
 
+import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.gateway.config.BizCodes;
 import com.clsaa.dop.server.gateway.config.GatewayProperties;
 import com.clsaa.dop.server.gateway.model.bo.AccessTokenBoV1;
+import com.clsaa.dop.server.gateway.model.vo.ErrorResult;
 import com.clsaa.dop.server.gateway.oauth.security.CryptoResult;
 import com.clsaa.dop.server.gateway.oauth.security.FastAes;
 import com.clsaa.dop.server.gateway.service.AccessTokenService;
@@ -78,22 +80,42 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         // 检查是否有header
         String bearToken = ctx.getRequest().getHeader(HTTP_AUTHORIZATION_HEADER);
-        BizAssert.validParam(StringUtils.hasText(bearToken), new BizCode(BizCodes.INVALID_REQUEST.getCode(), "Empty Authorization Header"));
+        if (StringUtils.isEmpty(bearToken)) {
+            returnForError();
+        }
         // bearer和token之间用一个空格分隔
         // 参考 http://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#authz-header
         String[] tokens = StringUtils.split(bearToken, " ");
-        BizAssert.validParam(tokens != null && tokens.length == 2, new BizCode(BizCodes.INVALID_REQUEST.getCode(),
-                "invalid authorization bearer token"));
+        if (tokens == null || tokens.length != 2) {
+            returnForError();
+        }
         // token自校验解密
         CryptoResult cryptoResult = FastAes.decrypt(this.tokenSecret, tokens[1]);
         // 是否通过自校验
-        BizAssert.validParam(cryptoResult.isOK(), BizCodes.INVALID_ACCESS_TOKEN);
+        if(!cryptoResult.isOK()){
+            returnForError();
+        }
         // 查找token
         AccessTokenBoV1 token = this.accessTokenService.findAccessTokenByToken(cryptoResult.getContent());
-        System.out.println("current_time: " + System.currentTimeMillis() +
-                " - " + "token expired:" + token.getExpires().getTime());
         // 是否失效
-        BizAssert.authorized(token != null && !token.isExpired(), BizCodes.ACCESS_TOKEN_EXPIRED);
+        if(token==null||token.isExpired()){
+            returnForError();
+        }
         return null;
+    }
+
+    private void returnForError() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        // 过滤该请求，不对其进行路由
+        ErrorResult errorResult = ErrorResult.builder()
+                .path(ctx.getRequest().getRequestURI())
+                .bizCode(BizCodes.INVALID_ACCESS_TOKEN)
+                .error(BizCodes.INVALID_ACCESS_TOKEN.getMessage())
+                .trace(this.getClass().getName())
+                .build();
+        ctx.setSendZuulResponse(false);
+        ctx.setResponseStatusCode(403);
+        ctx.setResponseBody(JSON.toJSONString(errorResult));
+        ctx.getResponse().setContentType("application/json;charset=UTF-8");
     }
 }

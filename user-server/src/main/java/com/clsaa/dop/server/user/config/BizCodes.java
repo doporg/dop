@@ -34,4 +34,8 @@ public interface BizCodes {
      * 激活通道已失效
      */
     BizCode EXPIRED_REGISTER_CODE = new BizCode(1101, "注册失败，激活通道已失效");
+    /**
+     * 用户名密码错误
+     */
+    BizCode INVALID_PASSWORD = new BizCode(13100, "用户名密码错误");
 }
