@@ -28,6 +28,9 @@ public class WaitOperation {
      */
     private int waitTime;
 
+    @Column(name = "operation_order")
+    private int order;
+
     // ----------- common property ---------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

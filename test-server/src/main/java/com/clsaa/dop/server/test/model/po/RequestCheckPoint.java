@@ -20,8 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "interface_request_check_point", schema = "db_dop_test",
-        indexes = {@Index(columnList = "url_id")})
+@Table(name = "interface_request_check_point", schema = "db_dop_test")
 public class RequestCheckPoint {
 
     @Id
@@ -35,9 +34,6 @@ public class RequestCheckPoint {
     private CheckPointOperation operation;
 
     private String value;
-
-    @Column(name = "url_id")
-    private Long urlId;
 
     // ----------- common property ---------
     private LocalDateTime ctime;

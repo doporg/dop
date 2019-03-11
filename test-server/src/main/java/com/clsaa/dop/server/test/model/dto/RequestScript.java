@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.ManyToOne;
 import java.util.List;
 
 @Data
@@ -27,6 +28,7 @@ public class RequestScript implements Operation{
     /**
      * 请求头部
      */
+    @ManyToOne
     private List<RequestHeader> requestHeaders;
 
     /**

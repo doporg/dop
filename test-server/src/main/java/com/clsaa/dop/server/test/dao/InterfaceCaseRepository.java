@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @version 1.0
  * @since 06/03/2019
  */
-public interface InterfaceRepository extends JpaRepository<InterfaceCase, Long> {
+public interface InterfaceCaseRepository extends JpaRepository<InterfaceCase, Long> {
+
 
 }

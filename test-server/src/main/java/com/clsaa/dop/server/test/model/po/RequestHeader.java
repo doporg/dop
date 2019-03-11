@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "interface_request_header", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"url_id", "name"})},
-        indexes = {@Index(columnList = "url_id,name", unique = true)})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"request_id", "name"})},
+        indexes = {@Index(columnList = "request_id,name", unique = true)})
 public class RequestHeader {
 
     @Id
@@ -32,9 +32,6 @@ public class RequestHeader {
     private String name;
 
     private String value;
-
-    @Column(name = "url_id")
-    private Long urlId;
 
     // ----------- common property ---------
     private LocalDateTime ctime;

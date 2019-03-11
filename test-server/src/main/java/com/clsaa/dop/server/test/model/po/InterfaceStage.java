@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Attention!
@@ -20,16 +21,21 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "interface_script", schema = "db_dop_test",
+@Table(name = "interface_stage", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "stage"})},
         indexes = {@Index(columnList = "case_id,stage", unique = true)})
-public class InterfaceScript {
+public class InterfaceStage {
     // ----------- main property ---------
     @Enumerated(value = EnumType.STRING)
     private Stage stage;
 
-    @Column(name = "case_id")
-    private Long caseId;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "stage_id", referencedColumnName = "id")
+    private List<RequestScript> requestScripts;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "stage_id", referencedColumnName = "id")
+    private List<WaitOperation> waitOperations;
 
     // ----------- common property ---------
     @Id

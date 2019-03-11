@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author xihao
@@ -47,6 +48,10 @@ public class InterfaceCase {
 
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id", referencedColumnName = "id")
+    private List<InterfaceStage> stages;
 
     // ----------- common property ---------
     private LocalDateTime ctime;
