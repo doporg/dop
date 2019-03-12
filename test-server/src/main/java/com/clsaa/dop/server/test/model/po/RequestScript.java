@@ -5,6 +5,8 @@ import com.clsaa.dop.server.test.enums.OperationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,16 +31,18 @@ public class RequestScript {
     @Enumerated(value = EnumType.STRING)
     private HttpMethod httpMethod;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @Fetch(FetchMode.SUBSELECT)
     private List<RequestHeader> requestHeaders;
 
     @Column(name = "request_body")
     private String requestBody;
 
     // check point concerned
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @Fetch(FetchMode.SUBSELECT)
     private List<RequestCheckPoint> requestCheckPoints;
 
     @Column(name = "retry_times")
@@ -47,8 +51,9 @@ public class RequestScript {
     @Column(name = "retry_interval")
     private Long retryInterval;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @Fetch(FetchMode.SUBSELECT)
     private List<UrlResultParam> resultParams;
 
     @Enumerated(value = EnumType.STRING)

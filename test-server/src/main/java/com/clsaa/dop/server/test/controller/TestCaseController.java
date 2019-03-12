@@ -3,12 +3,11 @@ package com.clsaa.dop.server.test.controller;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
 import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
+import com.clsaa.dop.server.test.service.InterfaceCaseQueryService;
 import com.clsaa.dop.server.test.service.ManualCaseCreateService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xihao
@@ -24,6 +23,9 @@ public class TestCaseController {
     @Autowired
     private ManualCaseCreateService manualCaseCreateService;
 
+    @Autowired
+    private InterfaceCaseQueryService interfaceCaseQueryService;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping("/interfaceCase")
     public InterfaceCaseDto createCase(@RequestBody InterfaceCaseDto interfaceCase) {
@@ -34,5 +36,10 @@ public class TestCaseController {
     @PostMapping("/manualCase")
     public ManualCaseDto createCase(@RequestBody ManualCaseDto manualCase) {
         return manualCaseCreateService.create(manualCase).orElse(null);
+    }
+
+    @GetMapping("/interfaceCases/{id}")
+    public InterfaceCaseDto getCase(@PathVariable("id")Long id) {
+        return interfaceCaseQueryService.selectByPk(id).get();
     }
 }

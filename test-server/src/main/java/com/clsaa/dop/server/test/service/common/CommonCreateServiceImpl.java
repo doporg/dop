@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.service;
+package com.clsaa.dop.server.test.service.common;
 
 import com.clsaa.dop.server.test.mapper.ServiceMapper;
 import org.springframework.data.jpa.repository.JpaRepository;
