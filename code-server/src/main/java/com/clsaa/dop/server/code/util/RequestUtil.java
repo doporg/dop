@@ -30,10 +30,14 @@ public class RequestUtil {
     private static final String privateToken = "y5MJTK9yisBKfNF1t-gd";
 
     public static void main(String[] args){
+//        "GET /projects/:id/repository/files/:file_path"
 
-        ProjectBo projectBo=RequestUtil.get("/projects/1",ProjectBo.class);
+//        List<ProjectBo> list=RequestUtil.getList("/projects/:id/repository/files/:file_path",ProjectBo.class);
 
-        System.out.println(projectBo);
+//        for(ProjectBo projectBo:list)
+//        System.out.println(projectBo);
+
+        FormatUtil.printJson(httpGet("/projects/3/repository/tree?"));
 
 
 

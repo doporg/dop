@@ -1,13 +1,9 @@
 const codeAsideMenuConfig=[
 
-    {
-        name: '返回',
-        path: '/',
-        icon: 'transfer-left'
-    },
+
     {
         name: '首页',
-        path: '/code/projects/personal',
+        path: '/',
         icon: 'home2'
     },
     {
