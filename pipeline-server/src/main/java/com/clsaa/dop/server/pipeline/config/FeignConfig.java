@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline.config;
+package com.clsaa.dop.server.pipeline.config;
 
 import feign.Retryer;
 import org.springframework.context.annotation.Bean;

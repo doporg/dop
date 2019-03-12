@@ -58,7 +58,6 @@ function renderRouterConfigV4(container, router, contextPath) {
     }
 
     if(routeItem.isLogin){
-        // 优先使用当前定义的 layout
         if (routeItem.layout && routeItem.component) {
             routeChildren.push(
                 <Route

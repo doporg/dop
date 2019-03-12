@@ -145,9 +145,7 @@ public class UserService {
         System.out.println(userCredentialBoV1.getCredential());
         boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
         System.out.println(verifyResult);
-        if (verifyResult) {
-            return BeanUtils.convertType(user, UserBoV1.class);
-        }
-        return null;
+        BizAssert.pass(verifyResult, BizCodes.INVALID_PASSWORD);
+        return BeanUtils.convertType(user, UserBoV1.class);
     }
 }
