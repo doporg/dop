@@ -1,9 +1,10 @@
 package com.clsaa.dop.server.code.util;
 
+import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.code.model.bo.ProjectBo;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -21,7 +22,7 @@ import java.util.List;
  *
  * @author wsy
  */
-public class HttpRequestUtil {
+public class RequestUtil {
 
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
@@ -29,10 +30,30 @@ public class HttpRequestUtil {
     private static final String privateToken = "y5MJTK9yisBKfNF1t-gd";
 
     public static void main(String[] args){
-        String result = httpGet("/users/waszqt/projects?&simple=true");
-        FormatUtil.printJson(result);
+
+        ProjectBo projectBo=RequestUtil.get("/projects/1",ProjectBo.class);
+
+        System.out.println(projectBo);
+
+
 
     }
+
+    /**
+     * get请求获得一个List
+     */
+    public static <T> List<T> getList(String path,Class<T> clazz){
+
+        return JSON.parseArray(httpGet(path),clazz);
+
+    }
+
+    public static <T> T get(String path,Class<T> clazz){
+
+        return JSON.parseObject(httpGet(path),clazz);
+
+    }
+
 
 
     /**
@@ -40,7 +61,7 @@ public class HttpRequestUtil {
      * @param path 路径
      * @return json字符串
      */
-    public static String httpGet(String path) {
+    private static String httpGet(String path) {
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
