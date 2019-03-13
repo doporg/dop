@@ -23,6 +23,10 @@ public class PermissionV1 {
      */
     private Long id;
     /**
+     * 父功能点ID
+     */
+    private Long parentId;
+    /**
      * 功能点名称
      */
     private String name;

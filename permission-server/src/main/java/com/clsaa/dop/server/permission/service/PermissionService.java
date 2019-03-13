@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,10 @@ public class PermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;
+
+    @Autowired
+    //关联关系service
+    private RolePermissionMappingService rolePermissionMappingService;
 /* *
  *
  *  * @param id 功能点ID
@@ -106,23 +111,33 @@ public class PermissionService {
 
         return pagination;
     }
+
     //根据name查询功能点
     public PermissionBoV1 findByName(String name)
     {
        return BeanUtils.convertType(this.permissionRepository.findByName(name), PermissionBoV1.class);
     }
 
-    //根据ID删除功能点
+    //根据ID删除功能点,并删除关联关系
     @Transactional
     public void deleteById(Long id)
     {
+        rolePermissionMappingService.deleteByPermissionId(id);
         permissionRepository.deleteById(id);
+
     }
 
     //根据角色删除联系关系
     public void deleteAll()
     {
         permissionRepository.deleteAll();
+    }
+
+    //返回所有功能点，用于与角色绑定
+    public List<PermissionBoV1> findAll()
+    {
+        return permissionRepository.findAll().stream().map(p ->
+                BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
     }
 
 }

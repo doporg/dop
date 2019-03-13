@@ -2,6 +2,7 @@ package com.clsaa.dop.server.permission.controller;
 
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
+import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.model.vo.RoleV1;
 import com.clsaa.dop.server.permission.service.PermissionService;
@@ -13,6 +14,9 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 功能点管理控制层
@@ -41,7 +45,7 @@ public class RoleController {
     @ApiOperation(value = "创建角色", notes = "创建角色")
     @PostMapping("/v1/roles")
 
-    public void  createRole(
+    public Long createRole(
             @ApiParam(name = "parentId",value = "父角色ID",required = false,defaultValue = "0")
             @RequestParam(value = "parentId", required = false, defaultValue = "0") Long parentId,
             @ApiParam(name = "name",value = "名称",required = true)
@@ -50,7 +54,7 @@ public class RoleController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
     )
     {
-        roleService.createRole(parentId,name,cuser,muser);
+        return roleService.createRole(parentId,name,cuser,muser);
     }
 
     @ApiOperation(value = "根据ID查询角色", notes = "根据ID查询角色")
@@ -86,5 +90,14 @@ public class RoleController {
     {
         roleService.deleteById(id);
     }
+
+    @ApiOperation(value="查询所有功能点ID和名称",notes = "查询所有功能点ID和名称")
+    @GetMapping("v1/roles/permissions")
+    public List<PermissionV1> findAllPermission()
+    {
+        return roleService.findAllPermission().stream().map(p ->
+            BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
+    }
+
 
 }

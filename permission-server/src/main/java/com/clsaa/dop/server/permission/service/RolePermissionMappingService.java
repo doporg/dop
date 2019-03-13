@@ -38,10 +38,10 @@ public class RolePermissionMappingService {
     //关联表DAO
     private RolePermissionMappingDAO rolePermissionMappingDAO;
     @Autowired
-    //功能点DAO
+    //功能点service
     private PermissionService permissionService;
     @Autowired
-    //角色DAO
+    //角色service
     private RoleService roleService;
 
     /* *
@@ -106,11 +106,29 @@ public class RolePermissionMappingService {
     }
 
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    //删除角色功能点关联关系
+    //删除特定角色特定功能点关联关系
     public void delete(Long roleId,Long permissionId)
     {
         RolePermissionMapping existRolePermissionMapping=this.rolePermissionMappingDAO.
                 findByRoleIdAndPermissionId(roleId,permissionId);
         rolePermissionMappingDAO.delete(existRolePermissionMapping);
     }
+
+    //根据功能点ID删除关联关系
+    public void deleteByPermissionId(Long permissionId)
+    {
+        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByPermissionId(permissionId);
+        rolePermissionMappingList.forEach(rolePermissionMapping -> {
+            rolePermissionMappingDAO.delete(rolePermissionMapping);
+        });
+    }
+    //根据角色ID删除关联关系
+    public void deleteByRoleId(Long roleId)
+    {
+        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByRoleId(roleId);
+        rolePermissionMappingList.forEach(rolePermissionMapping -> {
+            rolePermissionMappingDAO.delete(rolePermissionMapping);
+        });
+    }
+
 }

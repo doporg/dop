@@ -38,6 +38,13 @@ import java.util.stream.Collectors;
 public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    //功能点service
+    private PermissionService permissionService;
+
+    @Autowired
+    //关联关系service
+    private RolePermissionMappingService rolePermissionMappingService;
 
     /* *
      *
@@ -56,7 +63,7 @@ public class RoleService {
 
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    public void createRole(Long parentId,String name, Long cuser,Long muser)
+    public Long createRole(Long parentId,String name, Long cuser,Long muser)
     {
         Role existRole=this.roleRepository.findByName(name);
         BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
@@ -70,7 +77,7 @@ public class RoleService {
                 .deleted(false)
                 .build();
         roleRepository.saveAndFlush(role);
-
+        return role.getId();
     }
 
     //根据ID查询角色
@@ -115,11 +122,19 @@ public class RoleService {
     {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
-    //根据ID删除角色
+    //根据ID删除角色,并删除关联关系
     @Transactional
     public void deleteById(Long id)
+
     {
+        rolePermissionMappingService.deleteByRoleId(id);
         roleRepository.deleteById(id);
+    }
+
+    //查询所有权限的ID和名称
+    public List<PermissionBoV1> findAllPermission()
+    {
+        return permissionService.findAll();
     }
 
 }

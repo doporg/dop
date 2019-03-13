@@ -61,7 +61,7 @@ public class RolePermissionMappingController {
     }
 
     @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")
-    @GetMapping("/v1/roles/permissions")
+    @GetMapping("/v1/roles/permissions/{id}")
     //根据角色ID查询功能点
     public List<PermissionV1> findByroleId(@ApiParam(name = "roleId",value = "角色ID",required = true)
                                                @RequestParam(value = "roleId", required = true)Long roleId)
@@ -71,7 +71,7 @@ public class RolePermissionMappingController {
     }
 
     @ApiOperation(value = "根据功能点ID查询角色", notes = "根据功能点ID查询角色")
-    @GetMapping("/v1/permissions/roles")
+    @GetMapping("/v1/permissions/roles/{id}")
     //根据功能点ID查询角色
     public List<RoleV1> findBypermissionId(@ApiParam(name = "permissionId",value = "功能点ID",required = true)
                                            @RequestParam(value = "permissionId", required = true)Long permissionId)
