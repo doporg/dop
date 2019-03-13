@@ -31,6 +31,7 @@ export default class Permission extends Component {
             currentData : [],
             visible:false,
             deletevisible:false,
+            isLoading:true,
             InputInfo:
                 {
                     parentId:"",
@@ -73,6 +74,7 @@ export default class Permission extends Component {
 
     //每次访问的刷新
     componentDidMount() {
+        this.setState({isLoading:true})
         let url = API.permission + "/v1/permissions" ;
         let params=
             {
@@ -86,6 +88,7 @@ export default class Permission extends Component {
             //先不要set currentdata,先用 response.data.pageList
             Axios.all(this.getcusername(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
+                this.setState({isLoading:false})
             })
         }).catch((error)=>{
             // handle error
@@ -96,6 +99,7 @@ export default class Permission extends Component {
     }
     onChange=currentPage=> {
 
+        this.setState({isLoading:true})
         let url = API.permission + "/v1/permissions" ;
         let params=
             {
@@ -111,6 +115,7 @@ export default class Permission extends Component {
                );
             Axios.all(this.getcusername(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
+                this.setState({isLoading:false})
             })
 
         }).catch((error)=>{
@@ -151,10 +156,9 @@ export default class Permission extends Component {
             let byNameurl=API.permission+"/v1/permissions/byName"
             let byNameparams=
                 {name:values.name}
-            //获取创建者名称的url
-            let urlcuser=API.gateway+"/user-server/v1/users"
+
             //创建的url
-            let url= API.gateway + '/permission-server/v1/permissions';
+            let url= API.gateway + "/permission-server/v1/permissions";
             let params=
                 {
                     description: values.description,
@@ -180,12 +184,12 @@ export default class Permission extends Component {
                         )
                             .then((response)=>{
                                 console.log("创建时的response："+response)
+                                this.componentDidMount()
+
                             }).catch((error)=> {
                             console.log(error);
                         });
 
-                        console.log("Submit!!!");
-                        console.log(values);
                     }
                 }).catch((error)=>{
                     // handle error
@@ -327,7 +331,8 @@ export default class Permission extends Component {
 
             {/*<Button onClick={}>查询所有功能点</Button>*/}
 
-            <Table dataSource={this.state.currentData}>
+            <Table dataSource={this.state.currentData}
+                    isLoading={this.state.isLoading}>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人"   dataIndex="cuser"/>

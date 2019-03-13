@@ -16,7 +16,7 @@ export default class RolePermissionMapping extends Component {
 
     render() {
         return(
-            <a> roleWithPermission!</a>
+            <div> roleWithPermission!</div>
         )
     }
 

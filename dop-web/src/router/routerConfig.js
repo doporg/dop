@@ -88,11 +88,6 @@ const permissionConfig = [
         layout: BasicLayout,
         component: Permission,
     },
-    // {
-    //     path: '/permissions/newPermission',
-    //     layout: BasicLayout,
-    //     component: PipelineInfo,
-    // },
 ];
 const roleConfig = [
     //role
