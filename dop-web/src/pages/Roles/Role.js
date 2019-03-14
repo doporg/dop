@@ -47,6 +47,7 @@ export default class Role extends Component {
                 }
             },
             permissionvisible:false,
+            currentRoleId:0,
             visible:false,
             isLoading:true,
             deletevisible:false,
@@ -233,6 +234,7 @@ export default class Role extends Component {
 
         console.log("ID是"+id)
             //获取当前角色功能点
+        this.setState({currentRoleId:id})
             let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
             let param={roleId:id}
             Axios.get(getPermissionUrl,{params:(param)}).then(response=>
@@ -243,7 +245,6 @@ export default class Role extends Component {
                 let url=API.permission+"/v1/roles/permissions";
                 Axios.get(url).then(response=>{
                     this.setState({permissionList:response.data})
-                    console.log(typeof (this.state.currentpermission )+typeof (this.state.permissionList))
                 })
 
             })
@@ -253,27 +254,61 @@ export default class Role extends Component {
         });
     }
 
-
-    handleSubmit(e){
-
-
-    }
     //确认删除操作以及
     //删除功能点
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.permission + "v1/roles/{id}" ;
+        let url = API.permission + "/v1/roles/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
             .then((response)=>{
                 Feedback.toast.success('成功删除！')
-                console.log(response);
+                this.onChange(this.state.currentPage)
             }).catch((error)=> {
             console.log(error);
         });
     };
+    //取消删除操作
+    onCancel = () => {
+        console.log('取消删除');
+        Feedback.toast.error('删除已取消！')
+
+    }
+
+    removePermission=id=>{
+        console.log("功能点ID"+id)
+        let url=API.permission+"/v1/roles/permissions"
+        let param={roleId:this.state.currentRoleId,
+                    permissionId:id}
+        let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
+        let roleId={roleId:this.state.currentRoleId}
+         Axios.delete(url,{params:(param)}).then(response=>
+             //再次获取该角色功能点
+
+            Axios.get(getPermissionUrl,{params:(roleId)}).then(response=>
+        {
+            Feedback.toast.success("成功删除！")
+            this.setState({currentpermission:response.data})
+        })
+         )
+    }
+    addPermission=id=>{
+        let url =API.gateway+"/permission-server/v1/roles/permissionmap"
+        let param={roleId:this.state.currentRoleId,
+            permissionId:id}
+        let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
+        let roleId={roleId:this.state.currentRoleId}
+        Axios.post(url,{},{params:(param)}).then(response=>
+            Axios.get(getPermissionUrl,{params:(roleId)}).then(response1=>
+            {
+                Feedback.toast.success("成功添加！")
+                console.log(response)
+                this.setState({currentpermission:response1.data})
+            })
+        )
+    }
     render() {
         const { init, getError, getState } = this.field;
         //form样式定义
@@ -314,6 +349,18 @@ export default class Role extends Component {
                     <button>删除</button>
                 </BalloonConfirm>
 
+            );
+        }
+        //删除角色功能点对应按钮
+        const deletepermissionmap=(value, index, record)=>{
+            return (
+                <button onClick={this.removePermission.bind(this, record.id)}>删除</button>
+            );
+        }
+        //添加角色功能点对应按钮
+        const addpermissionmap=(value, index, record)=>{
+            return (
+                <button onClick={this.addPermission.bind(this, record.id)}>添加</button>
             );
         }
 
@@ -403,6 +450,7 @@ export default class Role extends Component {
                                         primaryKey="id">
                                         <Table.Column width ='20%' title="名称" dataIndex="name" />
                                         <Table.Column title="功能描述" dataIndex="description" />
+                                        <Table.Column title="删除操作" cell={deletepermissionmap} width="10%" />
                                     </Table>
                             </FormItem>
 
@@ -410,19 +458,13 @@ export default class Role extends Component {
                                 <h2>所有功能点</h2>
                                         <Table
                                             dataSource={this.state.permissionList}
-                                            primaryKey="id"
-                                            rowSelection={this.state.rowSelection}>
+                                            primaryKey="id">
                                                 <Table.Column width ='20%' title="名称" dataIndex="name" />
                                                 <Table.Column title="功能描述" dataIndex="description" />
+                                                <Table.Column title="添加" cell={addpermissionmap} width="10%" />
                                         </Table>
                             </FormItem>
-                            <FormItem wrapperCol={{ offset: 6 }} onClick={this.handleSubmit.bind(this)}>
-                                <Button type="primary">
-                                    修改
-                                </Button>
-                                &nbsp;&nbsp;&nbsp;
-                                <Button onClick={this.handleReset.bind(this)}>重置</Button>
-                            </FormItem>
+
                         </Form>
                 </Dialog>
 

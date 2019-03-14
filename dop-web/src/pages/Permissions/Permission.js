@@ -211,7 +211,7 @@ export default class Permission extends Component {
         )
             .then((response)=>{
                 Feedback.toast.success('成功删除！')
-                console.log(response);
+                this.onChange(this.state.currentPage)
             }).catch((error)=> {
             console.log(error);
         });
@@ -243,7 +243,7 @@ export default class Permission extends Component {
                     onCancel={this.onCancel}
                     title="您真的要删除吗？"
                 >
-                    <button >删除</button>
+                    <button>删除</button>
                 </BalloonConfirm>
 
             );
