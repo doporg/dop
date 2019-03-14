@@ -1,68 +1,43 @@
-/**
- *  流水线信息展示，修改
- *  @author zhangfuli
- *
- * */
-import React, { Component } from 'react';
-import { Button, Feedback, Loading, Form, Input} from '@icedesign/base';
-
-const { toast } = Feedback;
-
-const FormItem = Form.Item;
-
-const layout = {
-    labelCol: {
-        fixedSpan: 4
-    },
-    wrapperCol: {
-        span: 18
-    },
-
-};
+import React, {Component} from 'react';
+import RunStep from '../components/RunStep'
+import SuccessLog from '../components/SuccessLog'
+import FailLog from '../components/FailLog'
+import ProcessLog from '../components/ProcessLog'
 
 export default class PipelineTest extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
-            visible: false
+            currentStep: 1,
+            steps: [{
+                title: "步骤一",
+                disabled: true
+            },
+                {
+                    title: "步骤一",
+
+                }, {
+                    title: "步骤一",
+                    disabled: true
+                }]
         };
     }
-
-    setVisible(visible) {
-        console.log(111)
+    current(data){
         this.setState({
-            visible
+            currentStep: data
         });
-    }
-    handleButtonClick () {
-        toast.success('欢迎使用 ICE 中后台应用解决0000000方案');
+        console.log(this.state.currentStep)
     }
     render() {
-        return (<div>
-            <Loading visible={this.state.visible} shape="fusion-reactor" className="next-loading">
-                <Form style={{width: 500}}>
-                    <FormItem label="Username" {...layout} >
-                        <Input />
-                    </FormItem>
-                    <FormItem label="Password"  {...layout} >
-                        <Input htmlType="password" placeholder="please input"/>
-                    </FormItem>
-                    <FormItem label="Detail" {...layout} >
-                        <Input multiple  />
-                    </FormItem>
-                </Form>
-            </Loading>
-            <div style={{paddingLeft: 80}}>
-                <Button onClick={this.setVisible.bind(this, true)} type="primary">Submit</Button>
-                <Button onClick={this.setVisible.bind(this, false)} style={{marginLeft: 5}}>Cancel</Button>
-                <Button
-                    size="small"
-                    type="primary"
-                    onClick={this.handleButtonClick}
-                >
-                    点击弹出信息
-                </Button>
+        return (
+            <div>
+                <RunStep steps={this.state.steps} current={this.current.bind(this)}/>
+                <SuccessLog />
+                <FailLog />
+                <ProcessLog />
+
             </div>
-        </div>);
+        )
     }
+
 }

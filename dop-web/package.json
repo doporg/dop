@@ -27,6 +27,7 @@
     "@jenkins-cd/js-test": "^1.2.3",
     "@jenkins-cd/pipeline-graph-widget": "^0.1.2",
     "@jenkins-cd/react-flow": "0.0.33",
+    "amazeui-react": "^1.2.3",
     "base64url": "^3.0.1",
     "classnames": "^2.2.5",
     "crypto-js": "^3.1.9-1",

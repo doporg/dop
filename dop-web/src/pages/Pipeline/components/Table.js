@@ -3,6 +3,7 @@ import {Table, Button, Loading, Feedback} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import API from "../../API";
 import Axios from "axios/index";
+import './Styles.scss'
 
 const { toast } = Feedback;
 const timetrans = (timestamp) => {
@@ -121,7 +122,7 @@ export default class PipelineTable extends Component {
                     type="primary"
                     shape="warning"
                     size="small"
-                    style={styles.button}
+                    className="button"
                     onClick={this.deletePipeline.bind(this, record)}
                 >删除</Button>
             </div>
@@ -182,16 +183,3 @@ export default class PipelineTable extends Component {
         )
     }
 }
-const styles = {
-    table: {
-        marginTop: '10px',
-        minHeight: '500px',
-    },
-    pagination: {
-        margin: '20px 0',
-        textAlign: 'right',
-    },
-    button: {
-        marginLeft: '10px'
-    }
-};
