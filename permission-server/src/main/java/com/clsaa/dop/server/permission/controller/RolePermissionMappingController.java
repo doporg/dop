@@ -83,11 +83,14 @@ public class RolePermissionMappingController {
     @ApiOperation(value = "删除角色功能点关联关系", notes = "删除角色功能点关联关系")
     @DeleteMapping ("/v1/roles/permissions")
     //删除角色功能点关联关系
-    public void delete(Long roleId,Long permissionId)
+    public void delete(
+            @ApiParam(name = "roleId",value = "角色ID",required = true)
+            @RequestParam(value = "roleId", required = true)Long roleId,
+            @ApiParam(name = "permissionId",value = "功能点ID",required = true)
+            @RequestParam(value = "permissionId", required = true)Long permissionId)
     {
         rolePermissionMappingService.delete(roleId,permissionId);
     }
-
 
 
 }
