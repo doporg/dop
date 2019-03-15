@@ -10,7 +10,6 @@ const {toast} = Feedback;
 class App extends Component {
     componentWillMount() {
         Axios.interceptors.response.use((response) => {
-            console.log("11")
             return Promise.resolve(response);
         }, (error) => {
             if(error.status === 500 && error.message === 'pre:AccessTokenZuulFilter'){

@@ -9,6 +9,7 @@ import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class JenkinsService {
      * */
     public String createJob(PipelineBoV1 pipelineBoV1, String version){
         Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getStages());
-        String name = pipelineBoV1.getName() + "_"+pipelineBoV1.getCtime()+"_" + pipelineBoV1.getCuser();
+        String name = pipelineBoV1.getId();
         try {
             jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
         }catch (Exception e){
@@ -70,7 +71,6 @@ public class JenkinsService {
      * param: 流水线的名称
      *
      * */
-
     public String build(String jobName){
         try{
             if(this.jobs.containsKey(jobName)){

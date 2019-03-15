@@ -35,6 +35,7 @@ const pipelineConfig = [
         path: '/pipeline/project/:id',
         layout: BasicLayout,
         component: PipelineProject,
+        isLogin: true
     }, {
         path: '/pipeline/edit/:id',
         layout: BasicLayout,

@@ -2,8 +2,9 @@
 
 const API = {
     gateway: "http://open.dop.clsaa.com",
-    pipeline: "http://localhost:8081",
+    pipeline: "http://localhost:13600",
     jenkins: "http://jenkins.dop.clsaa.com",
+    jenkinsRest: "http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/",
     address: "http://www.dop.clsaa.com/#/"
 };
 

@@ -10,9 +10,9 @@ export default class RunStep extends Component {
 
     render() {
         return (
-            <Step current={1} type="dot">
+            <Step current={this.props.currentStage} type="dot">
                 {
-                    this.props.steps.map((item, index) => {
+                    this.props.stages.map((item, index) => {
                         return (
                             <Step.Item
                                 className="stepItem"
