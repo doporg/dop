@@ -12,29 +12,29 @@ export default class PipelineTest extends Component {
             steps: [{
                 title: "步骤一",
                 disabled: true
-            },
-                {
-                    title: "步骤一",
-
-                }, {
-                    title: "步骤一",
-                    disabled: true
-                }]
+            }, {
+                title: "步骤一",
+            }, {
+                title: "步骤一",
+                disabled: true
+            }]
         };
     }
-    current(data){
+
+    current(data) {
         this.setState({
             currentStep: data
         });
         console.log(this.state.currentStep)
     }
+
     render() {
         return (
             <div>
                 <RunStep steps={this.state.steps} current={this.current.bind(this)}/>
-                <SuccessLog />
-                <FailLog />
-                <ProcessLog />
+                <SuccessLog/>
+                <FailLog/>
+                <ProcessLog/>
 
             </div>
         )
