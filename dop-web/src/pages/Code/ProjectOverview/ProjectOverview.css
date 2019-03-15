@@ -1,47 +1,145 @@
 .container{
-    background-color: white;
-    height: 500px;
+    background-color: rgb(255, 255, 255);
+    height: 600px;
+    position: relative;
+    padding-top: 1px;
+    font-weight: bold;
+
 }
 
-img{
-    width: auto;
-    height: auto;
-    max-width: 30%;
-    max-height: 60%;
+.btn img{
+    width: 12px;
+    height: 12px;
     margin-right: 5px;
+    vertical-align: middle;
 }
+
+
 
 .btn{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    background-color: rgba(103,228,129,0);
+    /*display: inline-flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    text-align: center;
+    position: absolute;
+    border: 1px solid #dce0e5;
+    color: #555555;
+    border-radius: 1px;
+    background-color: #f0f2f5
+}
+
+
+.btn:hover{
+    background-color: #d1d1d1;
 }
 
 .btn_public{
-    height: 50px;
-    width:100px;
+    top:8px;
+    left: 8px;
+    height: 45px;
+    width:95px;
+}
+
+.btn_edit{
+    top:8px;
+    right: 8px;
+    height: 45px;
+    width: 45px;
+}
+
+.btn_star{
+    left: 15px;
+    height: 45px;
+    width: 60px;
+}
+
+.btn_branch{
+    left: 75px;
+    height: 45px;
+    width: 60px;
+    border-left:none;
+}
+
+.btn_ssh{
+    left: 150px;
+    height: 45px;
+    width: 80px;
+}
+
+.btn_http{
+    left: 230px;
+    height: 45px;
+    width: 100px;
+    border-left:none;
 }
 
 
-.ghost-light-background {
-    display: inline-block;
-    height: 100px;
-    line-height: 100px;
-    width: 50%;
-    background: #EBECF0;
-    margin-bottom: 20px;
-    padding-left:10px;
-    box-sizing: border-box;
+
+.input_url{
+    position: absolute;
+    left: 330px;
+    height: 45px;
+    width: 300px;
+    border-left: none;
+    border-right: none;
+    border-top:1px solid #e2e2e2;
+    border-bottom:1px solid #e2e2e2;
 }
-.ghost-dark-background {
+
+.btn_copy{
+    left:630px;
+    height: 45px;
+    width:60px;
+}
+
+.btn_download{
+    padding-left: 12px;
+    left:705px;
+    height: 45px;
+    width:50px;
+}
+
+.project_avatar{
+    text-align: center;
+    line-height: 90px;
+    font-size: 40px;
+    height: 90px;
+    width: 90px;
+    margin: 50px auto 0 auto;
+    background-color: #E0F2F1;
+    color: #555;
+    border-radius: 50%;
+
+}
+
+
+.text_title{
+    text-align: center;
+    font-size: 30px;
+}
+.text_description{
+    text-align: center;
+    color: #7a7a7a;
+}
+
+
+.div1{
+    position: relative;
+    top:15px;
+    left:200px;
+}
+
+.div2{
+    margin-top: 115px;
+    border-top: 1px solid #d1d1d1;
+    border-bottom: 1px solid #d1d1d1;
+    line-height: 80px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.div2 span{
     display: inline-block;
-    height: 100px;
-    line-height: 100px;
-    width: 50%;
-    background: #333;
-    margin-bottom: 20px;
-    padding-left:10px;
-    box-sizing: border-box;
+    width:120px
 }
