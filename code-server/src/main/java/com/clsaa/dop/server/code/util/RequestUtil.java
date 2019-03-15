@@ -37,7 +37,7 @@ public class RequestUtil {
 //        for(ProjectBo projectBo:list)
 //        System.out.println(projectBo);
 
-        FormatUtil.printJson(httpGet("/projects/3/repository/tree?"));
+        FormatUtil.printJson(httpGet("/projects/3"));
 
 
 
