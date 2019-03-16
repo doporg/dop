@@ -5,17 +5,7 @@ import API from "../../API";
 import Axios from "axios/index";
 import './Styles.scss'
 
-const { toast } = Feedback;
-const timetrans = (timestamp) => {
-    timestamp = timestamp.length === 13 ? parseInt(timestamp, 10) : parseInt(timestamp, 10) * 1000;
-    let date = new Date(timestamp);//如果date为13位不需要乘1000
-    let Y = date.getFullYear() + '-';
-    let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-    let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-    let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-    let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
-    return Y + M + D + h + m;
-};
+const {toast} = Feedback;
 
 export default class PipelineTable extends Component {
     constructor(props) {
@@ -33,12 +23,17 @@ export default class PipelineTable extends Component {
     }
 
     getPipeline() {
-        let url = API.pipeline + '/pipeline/findAll';
+        let url = API.pipeline + '/v1/pipelines';
         let self = this;
         Axios.get(url).then((response) => {
             let dataSource = response.data.sort((a, b) => {
                 return (a.name - b.name)
             });
+            for(let i=0;i<dataSource.length;i++){
+                if(dataSource[i].isDeleted){
+                    dataSource.splice(i, 1)
+                }
+            }
             self.setState({
                 dataSource
             });
@@ -46,15 +41,11 @@ export default class PipelineTable extends Component {
     }
 
     removeByIdSQL(id) {
-        let data = {id: id};
-        let url = API.pipeline + '/pipeline/remove';
+        let url = API.pipeline + '/v1/delete/byId?id='+id;
         let self = this;
-        Axios.post(
-            url,
-            data
-        ).then((response) => {
+        Axios.put(url).then((response) => {
             let pipelineInfo = this.state.dataSource;
-            if (response.data === 'remove') {
+            if (response.status === 200) {
                 pipelineInfo.splice(pipelineInfo.findIndex((value) => {
                     return value.id === id
                 }), 1);
@@ -72,19 +63,18 @@ export default class PipelineTable extends Component {
     }
 
     deletePipeline(pipelineInfo) {
-        let url = API.pipeline + '/pipeline/jenkins/deleteJob';
+        let url = API.pipeline + '/v1/pipeline/byId?id='+pipelineInfo.id;
         let self = this;
         self.setState({
             visible: true
         });
         Axios({
-            method: 'post',
+            method: 'delete',
             url: url,
-            data: pipelineInfo
         }).then((response) => {
-            if(response.status === 200){
+            if (response.status === 200) {
                 self.removeByIdSQL(pipelineInfo.id);
-            }else{
+            } else {
                 toast.show({
                     type: "error",
                     content: "删除失败",
@@ -97,15 +87,15 @@ export default class PipelineTable extends Component {
     /**
      *  表格 序号栏配置
      * */
-    renderIndex(value, index, record) {
+    renderIndex(value, index) {
         return index + 1;
     };
 
     /**
      *  表格 创建时间
      * */
-    renderCreateTime(value, index, record) {
-        return timetrans(value)
+    renderCreateTime(value) {
+        return value[0] + "-" + value[1] + "-" + value[2] + " " + value[3] + ":" + value[4]
     }
 
     /**
@@ -142,16 +132,12 @@ export default class PipelineTable extends Component {
         }, {
             title: '创建时间',
             width: 10,
-            dataIndex: 'createTime',
+            dataIndex: 'ctime',
             cell: this.renderCreateTime
         }, {
-            title: '运行状态',
-            width: 20,
-            dataIndex: 'status',
-        }, {
-            title: '管理员',
+            title: '创建人',
             width: 8,
-            dataIndex: 'admin',
+            dataIndex: 'cuser',
         }, {
             title: '操作',
             width: 10,

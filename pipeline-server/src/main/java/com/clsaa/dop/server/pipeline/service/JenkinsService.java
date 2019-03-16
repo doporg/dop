@@ -57,13 +57,12 @@ public class JenkinsService {
      * 删除流水线
      * param: 流水线的名称
      * */
-    public String deleteJob(String jobName){
+    public void deleteJob(String jobName){
         try{
             jenkins.deleteJob(jobName);
         }catch (Exception e){
-            return e.toString();
+            System.out.println(e.toString());
         }
-        return "DeleteJobSuccess";
     }
 
     /**

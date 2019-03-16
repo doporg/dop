@@ -17,7 +17,17 @@ import API from '../../API';
 const {Combobox} = Select;
 const {toast} = Feedback;
 
-export default class PipelineInfo extends Component {
+const fatchAdmin = (admin) => {
+    return admin.map((item, index) => {
+        console.log(index);
+        return {
+            id: `${index}`,
+            name: `test${index}`
+        };
+    });
+};
+
+export default class PipelineInfoPast extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -73,6 +83,7 @@ export default class PipelineInfo extends Component {
         let url = API.pipeline + "/pipeline/findById?id=" + id;
         let self = this;
         Axios.get(url).then((response) => {
+            fatchAdmin(response.data.admin);
             self.setState({
                 pipelineInfo: response.data,
                 currentStage: response.data.stage[0]
@@ -92,6 +103,48 @@ export default class PipelineInfo extends Component {
      * */
     currentFormChange = value => {
         this.setState({value});
+    };
+
+    /**
+     * 选择管理员更新到视图
+     * */
+    onSelectAdminUpdate(value) {
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+        this.searchTimeout = setTimeout(() => {
+            jsonp(
+                `https://suggest.taobao.com/sug?code=utf-8&q=${value}`,
+                (err, data) => {
+                    const teamMember = data.result.map(item => {
+                        return {
+                            label: item[0],
+                            value: item[1]
+                        };
+                    });
+                    this.setState({
+                        teamMember
+                    });
+                }
+            );
+        }, 100);
+    }
+
+    /**
+     * 选择管理员更新数据
+     * */
+    selectAdmin(value) {
+        let pipelineInfo = Object.assign({}, this.state.pipelineInfo, {admin: value});
+        this.setState({
+            pipelineInfo
+        });
+    }
+
+    /**
+     * 自定义管理员
+     * */
+    selectValueRender = v => {
+        return `${v.name}`;
     };
 
     /**
@@ -486,6 +539,21 @@ export default class PipelineInfo extends Component {
                             }
                         })()}
                         <div className="form-item">
+                            <span className="form-item-label">管理员: </span>
+                            {/*有bug需改进*/}
+                            <Combobox
+                                onInputUpdate={this.onSelectAdminUpdate.bind(this)}
+                                filterLocal={false}
+                                value={this.state.pipelineInfo.admin}
+                                fillProps="name"
+                                multiple
+                                placeholder="请输入项目组成员"
+                                onChange={this.selectAdmin.bind(this)}
+                                dataSource={this.state.teamMember}
+                            />
+                            <FormError className="form-itemError" name="admin"/>
+                        </div>
+                        <div className="form-item">
                             <span className="form-item-label">监听设置: </span>
                             <FormBinder name="monitor" required message="请选择监听设置">
                                 <Combobox
@@ -500,14 +568,14 @@ export default class PipelineInfo extends Component {
 
                         <div className="step-wrapper">
                             <span className="label">配置流水线: </span>
-                            <Step className="pipeline-info-step" type="circle" animation={true}
+                            <Step className="step" type="circle" animation={true}
                                   current={this.state.currentStageOrder}
                             >
                                 {this.state.pipelineInfo.stage.map((item, index) => {
                                     return (
                                         <Step.Item key={index} title={item.name}
                                                    itemRender={this.stepItemRender}
-                                                   className="pipeline-info-stepItem"
+                                                   className="stepItem"
                                                    onClick={this.changeStage.bind(this, index)}
                                         />
 
@@ -516,7 +584,7 @@ export default class PipelineInfo extends Component {
 
                                 <Step.Item key={this.state.pipelineInfo.stage.length} title="添加"
                                            itemRender={this.stepItemAdd.bind(this)}
-                                           className="pipeline-info-stepItem"
+                                           className="stepItem"
                                            onClick={this.addStage.bind(this, this.state.pipelineInfo.stage.length)}
                                 />
                             </Step>
