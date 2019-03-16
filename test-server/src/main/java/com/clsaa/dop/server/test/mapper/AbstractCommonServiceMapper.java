@@ -15,36 +15,36 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  * @version 1.0
  * @since 06/03/2019
  */
-public abstract class AbstractCommonServiceMapper<PO, DTO> implements ServiceMapper<PO, DTO> {
+public abstract class AbstractCommonServiceMapper<SOURCE, TARGET> implements ServiceMapper<SOURCE, TARGET> {
 
-    abstract Class<PO> getPOClass();
+    abstract Class<SOURCE> getSourceClass();
 
-    abstract Class<DTO> getDTOClass();
+    abstract Class<TARGET> getTargetClass();
 
-    public Optional<PO> downgrade(DTO dto){
-        return Optional.of(dto)
-                .map(d -> BeanUtils.convertType(d, getPOClass()));
+    public Optional<SOURCE> inverseConvert(TARGET target){
+        return Optional.of(target)
+                .map(d -> BeanUtils.convertType(d, getSourceClass()));
     }
 
-    public List<PO> downgrade(Collection<DTO> dtos){
-        return isEmpty(dtos) ?
+    public List<SOURCE> inverseConvert(Collection<TARGET> targets){
+        return isEmpty(targets) ?
                 Lists.newArrayList() :
-                dtos.stream()
-                        .map(this::downgrade)
+                targets.stream()
+                        .map(this::inverseConvert)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());
     }
 
-    public Optional<DTO> upgrade(PO po){
-        return Optional.of(po).map(p -> BeanUtils.convertType(p, getDTOClass()));
+    public Optional<TARGET> convert(SOURCE source){
+        return Optional.of(source).map(p -> BeanUtils.convertType(p, getTargetClass()));
     }
 
-    public List<DTO> upgrade(Collection<PO> pos){
-        return isEmpty(pos) ?
+    public List<TARGET> convert(Collection<SOURCE> sources){
+        return isEmpty(sources) ?
                 Lists.newArrayList() :
-                pos.stream()
-                        .map(this::upgrade)
+                sources.stream()
+                        .map(this::convert)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList());

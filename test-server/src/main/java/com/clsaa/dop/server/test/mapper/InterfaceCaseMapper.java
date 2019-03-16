@@ -17,18 +17,18 @@ import java.util.function.Function;
 public class InterfaceCaseMapper extends AbstractCommonServiceMapper<InterfaceCase, InterfaceCaseDto> {
 
     @Override
-    Class<InterfaceCase> getPOClass() {
+    Class<InterfaceCase> getSourceClass() {
         return InterfaceCase.class;
     }
 
     @Override
-    Class<InterfaceCaseDto> getDTOClass() {
+    Class<InterfaceCaseDto> getTargetClass() {
         return InterfaceCaseDto.class;
     }
 
     @Override
-    public Optional<InterfaceCaseDto> upgrade(InterfaceCase po) {
-        return Optional.of(po).map(doUpgrade());
+    public Optional<InterfaceCaseDto> convert(InterfaceCase source) {
+        return Optional.of(source).map(doUpgrade());
     }
 
     private Function<InterfaceCase, InterfaceCaseDto> doUpgrade() {

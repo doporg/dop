@@ -13,12 +13,12 @@ import org.springframework.stereotype.Component;
 public class ManualCaseServiceMapper extends AbstractCommonServiceMapper<ManualCase, ManualCaseDto> {
 
     @Override
-    Class<ManualCase> getPOClass() {
+    Class<ManualCase> getSourceClass() {
         return ManualCase.class;
     }
 
     @Override
-    Class<ManualCaseDto> getDTOClass() {
+    Class<ManualCaseDto> getTargetClass() {
         return ManualCaseDto.class;
     }
 }

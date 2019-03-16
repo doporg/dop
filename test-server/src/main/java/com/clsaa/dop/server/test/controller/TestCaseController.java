@@ -38,8 +38,15 @@ public class TestCaseController {
         return manualCaseCreateService.create(manualCase).orElse(null);
     }
 
+    @ApiOperation(value = "根据id查询接口测试用例信息")
     @GetMapping("/interfaceCases/{id}")
     public InterfaceCaseDto getCase(@PathVariable("id")Long id) {
         return interfaceCaseQueryService.selectByPk(id).get();
+    }
+
+    @GetMapping("/interfaceCases/execute/{id}")
+    public String getExecuteResult(@PathVariable("id") Long id) {
+
+        return "Success!";
     }
 }

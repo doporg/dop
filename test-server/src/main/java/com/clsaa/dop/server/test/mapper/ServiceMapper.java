@@ -9,13 +9,13 @@ import java.util.Optional;
  * @version 1.0
  * @since 06/03/2019
  */
-public interface ServiceMapper<PO, DTO> {
+public interface ServiceMapper<SOURCE, TARGET> {
 
-    Optional<PO> downgrade(DTO dto);
+    Optional<SOURCE> inverseConvert(TARGET target);
 
-    List<PO> downgrade(Collection<DTO> dtos);
+    List<SOURCE> inverseConvert(Collection<TARGET> targets);
 
-    Optional<DTO> upgrade(PO po);
+    Optional<TARGET> convert(SOURCE source);
 
-    List<DTO> upgrade(Collection<PO> pos);
+    List<TARGET> convert(Collection<SOURCE> sources);
 }
