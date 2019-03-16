@@ -22,8 +22,8 @@ public class CommonCreateServiceImpl<PO, DTO, ID> implements CreateService<DTO> 
 
     @Override
     public Optional<DTO> create(DTO data) {
-        Optional<PO> poCreated = serviceMapper.downgrade(data).map(po -> jpaRepository.save(po));
-        return serviceMapper.upgrade(poCreated.orElse(null));
+        Optional<PO> poCreated = serviceMapper.inverseConvert(data).map(po -> jpaRepository.save(po));
+        return serviceMapper.convert(poCreated.orElse(null));
     }
 
 }

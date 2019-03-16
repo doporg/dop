@@ -24,19 +24,19 @@ public class CommonQueryServiceImpl<PO,DTO,ID> implements QueryService<DTO, ID> 
     @Override
     public Optional<DTO> selectByPk(ID id) {
         Optional<PO> poOptional = jpaRepository.findById(id);
-        return poOptional.isPresent() ? serviceMapper.upgrade(poOptional.get()) : Optional.empty();
+        return poOptional.isPresent() ? serviceMapper.convert(poOptional.get()) : Optional.empty();
     }
 
     @Override
     public List<DTO> selectByPk(List<ID> id) {
         List<PO> pos = jpaRepository.findAllById(id);
-        return serviceMapper.upgrade(pos);
+        return serviceMapper.convert(pos);
     }
 
     @Override
     public List<DTO> select() {
         List<PO> pos = jpaRepository.findAll();
-        return serviceMapper.upgrade(pos);
+        return serviceMapper.convert(pos);
     }
 
     @Override
