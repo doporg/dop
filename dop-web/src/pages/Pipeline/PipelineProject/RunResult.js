@@ -18,8 +18,12 @@ export default class RunResult extends Component {
         }
     }
     componentWillReceiveProps (nextProps){
+        let self = this;
         if(nextProps.runs){
-            this.stage(nextProps.runs._links.self.href)
+            this.stage(nextProps.runs._links.self.href).then((stages)=>{
+                console.log(stages);
+                self.step(stages[self.state.currentStage])
+            })
         }
     }
     componentDidUpdate (prevProps, prevState){
@@ -35,37 +39,78 @@ export default class RunResult extends Component {
     }
     //获取stage
     stage(href){
-        let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/'
+        let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
         // let url = API.jenkins + href + "nodes/";
         let self = this;
         let stages = [];
+        return new Promise((resolve, reject)=>{
+            Axios({
+                method: 'get',
+                url: url,
+                headers:{
+                    'Authorization': self.props.authorization
+                }
+            }).then((response)=>{
+                if(response.status === 200){
+                    response.data.map((item, index)=>{
+                        let stage = {
+                            id: item.id,
+                            title: item.displayName,
+                            time: item.durationInMillis,
+                            result: item.result,
+                            disabled: item.result === 'NOT_BUILT',
+                            href: item._links.steps.href,
+                            steps: []
+                        };
+                        stages.push(stage)
+                    });
+                    self.setState({
+                        stages
+                    });
+                    resolve(self.state.stages)
+                }
+                reject()
+            })
+        })
+    }
+
+    //获取step
+    step(stage){
+        let url = API.jenkins + stage.href;
+        let self = this;
+        let steps = [];
         Axios({
             method: 'get',
             url: url,
             headers:{
-                'Authorization': 'Basic emZsOnpmbA=='
+                'Authorization': self.props.authorization
             }
         }).then((response)=>{
-            console.log(response.data);
+            console.log(response);
             if(response.status === 200){
                 response.data.map((item, index)=>{
-                    let stage = {
-                        title: item.displayName,
+                    let step = {
+                        id: item.id,
+                        displayDescription: item.displayDescription,
+                        displayName: item.displayName,
+                        result: item.result,
                         time: item.durationInMillis,
-                        disabled: item.result === 'NOT_BUILT',
+                        logHref: item.actions.length === 0 ? null:item.actions[0]._links.self.href,
+                        log: []
                     };
-                    stages.push(stage)
-                })
+                    steps.push(step);
+                });
+                stage.steps = steps;
+                console.log(stage)
             }
-            self.setState({
-                stages
-            })
         })
     }
     render() {
         return (
             <div>
                 <RunStep stages={this.state.stages} currentStage={this.state.currentStage} current={this.current.bind(this)}/>
+
+
             </div>
         );
     }

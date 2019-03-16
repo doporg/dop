@@ -16,6 +16,7 @@ export default class PipelineProject extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            authorization: 'Basic emZsOnpmbA==',
             visible: false,
             pipelineId: this.props.match.params.id,
             runs: {}
@@ -100,7 +101,7 @@ export default class PipelineProject extends Component {
                         </Button>
                     </div>
 
-                    <RunResult runs={this.state.runs}/>
+                    <RunResult runs={this.state.runs} authorization={this.state.authorization}/>
                 </Loading>
             </div>
 
