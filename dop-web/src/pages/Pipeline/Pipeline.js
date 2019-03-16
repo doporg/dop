@@ -9,7 +9,6 @@ import { Button } from '@icedesign/base';
 import PipelineTable  from './components/Table'
 
 
-
 export default class Pipeline extends Component {
 
     constructor(){

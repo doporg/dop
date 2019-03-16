@@ -2,45 +2,25 @@
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 
-import CodeLayout from '../layouts/CodeLayout';
 import BasicLayout from '../layouts/BasicLayout';
-import {Projects, Application, ApplicationDetail} from '../pages/Projects';
-import {ApplicationEnvironmentDetail} from '../pages/Projects';
+import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
-import {Code,PersonalProjects,StarredProjects,AllProjects} from '../pages/Code'
-
-
 const baseConfig = [
+    {
+        path: '/project',
+        layout: BasicLayout,
+        component: Projects,
+    },
     {
         path: '*',
         layout: BasicLayout,
         component: NotFound,
     },
 ];
-const projectConfig = [
-    {
-        path: '/project',
-        layout: BasicLayout,
-        component: Projects,
-    },{
-        path: '/application',
-        layout: BasicLayout,
-        component: Application,
-    },
-    {
-        path: '/applicationDetail',
-        layout: BasicLayout,
-        component: ApplicationDetail,
-    },
-    {
-        path: '/application/environment/detail',
-        layout: BasicLayout,
-        component: ApplicationEnvironmentDetail
-    }
-]
+
 const pipelineConfig = [
     //pipeline
     {
@@ -98,6 +78,28 @@ const ciadjustConfig = [
     }
 ];
 
+const permissionConfig = [
+    //permission
+    {
+        path: '/permissions',
+        layout: BasicLayout,
+        component: Permission,
+    },
+];
+const roleConfig = [
+    //role
+    {
+        path: '/roles',
+        layout: BasicLayout,
+        component: Role,
+    },
+    {
+        path: '/roles/userwithrole',
+        layout: BasicLayout,
+        component: UserRoleMapping,
+    },
+];
+
 
 const codeConfig = [
     {
@@ -144,6 +146,6 @@ const codeConfig = [
     },
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig,...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
 
 export default routerConfig;

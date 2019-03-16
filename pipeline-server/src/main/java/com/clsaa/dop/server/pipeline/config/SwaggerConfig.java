@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipeline.config;
+package com.clsaa.dop.server.pipline.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

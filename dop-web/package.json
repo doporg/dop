@@ -4,8 +4,10 @@
   "description": "该项目基于 create-react-app 创建，使用 react-app-rewired 进行自定义配置，是南京大学软件学院Devops运行平台",
   "dependencies": {
     "@alifd/next": "^1.13.2",
-    "@icedesign/base": "^0.2.5",
+    "@icedesign/balloon-confirm": "^1.0.3",
+    "@icedesign/base": "^0.2.6",
     "@icedesign/container": "^0.1.4",
+    "@icedesign/data-binder": "^1.0.3",
     "@icedesign/form-binder": "^0.1.7",
     "@icedesign/icon": "^0.1.1",
     "@icedesign/img": "^0.1.0",
