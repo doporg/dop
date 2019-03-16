@@ -3,12 +3,16 @@
 
 
 import BasicLayout from '../layouts/BasicLayout';
-import Projects from '../pages/Projects';
+import {Projects, Application, ApplicationDetail} from '../pages/Projects';
+import {ApplicationEnvironmentDetail} from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
-import {Code,ProjectOverview} from '../pages/Code'
+import {Code, ProjectOverview} from '../pages/Code'
+import CodeLayout from '../layouts/CodeLayout';
+import {Permission} from "../pages/Permissions";
+import {Role,UserRoleMapping} from "../pages/Roles";
 
 const baseConfig = [
     {
@@ -43,7 +47,7 @@ const pipelineConfig = [
         path: '/pipeline/edit/:id',
         layout: BasicLayout,
         component: PipelineInfo,
-    },{
+    }, {
         path: '/pipeline/test',
         layout: BasicLayout,
         component: PipelineTest,
@@ -109,16 +113,38 @@ const codeConfig = [
     {
         path: '/code/:username/:projectid',
         layout: CodeLayout,
-        component:ProjectOverview
+        component: ProjectOverview
 
     },
     {
         path: '/code/:username/:projectid/commits/:branch',
         layout: CodeLayout,
-        component:Code
+        component: Code
     },
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
+const projectConfig = [
+    {
+        path: '/project',
+        layout: BasicLayout,
+        component: Projects,
+    }, {
+        path: '/application',
+        layout: BasicLayout,
+        component: Application,
+    },
+    {
+        path: '/applicationDetail',
+        layout: BasicLayout,
+        component: ApplicationDetail,
+    },
+    {
+        path: '/application/environment/detail',
+        layout: BasicLayout,
+        component: ApplicationEnvironmentDetail
+    }
+];
+
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...baseConfig];
 
 export default routerConfig;
