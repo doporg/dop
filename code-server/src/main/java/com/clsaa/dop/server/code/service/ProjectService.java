@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.code.service;
 
 
+import com.clsaa.dop.server.code.model.bo.BranchBo;
 import com.clsaa.dop.server.code.model.bo.ProjectBo;
 import com.clsaa.dop.server.code.model.bo.TagBo;
 import com.clsaa.dop.server.code.model.vo.ProjectVo;
@@ -29,6 +30,9 @@ public class ProjectService {
         //获得tag的数量
         List<TagBo> tags=RequestUtil.getList("/projects/"+id+"/repository/tags",TagBo.class);
         projectBo.setTag_count(tags.size());
+        //获得分支的数量
+        List<BranchBo> branches=RequestUtil.getList("/projects/"+id+"/repository/branches",BranchBo.class);
+        projectBo.setBranch_count(branches.size());
         //获得提交次数
         projectBo.setCommit_count(projectBo.getStatistics().getCommit_count());
         //计算文件大小

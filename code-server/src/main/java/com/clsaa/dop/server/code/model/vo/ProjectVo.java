@@ -20,6 +20,7 @@ public class ProjectVo {
     private int tag_count;
     private String file_size;
     private int commit_count;
+    private int branch_count;
 
 
 }
