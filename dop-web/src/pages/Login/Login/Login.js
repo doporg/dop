@@ -23,9 +23,7 @@ export default class Login extends Component {
 
     componentWillMount() {
         let self = this;
-        window.sessionStorage.removeItem("Authorization");
-        window.sessionStorage.removeItem("x-login-token");
-        window.sessionStorage.removeItem("x-login-user");
+        window.sessionStorage.clear();
         document.addEventListener("keydown",this.handleEnterKey);
         RSA().then(() => {
             self.setState({

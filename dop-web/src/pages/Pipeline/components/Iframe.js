@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './Styles.scss'
 
 
 export default class Iframe extends Component{
@@ -13,28 +14,15 @@ export default class Iframe extends Component{
     }
     render(){
         return (
-            <div style={style.wrapper}>
+            <div className="wrapper">
                 <iframe
                     id = "iframe"
                     title= "iframe"
                     frameBorder= "0"
                     scrolling = "yes"
-                    style={style.iframe}
+                    className="iframe"
                 />
             </div>
         )
     }
 }
-const style = {
-    wrapper: {
-        width: '100%',
-        height: '900px',
-        overflow: 'hidden'
-    },
-    iframe : {
-        position: "relative",
-        top: "-130px",
-        width: "102%",
-        height: "100%"
-    }
-};

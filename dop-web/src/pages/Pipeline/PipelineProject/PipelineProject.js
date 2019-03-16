@@ -3,132 +3,101 @@
  *  @author zhangfuli
  *
  * */
-
 import React, {Component} from 'react';
-import {Button, Icon, Loading} from '@icedesign/base';
+import {Button, Icon, Loading, Feedback} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
-import Iframe from '../components/Iframe'
+import RunResult from './RunResult'
 import './PipelineProject.scss'
+import {RSA} from "../../Login";
+
+const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pipelineInfo: {
-                name: "",
-                creator: "",
-                admin: ["1"],
-                //监听设置
-                monitor: "",
-                createTime: "",  //时间戳
-                stage: [
-                    //     {
-                    //     name: "",
-                    //      tasks: [
-                    //          //{
-                    //     //     taskName: "构建maven",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }, {
-                    //     //     taskName: "构建docker镜像",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }, {
-                    //     //     taskName: "推送docker镜像",
-                    //     //     gitUrl: "",
-                    //     //     dockerUserName: "",
-                    //     //     repository: "",
-                    //     //     description: ""
-                    //     // }
-                    //     ]
-                    // }
-                ]
-            },
-            iframeSrc: "",
-            visible: false
+            authorization: 'Basic emZsOnpmbA==',
+            visible: false,
+            pipelineId: this.props.match.params.id,
+            runs: {},
+            queue: [],
+            time: ""
         }
     }
 
-    componentWillMount() {
-        this.getPipelineInfoById(this.props.match.params.id)
-    }
-
-    /**
-     * 跳转到编辑页面
-     * */
-    goToEdit() {
-        this.props.history.push("/pipeline/edit/" + this.props.match.params.id)
-    }
-
-    /**
-     * get PipelineInfo By id
-     * */
-    getPipelineInfoById(id) {
-        let url = API.pipeline + "/pipeline/findById?id=" + id;
+    componentDidMount() {
         let self = this;
-        Axios.get(url).then((response) => {
-            console.log(response);
-            if (response.status === 200) {
-                self.setState({
-                    pipelineInfo: response.data
-                });
-                self.getRun(response.data.name + "_" + response.data.createTime + "_" + response.data.creator)
-            }
+        this.getRuns().then((data) => {
+            self.setState({
+                runs: data
+            })
         })
     }
 
-    /**
-     * build pipeline
-     * */
+
+    getRuns() {
+        let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
+        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
+        let self = this;
+        return new Promise((resolve, reject) => {
+            Axios({
+                method: 'get',
+                url: url,
+                headers: {
+                    'Authorization': self.state.authorization
+                }
+            }).then((response) => {
+                if (response.status === 200) {
+                    if (response.data.length === 0) {
+                        toast.show({
+                            type: "prompt",
+                            content: "该流水线尚未运行",
+                            duration: 3000
+                        });
+                    } else {
+                        console.log(response.data[0]);
+                        resolve(response.data[0]);
+                        if (response.data[0].state === 'FINISHED') {
+                            console.log("finish")
+                            self.clear();
+                        }
+
+                    }
+                }
+                reject()
+            })
+        })
+    }
+
     buildPipeline() {
-        let url = API.pipeline + '/pipeline/jenkins/build';
+        let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
         let self = this;
-
-        let pipelineInfo = this.state.pipelineInfo;
-        delete pipelineInfo.id;
-
-        Axios({
-            method: 'post',
-            url: url,
-            data: pipelineInfo
+        Axios.post(url, {}, {
+            headers: {
+                'Authorization': self.state.authorization,
+                'Content-Type': 'application/json'
+            }
         }).then((response) => {
-            console.log(response);
-            if (response.data === "BuildSuccess") {
-                self.getRun(pipelineInfo.name + "_" + pipelineInfo.createTime + "_" + pipelineInfo.creator);
-            }
-        })
-    }
-
-    getRun(name) {
-        let url = API.jenkins + '/blue/rest/organizations/jenkins/pipelines/' + name + '/runs';
-        let self = this;
-
-        self.setState({
-            visible: true
-        });
-
-        Axios.get(url).then((response) => {
-            console.log(response);
-            if (response.data) {
-                let iframeSrc = API.jenkins +
-                    "/blue/organizations/jenkins/" +
-                    name + "/detail/" + name + "/" +
-                    response.data.length + "/pipeline";
-                self.setState({
-                    iframeSrc: iframeSrc
-                });
-                setTimeout(() => {
-                    self.setState({
-                        visible: false
+            if (response.status === 200) {
+                let time = setInterval(() => {
+                    this.getRuns().then((data) => {
+                        self.setState({
+                            runs: data
+                        })
                     })
-                }, 4000);
+                }, 5000)
+                self.setState({
+                    runs: response.data,
+                    time: time
+                });
+
             }
         })
+
+    }
+    clear(){
+        clearInterval(this.state.time)
     }
 
     render() {
@@ -140,7 +109,7 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button" onClick={this.goToEdit.bind(this)}>
+                        <Button type="normal" className="button">
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
@@ -149,9 +118,8 @@ export default class PipelineProject extends Component {
                             删除流水线
                         </Button>
                     </div>
-                    <div className="iframe">
-                        <Iframe src={this.state.iframeSrc} onLoad={loading => this.onLoad(loading)}/>
-                    </div>
+
+                    <RunResult runs={this.state.runs} authorization={this.state.authorization}/>
                 </Loading>
             </div>
 

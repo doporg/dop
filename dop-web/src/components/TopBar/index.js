@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Button } from '@icedesign/base';
 import PropTypes from 'prop-types';
-
 export default class TopBar extends PureComponent {
-  render() {
+
+
+    render() {
     const { title, buttonText, extraBefore, extraAfter, style } = this.props;
 
     return (

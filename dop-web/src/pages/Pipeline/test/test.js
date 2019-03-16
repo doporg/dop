@@ -1,68 +1,69 @@
-/**
- *  流水线信息展示，修改
- *  @author zhangfuli
- *
- * */
-import React, { Component } from 'react';
-import { Button, Feedback, Loading, Form, Input} from '@icedesign/base';
+import React, {Component} from 'react';
+import RunStep from '../components/RunStep'
+import Log from '../components/Log'
 
-const { toast } = Feedback;
+import {Feedback} from "@icedesign/base";
+import API from "../../API";
+import Axios from "axios/index";
 
-const FormItem = Form.Item;
-
-const layout = {
-    labelCol: {
-        fixedSpan: 4
-    },
-    wrapperCol: {
-        span: 18
-    },
-
-};
+const {toast} = Feedback;
 
 export default class PipelineTest extends Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
-            visible: false
+            currentStep: 1,
+            steps: [{
+                title: "步骤一",
+                disabled: true
+            }, {
+                title: "步骤一",
+            }, {
+                title: "步骤一",
+                disabled: true
+            }]
         };
     }
+    componentDidMount(){
+        this.jenkinsAuthorization().then((token)=>{
+            console.log(token)
+        }).catch((data)=>{
+            toast.show({
+                type: "error",
+                content: "授权失败",
+                duration: 1000
+            });
+        })
+    }
 
-    setVisible(visible) {
-        console.log(111)
+    jenkinsAuthorization(){
+        let url = API.pipeline + '/v1/authorization';
+        return new Promise((resolve, reject)=>{
+            Axios.get(url).then((response)=>{
+                if(response.status === 200){
+                    resolve(response.data)
+                }else{
+                    reject()
+                }
+            });
+        })
+    }
+    current(data) {
         this.setState({
-            visible
+            currentStep: data
         });
+        console.log(this.state.currentStep)
     }
-    handleButtonClick () {
-        toast.success('欢迎使用 ICE 中后台应用解决0000000方案');
-    }
+
     render() {
-        return (<div>
-            <Loading visible={this.state.visible} shape="fusion-reactor" className="next-loading">
-                <Form style={{width: 500}}>
-                    <FormItem label="Username" {...layout} >
-                        <Input />
-                    </FormItem>
-                    <FormItem label="Password"  {...layout} >
-                        <Input htmlType="password" placeholder="please input"/>
-                    </FormItem>
-                    <FormItem label="Detail" {...layout} >
-                        <Input multiple  />
-                    </FormItem>
-                </Form>
-            </Loading>
-            <div style={{paddingLeft: 80}}>
-                <Button onClick={this.setVisible.bind(this, true)} type="primary">Submit</Button>
-                <Button onClick={this.setVisible.bind(this, false)} style={{marginLeft: 5}}>Cancel</Button>
-                <Button
-                    size="small"
-                    type="primary"
-                    onClick={this.handleButtonClick}
-                >
-                    点击弹出信息
-                </Button>
+        return (
+            <div>
+                <RunStep steps={this.state.steps} current={this.current.bind(this)}/>
+                <Log/>
+
+
             </div>
-        </div>);
+        )
     }
+
 }

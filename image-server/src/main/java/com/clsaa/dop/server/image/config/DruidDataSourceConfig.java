@@ -25,8 +25,7 @@ import javax.sql.DataSource;
 public class DruidDataSourceConfig {
 
   private String url;
-  private String username;
-  private String password;
+  private String username;  private String password;
   private String driverClassName;
   private int maxActive;
   private int maxIdle;

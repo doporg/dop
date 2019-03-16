@@ -1,4 +1,4 @@
-.body{
+.pipeline-info-body{
   margin:0 5px;
   background: white;
   overflow: hidden;
@@ -28,10 +28,10 @@
         display: inline-block;
         text-align: right;
       }
-      .step{
+      .pipeline-info-step{
         margin-left: 90px;
         margin-top: 30px;
-        .stepItem{
+        .pipeline-info-stepItem{
           max-width: 100px;
         }
       }

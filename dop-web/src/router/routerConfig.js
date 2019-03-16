@@ -1,8 +1,7 @@
 // 以下文件格式为描述路由的协议格式
 // 你可以调整 routerConfig 里的内容
-// 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 
-import CodeLayout from '../layouts/CodeLayout';
+
 import BasicLayout from '../layouts/BasicLayout';
 import Projects from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
@@ -10,7 +9,6 @@ import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 import {Code,ProjectOverview} from '../pages/Code'
-
 
 const baseConfig = [
     {
@@ -31,11 +29,13 @@ const pipelineConfig = [
         path: '/pipeline',
         layout: BasicLayout,
         component: Pipeline,
-    },{
-        path: '/pipeline/new',
-        layout: BasicLayout,
-        component: PipelineInfo,
-    }, {
+    },
+    // {
+    //     path: '/pipeline/new',
+    //     layout: BasicLayout,
+    //     component: PipelineInfo,
+    // },
+    {
         path: '/pipeline/project/:id',
         layout: BasicLayout,
         component: PipelineProject,
@@ -82,6 +82,28 @@ const ciadjustConfig = [
     }
 ];
 
+const permissionConfig = [
+    //permission
+    {
+        path: '/permissions',
+        layout: BasicLayout,
+        component: Permission,
+    },
+];
+const roleConfig = [
+    //role
+    {
+        path: '/roles',
+        layout: BasicLayout,
+        component: Role,
+    },
+    {
+        path: '/roles/userwithrole',
+        layout: BasicLayout,
+        component: UserRoleMapping,
+    },
+];
+
 
 const codeConfig = [
     {
@@ -97,6 +119,6 @@ const codeConfig = [
     },
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig,...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
 
 export default routerConfig;

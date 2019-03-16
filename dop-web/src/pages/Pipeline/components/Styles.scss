@@ -1,0 +1,130 @@
+.button {
+  margin-left: 10px
+}
+
+.step{
+  display: flex;
+  justify-content: center;
+  .stepItem {
+    min-width: 50px;
+    max-width: 100px;
+    .next-icon-success-filling{
+      color:#8cc04f;
+    }
+    .next-icon-delete-filling{
+      color:#d54c53
+    }
+  }
+}
+
+
+.wrapper {
+  width: 100%;
+  height: 900px;
+  overflow: hidden;
+}
+
+.iframe {
+  position: relative;
+  top: -130px;
+  width: 102%;
+  height: 100%;
+}
+
+.accordion {
+  font-family: "LatoLatinWeb", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  overflow: auto;
+  .title {
+    width: 100%;
+    height: 35px;
+    display: flex;
+    cursor: pointer;
+    border: solid 1px #e4e4e4;
+    background: white;
+    font-size: 15px;
+    align-items: center;
+    &:hover {
+      background: #FAFAFA;
+    }
+    .success {
+      background: #8cc04f;
+    }
+    .fail {
+      background: #d54c53;
+    }
+    .loading {
+      background: #2077FF;
+    }
+    .div-icon {
+      width: 30px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .icon {
+        color: white;
+      }
+    }
+    .div-icon2 {
+      width: 30px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .icon {
+        transition: all .5s;
+        font-size: 2px;
+      }
+    }
+    .process {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .prop {
+      color: #a4a4a4;
+      white-space: nowrap;
+      margin-left: 10px;
+    }
+  }
+  .content {
+    background-color: #333333;
+    color: #f5f5f5;
+    padding: 0.5rem;
+    .pre {
+      clear: left;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      counter-reset: line-numbering;
+      margin: 0;
+      box-sizing: border-box;
+      font-size: 13px;
+      .ol {
+        list-style-type: decimal;
+        .li {
+          list-style: none;
+          font-family: "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+          .li-wrap{
+            display: flex;
+            &:hover{
+              background-color: rgba(255,255,255, 0.2);
+            }
+            .idx{
+              color: #777777;
+              display:inline-block;
+              margin-left: 60px;
+              text-align: left;
+            }
+            .shell{
+              color: #f5f5f5;
+              display:inline;
+              margin-left: 40px;
+              white-space: pre-wrap;
+              word-wrap:break-word;
+            }
+          }
+        }
+      }
+    }
+  }
+}
