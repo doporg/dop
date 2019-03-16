@@ -125,6 +125,12 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>3.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mapstruct</artifactId>
+                    <groupId>org.mapstruct</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -136,6 +142,7 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -190,6 +197,7 @@
                     </resources>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
     <repositories>
