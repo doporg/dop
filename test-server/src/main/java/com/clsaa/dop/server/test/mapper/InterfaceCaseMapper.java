@@ -28,10 +28,10 @@ public class InterfaceCaseMapper extends AbstractCommonServiceMapper<InterfaceCa
 
     @Override
     public Optional<InterfaceCaseDto> convert(InterfaceCase source) {
-        return Optional.of(source).map(doUpgrade());
+        return Optional.of(source).map(doConvert());
     }
 
-    private Function<InterfaceCase, InterfaceCaseDto> doUpgrade() {
+    private Function<InterfaceCase, InterfaceCaseDto> doConvert() {
         return po -> {
             if (po != null) {
                 InterfaceCaseDto dto = BeanUtils.convertType(po, InterfaceCaseDto.class);
