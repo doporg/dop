@@ -7,6 +7,8 @@ import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.Permission;
 import com.clsaa.dop.server.permission.model.po.Role;
+import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
+import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.model.vo.RoleV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +48,10 @@ public class RoleService {
     @Autowired
     //关联关系service
     private RolePermissionMappingService rolePermissionMappingService;
+
+    @Autowired
+    //关联关系service
+    private UserRoleMappingService userRoleMappingService;
 
     /* *
      *
@@ -135,6 +142,43 @@ public class RoleService {
     public List<PermissionBoV1> findAllPermission()
     {
         return permissionService.findAll();
+    }
+
+    //根据功能点ID查询角色
+    public List<RoleBoV1> findByPermissionId(Long permissionId)
+    {
+        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingService.findByPermissionId(permissionId);
+        List<RoleBoV1> roleBoV1List=new ArrayList<>();
+        rolePermissionMappingList.forEach(rolePermissionMapping -> {
+            Optional<Role> role=roleRepository.findById(rolePermissionMapping.getRoleId());
+            if(role.isPresent())
+            {
+                roleBoV1List.add(BeanUtils.convertType(role.get(),RoleBoV1.class));
+            }
+        });
+        return roleBoV1List;
+    }
+
+    //根据用户ID查询角色
+    public List<RoleBoV1> findByUserId(Long userId)
+    {
+        List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
+        List<RoleBoV1> roleBoV1List =new ArrayList<>();
+        userRoleMappingList.forEach(userRoleMapping -> {
+            Optional<Role> role=roleRepository.findById(userRoleMapping.getRoleId());
+            if(role.isPresent())
+            {
+                roleBoV1List.add(BeanUtils.convertType(role.get(),RoleBoV1.class));
+            }
+        });
+        return roleBoV1List;
+    }
+
+    //查询所有角色，为用户绑定时使用
+    public List<RoleBoV1> findAllRole()
+    {
+        return roleRepository.findAll().stream().map(p ->
+                BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
     }
 
 }

@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 //重写SQL删除语句
 @SQLDelete(sql = "update t_user_role_mapping set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-@Table(name = "t_user_role_mapping") //引入@Table注解，name赋值为表名
+@Table(name = "t_user_role_mapping",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id","id"})}) //引入@Table注解，name赋值为表名
 public class UserRoleMapping {
     private static final long serialVersionUID = 552000261L;
     /**

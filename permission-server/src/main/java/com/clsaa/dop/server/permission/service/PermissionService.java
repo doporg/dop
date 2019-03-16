@@ -3,7 +3,10 @@ package com.clsaa.dop.server.permission.service;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
+import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.Permission;
+import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
+import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
@@ -18,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -36,10 +36,16 @@ public class PermissionService {
 
     @Autowired
     private PermissionRepository permissionRepository;
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     //关联关系service
     private RolePermissionMappingService rolePermissionMappingService;
+    @Autowired
+    //关联关系service
+    private UserRoleMappingService userRoleMappingService;
+
 /* *
  *
  *  * @param id 功能点ID
@@ -127,17 +133,47 @@ public class PermissionService {
 
     }
 
-    //根据角色删除联系关系
-    public void deleteAll()
-    {
-        permissionRepository.deleteAll();
-    }
-
-    //返回所有功能点，用于与角色绑定
+    //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点
     public List<PermissionBoV1> findAll()
     {
         return permissionRepository.findAll().stream().map(p ->
                 BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
+    }
+
+    //根据角色ID查询功能点
+    public List<PermissionBoV1> findByRoleId(Long roleId)
+    {
+        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingService.findByRoleId(roleId);
+        List<PermissionBoV1> permissionBoV1List=new ArrayList<>();
+        for(RolePermissionMapping rolePermissionMapping:rolePermissionMappingList)
+        {
+            Optional<Permission> permission=permissionRepository.findById(rolePermissionMapping.getPermissionId());
+            if(permission.isPresent())
+            {
+                permissionBoV1List.add(BeanUtils.convertType(permission.get(),PermissionBoV1.class));
+            }
+        }
+        return permissionBoV1List;
+    }
+
+    //根据用户ID查询功能点
+    public List<PermissionBoV1> findByUserId(Long userId)
+    {
+        List<RoleBoV1> roleBoV1List=roleService.findByUserId(userId);
+        List<PermissionBoV1> permissionBoV1List=new ArrayList<>();
+        /*用Set存功能点ID，再通过功能点ID去获取功能点，去重*/
+        Set<Long> permissionIdSet=new HashSet<>();
+        roleBoV1List.forEach(roleBoV1 -> {
+            List<PermissionBoV1> permissionBoV1ListTmp= this.findByRoleId(roleBoV1.getId());
+            permissionBoV1ListTmp.forEach(permissionBoV1 -> {
+                permissionIdSet.add(permissionBoV1.getId());
+            });
+        });
+        permissionIdSet.forEach(permissionId->{
+           permissionBoV1List.add(BeanUtils.convertType(this.findById(permissionId),PermissionBoV1.class)) ;
+        });
+
+        return permissionBoV1List;
     }
 
 }

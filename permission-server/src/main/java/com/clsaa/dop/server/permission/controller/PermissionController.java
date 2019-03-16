@@ -16,6 +16,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,7 +29,7 @@ import java.util.List;
  *  * @param id 功能点ID
  *  * @param parentId 父功能点ID
  *  * @param name 功能点名称
- *  * @param isPrivate 是否私有
+ *  * @param isPrivate 是否私有 （后期决定能否继承该功能点）
  *  * @param description 功能点描述
  *  * @param ctime 创建时间
  *  * @param mtime 修改时间
@@ -57,12 +59,11 @@ public class PermissionController {
             @RequestParam(value = "isPrivate", required = true) Integer isPrivate,
             @ApiParam(name = "description",value = "功能点描述",required = true)
             @RequestParam(value = "description", required = true) String description,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
         )
     {
         permissionService.createPermission(parentId,name,isPrivate,
-                description,cuser,muser);
+                description,loginUser,loginUser);
     }
 
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
@@ -91,13 +92,32 @@ public class PermissionController {
         return BeanUtils.convertType(this.permissionService.findByName(name), PermissionV1.class);
     }
 
-
     @ApiOperation(value="根据ID删除功能点",notes = "根据ID删除功能点")
     @DeleteMapping("v1/permissions/{id}")
     public void deleteById(@ApiParam(name = "id",value = "功能点ID",required = true)
                                @RequestParam(value = "id", required = true)Long id)
     {
         permissionService.deleteById(id);
+    }
+
+    @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")
+    @GetMapping("/v1/roles/permissions/{id}")
+    //根据角色ID查询功能点
+    public List<PermissionV1> findByRoleId(@ApiParam(name = "roleId",value = "角色ID",required = true)
+                                           @RequestParam(value = "roleId", required = true)Long roleId)
+    {
+        return permissionService.findByRoleId(roleId)
+                .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "根据用户ID查询功能点", notes = "根据用户ID查询功能点")
+    @GetMapping("/v1/users/permissions/{id}")
+    //根据用户ID查询功能点
+    public List<PermissionV1> findByUserId(@ApiParam(name = "userId",value = "用户ID",required = true)
+                                           @RequestParam(value = "userId", required = true)Long userId)
+    {
+        return permissionService.findByUserId(userId)
+                .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
 
 }

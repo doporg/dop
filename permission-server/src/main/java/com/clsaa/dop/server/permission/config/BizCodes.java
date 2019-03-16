@@ -29,13 +29,13 @@ public interface BizCodes {
     /**
      * 功能点名称重复
      */
-    BizCode REPETITIVE_PERMISSION_NAME = new BizCode(1100, "创建失败，功能点名称重复");
+    BizCode REPETITIVE_PERMISSION_NAME = new BizCode(133000, "创建失败，功能点名称重复");
     /**
      * 角色名称重复
      */
-    BizCode REPETITIVE_ROLE_NAME = new BizCode(1101, "创建失败，角色名称重复");
+    BizCode REPETITIVE_ROLE_NAME = new BizCode(133001, "创建失败，角色名称重复");
     /**
      * 关联关系重复
      */
-    BizCode REPETITIVE_MAPPING = new BizCode(1102, "创建失败，该关联关系已存在");
+    BizCode REPETITIVE_MAPPING = new BizCode(133002, "创建失败，该关联关系已存在");
 }

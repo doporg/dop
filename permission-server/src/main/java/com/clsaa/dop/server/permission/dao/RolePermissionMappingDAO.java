@@ -1,7 +1,5 @@
 package com.clsaa.dop.server.permission.dao;
 
-import com.clsaa.dop.server.permission.model.po.Permission;
-import com.clsaa.dop.server.permission.model.po.Role;
 import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 

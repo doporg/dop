@@ -50,11 +50,10 @@ public class RoleController {
             @RequestParam(value = "parentId", required = false, defaultValue = "0") Long parentId,
             @ApiParam(name = "name",value = "名称",required = true)
             @RequestParam(value = "name", required = true) String name,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long cuser,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long muser
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
     )
     {
-        return roleService.createRole(parentId,name,cuser,muser);
+        return roleService.createRole(parentId,name,loginUser,loginUser);
     }
 
     @ApiOperation(value = "根据ID查询角色", notes = "根据ID查询角色")
@@ -98,6 +97,35 @@ public class RoleController {
         return roleService.findAllPermission().stream().map(p ->
             BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
+    @ApiOperation(value="查询所有角色",notes = "查询所有角色")
+    @GetMapping("v1/roles/roles")
+    public List<RoleV1> findAllRole()
+    {
+        return roleService.findAllRole().stream().map(p ->
+                BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "根据功能点ID查询角色", notes = "根据功能点ID查询角色")
+    @GetMapping("/v1/permissions/roles/{id}")
+    //根据功能点ID查询角色
+    public List<RoleV1> findByPermissionId(@ApiParam(name = "permissionId",value = "功能点ID",required = true)
+                                           @RequestParam(value = "permissionId", required = true)Long permissionId)
+    {
+        return roleService.findByPermissionId(permissionId)
+                .stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "根据用户ID查询角色", notes = "根据用户ID查询角色")
+    @GetMapping("/v1/users/roles/{id}")
+    //根据功能点ID查询角色
+    public List<RoleV1> findByUserId(@ApiParam(name = "userId",value = "用户ID",required = true)
+                                           @RequestParam(value = "userId", required = true)Long userId)
+    {
+        return roleService.findByUserId(userId)
+                .stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+    }
+
+
 
 
 }

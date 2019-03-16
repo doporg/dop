@@ -1,12 +1,6 @@
 package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
-import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
-import com.clsaa.dop.server.permission.model.po.Permission;
-import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
-import com.clsaa.dop.server.permission.model.vo.PermissionV1;
-import com.clsaa.dop.server.permission.model.vo.RoleV1;
-import com.clsaa.dop.server.permission.service.PermissionService;
 import com.clsaa.dop.server.permission.service.RolePermissionMappingService;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
@@ -15,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 角色功能点关联管理控制层
@@ -54,31 +45,11 @@ public class RolePermissionMappingController {
             @RequestParam(value = "roleId", required = true)Long roleId,
             @ApiParam(name = "permissionId",value = "功能点ID",required = true)
             @RequestParam(value = "permissionId", required = true)Long permissionId,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long cuser,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long muser)
+            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser)
     {
-            rolePermissionMappingService.addPermissionToRole(roleId,permissionId,cuser,muser);
+            rolePermissionMappingService.addPermissionToRole(roleId,permissionId,loginUser,loginUser);
     }
 
-    @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")
-    @GetMapping("/v1/roles/permissions/{id}")
-    //根据角色ID查询功能点
-    public List<PermissionV1> findByroleId(@ApiParam(name = "roleId",value = "角色ID",required = true)
-                                               @RequestParam(value = "roleId", required = true)Long roleId)
-    {
-        return rolePermissionMappingService.findByroleId(roleId)
-                .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
-    }
-
-    @ApiOperation(value = "根据功能点ID查询角色", notes = "根据功能点ID查询角色")
-    @GetMapping("/v1/permissions/roles/{id}")
-    //根据功能点ID查询角色
-    public List<RoleV1> findBypermissionId(@ApiParam(name = "permissionId",value = "功能点ID",required = true)
-                                           @RequestParam(value = "permissionId", required = true)Long permissionId)
-    {
-        return rolePermissionMappingService.findByPermissionId(permissionId)
-                .stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
-    }
 
     @ApiOperation(value = "删除角色功能点关联关系", notes = "删除角色功能点关联关系")
     @DeleteMapping ("/v1/roles/permissions")
