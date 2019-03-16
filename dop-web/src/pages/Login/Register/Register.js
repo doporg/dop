@@ -28,7 +28,7 @@ export default class Register extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        let self = this
+        let self = this;
         self.field.validate((errors, values) => {
             if (errors) {
                 toast.show({
@@ -47,6 +47,11 @@ export default class Register extends Component {
         let url = API.gateway + '/user-server/v1/account/register';
         let self = this;
         delete data.rePasswd;
+        toast.show({
+            type: "prompt",
+            content: "正在注册...",
+            duration: 5000
+        });
         PublicKey().then((publicKey) => {
             console.log(data.passwd)
             data.password = Encryption(data.passwd, publicKey);
@@ -71,12 +76,6 @@ export default class Register extends Component {
                     });
                 }
                 self.props.history.push('/login');
-            }).catch((error)=>{
-                toast.show({
-                    type: "error",
-                    content: error,
-                    duration: 1000
-                });
             })
         }).catch((error) => {
             toast.show({
