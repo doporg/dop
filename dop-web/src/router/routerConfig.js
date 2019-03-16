@@ -4,7 +4,8 @@
 
 import CodeLayout from '../layouts/CodeLayout';
 import BasicLayout from '../layouts/BasicLayout';
-import Projects from '../pages/Projects';
+import {Projects, Application, ApplicationDetail} from '../pages/Projects';
+import {ApplicationEnvironmentDetail} from '../pages/Projects';
 import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
@@ -14,17 +15,32 @@ import {Code,PersonalProjects,StarredProjects,AllProjects} from '../pages/Code'
 
 const baseConfig = [
     {
-        path: '/project',
-        layout: BasicLayout,
-        component: Projects,
-    },
-    {
         path: '*',
         layout: BasicLayout,
         component: NotFound,
     },
 ];
-
+const projectConfig = [
+    {
+        path: '/project',
+        layout: BasicLayout,
+        component: Projects,
+    },{
+        path: '/application',
+        layout: BasicLayout,
+        component: Application,
+    },
+    {
+        path: '/applicationDetail',
+        layout: BasicLayout,
+        component: ApplicationDetail,
+    },
+    {
+        path: '/application/environment/detail',
+        layout: BasicLayout,
+        component: ApplicationEnvironmentDetail
+    }
+]
 const pipelineConfig = [
     //pipeline
     {
@@ -128,6 +144,6 @@ const codeConfig = [
     },
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig,...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig,...baseConfig];
 
 export default routerConfig;
