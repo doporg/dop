@@ -2,6 +2,8 @@ package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.model.bo.ProjectBo;
+import com.clsaa.dop.server.code.model.po.User;
+import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -11,10 +13,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,54 +28,115 @@ import java.util.List;
  *
  * @author wsy
  */
+
+@Component
 public class RequestUtil {
 
+
+    private static UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService){
+        RequestUtil.userService=userService;
+    }
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
-    //管理员的token
-    private static final String privateToken = "y5MJTK9yisBKfNF1t-gd";
+
+//    管理员的token
+    private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
     public static void main(String[] args){
-//        "GET /projects/:id/repository/files/:file_path"
 
-//        List<ProjectBo> list=RequestUtil.getList("/projects/:id/repository/files/:file_path",ProjectBo.class);
+//        List<NameValuePair> list=new ArrayList<>();
+//        NameValuePair p1= new BasicNameValuePair("grant_type","password");
+//        NameValuePair p2= new BasicNameValuePair("username","root");
+//        NameValuePair p3= new BasicNameValuePair("password","Dop123456789");
+//        list.add(p1);
+//        list.add(p2);
+//        list.add(p3);
+//        String result= httpPost("http://gitlab.dop.clsaa.com/oauth/token",list);
+//        System.out.println(result);
 
-//        for(ProjectBo projectBo:list)
-//        System.out.println(projectBo);
+        List<ProjectBo> list =getList("/projects?simple=true&membership=true","waszqt",ProjectBo.class);
 
-        FormatUtil.printJson(httpGet("/projects/3"));
+        for(ProjectBo temp:list)
+            System.out.println(temp);
 
-
+//        System.out.println("ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899".length());
 
     }
 
     /**
-     * get请求获得一个List
+     * 发送get请求到gitlab，返回一个对象列表
+     * @param path 请求路径
+     * @param username 用户名
+     * @param clazz 类
+     * @param <T> 结果转化的类型
+     * @return 列表
      */
-    public static <T> List<T> getList(String path,Class<T> clazz){
+    public static <T> List<T> getList(String path,String username,Class<T> clazz){
 
-        return JSON.parseArray(httpGet(path),clazz);
-
-    }
-
-    public static <T> T get(String path,Class<T> clazz){
-
-        return JSON.parseObject(httpGet(path),clazz);
-
-    }
-
-
-
-    /**
-     * 发送get请求到gitlab
-     * @param path 路径
-     * @return json字符串
-     */
-    private static String httpGet(String path) {
+        String access_token=userService.findUserAccessToken(username);
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
-        url += "private_token=" + privateToken;
+        url += "access_token=" + access_token;
+
+        return JSON.parseArray(httpGet(url),clazz);
+
+    }
+
+    /**
+     * 没有用户名参数，默认使用root的private_token
+     */
+    public static <T> List<T> getList(String path,Class<T> clazz){
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "private_token=" + rootPrivateToken;
+
+        return JSON.parseArray(httpGet(url),clazz);
+
+    }
+
+    /**
+     * 发送get请求到gitlab，返回一个对象，其他同getList方式
+     */
+    public static <T> T get(String path,String username,Class<T> clazz){
+
+        String access_token=userService.findUserAccessToken(username);
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "access_token=" + access_token;
+
+        return JSON.parseObject(httpGet(url),clazz);
+
+    }
+
+    /**
+     * 没有用户名参数，默认使用root的private_token
+     */
+    public static <T> T get(String path,Class<T> clazz){
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "private_token=" + rootPrivateToken;
+
+        return JSON.parseObject(httpGet(url),clazz);
+
+    }
+
+
+
+    /**
+     * 发送http get请求
+     * @param url 路径
+     * @return json字符串
+     */
+    private static String httpGet(String url) {
+
+
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
@@ -105,7 +172,15 @@ public class RequestUtil {
     }
 
 
-    public static String httpPost(String url, List<NameValuePair> formparams) throws Exception {
+    /**
+     * 发送http post请求
+     * @param url 路径
+     * @param formparams 参数键值对
+     * @return json字符串
+     */
+    public static String httpPost(String url, List<NameValuePair> formparams){
+
+
         CloseableHttpClient httpclients = HttpClients.createDefault();
 
         HttpPost httpPost = new HttpPost(url);
@@ -113,20 +188,30 @@ public class RequestUtil {
         UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
 
         httpPost.setEntity(entity);
-        CloseableHttpResponse response = httpclients.execute(httpPost);
-        HttpEntity entity1 = response.getEntity();
-
+        CloseableHttpResponse response = null;
         try {
-            HttpEntity entity5 = response.getEntity();
-            if (entity != null) {
-                InputStream is = entity.getContent();
-            }
-        } finally {
-            response.close();
-            httpclients.close();
+            response=httpclients.execute(httpPost);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return EntityUtils.toString(entity1);
+        String result=null;
+        try {
+            HttpEntity entity1 = response.getEntity();
+            if (entity1 != null) {
+                result = EntityUtils.toString(entity1);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
 
     }
 

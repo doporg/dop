@@ -3,10 +3,12 @@ package com.clsaa.dop.server.code.service;
 
 import com.clsaa.dop.server.code.model.bo.BranchBo;
 import com.clsaa.dop.server.code.model.bo.ProjectBo;
+import com.clsaa.dop.server.code.model.bo.ProjectListBo;
 import com.clsaa.dop.server.code.model.bo.TagBo;
 import com.clsaa.dop.server.code.model.vo.ProjectVo;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import com.clsaa.dop.server.code.util.RequestUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.List;
  */
 @Service
 public class ProjectService {
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 根据id查找项目
@@ -48,6 +53,14 @@ public class ProjectService {
         }
 
         return projectBo;
+    }
+
+    public List<ProjectListBo> findProjectByMember(String username){
+
+        //获得项目基本信息
+        List<ProjectListBo> listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+
+        return listBos;
     }
 
     public static void main(String[] args) {
