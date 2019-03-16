@@ -30,10 +30,12 @@ class Header extends Component {
         let url = API.gateway + '/user-server/v1/users';
         let self = this;
         Axios.get(url).then((response)=>{
-            console.log(response)
             self.setState({
                 user: response.data
-            })
+            });
+            window.sessionStorage.setItem('user-id', response.data.id);
+            window.sessionStorage.setItem('user-name', response.data.name);
+            window.sessionStorage.setItem('user-email', response.data.email);
         }).catch((error)=>{
             toast.show({
                 type: "error",
@@ -44,9 +46,7 @@ class Header extends Component {
     }
 
     logout() {
-        window.sessionStorage.removeItem('Authorization');
-        window.sessionStorage.removeItem('x-login-token');
-        window.sessionStorage.removeItem('x-login-user');
+        window.sessionStorage.clear();
     }
 
     render() {

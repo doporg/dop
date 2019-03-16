@@ -23,8 +23,8 @@ import java.util.List;
  * @since 2019-03-09
  */
 
-@CrossOrigin
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class PipelineController {
     @Autowired
     private PipelineService pipelineService;
