@@ -31,14 +31,17 @@ public class NameSpaceController {
         return BeanUtils.convertType(nameSpaceService.getNameSpace(ouser,name),NameSpaceVO.class);
     }
 
-    @ApiOperation(value = "/namespaces")
+    @ApiOperation(value = "根据创建人的信息获取创建人创建的全部命名空间的信息",notes = "根据用户的信息进行查询，如果说用户尚未" +
+            "创建任何的命名空间返回null")
+    @GetMapping(value = "/namespaces")
     public List<NameSpaceVO> getNameSpaces(@RequestParam("ouser")Long ouser){
         List<NameSpaceBO> nameSpaceBOS = nameSpaceService.getNameSpaces(ouser);
         List<NameSpaceVO> nameSpaceVOS = new ArrayList<>();
         for (Iterator i = nameSpaceBOS.iterator();i.hasNext();){
-
+            NameSpaceVO nameSpaceVO = BeanUtils.convertType(i.next(),NameSpaceVO.class);
+            nameSpaceVOS.add(nameSpaceVO);
         }
-        return nameSpaceService.getNameSpaceList(ouser);
+        return nameSpaceVOS;
     }
 
 }

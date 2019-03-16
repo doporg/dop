@@ -25,6 +25,11 @@ public class NameSpaceService {
     private NamespaceRepository namespaceRepository;
     private static final Log log = LogFactory.getLog(NameSpaceService.class);
 
+    /**
+     *
+     * @param ouser
+     * @return {@link List<NameSpaceBO>} 命名空间的BO对象列表
+     */
     public List<NameSpaceBO> getNameSpaces(Long ouser) {
         List<NameSpaceBO> nameSpaceBOs = new ArrayList<>();
         List<NameSpacePO> nameSpacePOs = namespaceRepository.findAllByOuser(ouser);
@@ -39,6 +44,12 @@ public class NameSpaceService {
         return null;
     }
 
+    /**
+     *
+     * @param ouser 命名空间创建人
+     * @param name 命名空间的name
+     * @return 命名空间的bo对象
+     */
     public NameSpaceBO getNameSpace(Long ouser, String name) {
 
         NameSpacePO nameSpacePO = namespaceRepository.findByNameAndOuser(name,ouser);
