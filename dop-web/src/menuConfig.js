@@ -23,7 +23,7 @@ const headerMenuConfig = [
 const asideMenuConfig = [
     {
         name: '全部项目',
-        path: '/',
+        path: '/project',
         icon: 'home2',
     },
     {
@@ -70,7 +70,13 @@ const asideMenuConfig = [
         name: '自调节集成',
         path: '/ciadjust',
         icon: 'cascades',
+    },
+    {
+        name: '代码管理',
+        path: '/code/projects/personal',
+        icon: 'code',
     }
+
 ];
 
 export {headerMenuConfig, asideMenuConfig};

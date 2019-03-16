@@ -8,9 +8,6 @@ import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pi
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
-import {Permission} from "../pages/Permissions";
-import {Role,UserRoleMapping} from "../pages/Roles";
-
 const baseConfig = [
     {
         path: '/project',
@@ -103,6 +100,52 @@ const roleConfig = [
     },
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
+
+const codeConfig = [
+    {
+        path: '/code/projects/personal',
+        layout: CodeLayout,
+        component:PersonalProjects
+
+    },
+    {
+        path: '/code/projects/starred',
+        layout: CodeLayout,
+        component:StarredProjects
+
+    },
+    {
+        path: '/code/projects/all',
+        layout: CodeLayout,
+        component:AllProjects
+
+    },
+    {
+        path: '/code/summary',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/files',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/commits',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/groups',
+        layout: CodeLayout,
+        component:Code
+
+    },
+];
+
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig, ...permissionConfig , ...roleConfig, ...baseConfig];
 
 export default routerConfig;

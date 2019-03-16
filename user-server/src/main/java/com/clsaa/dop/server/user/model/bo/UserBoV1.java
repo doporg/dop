@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class UserBoV1 {
     /**
