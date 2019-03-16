@@ -46,12 +46,12 @@ spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
   host: localhost:${server.port}
-  groupId: @project.groupId@
-  artifactId: @project.artifactId@
-  version: @project.version@
-  name: @project.name@
-  description: @project.description@
-  url: @project.url@
+  groupId: '@project.groupId@'
+  artifactId: '@project.artifactId@'
+  version: '@project.version@'
+  name: '@project.name@'
+  description: '@project.description@'
+  url: '@project.url@'
 swagger.enable: true
 eureka:
   instance:
