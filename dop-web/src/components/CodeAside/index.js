@@ -24,7 +24,7 @@ class CodeAside extends Component {
     const { location } = this.props;
     const { pathname } = location;
     const { username,projectid } = this.props.match.params;
-    var branch = "master";
+    let branch = "master";
     if(this.props.match.params.hasOwnProperty('branch')){
       branch=this.props.match.params.branch;
     }

@@ -3,7 +3,7 @@
     height: 600px;
     position: relative;
     padding-top: 1px;
-    font-weight: bold;
+    /*font-weight: bold;*/
 
 }
 
@@ -23,7 +23,7 @@
     text-align: center;
     position: absolute;
     border: 1px solid #dce0e5;
-    color: #555555;
+    /*color: #555555;*/
     border-radius: 1px;
     background-color: #f0f2f5
 }
@@ -33,7 +33,7 @@
     background-color: #d1d1d1;
 }
 
-.btn_public{
+.btn_visibility{
     top:8px;
     left: 8px;
     height: 45px;
@@ -76,6 +76,9 @@
 
 
 .input_url{
+    /*font-size: 17px;*/
+    /*font-weight: normal;*/
+    padding:5px 15px;
     position: absolute;
     left: 330px;
     height: 45px;
@@ -84,6 +87,7 @@
     border-right: none;
     border-top:1px solid #e2e2e2;
     border-bottom:1px solid #e2e2e2;
+    color:#515151
 }
 
 .btn_copy{
@@ -115,7 +119,7 @@
 
 .text_title{
     text-align: center;
-    font-size: 30px;
+    font-size: 20px;
 }
 .text_description{
     text-align: center;
