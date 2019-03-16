@@ -8,6 +8,8 @@ import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pi
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
+import {Code,ProjectOverview} from '../pages/Code'
+
 const baseConfig = [
     {
         path: '/project',
@@ -105,46 +107,15 @@ const roleConfig = [
 
 const codeConfig = [
     {
-        path: '/code/projects/personal',
+        path: '/code/:username/:projectid',
         layout: CodeLayout,
-        component:PersonalProjects
+        component:ProjectOverview
 
     },
     {
-        path: '/code/projects/starred',
-        layout: CodeLayout,
-        component:StarredProjects
-
-    },
-    {
-        path: '/code/projects/all',
-        layout: CodeLayout,
-        component:AllProjects
-
-    },
-    {
-        path: '/code/summary',
+        path: '/code/:username/:projectid/commits/:branch',
         layout: CodeLayout,
         component:Code
-
-    },
-    {
-        path: '/code/files',
-        layout: CodeLayout,
-        component:Code
-
-    },
-    {
-        path: '/code/commits',
-        layout: CodeLayout,
-        component:Code
-
-    },
-    {
-        path: '/code/groups',
-        layout: CodeLayout,
-        component:Code
-
     },
 ];
 
