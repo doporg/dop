@@ -30,7 +30,6 @@ export default class RunResult extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.currentStage !== this.state.currentStage) {
-            console.log(this.state.currentStage)
             this.step(this.state.stages[this.state.currentStage])
         }
     }
@@ -44,8 +43,8 @@ export default class RunResult extends Component {
 
     //获取stage
     stage(href) {
-        let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
-        // let url = API.jenkins + href + "nodes/";
+        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
+        let url = API.jenkins + href + "nodes/";
         let self = this;
         let stages = [];
         return new Promise((resolve, reject) => {
@@ -57,20 +56,25 @@ export default class RunResult extends Component {
                 }
             }).then((response) => {
                 if (response.status === 200) {
-                    response.data.map((item, index) => {
-                        console.log(item)
+                    if (response.data.length === 0) {
+                        self.stage(href);
+                        return;
+                    }
+                    for (let i = 0; i < response.data.length; i++) {
+                        let item = response.data[i];
                         let stage = {
                             id: item.id,
                             title: item.displayName,
                             time: item.durationInMillis,
                             result: item.result,
                             disabled: item.result === 'NOT_BUILT',
-                            icon: item.result === 'SUCCESS'?'success-filling':'delete-filling',
+                            icon: item.state === "RUNNING" ?
+                                'loading' : (item.result === 'SUCCESS' ? 'success-filling' : 'delete-filling'),
                             href: item._links.steps.href,
                             steps: []
                         };
                         stages.push(stage)
-                    });
+                    }
                     self.setState({
                         stages
                     });
@@ -138,8 +142,8 @@ export default class RunResult extends Component {
                                          result={step.result}
                                          href={step.logHref}
                                          authorization={self.props.authorization}
-                                         title={step.displayDescription?step.displayDescription: step.displayName}
-                                         prop={step.displayDescription?step.displayName:null}
+                                         title={step.displayDescription ? step.displayDescription : step.displayName}
+                                         prop={step.displayDescription ? step.displayName : null}
                                     />
                                 )
                             }))

@@ -9,6 +9,8 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import './PipelineProject.scss'
+import {RSA} from "../../Login";
+
 const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
@@ -18,39 +20,49 @@ export default class PipelineProject extends Component {
             authorization: 'Basic emZsOnpmbA==',
             visible: false,
             pipelineId: this.props.match.params.id,
-            runs: {}
+            runs: {},
+            queue: [],
+            time: ""
         }
     }
+
     componentDidMount() {
         let self = this;
-        this.getRuns().then((data)=>{
+        this.getRuns().then((data) => {
             self.setState({
                 runs: data
             })
         })
     }
 
-    getRuns(){
+
+    getRuns() {
         let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
         // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
         let self = this;
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             Axios({
                 method: 'get',
                 url: url,
-                headers:{
+                headers: {
                     'Authorization': self.state.authorization
                 }
-            }).then((response)=>{
-                if(response.status === 200){
-                    if(response.data.length === 0){
+            }).then((response) => {
+                if (response.status === 200) {
+                    if (response.data.length === 0) {
                         toast.show({
                             type: "prompt",
                             content: "该流水线尚未运行",
                             duration: 3000
                         });
-                    }else{
-                        resolve(response.data[0])
+                    } else {
+                        console.log(response.data[0]);
+                        resolve(response.data[0]);
+                        if (response.data[0].state === 'FINISHED') {
+                            console.log("finish")
+                            self.clear();
+                        }
+
                     }
                 }
                 reject()
@@ -58,26 +70,36 @@ export default class PipelineProject extends Component {
         })
     }
 
-    buildPipeline(){
-        console.log('click')
+    buildPipeline() {
         let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
         let self = this;
-        Axios({
-            method: 'post',
-            url: url,
-            headers:{
-                'content-type': 'application/json;charset=UTF-8',
-                'Authorization': self.state.authorization
+        Axios.post(url, {}, {
+            headers: {
+                'Authorization': self.state.authorization,
+                'Content-Type': 'application/json'
             }
-        }).then((response)=>{
-            if(response.status === 200){
+        }).then((response) => {
+            if (response.status === 200) {
+                let time = setInterval(() => {
+                    this.getRuns().then((data) => {
+                        self.setState({
+                            runs: data
+                        })
+                    })
+                }, 5000)
                 self.setState({
-                    runs: response.data
-                })
+                    runs: response.data,
+                    time: time
+                });
+
             }
         })
 
     }
+    clear(){
+        clearInterval(this.state.time)
+    }
+
     render() {
         return (
             <div className="body">
@@ -87,7 +109,7 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button" >
+                        <Button type="normal" className="button">
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>

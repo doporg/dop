@@ -31,7 +31,6 @@ export default class Log extends Component {
                 }
             }).then((response) => {
                 if (response.status === 200) {
-                    console.log(response.data)
                     let logs =  response.data.split('\n');
                     logs.pop();
                     self.setState({
