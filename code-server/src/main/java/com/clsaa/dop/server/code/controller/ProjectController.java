@@ -10,10 +10,7 @@ import com.clsaa.dop.server.code.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +24,6 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private UserService userService;
 
     @ApiOperation(value = "查询项目信息",notes="根据项目的id查询项目总览需要的信息")
     @GetMapping("/projects/{id}")
@@ -36,6 +31,13 @@ public class ProjectController {
         return BeanUtils.convertType(projectService.findProject(id),ProjectVo.class);
     }
 
+    @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")
+    @PostMapping("/projects/{id}/star/{username}")
+    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")int id,@ApiParam(value = "用户名") @PathVariable("username")String username){
+        projectService.starProject(id,username);
+    }
+
+    @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
     @GetMapping("/users/{username}/projects")
     public List<ProjectListVo> findProjectByMember(@ApiParam(value = "用户名")@PathVariable("username")String username){
         List<ProjectListBo> listBos= projectService.findProjectByMember(username);

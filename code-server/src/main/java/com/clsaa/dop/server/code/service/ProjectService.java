@@ -8,9 +8,11 @@ import com.clsaa.dop.server.code.model.bo.TagBo;
 import com.clsaa.dop.server.code.model.vo.ProjectVo;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import com.clsaa.dop.server.code.util.RequestUtil;
+import org.apache.http.NameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +57,28 @@ public class ProjectService {
         return projectBo;
     }
 
+    /**
+     * 以username的身份star一个project,若已经star，则unstar
+     * @param id 项目id
+     * @param username 用户
+     */
+    public void starProject(int id,String username){
+
+        List<NameValuePair> params=new ArrayList<>();
+        int code=RequestUtil.post("/projects/"+id+"/star",username,params);
+        if(code==304){
+            RequestUtil.post("/projects/"+id+"/unstar",username,params);
+        }
+
+    }
+
+
+
+    /**
+     * 查找用户参与的项目
+     * @param username 用户名
+     * @return 项目列表
+     */
     public List<ProjectListBo> findProjectByMember(String username){
 
         //获得项目基本信息

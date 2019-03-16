@@ -36,16 +36,17 @@ public class RequestUtil {
     private static UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService){
-        RequestUtil.userService=userService;
+    public void setUserService(UserService userService) {
+        RequestUtil.userService = userService;
     }
+
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
 
-//    管理员的token
+    //    管理员的token
     private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
 //        List<NameValuePair> list=new ArrayList<>();
 //        NameValuePair p1= new BasicNameValuePair("grant_type","password");
@@ -57,9 +58,9 @@ public class RequestUtil {
 //        String result= httpPost("http://gitlab.dop.clsaa.com/oauth/token",list);
 //        System.out.println(result);
 
-        List<ProjectBo> list =getList("/projects?simple=true&membership=true","waszqt",ProjectBo.class);
+        List<ProjectBo> list = getList("/projects?simple=true&membership=true", "waszqt", ProjectBo.class);
 
-        for(ProjectBo temp:list)
+        for (ProjectBo temp : list)
             System.out.println(temp);
 
 //        System.out.println("ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899".length());
@@ -68,74 +69,90 @@ public class RequestUtil {
 
     /**
      * 发送get请求到gitlab，返回一个对象列表
-     * @param path 请求路径
+     *
+     * @param path     请求路径
      * @param username 用户名
-     * @param clazz 类
-     * @param <T> 结果转化的类型
+     * @param clazz    类
+     * @param <T>      结果转化的类型
      * @return 列表
      */
-    public static <T> List<T> getList(String path,String username,Class<T> clazz){
+    public static <T> List<T> getList(String path, String username, Class<T> clazz) {
 
-        String access_token=userService.findUserAccessToken(username);
+        String access_token = userService.findUserAccessToken(username);
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
 
-        return JSON.parseArray(httpGet(url),clazz);
+        return JSON.parseArray(httpGet(url), clazz);
 
     }
 
     /**
      * 没有用户名参数，默认使用root的private_token
      */
-    public static <T> List<T> getList(String path,Class<T> clazz){
+    public static <T> List<T> getList(String path, Class<T> clazz) {
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "private_token=" + rootPrivateToken;
 
-        return JSON.parseArray(httpGet(url),clazz);
+        return JSON.parseArray(httpGet(url), clazz);
 
     }
 
     /**
      * 发送get请求到gitlab，返回一个对象，其他同getList方式
      */
-    public static <T> T get(String path,String username,Class<T> clazz){
+    public static <T> T get(String path, String username, Class<T> clazz) {
 
-        String access_token=userService.findUserAccessToken(username);
+        String access_token = userService.findUserAccessToken(username);
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
 
-        return JSON.parseObject(httpGet(url),clazz);
+        return JSON.parseObject(httpGet(url), clazz);
 
     }
 
     /**
      * 没有用户名参数，默认使用root的private_token
      */
-    public static <T> T get(String path,Class<T> clazz){
+    public static <T> T get(String path, Class<T> clazz) {
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "private_token=" + rootPrivateToken;
 
-        return JSON.parseObject(httpGet(url),clazz);
+        return JSON.parseObject(httpGet(url), clazz);
 
     }
 
 
+    /**
+     * 发送post请求到gitlab
+     *
+     * @param path     路径
+     * @param username 用户名
+     * @param params   参数键值对
+     * @return 返回状态码
+     */
+    public static int post(String path, String username, List<NameValuePair> params) {
+        String url = api + path;
+        NameValuePair p = new BasicNameValuePair("access_token", userService.findUserAccessToken(username));
+        params.add(p);
+        return httpPost(url, params);
+    }
+
 
     /**
      * 发送http get请求
+     *
      * @param url 路径
      * @return json字符串
      */
     private static String httpGet(String url) {
-
 
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
@@ -174,11 +191,12 @@ public class RequestUtil {
 
     /**
      * 发送http post请求
-     * @param url 路径
+     *
+     * @param url        路径
      * @param formparams 参数键值对
      * @return json字符串
      */
-    public static String httpPost(String url, List<NameValuePair> formparams){
+    private static int httpPost(String url, List<NameValuePair> formparams) {
 
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
@@ -190,25 +208,17 @@ public class RequestUtil {
         httpPost.setEntity(entity);
         CloseableHttpResponse response = null;
         try {
-            response=httpclients.execute(httpPost);
+            response = httpclients.execute(httpPost);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        String result=null;
+        int result = response.getStatusLine().getStatusCode();
+
         try {
-            HttpEntity entity1 = response.getEntity();
-            if (entity1 != null) {
-                result = EntityUtils.toString(entity1);
-            }
-        }catch (IOException e){
+            response.close();
+        } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            try {
-                response.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         return result;
