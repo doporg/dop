@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import RunStep from '../components/RunStep'
-import SuccessLog from '../components/SuccessLog'
-import FailLog from '../components/FailLog'
-import ProcessLog from '../components/ProcessLog'
+import Log from '../components/Log'
+
 import {Feedback} from "@icedesign/base";
 import API from "../../API";
 import Axios from "axios/index";
@@ -60,9 +59,8 @@ export default class PipelineTest extends Component {
         return (
             <div>
                 <RunStep steps={this.state.steps} current={this.current.bind(this)}/>
-                <SuccessLog/>
-                <FailLog/>
-                <ProcessLog/>
+                <Log/>
+
 
             </div>
         )

@@ -10,7 +10,7 @@ export default class RunStep extends Component {
 
     render() {
         return (
-            <Step current={this.props.currentStage} type="dot">
+            <Step current={this.props.currentStage} type="dot" className={this.props.className + " step"}>
                 {
                     this.props.stages.map((item, index) => {
                         return (

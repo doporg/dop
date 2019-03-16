@@ -3,7 +3,6 @@
  *  @author zhangfuli
  *
  * */
-
 import React, {Component} from 'react';
 import {Button, Icon, Loading, Feedback} from '@icedesign/base';
 import Axios from 'axios';
@@ -32,14 +31,15 @@ export default class PipelineProject extends Component {
     }
 
     getRuns(){
-        // let url = API.jenkinsRest + id + '/runs/';
-        let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/'
+        let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
+        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
+        let self = this;
         return new Promise((resolve, reject)=>{
             Axios({
                 method: 'get',
                 url: url,
                 headers:{
-                    'Authorization': 'Basic emZsOnpmbA=='
+                    'Authorization': self.state.authorization
                 }
             }).then((response)=>{
                 if(response.status === 200){
@@ -60,9 +60,6 @@ export default class PipelineProject extends Component {
 
     buildPipeline(){
         console.log('click')
-        this.setState({
-            runs: '111111'
-        });
         let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
         let self = this;
         Axios({
@@ -70,10 +67,9 @@ export default class PipelineProject extends Component {
             url: url,
             headers:{
                 'content-type': 'application/json;charset=UTF-8',
-                'Authorization': 'Basic emZsOnpmbA=='
+                'Authorization': self.state.authorization
             }
         }).then((response)=>{
-            console.log(response)
             if(response.status === 200){
                 self.setState({
                     runs: response.data

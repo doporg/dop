@@ -8,6 +8,7 @@ import React, {Component} from 'react';
 import Axios from 'axios'
 import API from '../../API'
 import RunStep from '../components/RunStep'
+import Log from '../components/Log'
 
 export default class RunResult extends Component {
     constructor(props) {
@@ -17,48 +18,54 @@ export default class RunResult extends Component {
             currentStage: 0
         }
     }
-    componentWillReceiveProps (nextProps){
+
+    componentWillReceiveProps(nextProps) {
         let self = this;
-        if(nextProps.runs){
-            this.stage(nextProps.runs._links.self.href).then((stages)=>{
-                console.log(stages);
+        if (nextProps.runs) {
+            this.stage(nextProps.runs._links.self.href).then((stages) => {
                 self.step(stages[self.state.currentStage])
             })
         }
     }
-    componentDidUpdate (prevProps, prevState){
-        if(prevState.currentStage !== this.state.currentStage){
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.currentStage !== this.state.currentStage) {
             console.log(this.state.currentStage)
+            this.step(this.state.stages[this.state.currentStage])
         }
     }
+
     //当前stage
     current(data) {
         this.setState({
             currentStage: data
         });
     }
+
     //获取stage
-    stage(href){
+    stage(href) {
         let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
         // let url = API.jenkins + href + "nodes/";
         let self = this;
         let stages = [];
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             Axios({
                 method: 'get',
                 url: url,
-                headers:{
+                headers: {
                     'Authorization': self.props.authorization
                 }
-            }).then((response)=>{
-                if(response.status === 200){
-                    response.data.map((item, index)=>{
+            }).then((response) => {
+                if (response.status === 200) {
+                    response.data.map((item, index) => {
+                        console.log(item)
                         let stage = {
                             id: item.id,
                             title: item.displayName,
                             time: item.durationInMillis,
                             result: item.result,
                             disabled: item.result === 'NOT_BUILT',
+                            icon: item.result === 'SUCCESS'?'success-filling':'delete-filling',
                             href: item._links.steps.href,
                             steps: []
                         };
@@ -75,42 +82,70 @@ export default class RunResult extends Component {
     }
 
     //获取step
-    step(stage){
+    step(stage) {
+        if (stage.steps.length) {
+            return
+        }
         let url = API.jenkins + stage.href;
         let self = this;
+        let stages = self.state.stages;
         let steps = [];
         Axios({
             method: 'get',
             url: url,
-            headers:{
+            headers: {
                 'Authorization': self.props.authorization
             }
-        }).then((response)=>{
-            console.log(response);
-            if(response.status === 200){
-                response.data.map((item, index)=>{
+        }).then((response) => {
+            if (response.status === 200) {
+                response.data.map((item, index) => {
                     let step = {
                         id: item.id,
                         displayDescription: item.displayDescription,
                         displayName: item.displayName,
                         result: item.result,
                         time: item.durationInMillis,
-                        logHref: item.actions.length === 0 ? null:item.actions[0]._links.self.href,
+                        logHref: item.actions.length === 0 ? null : item.actions[0]._links.self.href,
                         log: []
                     };
                     steps.push(step);
                 });
                 stage.steps = steps;
-                console.log(stage)
+                stages.splice(self.state.currentStage, 1, stage);
+                self.setState({
+                    stages
+                })
             }
         })
     }
+
+
     render() {
         return (
-            <div>
-                <RunStep stages={this.state.stages} currentStage={this.state.currentStage} current={this.current.bind(this)}/>
-
-
+            <div className="run-detail">
+                <RunStep stages={this.state.stages}
+                         currentStage={this.state.currentStage}
+                         current={this.current.bind(this)}
+                         className="run-detail-stage"
+                />
+                <div className="run-detail-stap">
+                    {(() => {
+                        let self = this;
+                        if (this.state.stages.length && this.state.stages[this.state.currentStage].steps.length) {
+                            return (this.state.stages[this.state.currentStage].steps.map((step, index) => {
+                                return (
+                                    <Log key={index}
+                                         result={step.result}
+                                         href={step.logHref}
+                                         authorization={self.props.authorization}
+                                         title={step.displayDescription?step.displayDescription: step.displayName}
+                                         prop={step.displayDescription?step.displayName:null}
+                                    />
+                                )
+                            }))
+                        }
+                    })()}
+                </div>
             </div>
         );
     }
