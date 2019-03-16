@@ -70,7 +70,6 @@ public class UserLoginZuulFilter extends ZuulFilter {
                 returnForError();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             returnForError();
         }
 
@@ -81,14 +80,14 @@ public class UserLoginZuulFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         // 过滤该请求，不对其进行路由
         ErrorResult errorResult = ErrorResult.builder()
-                .path(ctx.getRequest().getContextPath())
+                .path(ctx.getRequest().getRequestURI())
                 .bizCode(BizCodes.INVALID_LOGIN_TOKEN)
-                .error("")
-                .trace("")
+                .error(BizCodes.INVALID_LOGIN_TOKEN.getMessage())
+                .trace(this.getClass().getName())
                 .build();
         ctx.setSendZuulResponse(false);
         ctx.setResponseStatusCode(403);
         ctx.setResponseBody(JSON.toJSONString(errorResult));
+        ctx.getResponse().setContentType("application/json;charset=UTF-8");
     }
-
 }

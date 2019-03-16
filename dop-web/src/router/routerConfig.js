@@ -2,6 +2,7 @@
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 
+import CodeLayout from '../layouts/CodeLayout';
 import BasicLayout from '../layouts/BasicLayout';
 import {Projects, Application, ApplicationDetail} from '../pages/Projects';
 import {ApplicationEnvironmentDetail} from '../pages/Projects';
@@ -9,6 +10,9 @@ import {Pipeline, PipelineInfo, PipelineProject, PipelineTest} from '../pages/Pi
 import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
+import {Code,PersonalProjects,StarredProjects,AllProjects} from '../pages/Code'
+
+
 const baseConfig = [
     {
         path: '*',
@@ -94,6 +98,52 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
+
+const codeConfig = [
+    {
+        path: '/code/projects/personal',
+        layout: CodeLayout,
+        component:PersonalProjects
+
+    },
+    {
+        path: '/code/projects/starred',
+        layout: CodeLayout,
+        component:StarredProjects
+
+    },
+    {
+        path: '/code/projects/all',
+        layout: CodeLayout,
+        component:AllProjects
+
+    },
+    {
+        path: '/code/summary',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/files',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/commits',
+        layout: CodeLayout,
+        component:Code
+
+    },
+    {
+        path: '/code/groups',
+        layout: CodeLayout,
+        component:Code
+
+    },
+];
+
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig,...codeConfig,...baseConfig];
 
 export default routerConfig;
