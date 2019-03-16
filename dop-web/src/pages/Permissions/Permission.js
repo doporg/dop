@@ -250,7 +250,7 @@ export default class Permission extends Component {
         }
         return (
         <div>
-            <Button onClick={this.onOpen} >创建功能点</Button>
+            <Button type="primary" onClick={this.onOpen} >创建功能点</Button>
             <Dialog
                 title="创建功能点"
                 visible={this.state.visible}

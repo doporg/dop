@@ -9,7 +9,7 @@ import NotFound from '../pages/NotFound';
 import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 import {Permission} from "../pages/Permissions";
-import {Role,RolePermissionMapping} from "../pages/Roles";
+import {Role,UserRoleMapping} from "../pages/Roles";
 
 const baseConfig = [
     {
@@ -97,9 +97,9 @@ const roleConfig = [
         component: Role,
     },
     {
-        path: '/roles/rolewithpermission',
+        path: '/roles/userwithrole',
         layout: BasicLayout,
-        component: RolePermissionMapping,
+        component: UserRoleMapping,
     },
 ];
 

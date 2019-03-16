@@ -369,8 +369,8 @@ export default class Role extends Component {
             <div>
                 <Button type="primary" onClick={this.onOpen} >创建新角色</Button>
 
-                <Link to='/roles/rolewithpermission'>
-                    <Button type="primary" >编辑角色</Button>
+                <Link to='/roles/userwithrole'>
+                    <Button type="primary" >角色分配</Button>
                 </Link>
 
                 <Dialog

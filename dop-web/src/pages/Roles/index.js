@@ -1,4 +1,4 @@
 import Role from './Role';
-import RolePermissionMapping from './RolePermissionMapping/RolePermissionMapping'
+import UserRoleMapping from './UserRoleMapping/UserRoleMapping'
 
-export {Role,RolePermissionMapping};
+export {Role,UserRoleMapping};
