@@ -81,5 +81,12 @@ public class ImageInfoPO implements Serializable {
     @Column(name = "mtime")
     private LocalDateTime mtime;
 
+    /**
+     * 删除标记
+     */
+    @Basic
+    @Column(name = "is_deleted")
+    private Boolean deleted;
+
 
 }

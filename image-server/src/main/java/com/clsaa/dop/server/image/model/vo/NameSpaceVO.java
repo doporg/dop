@@ -20,9 +20,9 @@ public class NameSpaceVO {
      */
     private String name;
     /**
-     * 命名空间的创建人的唯一标识
+     * 命名空间的创建人
      */
-    private String identifier;
+    private Long ouser;
     /**
      * 命名空间内的仓库数
      */

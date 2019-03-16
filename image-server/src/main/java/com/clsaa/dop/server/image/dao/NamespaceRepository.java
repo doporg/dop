@@ -8,21 +8,22 @@ import java.util.List;
 /**
  * 命名空间Repository
  * @author xzt
+ * @since 2019-3-7
  */
 public interface NamespaceRepository extends JpaRepository<NameSpacePO,Long>{
     /**
-     * 查找用户凭据为identifier的命名空间
-     * @param identifier 用户的唯一凭据
+     * 查找ouser的命名空间
+     * @param ouser 用户的唯一凭据
      * @return {@link List<NameSpacePO>} 用户的namespace列表
      */
-    List<NameSpacePO> findAllByIdentifier(String identifier);
+    List<NameSpacePO> findAllByOuser(Long ouser);
 
     /**
      * 查找用户凭据为identifier
      * @param name 命名空间的name
-     * @param identifier 用户的唯一凭据
+     * @param ouser 用户的唯一凭据
      * @return {@link NameSpacePO}
      */
-    NameSpacePO findByNameAndidentifier(String name, String identifier);
+    NameSpacePO findByNameAndOuser(String name, Long ouser);
 
 }

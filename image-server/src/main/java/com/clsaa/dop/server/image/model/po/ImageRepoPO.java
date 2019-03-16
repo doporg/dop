@@ -82,8 +82,9 @@ public class ImageRepoPO implements Serializable {
     /**
      * 镜像仓库中的镜像
      */
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ImageInfoPO> imageInfos;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_repo_id",referencedColumnName = "id")
+    private List<ImageInfoPO> imageInfos = new ArrayList<>();
     /**
      * 镜像仓库的状态
      */
@@ -112,4 +113,10 @@ public class ImageRepoPO implements Serializable {
     @Basic
     @Column(name = "mtime")
     private LocalDateTime mtime;
+    /**
+     * 删除标记
+     */
+    @Basic
+    @Column(name = "is_deleted")
+    private Boolean deleted;
 }

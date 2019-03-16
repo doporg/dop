@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @Table(name = "t_namespace", schema = "db_dop_image_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name","identifier"})},
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name","ouser"})},
         indexes = {@Index(columnList ="name")})
 public class NameSpacePO implements Serializable{
     private static final long serialVersionUID = 6906097418517275871L;
@@ -56,13 +56,17 @@ public class NameSpacePO implements Serializable{
      * 创建人的唯一标识
      */
     @Basic
-    @Column(name = "identifier")
-    private String identifier;
+    @Column(name = "ouser")
+    private Long ouser;
     /**
      * 命名空间里的镜像仓库
      */
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ImageRepoPO> imageRepoPOS;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumns({
+            @JoinColumn(name = "namespace_name",referencedColumnName = "name"),
+            @JoinColumn(name = "ouser",referencedColumnName = "ouser")
+    })
+    private List<ImageRepoPO> imageRepoPOS = new ArrayList<>();
     /**
      * 命名空间创建时间
      */
@@ -84,4 +88,10 @@ public class NameSpacePO implements Serializable{
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
+    /**
+     * 删除标记
+     */
+    @Basic
+    @Column(name = "is_deleted")
+    private Boolean deleted;
 }
