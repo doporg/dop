@@ -9,7 +9,6 @@ import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
 import {Input, Button, Select, Step, Icon, Feedback} from '@icedesign/base';
 import IceLabel from '@icedesign/label';
 import {Link} from 'react-router-dom';
-import jsonp from "jsonp";
 import './PipelineInfo.scss';
 import Axios from 'axios';
 import API from '../../API';
@@ -26,19 +25,11 @@ export default class PipelineInfo extends Component {
             // 流水线的基本信息
             pipelineInfo: {
                 name: "",
-                creator: "test",
+                cuser: "test",
                 //监听设置
                 monitor: "",
-                createTime: "",  //时间戳
-                stage: []
+                stages: []
             },
-
-            // 获取到的项目组成员
-            teamMember: [{
-                id: 1,
-                name: 'test'
-            }],
-
             monitor: ["自动触发", "手动触发"],
 
             //当前编辑的stage
@@ -178,7 +169,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             case "构建maven":
@@ -189,7 +180,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             case "构建node":
@@ -200,7 +191,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             case "构建docker镜像":
@@ -211,7 +202,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             case "推送docker镜像":
@@ -222,7 +213,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             case "自定义脚本":
@@ -233,7 +224,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
             default:
@@ -244,7 +235,7 @@ export default class PipelineInfo extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    description: ""
+                    shell: ""
                 };
                 break;
         }
@@ -332,13 +323,14 @@ export default class PipelineInfo extends Component {
             currentStage
         })
     }
-    buildDescription(value){
+
+    buildShell(value) {
         let findIndex = this.state.currentStage.tasks.findIndex((item) => {
             return item.taskName === this.state.chosenTask.taskName
         });
-        // this.state.currentStage.tasks[findIndex].description = value
+        // this.state.currentStage.tasks[findIndex].shell = value
         let currentStage = this.state.currentStage;
-        currentStage.tasks[findIndex].description = value;
+        currentStage.tasks[findIndex].shell = value;
         this.setState({
             currentStage
         })
@@ -404,37 +396,26 @@ export default class PipelineInfo extends Component {
      * */
     save() {
         let pipelineInfo = this.state.pipelineInfo;
-        let urlSQL = API.pipeline + '/pipeline/save';
+        let urlSQL = API.pipeline + '/v1/pipeline';
         let self = this;
         if (!this.state.newPipeline) {
             this.removeByIdSQL(this.props.match.params.id);
             //预处理一下数据
             delete pipelineInfo.id;
             this.deletePipeline(pipelineInfo);
-        } else {
-            //new pipeline add createTime
-            pipelineInfo = Object.assign({}, this.state.pipelineInfo, {createTime: new Date().getTime().toString()});
-            /**
-             *  检查数据
-             *  stageName不能一样
-             *
-             * */
-
         }
         setTimeout(() => {
-            this.setState({
-                pipelineInfo
-            });
+
             // add SQL
             Axios({
                 method: 'post',
                 url: urlSQL,
                 data: pipelineInfo,
             }).then((response) => {
-                console.log(response)
-                if (response.data === "success") {
-                    self.createPipeline(pipelineInfo);
-                }
+                console.log(response);
+                // if (response.data === "success") {
+                //     self.createPipeline(pipelineInfo);
+                // }
             }).catch((error) => {
                 toast.show({
                     type: "error",
@@ -567,7 +548,7 @@ export default class PipelineInfo extends Component {
                                                     >{item.taskName}</span>
                                                                 <Icon type="close" size="xs" className="close"
                                                                       onClick={this.closeTask.bind(this, index)}
-                                                                ></Icon>
+                                                                />
                                                             </IceLabel>
                                                         </div>
                                                     )
@@ -744,7 +725,8 @@ export default class PipelineInfo extends Component {
 
                                                                                         <div className="textarea">
                                                                                             <div className="title">
-                                                                                                <span className="must">*</span>
+                                                                                                <span
+                                                                                                    className="must">*</span>
                                                                                                 脚本内容:
                                                                                             </div>
                                                                                             <div className="area-wrap">
@@ -752,7 +734,7 @@ export default class PipelineInfo extends Component {
                                                                                                     multiple
                                                                                                     placeholder=""
                                                                                                     className="area"
-                                                                                                    onChange={this.buildDescription.bind(this)}
+                                                                                                    onChange={this.buildShell.bind(this)}
                                                                                                 />
                                                                                             </div>
                                                                                         </div>

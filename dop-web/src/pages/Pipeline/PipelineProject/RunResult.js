@@ -102,7 +102,8 @@ export default class RunResult extends Component {
             }
         }).then((response) => {
             if (response.status === 200) {
-                response.data.map((item, index) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    let item = response.data[i];
                     let step = {
                         id: item.id,
                         displayDescription: item.displayDescription,
@@ -113,7 +114,7 @@ export default class RunResult extends Component {
                         log: []
                     };
                     steps.push(step);
-                });
+                }
                 stage.steps = steps;
                 stages.splice(self.state.currentStage, 1, stage);
                 self.setState({

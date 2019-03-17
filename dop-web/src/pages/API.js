@@ -5,7 +5,9 @@ const API = {
     pipeline: "http://localhost:13600",
     jenkins: "http://jenkins.dop.clsaa.com",
     jenkinsRest: "http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/",
-    address: "http://www.dop.clsaa.com/#/"
+    address: "http://www.dop.clsaa.com/#/",
+    application: "http://localhost:13800",
+    permission: "http://localhost:13300"
 };
 
 export default API;

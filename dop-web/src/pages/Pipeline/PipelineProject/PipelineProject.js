@@ -9,8 +9,6 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import './PipelineProject.scss'
-import {RSA} from "../../Login";
-
 const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
@@ -109,11 +107,11 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button">
+                        <Button type="normal" className="button" disabled>
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
-                        <Button type="secondary" shape="warning" className="button">
+                        <Button type="secondary" shape="warning" className="button" disabled>
                             <Icon type="ashbin"/>
                             删除流水线
                         </Button>

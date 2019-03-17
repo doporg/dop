@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 
+
 import com.clsaa.dop.server.pipeline.config.BizCodes;
+import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.service.BlueOceanService;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
@@ -47,6 +49,16 @@ public class JenkinsController {
         }catch (Exception e){
             System.out.println(e.toString());
         }
+    }
 
+    @ApiOperation(value = "创建流水线", notes = "根据流水线信息创建流水线")
+    @PostMapping("/v1/pipeline")
+    public void create(@RequestBody PipelineBoV1 pipelineBoV1) {
+        try{
+            jenkinsService = new JenkinsService(URI, User, PWD);
+            this.jenkinsService.createJob(pipelineBoV1, "1.0");
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
 }
