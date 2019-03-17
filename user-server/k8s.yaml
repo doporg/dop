@@ -17,10 +17,8 @@ spec:
           resources:
             requests:
               memory: "1024Mi"
-              cpu: "500m"
             limits:
               memory: "1024Mi"
-              cpu: "1000m"
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
