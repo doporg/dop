@@ -8,10 +8,7 @@ import Form from "@icedesign/base/lib/form";
 import BalloonConfirm from "@icedesign/balloon-confirm";
 import Input from "@icedesign/base/lib/input";
 import Select, {Option} from "@icedesign/base/lib/select";
-import Checkbox from "@icedesign/base/lib/checkbox";
-import Balloon from "@icedesign/base/lib/balloon";
 import { Link } from 'react-router-dom';
-import Transfer from "@icedesign/base/lib/transfer";
 const { Item: FormItem } = Form;
 /**
  *  角色管理
@@ -20,8 +17,6 @@ const { Item: FormItem } = Form;
  *
  * */
 
-
-
 export default class Role extends Component {
 
 
@@ -29,12 +24,9 @@ export default class Role extends Component {
         super(props);
         this.field = new Field(this);
         this.state = {
-            Dialogstyle: {
-                width: "60%" ,height:"7000"
-            },
             currentData : [],
             permissionList:[],
-            currentpermission:[],
+            currentPermission:[],
             rowSelection: {
                 onChange: this.onSelectChange.bind(this),
                 onSelectAll: function(selected) {
@@ -46,11 +38,11 @@ export default class Role extends Component {
                     };
                 }
             },
-            permissionvisible:false,
+            permissionVisible:false,
             currentRoleId:0,
             visible:false,
             isLoading:true,
-            deletevisible:false,
+            deleteVisible:false,
             InputInfo:
                 {
                     parentId:"",
@@ -75,7 +67,7 @@ export default class Role extends Component {
             this.setState({
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount})
-            Axios.all(this.getmusername(response.data.pageList)).then(()=>{
+            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -102,7 +94,7 @@ export default class Role extends Component {
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount}
             );
-            Axios.all(this.getmusername(response.data.pageList)).then(()=>{
+            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -131,13 +123,13 @@ export default class Role extends Component {
             console.log(idList)
 
             let createRoleUrl=API.gateway+"/permission-server/v1/roles"
-            let byNameurl=API.permission+"/v1/roles/byName"
+            let byNameUrl=API.permission+"/v1/roles/byName"
 
-            let Roleparam={parentId: values.parentId,name:values.name}
-            let byNameparams={name:values.name}
+            let RoleParam={parentId: values.parentId,name:values.name}
+            let byNameParams={name:values.name}
 
             //先检测是否重复
-            Axios.get(byNameurl,{params:(byNameparams)}
+            Axios.get(byNameUrl,{params:(byNameParams)}
             ).then((response) => {
                 // handle success
                 console.log("监测重复返回的东西："+response.data.name);
@@ -151,7 +143,7 @@ export default class Role extends Component {
                         visible: false
                     });
                     //插入角色
-                    Axios.post(createRoleUrl, {},{params:(Roleparam)}
+                    Axios.post(createRoleUrl, {},{params:(RoleParam)}
                     )
                         .then((response)=>{
                             console.log("创建角色成功")
@@ -179,7 +171,7 @@ export default class Role extends Component {
     }
 
     //通过get请求中的userid获取username的函数
-    getmusername=(data)=>{
+    getUserName=(data)=>{
         let axiosList=[]
         data.forEach(item=>{
             let url = API.gateway + "/user-server/v1/users/"+item.muser
@@ -214,10 +206,10 @@ export default class Role extends Component {
     };
 
     //关闭创建角色弹窗
-    onpermissionClose = reason => {
+    onPermissionClose = reason => {
         console.log(reason);
         this.setState({
-            permissionvisible: false
+            permissionVisible: false
         });
     };
 
@@ -239,8 +231,8 @@ export default class Role extends Component {
             let param={roleId:id}
             Axios.get(getPermissionUrl,{params:(param)}).then(response=>
             {
-                this.setState({currentpermission:response.data})
-                console.log(this.state.currentpermission)
+                this.setState({currentPermission:response.data})
+                console.log(this.state.currentPermission)
                 //获取全部功能点
                 let url=API.permission+"/v1/roles/permissions";
                 Axios.get(url).then(response=>{
@@ -250,7 +242,7 @@ export default class Role extends Component {
             })
 
         this.setState({
-            permissionvisible: true
+            permissionVisible: true
         });
     }
 
@@ -290,7 +282,7 @@ export default class Role extends Component {
             Axios.get(getPermissionUrl,{params:(roleId)}).then(response=>
         {
             Feedback.toast.success("成功删除！")
-            this.setState({currentpermission:response.data})
+            this.setState({currentPermission:response.data})
         })
          )
     }
@@ -305,12 +297,15 @@ export default class Role extends Component {
             {
                 Feedback.toast.success("成功添加！")
                 console.log(response)
-                this.setState({currentpermission:response1.data})
+                this.setState({currentPermission:response1.data})
             })
         )
     }
     render() {
-        const { init, getError, getState } = this.field;
+        const { init } = this.field;
+        const dialogStyle= {
+                width: "60%" ,height:"7000"
+            }
         //form样式定义
         const formItemLayout = {
             labelCol: {
@@ -327,19 +322,19 @@ export default class Role extends Component {
             </a>
         );
         const footer2=(
-            <a onClick={this.onpermissionClose} href="javascript:;">
+            <a onClick={this.onPermissionClose} href="javascript:;">
                 取消
             </a>
         )
 
-        const showpermission =(value, index, record)=>{
+        const showPermission =(value, index, record)=>{
             return(
                     <button onClick={this.editRoleOpen.bind(this,record.id)}>编辑角色</button>
             )
         }
 
         //删除操作定义
-        const renderdelete = (value, index, record) => {
+        const renderDelete = (value, index, record) => {
             return (
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
@@ -352,13 +347,13 @@ export default class Role extends Component {
             );
         }
         //删除角色功能点对应按钮
-        const deletepermissionmap=(value, index, record)=>{
+        const deletePermissionMap=(value, index, record)=>{
             return (
                 <button onClick={this.removePermission.bind(this, record.id)}>删除</button>
             );
         }
         //添加角色功能点对应按钮
-        const addpermissionmap=(value, index, record)=>{
+        const addPermissionMap=(value, index, record)=>{
             return (
                 <button onClick={this.addPermission.bind(this, record.id)}>添加</button>
             );
@@ -377,7 +372,7 @@ export default class Role extends Component {
                     title="创建角色"
                     visible={this.state.visible}
                     onClose={this.onClose}
-                    style={this.state.Dialogstyle}
+                    style={dialogStyle}
                     minMargin={5}
                     footer={footer}>
 
@@ -436,9 +431,9 @@ export default class Role extends Component {
 
                 <Dialog
                     title="角色功能点列表"
-                    visible={this.state.permissionvisible}
-                    onClose={this.onpermissionClose}
-                    style={this.state.Dialogstyle}
+                    visible={this.state.permissionVisible}
+                    onClose={this.onPermissionClose}
+                    style={dialogStyle}
                     minMargin={5}
                     footer={footer2}
                     >
@@ -446,11 +441,11 @@ export default class Role extends Component {
                             <FormItem>
                                 <h2>已有功能点</h2>
                                     <Table
-                                        dataSource={this.state.currentpermission}
+                                        dataSource={this.state.currentPermission}
                                         primaryKey="id">
                                         <Table.Column width ='20%' title="名称" dataIndex="name" />
                                         <Table.Column title="功能描述" dataIndex="description" />
-                                        <Table.Column title="删除操作" cell={deletepermissionmap} width="10%" />
+                                        <Table.Column title="删除操作" cell={deletePermissionMap} width="10%" />
                                     </Table>
                             </FormItem>
 
@@ -461,7 +456,7 @@ export default class Role extends Component {
                                             primaryKey="id">
                                                 <Table.Column width ='20%' title="名称" dataIndex="name" />
                                                 <Table.Column title="功能描述" dataIndex="description" />
-                                                <Table.Column title="添加" cell={addpermissionmap} width="10%" />
+                                                <Table.Column title="添加" cell={addPermissionMap} width="10%" />
                                         </Table>
                             </FormItem>
 
@@ -474,8 +469,8 @@ export default class Role extends Component {
                     <Table.Column title="角色名称" dataIndex="name"/>
                     <Table.Column title="最后修改人"   dataIndex="muser"/>
                     <Table.Column title="最后修改时间" dataIndex="mtime"/>
-                    <Table.Column title="编辑角色" cell={showpermission}width="10%"/>
-                    <Table.Column title="删除操作" cell={renderdelete} width="10%" />
+                    <Table.Column title="编辑角色" cell={showPermission}width="10%"/>
+                    <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
 
                 </Table>
