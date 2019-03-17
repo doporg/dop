@@ -16,11 +16,11 @@ spec:
           image: registry.dop.clsaa.com/dop/user-server:<BUILD_TAG>
           resources:
             requests:
-              memory: 128Mi
-              cpu: 100m
-            limits:
               memory: 256Mi
-              cpu: 200m
+              cpu: 1
+            limits:
+              memory: 384Mi
+              cpu: 2
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
