@@ -1,4 +1,4 @@
 import Code from './DataOverview'
-import {PersonalProjects,StarredProjects,AllProjects} from './Projects'
+import {ProjectList,StarredProjects,AllProjects} from './ProjectList'
 import ProjectOverview from './ProjectOverview'
-export {Code,PersonalProjects,StarredProjects,AllProjects,ProjectOverview};
+export {Code,ProjectList,ProjectOverview};

@@ -73,7 +73,7 @@ const asideMenuConfig = [
     },
     {
         name: '代码管理',
-        path: '/code/waszqt/1',
+        path: '/code/projectlist/personal',
         icon: 'code',
     }
 
