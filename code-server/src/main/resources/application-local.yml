@@ -71,3 +71,8 @@ ribbon:
   ConnectTimeout: 10000
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
+
+mybatis:
+  type-aliases-package: com.clsaa.dop.server.code.model.po
+  mapper-locations: classpath:mapper/*.xml
+  config-location: classpath:mapper/config/sqlMapConfig.xml
