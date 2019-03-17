@@ -14,11 +14,6 @@ spec:
         - name: user-server
           imagePullPolicy: Always
           image: registry.dop.clsaa.com/dop/user-server:<BUILD_TAG>
-          resources:
-            requests:
-              memory: "1024Mi"
-            limits:
-              memory: "1024Mi"
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
