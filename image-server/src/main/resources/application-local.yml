@@ -45,7 +45,7 @@ spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: localhost:${server.port}
+  host: open.dop.clsaa.com/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
