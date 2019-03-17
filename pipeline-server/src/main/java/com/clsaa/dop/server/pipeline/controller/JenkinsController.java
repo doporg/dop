@@ -1,16 +1,12 @@
 package com.clsaa.dop.server.pipeline.controller;
 
-
 import com.clsaa.dop.server.pipeline.config.BizCodes;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.service.BlueOceanService;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
-import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**

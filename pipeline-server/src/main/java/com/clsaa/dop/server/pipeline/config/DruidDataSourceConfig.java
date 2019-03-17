@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline.config;
+package com.clsaa.dop.server.pipeline.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import lombok.Getter;

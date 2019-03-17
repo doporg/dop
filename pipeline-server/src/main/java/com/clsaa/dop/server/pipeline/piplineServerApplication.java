@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.pipline;
+package com.clsaa.dop.server.pipeline;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +19,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @ComponentScan("com.clsaa")
 public class piplineServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PiplineServerApplication.class, args);
+        SpringApplication.run(piplineServerApplication.class, args);
     }
 }
