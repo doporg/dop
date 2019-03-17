@@ -16,10 +16,10 @@ spec:
           image: registry.dop.clsaa.com/dop/user-server:<BUILD_TAG>
           resources:
             requests:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "500m"
             limits:
-              memory: "256Mi"
+              memory: "512Mi"
               cpu: "1000m"
           volumeMounts:
             - name: host-time
