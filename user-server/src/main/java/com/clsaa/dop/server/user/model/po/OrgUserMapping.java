@@ -19,10 +19,10 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_organization_user_mapping", schema = "db_dop_user_server",
+@Table(name = "t_org_user_mapping", schema = "db_dop_user_server",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "organization_id"})},
         indexes = {@Index(columnList = "user_id, organization_id")})
-public class OrganizationUserMapping implements Serializable {
+public class OrgUserMapping implements Serializable {
 
     private static final long serialVersionUID = 6906097418517275871L;
     /**

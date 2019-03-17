@@ -1,6 +1,8 @@
 package com.clsaa.dop.server.user.model.po;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,6 +21,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "t_organization", schema = "db_dop_user",
         indexes = {@Index(columnList = "path"), @Index(columnList = "parent_id")})
+@SQLDelete(sql = "update t_organization set is_deleted = true where id = ?")
+@Where(clause = "is_deleted =false")
 public class Group implements Serializable {
     private static final long serialVersionUID = 6106097411517275871L;
     /**

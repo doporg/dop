@@ -1,6 +1,8 @@
 package com.clsaa.dop.server.user.model.po;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_organization", schema = "db_dop_user")
+@SQLDelete(sql = "update t_organization set is_deleted = true where id = ?")
+@Where(clause = "is_deleted =false")
 public class Organization implements Serializable {
     private static final long serialVersionUID = 6906097411517275871L;
     /**
@@ -73,6 +77,6 @@ public class Organization implements Serializable {
      * 是否删除
      */
     @Basic
-    @Column(name = "deleted")
+    @Column(name = "is_deleted")
     private Boolean deleted;
 }
