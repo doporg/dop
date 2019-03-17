@@ -14,6 +14,13 @@ spec:
         - name: message-server
           imagePullPolicy: Always
           image: registry.dop.clsaa.com/dop/message-server:<BUILD_TAG>
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 200m
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
