@@ -16,7 +16,6 @@ import imgDownload from './imgs/download.png'
 
 const {toast} = Feedback;
 
-const server="http://localhost:13900";
 
 export default class ProjectOverview extends React.Component{
 
@@ -51,7 +50,7 @@ export default class ProjectOverview extends React.Component{
 
     componentDidMount(){
 
-        let url =  server+ "/projects/"+this.state.projectid;
+        let url =  API.code+ "/projects/"+this.state.projectid;
         let self = this;
         Axios.get(url).then((response) => {
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data});
@@ -61,10 +60,10 @@ export default class ProjectOverview extends React.Component{
     star(){
         const curUser = window.sessionStorage.getItem("user-name");
         console.log(curUser);
-        let url =  server+ "/projects/"+this.state.projectid+"/star/"+curUser;
+        let url =  API.code+ "/projects/"+this.state.projectid+"/star/"+curUser;
         let self = this;
         Axios.post(url).then((response) => {
-            url=server+ "/projects/"+this.state.projectid;
+            url=API.code+ "/projects/"+this.state.projectid;
             Axios.get(url).then((response) => {
                 self.setState({projectInfo:response.data});
             });
