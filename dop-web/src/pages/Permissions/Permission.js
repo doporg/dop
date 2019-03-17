@@ -25,18 +25,15 @@ export default class Permission extends Component {
         super(props);
         this.field = new Field(this);
         this.state = {
-            Dialogstyle: {
-                width: "50%" ,height:"7000"
-            },
             currentData : [],
             visible:false,
-            deletevisible:false,
+            deleteVisible:false,
             isLoading:true,
             InputInfo:
                 {
                     parentId:"",
                     name:"",
-                    isPravte:"",
+                    isPrivate:"",
                     description:"",
                 },
             pageNo:1,
@@ -85,8 +82,8 @@ export default class Permission extends Component {
             this.setState({
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount})
-            //先不要set currentdata,先用 response.data.pageList
-            Axios.all(this.getcusername(response.data.pageList)).then(()=>{
+            //先不要set currentData,先用 response.data.pageList
+            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -113,7 +110,7 @@ export default class Permission extends Component {
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount}
                );
-            Axios.all(this.getcusername(response.data.pageList)).then(()=>{
+            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -130,7 +127,7 @@ export default class Permission extends Component {
     }
 
     //通过get请求中的userid获取username的函数
-    getcusername=(data)=>{
+    getUserName=(data)=>{
         let axiosList=[]
         data.forEach(item=>{
             let url = API.gateway + "/user-server/v1/users/"+item.cuser
@@ -153,8 +150,8 @@ export default class Permission extends Component {
                 return;
             }
             //检测重复的url以及参数
-            let byNameurl=API.permission+"/v1/permissions/byName"
-            let byNameparams=
+            let byNameUrl=API.permission+"/v1/permissions/byName"
+            let byNameParams=
                 {name:values.name}
 
             //创建的url
@@ -167,7 +164,7 @@ export default class Permission extends Component {
                     parentId: 0,
                 }
              //先检测是否重复
-                Axios.get(byNameurl,{params:(byNameparams)}
+                Axios.get(byNameUrl,{params:(byNameParams)}
                 ).then((response) => {
                     // handle success
                     console.log("监测重复返回的东西："+response.data.name);
@@ -219,6 +216,9 @@ export default class Permission extends Component {
 
     render() {
         const { init, getError, getState } = this.field;
+        const dialogStyle= {
+            width: "50%" ,height:"7000"
+        }
         //form样式定义
         const formItemLayout = {
             labelCol: {
@@ -236,7 +236,7 @@ export default class Permission extends Component {
         );
 
         //删除操作定义
-        const renderdelete = (value, index, record) => {
+        const renderDelete = (value, index, record) => {
             return (
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
@@ -255,7 +255,7 @@ export default class Permission extends Component {
                 title="创建功能点"
                 visible={this.state.visible}
                 onClose={this.onClose}
-                style={this.state.Dialogstyle}
+                style={dialogStyle}
                 minMargin={5}
                 footer={footer}>
 
@@ -328,16 +328,13 @@ export default class Permission extends Component {
             </Dialog>
 
 
-
-            {/*<Button onClick={}>查询所有功能点</Button>*/}
-
             <Table dataSource={this.state.currentData}
                     isLoading={this.state.isLoading}>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人"   dataIndex="cuser"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
-                <Table.Column title="删除操作" cell={renderdelete} width="20%" />
+                <Table.Column title="删除操作" cell={renderDelete} width="20%" />
 
             </Table>
             <Pagination total={this.state.totalCount}

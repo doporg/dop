@@ -16,9 +16,6 @@ export default class UserRoleMapping extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Dialogstyle: {
-                width: "60%" ,height:"7000"
-            },
             currentData : [{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                             {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                              {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
@@ -28,7 +25,7 @@ export default class UserRoleMapping extends Component {
             currentPermissions:[],
             roleList:[],
             visible:false,
-            permissionvisible:false,
+            permissionVisible:false,
             isLoading:true,
 
             pageNo:1,
@@ -67,8 +64,8 @@ export default class UserRoleMapping extends Component {
         });
     }
 
-    onpermissionClose=reason=>{
-        this.setState({permissionvisible:false})
+    onPermissionClose=reason=>{
+        this.setState({permissionVisible:false})
     }
 
     //关闭用户角色弹窗
@@ -123,17 +120,20 @@ export default class UserRoleMapping extends Component {
             this.setState({currentPermissions:response.data})
         })
 
-        this.setState({permissionvisible:true
+        this.setState({permissionVisible:true
         });
     }
 
     render() {
-        const showroles =(value, index, record)=>{
+        const dialogStyle= {
+            width: "60%" ,height:"7000"
+        }
+        const showRoles =(value, index, record)=>{
             return(
                 <button onClick={this.editUserOpen.bind(this,record.id)}>添加角色</button>
             )
         }
-        const showpermissions =(value, index, record)=>{
+        const showPermissions =(value, index, record)=>{
             return(
                 <button onClick={this.showPermissions.bind(this,record.id)}>查看功能点</button>
             )
@@ -144,18 +144,18 @@ export default class UserRoleMapping extends Component {
             </a>
         )
         const footer2=(
-            <a onClick={this.onpermissionClose} href="javascript:;">
+            <a onClick={this.onPermissionClose} href="javascript:;">
                 取消
             </a>
         )
         //删除角色按钮
-        const deleterolemap=(value, index, record)=>{
+        const deleteRoleMap=(value, index, record)=>{
             return (
                 <button onClick={this.removeRole.bind(this, record.id)}>删除</button>
             );
         }
         //添加角色按钮
-        const addrolemap=(value, index, record)=>{
+        const addRoleMap=(value, index, record)=>{
             return (
                 <button onClick={this.addRole.bind(this, record.id)}>添加</button>
             );
@@ -167,7 +167,7 @@ export default class UserRoleMapping extends Component {
                     title="用户关联角色列表"
                     visible={this.state.visible}
                     onClose={this.onClose}
-                    style={this.state.Dialogstyle}
+                    style={dialogStyle}
                     minMargin={5}
                     footer={footer}
                 >
@@ -176,7 +176,7 @@ export default class UserRoleMapping extends Component {
                                 dataSource={this.state.currentRoles}
                                 primaryKey="id">
                                 <Table.Column  title="名称" dataIndex="name" />
-                                <Table.Column title="删除操作" cell={deleterolemap} width="10%" />
+                                <Table.Column title="删除操作" cell={deleteRoleMap} width="10%" />
                             </Table>
 
 
@@ -186,15 +186,15 @@ export default class UserRoleMapping extends Component {
                                 dataSource={this.state.roleList}
                                 primaryKey="id">
                                 <Table.Column  title="名称" dataIndex="name" />
-                                <Table.Column title="添加" cell={addrolemap} width="10%" />
+                                <Table.Column title="添加" cell={addRoleMap} width="10%" />
                             </Table>
                 </Dialog>
 
                 <Dialog
                     title="用户功能点表"
-                    visible={this.state.permissionvisible}
-                    onClose={this.onpermissionClose}
-                    style={this.state.Dialogstyle}
+                    visible={this.state.permissionVisible}
+                    onClose={this.onPermissionClose}
+                    style={dialogStyle}
                     minMargin={5}
                     footer={footer2}>
                     <Table
@@ -211,8 +211,8 @@ export default class UserRoleMapping extends Component {
                     <Table.Column title="用户名称" dataIndex="name"/>
                     <Table.Column title="用户邮箱"   dataIndex="email"/>
                     <Table.Column title="最后修改时间" dataIndex="mtime"/>
-                    <Table.Column title="分配角色" cell={showroles}width="10%"/>
-                    <Table.Column title="查看功能点" cell={showpermissions}width="10%"/>
+                    <Table.Column title="分配角色" cell={showRoles}width="10%"/>
+                    <Table.Column title="查看功能点" cell={showPermissions}width="10%"/>
 
                 </Table>
             </div>
