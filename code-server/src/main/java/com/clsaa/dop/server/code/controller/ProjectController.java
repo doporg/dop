@@ -38,9 +38,9 @@ public class ProjectController {
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
-    @GetMapping("/users/{username}/projects")
-    public List<ProjectListVo> findProjectByMember(@ApiParam(value = "用户名")@PathVariable("username")String username){
-        List<ProjectListBo> listBos= projectService.findProjectByMember(username);
+    @GetMapping("/projectlist/{sort}/{username}")
+    public List<ProjectListVo> findProjectByMember(@ApiParam(value = "分类")@PathVariable("sort")String sort,@ApiParam(value = "用户名")@PathVariable("username")String username){
+        List<ProjectListBo> listBos= projectService.findProjectList(sort,username);
         List<ProjectListVo> listVos=new ArrayList<>();
         for(ProjectListBo temp:listBos)
             listVos.add(BeanUtils.convertType(temp,ProjectListVo.class));

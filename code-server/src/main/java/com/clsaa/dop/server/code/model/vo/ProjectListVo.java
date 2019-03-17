@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProjectListVo {
 
-    private String name;
+    private int id;
     private String description;
     private String path_with_namespace;
+    private int star_count;
+    private String visibility;
 }

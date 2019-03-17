@@ -79,10 +79,17 @@ public class ProjectService {
      * @param username 用户名
      * @return 项目列表
      */
-    public List<ProjectListBo> findProjectByMember(String username){
+    public List<ProjectListBo> findProjectList(String sort,String username){
 
-        //获得项目基本信息
-        List<ProjectListBo> listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+        List<ProjectListBo> listBos;
+
+        if(sort.equals("personal")) {
+            listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+        }else if(sort.equals("starred")){
+            listBos=RequestUtil.getList("/projects?starred=true",username,ProjectListBo.class);
+        }else {
+            listBos=RequestUtil.getList("/projects?visibility=public",username,ProjectListBo.class);
+        }
 
         return listBos;
     }
