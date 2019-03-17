@@ -19,6 +19,7 @@ export default class ProjectList extends React.Component {
         this.state = {
             sort: this.props.match.params.sort,
             data: [],
+            showData:[],
             pageNo: 1,
             pageSize: 5,
             pageTotal: 0
@@ -59,7 +60,7 @@ export default class ProjectList extends React.Component {
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
-            self.setState({pageTotal: pageTotal, data: response.data});
+            self.setState({pageTotal: pageTotal, data: response.data,showData:response.data});
         })
 
     }
@@ -69,7 +70,7 @@ export default class ProjectList extends React.Component {
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
-            self.setState({sort: sort, pageTotal: pageTotal, pageNo: 1, data: response.data});
+            self.setState({sort: sort, pageTotal: pageTotal, pageNo: 1, data: response.data,showData:response.data});
         })
     }
 
@@ -83,6 +84,31 @@ export default class ProjectList extends React.Component {
         this.setState({
             pageNo: this.state.pageNo < this.state.pageTotal ? this.state.pageNo + 1 : this.state.pageTotal
         })
+    }
+
+    handleInputChange(event) {
+        console.log(event.target.value);
+        const val = event.target.value;
+        if (val !== "") {
+            const showData = this.state.data.filter(function (item) {
+                const name = item.path_with_namespace.substring(item.path_with_namespace.indexOf('/')+1);
+                return name.indexOf(val) !== -1;
+            });
+            const pageTotal=Math.ceil(showData.length/this.state.pageSize);
+            this.setState({
+                pageTotal:pageTotal,
+                pageNo:1,
+                showData:showData
+            })
+        }else {
+            const pageTotal=Math.ceil(this.state.data.length/this.state.pageSize);
+            this.setState({
+                pageTotal:pageTotal,
+                pageNo:1,
+                showData:this.state.data
+            })
+        }
+
     }
 
 
@@ -111,7 +137,7 @@ export default class ProjectList extends React.Component {
                         </li>
                     </ul>
                     <div className="search-form">
-                        <input className="input_search" placeholder="根据项目名称过滤"/>
+                        <input className="input_search" placeholder="根据项目名称过滤" onChange={this.handleInputChange.bind(this)}/>
                         <button className="btn_add_project">
                             +新建项目
                         </button>
@@ -120,8 +146,8 @@ export default class ProjectList extends React.Component {
                         <ul>
                             {(() => {
                                 let begin = (this.state.pageNo - 1) * this.state.pageSize;
-                                let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.data.length);
-                                return this.state.data.slice(begin, end).map((item) => {
+                                let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.showData.length);
+                                return this.state.showData.slice(begin, end).map((item) => {
                                     const path = "/code/" + item.path_with_namespace.substring(0, item.path_with_namespace.indexOf('/')) + "/" + item.id;
                                     console.log(path);
                                     return (
