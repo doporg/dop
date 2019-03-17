@@ -1,18 +1,19 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: gateway-server
+  name: pipeline-server
   namespace: dop
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: gateway-server
+        app: pipeline-server
     spec:
       containers:
-        - name: gateway-server
-          image: registry.dop.clsaa.com/dop/gateway-server:<BUILD_TAG>
+        - name: pipeline-server
+          imagePullPolicy: Always
+          image: registry.dop.clsaa.com/dop/pipeline-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi
@@ -26,7 +27,7 @@ spec:
             - name: host-timezone
               mountPath: /etc/timezone
           ports:
-            - containerPort: 8888
+            - containerPort: 13600
       volumes:
         - name: host-time
           hostPath:
@@ -38,28 +39,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway-server
+  name: pipeline-server
   namespace: dop
   labels:
-    app: gateway-server
+    app: pipeline-server
 spec:
   ports:
-    - port: 14523
+    - port: 13600
       protocol: TCP
-      targetPort: 8888
+      targetPort: 13600
   selector:
-    app: gateway-server
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: gateway-server
-  namespace: dop
-spec:
-  rules:
-    - host: open.dop.clsaa.com
-      http:
-        paths:
-          - backend:
-              serviceName: gateway-server
-              servicePort: 14523
+    app: pipeline-server

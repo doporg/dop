@@ -15,10 +15,10 @@ spec:
           image: registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
           resources:
             requests:
-              memory: 128Mi
+              memory: 384Mi
               cpu: 250m
             limits:
-              memory: 256Mi
+              memory: 384Mi
               cpu: 500m
           volumeMounts:
             - name: host-time

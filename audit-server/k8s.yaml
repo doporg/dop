@@ -19,7 +19,7 @@ spec:
               memory: 384Mi
               cpu: 250m
             limits:
-              memory: 512Mi
+              memory: 384Mi
               cpu: 500m
           volumeMounts:
             - name: host-time
