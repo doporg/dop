@@ -48,20 +48,20 @@ public class RequestUtil {
 
     public static void main(String[] args) {
 
-        List<NameValuePair> list=new ArrayList<>();
-        NameValuePair p1= new BasicNameValuePair("grant_type","password");
-        NameValuePair p2= new BasicNameValuePair("username","Wsy123");
-        NameValuePair p3= new BasicNameValuePair("password","woshihaoren28");
-        list.add(p1);
-        list.add(p2);
-        list.add(p3);
-        String result= httpPost1("http://gitlab.dop.clsaa.com/oauth/token",list);
-        System.out.println(result);
+//        List<NameValuePair> list=new ArrayList<>();
+//        NameValuePair p1= new BasicNameValuePair("grant_type","password");
+//        NameValuePair p2= new BasicNameValuePair("username","root");
+//        NameValuePair p3= new BasicNameValuePair("password","Dop123456789");
+//        list.add(p1);
+//        list.add(p2);
+//        list.add(p3);
+//        String result= httpPost("http://gitlab.dop.clsaa.com/oauth/token",list);
+//        System.out.println(result);
 
-//        List<ProjectBo> list = getList("/projects?simple=true&membership=true", "waszqt", ProjectBo.class);
-//
-//        for (ProjectBo temp : list)
-//            System.out.println(temp);
+        List<ProjectBo> list = getList("/projects?simple=true&membership=true", "waszqt", ProjectBo.class);
+
+        for (ProjectBo temp : list)
+            System.out.println(temp);
 
 //        System.out.println("ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899".length());
 
@@ -146,6 +146,8 @@ public class RequestUtil {
     }
 
 
+
+
     /**
      * 发送http get请求
      *
@@ -194,7 +196,7 @@ public class RequestUtil {
      *
      * @param url        路径
      * @param formparams 参数键值对
-     * @return json字符串
+     * @return 状态码
      */
     private static int httpPost(String url, List<NameValuePair> formparams) {
 
@@ -225,14 +227,14 @@ public class RequestUtil {
 
     }
 
+
     /**
-     * 发送http post请求
-     *
-     * @param url        路径
-     * @param formparams 参数键值对
+     * 获得用户access_token不是rest api的形式，创建一个新的post方法
+     * @param url 地址
+     * @param formparams 参数
      * @return json字符串
      */
-    private static String httpPost1(String url, List<NameValuePair> formparams) {
+    public static String httpPost1(String url, List<NameValuePair> formparams) {
 
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
@@ -249,8 +251,10 @@ public class RequestUtil {
             e.printStackTrace();
         }
 
-        String result=null;
-        try { HttpEntity entity1 = response.getEntity();
+        String result = null;
+
+        try {
+            HttpEntity entity1 = response.getEntity();
             if (entity1 != null) {
                 result = EntityUtils.toString(entity1);
             }
@@ -262,7 +266,6 @@ public class RequestUtil {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
         return result;
