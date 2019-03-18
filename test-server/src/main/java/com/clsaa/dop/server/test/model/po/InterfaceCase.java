@@ -50,7 +50,8 @@ public class InterfaceCase {
     private CaseStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "case_id", referencedColumnName = "id")
+    @JoinColumn(name = "case_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<InterfaceStage> stages;
 
     // ----------- common property ---------

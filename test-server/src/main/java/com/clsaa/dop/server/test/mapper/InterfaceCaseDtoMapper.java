@@ -1,10 +1,13 @@
 package com.clsaa.dop.server.test.mapper;
 
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
+import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
 import com.clsaa.dop.server.test.util.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -14,7 +17,10 @@ import java.util.function.Function;
  * @since 06/03/2019
  */
 @Component
-public class InterfaceCaseMapper extends AbstractCommonServiceMapper<InterfaceCase, InterfaceCaseDto> {
+public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<InterfaceCase, InterfaceCaseDto> {
+
+    @Autowired
+    private InterfaceStageDtoMapper interfaceStageDtoMapper;
 
     @Override
     Class<InterfaceCase> getSourceClass() {
@@ -28,17 +34,14 @@ public class InterfaceCaseMapper extends AbstractCommonServiceMapper<InterfaceCa
 
     @Override
     public Optional<InterfaceCaseDto> convert(InterfaceCase source) {
-        return Optional.of(source).map(doConvert());
+        return super.convert(source).map(fillStages(source));
     }
 
-    private Function<InterfaceCase, InterfaceCaseDto> doConvert() {
-        return po -> {
-            if (po != null) {
-                InterfaceCaseDto dto = BeanUtils.convertType(po, InterfaceCaseDto.class);
-                dto.setStages(po.getStages());
-                return dto;
-            }
-            return null;
+    private Function<InterfaceCaseDto, InterfaceCaseDto> fillStages(InterfaceCase interfaceCase) {
+        return dto -> {
+            List<InterfaceStageDto> interfaceStageDtos = interfaceStageDtoMapper.convert(interfaceCase.getStages());
+            dto.setStages(interfaceStageDtos);
+            return dto;
         };
     }
 }

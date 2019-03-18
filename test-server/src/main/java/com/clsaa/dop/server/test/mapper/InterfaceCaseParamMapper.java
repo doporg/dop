@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * @author xihao
@@ -25,11 +26,21 @@ public class InterfaceCaseParamMapper extends AbstractCommonServiceMapper<Interf
         return InterfaceCaseDto.class;
     }
 
+    @Override
+    public Optional<InterfaceCaseDto> convert(InterfaceCaseParam param) {
+        return super.convert(param).map(fillDateAndUser());
+    }
 
-    public void fillDateAndUser(InterfaceCaseDto dto) {
-        LocalDateTime current = LocalDateTime.now();
-        dto.setCtime(current);
-        dto.setMtime(current);
+    public Function<InterfaceCaseDto,InterfaceCaseDto> fillDateAndUser() {
+        return dto -> {
+            LocalDateTime current = LocalDateTime.now();
+            dto.setCtime(current);
+            dto.setMtime(current);
 
+            //todo get current user
+            dto.setCuser(110L);
+            dto.setMuser(110L);
+            return dto;
+        };
     }
 }
