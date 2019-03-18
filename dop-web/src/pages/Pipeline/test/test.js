@@ -6,13 +6,7 @@ export default class PipelineTest extends Component {
     constructor() {
         super();
         this.state = {
-            stages: [{
-                name: "11",
-                steps: []
-            },{
-                name: "22",
-                steps: []
-            }]
+            stages: []
         };
     }
     stages(value){

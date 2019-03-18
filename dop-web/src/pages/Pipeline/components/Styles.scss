@@ -136,6 +136,11 @@
     margin-bottom: 30px;
     .pipeline-info-stage-stepItem{
       max-width: 100px;
+      .closeStage{
+        margin-left: 5px;
+        color: #d54c53;
+        cursor: pointer;
+      }
     }
   }
   .pipeline-info-step{
