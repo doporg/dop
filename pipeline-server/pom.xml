@@ -175,7 +175,7 @@
                 <configuration>
                     <fork>true</fork>
                     <executable>true</executable>
-                    <mainClass>com.clsaa.dop.server.pipeleine.pipelineServerApplication</mainClass>
+                    <mainClass>com.clsaa.dop.server.pipeline.PipelineServerApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
