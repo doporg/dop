@@ -1,13 +1,20 @@
 package com.clsaa.dop.server.test.controller;
 
+import com.clsaa.dop.server.test.mapper.InterfaceCaseParamMapper;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
+import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
 import com.clsaa.dop.server.test.service.InterfaceCaseQueryService;
 import com.clsaa.dop.server.test.service.ManualCaseCreateService;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.ApiOperation;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author xihao
@@ -26,10 +33,14 @@ public class TestCaseController {
     @Autowired
     private InterfaceCaseQueryService interfaceCaseQueryService;
 
+    @Autowired
+    private InterfaceCaseParamMapper interfaceCaseParamMapper;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping("/interfaceCase")
-    public InterfaceCaseDto createCase(@RequestBody InterfaceCaseDto interfaceCase) {
-        return interfaceCaseCreateService.create(interfaceCase).orElse(null);
+    public InterfaceCaseDto createCase(@RequestBody @Valid InterfaceCaseParam interfaceCase) {
+        InterfaceCaseDto toCreate = interfaceCaseParamMapper.convert(interfaceCase).orElse(null);
+        return interfaceCaseCreateService.create(toCreate).orElse(null);
     }
 
     @ApiOperation(value = "新增手工测试用例", notes = "创建失败返回null")
