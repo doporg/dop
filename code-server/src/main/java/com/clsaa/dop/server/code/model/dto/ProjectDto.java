@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class ProjectDto {
     private String name;
     private String description;
-    String visibility;
-    String initialize_with_readme;
+    private String visibility;
+    private String initialize_with_readme;
 }
