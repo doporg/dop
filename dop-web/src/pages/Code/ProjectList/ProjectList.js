@@ -139,7 +139,7 @@ export default class ProjectList extends React.Component {
                     <div className="search-form">
                         <input className="input_search" placeholder="根据项目名称过滤" onChange={this.handleInputChange.bind(this)}/>
                         <button className="btn_add_project">
-                            +新建项目
+                            <Link to="/code/projects/new"><span className="text_new">+新建项目</span></Link>
                         </button>
                     </div>
                     <div>
