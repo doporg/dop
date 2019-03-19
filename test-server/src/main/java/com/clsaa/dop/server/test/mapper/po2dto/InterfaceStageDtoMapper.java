@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.dto.RequestScriptDto;
 import com.clsaa.dop.server.test.model.dto.WaitOperationDto;
@@ -25,12 +26,12 @@ public class InterfaceStageDtoMapper extends AbstractCommonServiceMapper<Interfa
     private WaitOperationDtoMapper waitOperationDtoMapper;
 
     @Override
-    Class<InterfaceStage> getSourceClass() {
+    public Class<InterfaceStage> getSourceClass() {
         return InterfaceStage.class;
     }
 
     @Override
-    Class<InterfaceStageDto> getTargetClass() {
+    public Class<InterfaceStageDto> getTargetClass() {
         return InterfaceStageDto.class;
     }
 

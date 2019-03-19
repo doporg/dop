@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.RequestCheckPointDto;
 import com.clsaa.dop.server.test.model.dto.RequestHeaderDto;
 import com.clsaa.dop.server.test.model.dto.RequestScriptDto;
@@ -30,12 +31,12 @@ public class RequestScriptDtoMapper extends AbstractCommonServiceMapper<RequestS
     private UrlResultParamDtoMapper resultParamDtoMapper;
 
     @Override
-    Class<RequestScript> getSourceClass() {
+    public Class<RequestScript> getSourceClass() {
         return RequestScript.class;
     }
 
     @Override
-    Class<RequestScriptDto> getTargetClass() {
+    public Class<RequestScriptDto> getTargetClass() {
         return RequestScriptDto.class;
     }
 

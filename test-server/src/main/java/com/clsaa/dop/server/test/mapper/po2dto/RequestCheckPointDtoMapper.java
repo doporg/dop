@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.RequestCheckPointDto;
 import com.clsaa.dop.server.test.model.po.RequestCheckPoint;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class RequestCheckPointDtoMapper extends AbstractCommonServiceMapper<RequestCheckPoint, RequestCheckPointDto> {
 
     @Override
-    Class<RequestCheckPoint> getSourceClass() {
+    public Class<RequestCheckPoint> getSourceClass() {
         return RequestCheckPoint.class;
     }
 
     @Override
-    Class<RequestCheckPointDto> getTargetClass() {
+    public Class<RequestCheckPointDto> getTargetClass() {
         return RequestCheckPointDto.class;
     }
 }

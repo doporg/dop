@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.WaitOperationDto;
 import com.clsaa.dop.server.test.model.po.WaitOperation;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class WaitOperationDtoMapper extends AbstractCommonServiceMapper<WaitOperation, WaitOperationDto> {
 
     @Override
-    Class<WaitOperation> getSourceClass() {
+    public Class<WaitOperation> getSourceClass() {
         return WaitOperation.class;
     }
 
     @Override
-    Class<WaitOperationDto> getTargetClass() {
+    public Class<WaitOperationDto> getTargetClass() {
         return WaitOperationDto.class;
     }
 }

@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.UrlResultParamDto;
 import com.clsaa.dop.server.test.model.po.UrlResultParam;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class UrlResultParamDtoMapper extends AbstractCommonServiceMapper<UrlResultParam, UrlResultParamDto> {
 
     @Override
-    Class<UrlResultParam> getSourceClass() {
+    public Class<UrlResultParam> getSourceClass() {
         return UrlResultParam.class;
     }
 
     @Override
-    Class<UrlResultParamDto> getTargetClass() {
+    public Class<UrlResultParamDto> getTargetClass() {
         return UrlResultParamDto.class;
     }
 }

@@ -1,9 +1,9 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
-import com.clsaa.dop.server.test.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +23,12 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
     private InterfaceStageDtoMapper interfaceStageDtoMapper;
 
     @Override
-    Class<InterfaceCase> getSourceClass() {
+    public Class<InterfaceCase> getSourceClass() {
         return InterfaceCase.class;
     }
 
     @Override
-    Class<InterfaceCaseDto> getTargetClass() {
+    public Class<InterfaceCaseDto> getTargetClass() {
         return InterfaceCaseDto.class;
     }
 
