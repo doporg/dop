@@ -22,7 +22,7 @@ export default class PipelineInfo extends Component {
             // 流水线的基本信息
             pipeline: {
                 name: "",
-                cuser: "test",
+                cuser: "1",
                 //监听设置
                 monitor: "",
                 stages: []
@@ -55,7 +55,16 @@ export default class PipelineInfo extends Component {
     }
 
     save() {
-        console.log(this.state.pipeline)
+        let self = this;
+        let url = API.pipeline + '/v1/pipeline';
+        Axios({
+            method: 'post',
+            url: url,
+            data: self.state.pipeline
+            // data: data
+        }).then((response)=>{
+            console.log(response)
+        })
     }
 
 

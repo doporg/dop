@@ -31,12 +31,10 @@ public class JenkinsService {
     private static String User = "zfl";
     private static String PWD = "zfl";
     private JenkinsServer jenkins;
-    private Map<String, Job> jobs;
 
 
     public JenkinsService() throws Exception{
         this.jenkins = new JenkinsServer(new URI(JenkinsURI), User, PWD);
-        this.jobs = jenkins.getJobs();
     }
 
     /***
@@ -65,49 +63,5 @@ public class JenkinsService {
             System.out.println(e.toString());
         }
     }
-
-    /**
-     * 运行流水线
-     * param: 流水线的名称
-     *
-     * */
-    public String build(String jobName){
-        try{
-            if(this.jobs.containsKey(jobName)){
-                JobWithDetails job = jobs.get(jobName).details();
-                job.build();
-            }else{
-                return "NotFindJobNamed:" + jobName;
-            }
-        }catch (Exception e){
-            return e.toString();
-        }
-        return "BuildSuccess";
-    }
-//    public Map<String, String> getBuildResult(String jobName){
-//        Map<String, String> result = new HashMap<String, String>();
-//        try{
-//            JobWithDetails job = jobs.get(jobName).details();
-//            List<Build> builds = job.getAllBuilds();
-//            for(int i = 0; i < builds.size(); i++){
-//                Build build = builds.get(i);
-//                result.put(build.getUrl(), build.details().getResult().toString());
-//            }
-//            return result;
-//        }catch (Exception e){
-//            result.put("error", e.toString());
-//            return result;
-//        }
-//    }
-//    public String getBuildOutputText(String jobName){
-//        Map<String, String> result = new HashMap<String, String>();
-//        try{
-//            JobWithDetails job = jobs.get(jobName).details();
-//            Build builds = job.getLastBuild();
-//            return builds.details().getConsoleOutputText();
-//        }catch (Exception e){
-//            return e.toString();
-//        }
-//    }
 }
 

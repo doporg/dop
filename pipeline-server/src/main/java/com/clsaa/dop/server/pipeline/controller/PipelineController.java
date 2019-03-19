@@ -10,6 +10,7 @@ import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -29,22 +30,16 @@ public class PipelineController {
     @Autowired
     private PipelineService pipelineService;
 
-
-
-    @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(task)，成功返回status===200，失败返回400")
+    @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline")
     public void addUserV1(@RequestBody PipelineVoV1 pipelineV1) {
-        try{
-            this.pipelineService.addPipeline(pipelineV1);
-        }catch (Exception e){
-            BizAssert.justInvalidParam(BizCodes.ERROR_INSERT);
-        }
+        this.pipelineService.addPipeline(pipelineV1);
     }
 
     @ApiOperation(value = "查找所有流水线信息", notes = "查找所有流水线信息，若成功返回流水线所有的信息，失败返回null")
     @GetMapping("/v1/pipelines")
     public List<PipelineBoV1> findAll() {
-            return this.pipelineService.findAll();
+        return this.pipelineService.findAll();
     }
 
     @ApiOperation(value = "根据id删除流水线", notes = "根据id对流水线进行逻辑删除")

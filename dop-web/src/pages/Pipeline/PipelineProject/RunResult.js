@@ -22,9 +22,6 @@ export default class RunResult extends Component {
     componentWillReceiveProps(nextProps) {
         let self = this;
         if (nextProps.runs) {
-            console.log(nextProps.runs)
-             // nextProps.runs._links.self.href + 'nodes/'
-            // nextProps.runs._links.nodes.href
             this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
                 self.step(stages[self.state.currentStage])
             })
