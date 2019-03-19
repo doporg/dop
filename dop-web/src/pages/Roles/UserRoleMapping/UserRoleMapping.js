@@ -46,14 +46,14 @@ export default class UserRoleMapping extends Component {
         console.log(id)
         //获取当前用户角色
         this.setState({currentUserId:id})
-        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
+        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
         let param={userId:id}
         Axios.get(getRoleUrl,{params:(param)}).then(response=>
         {
             this.setState({currentRoles:response.data})
             console.log(this.state.currentRoles)
             //获取全部角色
-            let url=API.permission+"/v1/roles/roles";
+            let url=API.gateway+"/permission-server/v1/roles/roles";
             Axios.get(url).then(response=>{
                 this.setState({roleList:response.data})
             })
@@ -77,10 +77,10 @@ export default class UserRoleMapping extends Component {
     };
     removeRole=id=>{
         console.log("用户ID"+id)
-        let url=API.permission+"/v1/users/roles"
+        let url=API.gateway+"/permission-server/v1/users/roles"
         let param={userId:this.state.currentUserId,
             roleId:id}
-        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
+        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
         let userId={userId:this.state.currentUserId}
         Axios.delete(url,{params:(param)}).then(response=>
             //再次获取该用户角色
@@ -96,7 +96,7 @@ export default class UserRoleMapping extends Component {
         let url =API.gateway+"/permission-server/v1/users/rolemap"
         let param={userId:this.state.currentUserId,
             roleId:id}
-        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
+        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
         let userId={userId:this.state.currentUserId}
         Axios.post(url,{},{params:(param)}).then(response=>
             Axios.get(getRoleUrl,{params:(userId)}).then(response1=>
@@ -113,7 +113,7 @@ export default class UserRoleMapping extends Component {
 
         //获取当前用户的功能点
         this.setState({currentUserId:id})
-        let getPermissionUrl=API.permission+"/v1/users/permissions/{id}"
+        let getPermissionUrl=API.gateway+"/permission-server/v1/users/permissions/{id}"
         let param={userId:id}
         Axios.get(getPermissionUrl,{params:(param)}).then(response=>
         {

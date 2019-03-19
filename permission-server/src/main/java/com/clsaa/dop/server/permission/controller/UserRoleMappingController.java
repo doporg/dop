@@ -2,7 +2,6 @@ package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
 
-import com.clsaa.dop.server.permission.service.RolePermissionMappingService;
 
 import com.clsaa.dop.server.permission.service.UserRoleMappingService;
 import io.swagger.annotations.ApiOperation;
