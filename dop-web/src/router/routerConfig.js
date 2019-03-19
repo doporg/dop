@@ -3,11 +3,12 @@
 
 
 import BasicLayout from '../layouts/BasicLayout';
-import Projects from '../pages/Projects';
-import { pipelineConfig } from '../pages/Pipeline';
+import {Projects} from '../pages/Projects';
+import {pipelineConfig} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {loginConfig} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
+
 const baseConfig = [
     {
         path: '/project',
@@ -30,6 +31,6 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig,...baseConfig];
+const routerConfig = [...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
 
 export default routerConfig;
