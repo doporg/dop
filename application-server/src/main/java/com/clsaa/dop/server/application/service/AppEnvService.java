@@ -22,7 +22,10 @@ import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.KubeConfig;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service(value = "AppEnvService")
@@ -198,21 +201,38 @@ public class AppEnvService {
      * @param service      服务
      * @renturn{@link List<String>}
      */
-    public List<String> getDeploymentByNameSpaceAndService(Long id, String namespace, String service) throws Exception {
+    public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long id, String namespace, String service) throws Exception {
 
         AppsV1Api api = getAppsApi(id);
 
-        List<String> deploymentList = api.listNamespacedDeployment(namespace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false)
-                .getItems()
-                .stream()
-                .map(v1Service -> v1Service.getMetadata().getName())
-                .collect(Collectors.toList());
-        if (deploymentList.size() <= 1) {
-            return null;
-        } else {
-            return deploymentList;
+
+        V1DeploymentList deploymentList = api.listNamespacedDeployment(namespace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false);
+
+        List<V1Deployment> v1DeploymentList = deploymentList.getItems();
+
+        List<String> nameList = v1DeploymentList.stream().map(v1Deployment -> v1Deployment.getMetadata().getName()).collect(Collectors.toList());
+        Map<String, List<String>> containerList = new HashMap<>();
+        List<List<String>> lists = deploymentList.getItems().stream().map(
+                v1Deployment -> v1Deployment.getSpec().getTemplate().getSpec().getContainers().stream().map(
+                        v1Container -> v1Container.getName()).collect(Collectors.toList()
+                )).collect(Collectors.toList());
+
+        for (int i = 0; i < nameList.size(); i++) {
+            containerList.put(nameList.get(i), v1DeploymentList.get(i).getSpec().getTemplate().getSpec().getContainers().stream().map(
+                    v1Container -> v1Container.getName()).collect(Collectors.toList()
+            ));
         }
+
+
+        return new HashMap<String, Object>() {
+            {
+                put("deployment", nameList);
+                put("containers", containerList);
+            }
+
+        };
     }
+
 
     /**
      * 创建服务
@@ -225,30 +245,58 @@ public class AppEnvService {
     public void createServiceByNameSpace(Long id, String namespace, String name, Integer port) throws Exception {
         CoreV1Api coreApi = getCoreApi(id);
 
-//AppsV1Api appsV1Api = getAppsApi(id);
-//        V1Deployment deployment = new V1DeploymentBuilder()
-//                .withNewMetadata()
-//                .withName(name)
-//                .addToLabels("app", name)
-//                .endMetadata()
-//                .withNewSpec()
-//                .withReplicas(replicas.intValue())
-//                .withNewSelector()
-//                .addToMatchLabels("app",name)
-//                .endSelector()
-//                .withNewTemplate()
-//                .withNewMetadata()
-//                .addToLabels("app", name)
-//                .endMetadata()
-//                .withNewSpec()
-//                .addNewContainer()
-//                .withName(name)
-//                .withImage(image)
-//                .endContainer()
-//                .endSpec()
-//                .endTemplate()
-//                .endSpec()
-//                .build();
+        AppsV1Api appsV1Api = getAppsApi(id);
+        //V1Deployment deployment = new V1DeploymentBuilder()
+        //        .withNewMetadata()
+        //        .withName("test-deployment2")
+        //        .addToLabels("app", name)
+        //        .endMetadata()
+        //        .withNewSpec()
+        //        .withReplicas(2)
+        //        .withNewSelector()
+        //        .addToMatchLabels("app",name)
+        //        .endSelector()
+        //        .withNewTemplate()
+        //        .withNewMetadata()
+        //        .addToLabels("app", name)
+        //        .endMetadata()
+        //        .withNewSpec()
+        //        .addNewContainer()
+        //        .withName(name)
+        //        .withImage( "registry.dop.clsaa.com/dop/dop-web:3")
+        //        .endContainer()
+        //        .addNewContainer()
+        //        .withName("test-container")
+        //        .withImage( "registry.dop.clsaa.com/dop/dop-web:4")
+        //        .endContainer()
+        //        .endSpec()
+        //        .endTemplate()
+        //        .endSpec()
+        //        .build();
+        //
+        //V1Deployment deployment2 = new V1DeploymentBuilder()
+        //        .withNewMetadata()
+        //        .withName("test-deployment")
+        //        .addToLabels("app", name)
+        //        .endMetadata()
+        //        .withNewSpec()
+        //        .withReplicas(2)
+        //        .withNewSelector()
+        //        .addToMatchLabels("app",name)
+        //        .endSelector()
+        //        .withNewTemplate()
+        //        .withNewMetadata()
+        //        .addToLabels("app", name)
+        //        .endMetadata()
+        //        .withNewSpec()
+        //        .addNewContainer()
+        //        .withName(name)
+        //        .withImage("registry.dop.clsaa.com/dop/dop-web:5")
+        //        .endContainer()
+        //        .endSpec()
+        //        .endTemplate()
+        //        .endSpec()
+        //        .build();
         //
         //V1ReplicationController replicationController =
         //        new V1ReplicationControllerBuilder()
@@ -292,6 +340,7 @@ public class AppEnvService {
                         .build();
         //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
         //     appsV1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
+        //appsV1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
         coreApi.createNamespacedService(namespace, service, false, null, null);
 
     }

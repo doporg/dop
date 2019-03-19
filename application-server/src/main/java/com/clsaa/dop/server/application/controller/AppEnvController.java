@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,7 +119,7 @@ public class AppEnvController {
 
     @ApiOperation(value = "获取部署", notes = "获取部署")
     @GetMapping(value = "/application/environment/detail/{id}/cluster/allDeployment")
-    public List<String> getDeploymentByNameSpaceAndService(
+    public HashMap<String, Object> getDeploymentByNameSpaceAndService(
             @ApiParam(value = "id", name = "id", required = true) @PathVariable(value = "id") Long id,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
             @ApiParam(value = "service", name = "service", required = true) @RequestParam(value = "service") String service
