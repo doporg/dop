@@ -159,6 +159,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.23</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -175,7 +180,7 @@
                 <configuration>
                     <fork>true</fork>
                     <executable>true</executable>
-                    <mainClass>com.clsaa.dop.server.pipeline.PipelineServerApplication</mainClass>
+                    <mainClass>com.clsaa.dop.server.pipeleine.PipelineServerApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>

@@ -22,7 +22,10 @@ export default class RunResult extends Component {
     componentWillReceiveProps(nextProps) {
         let self = this;
         if (nextProps.runs) {
-            this.stage(nextProps.runs._links.self.href).then((stages) => {
+            console.log(nextProps.runs)
+             // nextProps.runs._links.self.href + 'nodes/'
+            // nextProps.runs._links.nodes.href
+            this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
                 self.step(stages[self.state.currentStage])
             })
         }
@@ -44,17 +47,12 @@ export default class RunResult extends Component {
     //获取stage
     stage(href) {
         // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
-        let url = API.jenkins + href + "nodes/";
+        // let url = API.jenkins + href;
+        let url = API.pipeline + "/v1/jenkins/result?path=" + href;
         let self = this;
         let stages = [];
         return new Promise((resolve, reject) => {
-            Axios({
-                method: 'get',
-                url: url,
-                headers: {
-                    'Authorization': self.props.authorization
-                }
-            }).then((response) => {
+            Axios.get(url).then((response) => {
                 if (response.status === 200) {
                     if (response.data.length === 0) {
                         self.stage(href);
@@ -90,19 +88,14 @@ export default class RunResult extends Component {
         if (stage.steps.length) {
             return
         }
-        let url = API.jenkins + stage.href;
+        let url = API.pipeline + "/v1/jenkins/result?path=" + stage.href;
         let self = this;
         let stages = self.state.stages;
         let steps = [];
-        Axios({
-            method: 'get',
-            url: url,
-            headers: {
-                'Authorization': self.props.authorization
-            }
-        }).then((response) => {
+        Axios.get(url).then((response) => {
             if (response.status === 200) {
-                response.data.map((item, index) => {
+                for (let i = 0; i < response.data.length; i++) {
+                    let item = response.data[i];
                     let step = {
                         id: item.id,
                         displayDescription: item.displayDescription,
@@ -113,7 +106,7 @@ export default class RunResult extends Component {
                         log: []
                     };
                     steps.push(step);
-                });
+                }
                 stage.steps = steps;
                 stages.splice(self.state.currentStage, 1, stage);
                 self.setState({

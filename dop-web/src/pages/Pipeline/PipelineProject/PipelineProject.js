@@ -9,15 +9,12 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import './PipelineProject.scss'
-import {RSA} from "../../Login";
-
 const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            authorization: 'Basic emZsOnpmbA==',
             visible: false,
             pipelineId: this.props.match.params.id,
             runs: {},
@@ -37,17 +34,11 @@ export default class PipelineProject extends Component {
 
 
     getRuns() {
-        let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
+        let url = API.pipeline + '/v1/jenkins/runs?id='+ this.state.pipelineId;
         // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
         let self = this;
         return new Promise((resolve, reject) => {
-            Axios({
-                method: 'get',
-                url: url,
-                headers: {
-                    'Authorization': self.state.authorization
-                }
-            }).then((response) => {
+            Axios.get(url).then((response) => {
                 if (response.status === 200) {
                     if (response.data.length === 0) {
                         toast.show({
@@ -56,10 +47,8 @@ export default class PipelineProject extends Component {
                             duration: 3000
                         });
                     } else {
-                        console.log(response.data[0]);
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
-                            console.log("finish")
                             self.clear();
                         }
 
@@ -71,14 +60,9 @@ export default class PipelineProject extends Component {
     }
 
     buildPipeline() {
-        let url = API.jenkinsRest + this.state.pipelineId + '/runs/';
+        let url = API.pipeline + '/v1/jenkins/build?id='+ this.state.pipelineId;
         let self = this;
-        Axios.post(url, {}, {
-            headers: {
-                'Authorization': self.state.authorization,
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
+        Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {
                     this.getRuns().then((data) => {
@@ -86,7 +70,7 @@ export default class PipelineProject extends Component {
                             runs: data
                         })
                     })
-                }, 5000)
+                }, 5000);
                 self.setState({
                     runs: response.data,
                     time: time
@@ -109,17 +93,17 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button">
+                        <Button type="normal" className="button" disabled>
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
-                        <Button type="secondary" shape="warning" className="button">
+                        <Button type="secondary" shape="warning" className="button" disabled>
                             <Icon type="ashbin"/>
                             删除流水线
                         </Button>
                     </div>
 
-                    <RunResult runs={this.state.runs} authorization={this.state.authorization}/>
+                    <RunResult runs={this.state.runs}/>
                 </Loading>
             </div>
 

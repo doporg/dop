@@ -9,6 +9,8 @@ import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -23,18 +25,17 @@ import java.util.Map;
  * @since 2019-03-09
  */
 
+@Service
 public class JenkinsService {
+    private static String JenkinsURI = "http://jenkins.dop.clsaa.com";
+    private static String User = "zfl";
+    private static String PWD = "zfl";
     private JenkinsServer jenkins;
-    private String jenkinsURI;
-    private String jenkinsUser;
-    private String jenkinsPWD;
     private Map<String, Job> jobs;
 
-    public JenkinsService(String jenkinsURI, String jenkinsUser, String jenkinsPWD) throws Exception{
-        this.jenkinsURI = jenkinsURI;
-        this.jenkinsUser = jenkinsUser;
-        this.jenkinsPWD = jenkinsPWD;
-        this.jenkins = new JenkinsServer(new URI(jenkinsURI), jenkinsUser, jenkinsPWD);
+
+    public JenkinsService() throws Exception{
+        this.jenkins = new JenkinsServer(new URI(JenkinsURI), User, PWD);
         this.jobs = jenkins.getJobs();
     }
 

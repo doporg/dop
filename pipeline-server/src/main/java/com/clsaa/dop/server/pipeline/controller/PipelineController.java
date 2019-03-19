@@ -2,7 +2,6 @@ package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.config.BizCodes;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.rest.result.bizassert.BizAssert;
@@ -12,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -28,6 +28,8 @@ import java.util.List;
 public class PipelineController {
     @Autowired
     private PipelineService pipelineService;
+
+
 
     @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(task)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline")
