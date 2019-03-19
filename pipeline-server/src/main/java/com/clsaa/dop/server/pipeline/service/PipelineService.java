@@ -26,9 +26,6 @@ public class PipelineService {
     @Autowired
     private PipelineRepository pipelineRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     /**
      * 添加流水线信息
      */

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
-import {Input, Select, Icon, Feedback} from '@icedesign/base';
+import {Input, Select, Icon} from '@icedesign/base';
 import IceLabel from '@icedesign/label';
 import './Styles.scss';
 

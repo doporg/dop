@@ -40,4 +40,28 @@ function PublicKey() {
 }
 
 
-export {Login, Register, RegisterTransfer, ModifyPwd, LoginTransfer, RSA, Encryption, PublicKey};
+const loginConfig = [
+    {
+        path: '/login',
+        component: Login,
+        isLogin: true
+    },
+    {
+        path: '/register',
+        component: Register,
+        isLogin: true
+    },
+    {
+        path: '/register/transfer',
+        component: RegisterTransfer,
+        isLogin: true
+    },
+    {
+        path: '/modifyPwd',
+        component: ModifyPwd,
+        isLogin: true
+    }
+];
+
+
+export {Login, Register, RegisterTransfer, ModifyPwd, LoginTransfer, RSA, Encryption, PublicKey, loginConfig};
