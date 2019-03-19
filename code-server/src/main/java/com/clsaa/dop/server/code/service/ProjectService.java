@@ -9,6 +9,7 @@ import com.clsaa.dop.server.code.model.vo.ProjectVo;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,12 +80,40 @@ public class ProjectService {
      * @param username 用户名
      * @return 项目列表
      */
-    public List<ProjectListBo> findProjectByMember(String username){
+    public List<ProjectListBo> findProjectList(String sort,String username){
 
-        //获得项目基本信息
-        List<ProjectListBo> listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+        List<ProjectListBo> listBos;
+
+        if(sort.equals("personal")) {
+            listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+        }else if(sort.equals("starred")){
+            listBos=RequestUtil.getList("/projects?starred=true",username,ProjectListBo.class);
+        }else {
+            listBos=RequestUtil.getList("/projects?visibility=public",username,ProjectListBo.class);
+        }
 
         return listBos;
+    }
+
+    /**
+     * 新建一个gitlab project
+     * @param name 项目名称
+     * @param description 项目描述
+     * @param visibility 可见等级
+     * @param initialize_with_readme 是否新建readme文件
+     * @param username 项目owner用户名
+     */
+    public void addProject(String name,String description,String visibility,String initialize_with_readme,String username){
+
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("name",name));
+        params.add(new BasicNameValuePair("description",description));
+        params.add(new BasicNameValuePair("visibility",visibility));
+        params.add(new BasicNameValuePair("initialize_with_readme",initialize_with_readme));
+
+        RequestUtil.post("/projects",username,params);
+
+
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.bo;
+package com.clsaa.dop.server.code.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectListBo {
-
-    private int id;
-    private String description;
-    private String path_with_namespace;
+public class ProjectDto {
     private String name;
-    private int star_count;
+    private String description;
     private String visibility;
+    private String initialize_with_readme;
 }

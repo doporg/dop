@@ -146,6 +146,8 @@ public class RequestUtil {
     }
 
 
+
+
     /**
      * 发送http get请求
      *
@@ -194,7 +196,7 @@ public class RequestUtil {
      *
      * @param url        路径
      * @param formparams 参数键值对
-     * @return json字符串
+     * @return 状态码
      */
     private static int httpPost(String url, List<NameValuePair> formparams) {
 
@@ -219,6 +221,51 @@ public class RequestUtil {
             response.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+
+    /**
+     * 获得用户access_token不是rest api的形式，创建一个新的post方法
+     * @param url 地址
+     * @param formparams 参数
+     * @return json字符串
+     */
+    public static String httpPost1(String url, List<NameValuePair> formparams) {
+
+
+        CloseableHttpClient httpclients = HttpClients.createDefault();
+
+        HttpPost httpPost = new HttpPost(url);
+
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+
+        httpPost.setEntity(entity);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclients.execute(httpPost);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String result = null;
+
+        try {
+            HttpEntity entity1 = response.getEntity();
+            if (entity1 != null) {
+                result = EntityUtils.toString(entity1);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                response.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return result;
