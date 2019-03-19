@@ -27,30 +27,14 @@ public class AppEnvBoV1 {
     private String title;
 
     /**
-     * 目标集群
+     * 目标集群Url
      */
-    private String targetCluster;
+    private String targetClusterUrl;
 
     /**
-     * 命名空间
+     * 目标集群Token
      */
-    private String nameSpace;
-
-    /**
-     * 对应服务
-     */
-    private String service;
-
-    /**
-     * 发布批次
-     */
-    private Integer releaseBatch;
-
-
-    /**
-     * 发布策略
-     */
-    private AppEnvironment.ReleaseStrategy releaseStrategy;
+    private String targetClusterToken;
 
     /**
      * 部署策略
