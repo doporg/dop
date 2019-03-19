@@ -176,4 +176,15 @@ public class PermissionService {
         return permissionBoV1List;
     }
 
+    //判断用户是否拥有特定功能点
+    public boolean checkUserPermission(Long permissionId,Long userId)
+    {
+        List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
+        for (UserRoleMapping userRoleMapping : userRoleMappingList) {
+            if (rolePermissionMappingService.findByRoleIdAndPermissionId(userRoleMapping.getRoleId(), permissionId) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -5,54 +5,54 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-
 /**
- * 角色持久层对象，对应角色表中每条数据
+ * 用户数据表，用于数据权限的控制
  *
  * @author lzy
  *
-
- *
- * since :2019.3.7
+ * since :2019.3.19
  */
-
 @Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_role",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name","id"})}) //引入@Table注解，name赋值为表名
+@Table(name = "t_userData") //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_role set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_userData set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class Role implements Serializable {
-
-    private static final long serialVersionUID = 552000263L;
+public class UserData {
+    private static final long serialVersionUID = 552000265L;
 
     /**
-     * 角色ID
+     * 用户数据ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
+
     /**
-     * 父级角色ID
+     * 规则ID
      */
     @Basic
-    @Column(name="parent_id")
-    private Long parentId;
+    @Column(name = "rule_id")
+    private Long ruleId;
     /**
-     * 角色名称
+     *  用户ID
      */
     @Basic
-    @Column(name="name")
-    private String name;
+    @Column(name = "user_id")
+    private Long userId;
+    /**
+     * 参数值
+     */
+    @Basic
+    @Column(name = "field_value")
+    private Long fieldValue;
 
     /* 表里都要有的字段*/
     /**
