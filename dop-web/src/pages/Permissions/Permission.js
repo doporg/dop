@@ -72,7 +72,7 @@ export default class Permission extends Component {
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/permissions" ;
+        let url = API.gateway + "/permission-server/v1/permissions" ;
         let params=
             {
                 pageNo:this.state.pageNo,
@@ -97,7 +97,7 @@ export default class Permission extends Component {
     onChange=currentPage=> {
 
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/permissions" ;
+        let url = API.gateway + "/permission-server/v1/permissions" ;
         let params=
             {
                 pageNo:currentPage,
@@ -150,7 +150,7 @@ export default class Permission extends Component {
                 return;
             }
             //检测重复的url以及参数
-            let byNameUrl=API.permission+"/v1/permissions/byName"
+            let byNameUrl=API.gateway+"/permission-server/v1/permissions/byName"
             let byNameParams=
                 {name:values.name}
 
@@ -202,7 +202,7 @@ export default class Permission extends Component {
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.permission + "/v1/permissions/{id}" ;
+        let url = API.gateway + "/permission-server/v1/permissions/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -334,7 +334,7 @@ export default class Permission extends Component {
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人"   dataIndex="cuser"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
-                <Table.Column title="删除操作" cell={renderDelete} width="20%" />
+                <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
             </Table>
             <Pagination total={this.state.totalCount}

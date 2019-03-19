@@ -57,7 +57,7 @@ export default class Role extends Component {
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/roles" ;
+        let url = API.gateway + "/permission-server/v1/roles" ;
         let params=
             {
                 pageNo:this.state.pageNo,
@@ -81,7 +81,7 @@ export default class Role extends Component {
     //翻页
     onChange=currentPage=> {
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/roles" ;
+        let url = API.gateway + "/permission-server/v1/roles" ;
         let params=
             {
                 pageNo:currentPage,
@@ -123,7 +123,7 @@ export default class Role extends Component {
             console.log(idList)
 
             let createRoleUrl=API.gateway+"/permission-server/v1/roles"
-            let byNameUrl=API.permission+"/v1/roles/byName"
+            let byNameUrl=API.gateway+"/permission-server/v1/roles/byName"
 
             let RoleParam={parentId: values.parentId,name:values.name}
             let byNameParams={name:values.name}
@@ -135,7 +135,7 @@ export default class Role extends Component {
                 console.log("监测重复返回的东西："+response.data.name);
                 if(response.data.name==values.name)
                 {
-                    Feedback.toast.error("功能点名称重复！")
+                    Feedback.toast.error("角色名称重复！")
                 }
                 else {
                     //不重复 则关闭窗口 开始插入数据
@@ -185,7 +185,7 @@ export default class Role extends Component {
     onOpen = () => {
 
 
-        let url=API.permission+"/v1/roles/permissions";
+        let url=API.gateway+"/permission-server/v1/roles/permissions";
         Axios.get(url).then(response=>{
 
             this.setState({permissionList:response.data})
@@ -227,14 +227,14 @@ export default class Role extends Component {
         console.log("ID是"+id)
             //获取当前角色功能点
         this.setState({currentRoleId:id})
-            let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
+            let getPermissionUrl=API.gateway+"/permission-server/v1/roles/permissions/{id}"
             let param={roleId:id}
             Axios.get(getPermissionUrl,{params:(param)}).then(response=>
             {
                 this.setState({currentPermission:response.data})
                 console.log(this.state.currentPermission)
                 //获取全部功能点
-                let url=API.permission+"/v1/roles/permissions";
+                let url=API.gateway+"/permission-server/v1/roles/permissions";
                 Axios.get(url).then(response=>{
                     this.setState({permissionList:response.data})
                 })
@@ -251,7 +251,7 @@ export default class Role extends Component {
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.permission + "/v1/roles/{id}" ;
+        let url = API.gateway + "/permission-server/v1/roles/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -271,10 +271,10 @@ export default class Role extends Component {
 
     removePermission=id=>{
         console.log("功能点ID"+id)
-        let url=API.permission+"/v1/roles/permissions"
+        let url=API.gateway+"/permission-server/v1/roles/permissions"
         let param={roleId:this.state.currentRoleId,
                     permissionId:id}
-        let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
+        let getPermissionUrl=API.gateway+"/permission-server/v1/roles/permissions/{id}"
         let roleId={roleId:this.state.currentRoleId}
          Axios.delete(url,{params:(param)}).then(response=>
              //再次获取该角色功能点
@@ -290,7 +290,7 @@ export default class Role extends Component {
         let url =API.gateway+"/permission-server/v1/roles/permissionmap"
         let param={roleId:this.state.currentRoleId,
             permissionId:id}
-        let getPermissionUrl=API.permission+"/v1/roles/permissions/{id}"
+        let getPermissionUrl=API.gateway+"/permission-server/v1/roles/permissions/{id}"
         let roleId={roleId:this.state.currentRoleId}
         Axios.post(url,{},{params:(param)}).then(response=>
             Axios.get(getPermissionUrl,{params:(roleId)}).then(response1=>
