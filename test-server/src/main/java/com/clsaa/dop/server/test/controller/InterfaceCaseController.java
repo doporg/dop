@@ -1,17 +1,21 @@
 package com.clsaa.dop.server.test.controller;
 
+import com.clsaa.dop.server.test.config.BizCodes;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
 import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
 import com.clsaa.dop.server.test.service.InterfaceCaseQueryService;
 import com.clsaa.dop.server.test.service.InterfaceStageCreateService;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
+import static com.clsaa.dop.server.test.doExecute.TestManager.execute;
 
 /**
  * @author xihao
@@ -51,7 +55,9 @@ public class InterfaceCaseController {
 
     @GetMapping("/execute/{id}")
     public String getExecuteResult(@PathVariable("id") Long id) {
-        // todo 实现执行逻辑
-        return "Success!";
+        BizAssert.validParam(id >= 0, BizCodes.INVALID_PARAM.getCode(), "请求执行的测试用例id不合法");
+        InterfaceCaseDto interfaceCaseDto = interfaceCaseQueryService.selectByPk(id).orElse(null);
+        return execute(interfaceCaseDto);
     }
+
 }
