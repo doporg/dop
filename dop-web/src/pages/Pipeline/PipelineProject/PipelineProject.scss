@@ -6,26 +6,32 @@
   .my-loading {
     display: block;
     height: 500px;
+
     .operate {
       padding: 10px 0;
+
       .button {
         margin-right: 20px;
       }
     }
+
     .iframe {
       margin-top: 50px;
     }
   }
+
   .run-detail {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-width: 900px;
+
     .run-detail-stage {
       overflow: auto;
       margin: 50px 0;
     }
+
     .run-detail-stap {
       width: 900px;
       height: 900px;

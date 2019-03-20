@@ -72,9 +72,6 @@ public class ApplicationController {
     }
 
 
-
-
-
     @ApiOperation(value = "创建应用", notes = "创建应用")
     @PostMapping(value = "/application/{projectId}")
     @ResponseBody
