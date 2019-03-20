@@ -58,4 +58,10 @@ public class PipelineController {
         return this.pipelineService.findById(new ObjectId(id));
     }
 
+    @ApiOperation(value = "根据id更新流水线信息")
+    @PutMapping("/v1/pipeline/update")
+    public void update(@RequestBody PipelineBoV1 pipelineBoV1) {
+        this.pipelineService.update(pipelineBoV1);
+    }
+
 }

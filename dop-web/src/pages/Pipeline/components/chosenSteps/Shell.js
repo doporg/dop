@@ -41,7 +41,7 @@ export default class Shell extends Component {
                             <div className="area-wrap">
                                 <Input
                                     multiple
-                                    placeholder=""
+                                    value={this.props.shell}
                                     className="area"
                                     onChange={this.buildShell.bind(this)}
                                 />
