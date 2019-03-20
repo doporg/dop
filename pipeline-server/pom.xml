@@ -180,7 +180,7 @@
                 <configuration>
                     <fork>true</fork>
                     <executable>true</executable>
-                    <mainClass>com.clsaa.dop.server.pipeleine.PipelineServerApplication</mainClass>
+                    <mainClass>com.clsaa.dop.server.pipeline.PipelineServerApplication</mainClass>
                 </configuration>
             </plugin>
             <plugin>
