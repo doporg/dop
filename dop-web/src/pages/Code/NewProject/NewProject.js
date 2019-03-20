@@ -72,7 +72,7 @@ export default class NewProject extends React.Component {
 
         // console.log(this.state);
         return (
-            <div className="container">
+            <div className="new-container">
                 <div className="div_title">
                     新建项目
                 </div>
