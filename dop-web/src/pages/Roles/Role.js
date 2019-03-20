@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Axios from 'axios';
 import API from '../API';
-import {Button, Dialog, Feedback, Field, Radio, Table} from "@icedesign/base";
+import {Button, Dialog, Feedback, Field, Table} from "@icedesign/base";
 import Pagination from "@icedesign/base/lib/pagination";
 import Form from "@icedesign/base/lib/form";
 import BalloonConfirm from "@icedesign/balloon-confirm";
@@ -16,7 +16,7 @@ const { Item: FormItem } = Form;
  *
  *
  * */
-
+let mUserMap=new Map()
 export default class Role extends Component {
 
 
@@ -33,10 +33,7 @@ export default class Role extends Component {
                     console.log("onSelectAll", selected);
                 },
                 selectedRowKeys: [],
-                getProps: record => {
-                    return {
-                    };
-                }
+
             },
             permissionVisible:false,
             currentRoleId:0,
@@ -68,6 +65,10 @@ export default class Role extends Component {
                 pageNo:response.data.pageNo,
                 totalCount:response.data.totalCount})
             Axios.all(this.getUserName(response.data.pageList)).then(()=>{
+                console.log(mUserMap)
+                response.data.pageList.forEach(item=>{
+                    item.muser=mUserMap.get(item.muser)
+                })
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -95,6 +96,10 @@ export default class Role extends Component {
                 totalCount:response.data.totalCount}
             );
             Axios.all(this.getUserName(response.data.pageList)).then(()=>{
+                console.log(mUserMap)
+                response.data.pageList.forEach(item=>{
+                    item.muser=mUserMap.get(item.muser)
+                })
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -173,10 +178,15 @@ export default class Role extends Component {
     //通过get请求中的userid获取username的函数
     getUserName=(data)=>{
         let axiosList=[]
+        let muserSet=[]
         data.forEach(item=>{
-            let url = API.gateway + "/user-server/v1/users/"+item.muser
+            muserSet.push(item.muser)
+        })
+        muserSet = new Set(muserSet)
+        muserSet.forEach(item=>{
+            let url = API.gateway + "/user-server/v1/users/"+item
             axiosList.push(Axios.get(url).then((response) => {
-                item.muser=response.data.name
+                mUserMap.set(item,response.data.name)
             }))
         })
         return axiosList
@@ -469,7 +479,7 @@ export default class Role extends Component {
                     <Table.Column title="角色名称" dataIndex="name"/>
                     <Table.Column title="最后修改人"   dataIndex="muser"/>
                     <Table.Column title="最后修改时间" dataIndex="mtime"/>
-                    <Table.Column title="编辑角色" cell={showPermission}width="10%"/>
+                    <Table.Column title="编辑角色" cell={showPermission} width="10%"/>
                     <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
 
