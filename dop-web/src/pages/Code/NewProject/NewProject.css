@@ -1,0 +1,59 @@
+.container{
+    background-color: rgb(255, 255, 255);
+    height: 600px;
+    position: relative;
+    padding-top: 1px;
+}
+
+.div_title{
+    border-bottom: 1px solid #c1c1c1;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bolder;
+    line-height: 50px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+
+}
+
+.div_input{
+    padding: 15px 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.div_visibility{
+    width: 85%;
+}
+
+.label_left{
+    width: 15%;
+    height: 40px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.input_name{
+    width: 85%;
+    height: 40px;
+    border-radius: 2px;
+    border: 1px solid #c1c1c1;
+
+}
+
+.input_description{
+    width: 85%;
+    height: 80px;
+    border-radius: 2px;
+    border: 1px solid #c1c1c1;
+}
+
+.btn_create{
+    background-color: #31af64;
+    border-color: #2faa60;
+    color: white;
+    width: 150px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 120px;
+}

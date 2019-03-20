@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.ProjectListBo;
+import com.clsaa.dop.server.code.model.dto.ProjectDto;
 import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.model.vo.ProjectListVo;
 import com.clsaa.dop.server.code.model.vo.ProjectVo;
@@ -38,13 +39,19 @@ public class ProjectController {
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
-    @GetMapping("/users/{username}/projects")
-    public List<ProjectListVo> findProjectByMember(@ApiParam(value = "用户名")@PathVariable("username")String username){
-        List<ProjectListBo> listBos= projectService.findProjectByMember(username);
+    @GetMapping("/projectlist/{sort}/{username}")
+    public List<ProjectListVo> findProjectList(@ApiParam(value = "分类")@PathVariable("sort")String sort,@ApiParam(value = "用户名")@PathVariable("username")String username){
+        List<ProjectListBo> listBos= projectService.findProjectList(sort,username);
         List<ProjectListVo> listVos=new ArrayList<>();
         for(ProjectListBo temp:listBos)
             listVos.add(BeanUtils.convertType(temp,ProjectListVo.class));
         return listVos;
+    }
+
+    @ApiOperation(value="新建一个项目",notes = "新建一个项目，包括一些基本信息")
+    @PostMapping("/projects/{username}")
+    public void addProject(@ApiParam(value = "项目基本信息")@RequestBody ProjectDto projectDto, @ApiParam(value = "用户名")@PathVariable("username") String username){
+        projectService.addProject(projectDto.getName(),projectDto.getDescription(),projectDto.getVisibility(),projectDto.getInitialize_with_readme(),username);
     }
 
 

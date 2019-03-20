@@ -21,15 +21,10 @@ export default class Log extends Component {
             count: this.state.count + 1
         });
         if (href && this.state.count % 2) {
-            let url = API.jenkins + href;
+            // let url = API.jenkins + href;
+            let url = API.pipeline + "/v1/jenkins/result?path=" + href;
             let self = this;
-            Axios({
-                method: 'get',
-                url: url,
-                headers: {
-                    "Authorization": self.props.authorization
-                }
-            }).then((response) => {
+            Axios.get(url).then((response) => {
                 if (response.status === 200) {
                     let logs =  response.data.split('\n');
                     logs.pop();

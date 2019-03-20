@@ -66,8 +66,11 @@ public class UserService {
             String password = registerData.getString("password");
             CryptoResult realPassword = RSA.decryptByPrivateKey(password, this.userProperties.getAccount().getSecret().getRSAPrivateKey());
             BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
+            //校验用户名或邮箱是否存在
             User existUser = this.userRepository.findUserByEmail(email);
             BizAssert.allowed(existUser == null, BizCodes.REPETITIVE_USER_EMAIL);
+            existUser = this.userRepository.findUserByName(registerData.getString("name"));
+            BizAssert.allowed(existUser == null, BizCodes.REPETITIVE_USER_NAME);
             User user = User.builder()
                     .name(registerData.getString("name"))
                     .email(registerData.getString("email"))
@@ -103,6 +106,13 @@ public class UserService {
      */
     public UserBoV1 findUserByEmail(String email) {
         return BeanUtils.convertType(this.userRepository.findUserByEmail(email), UserBoV1.class);
+    }
+
+    /**
+     * 根据用户名查询用户，若不存在返回null
+     */
+    public UserBoV1 findUserByName(String name) {
+        return BeanUtils.convertType(this.userRepository.findUserByName(name), UserBoV1.class);
     }
 
     /**

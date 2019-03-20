@@ -17,7 +17,6 @@ import imgDownload from './imgs/download.png'
 const {toast} = Feedback;
 
 
-
 export default class ProjectOverview extends React.Component{
 
     constructor(props){
@@ -47,26 +46,29 @@ export default class ProjectOverview extends React.Component{
         }
         ;
 
-
-
-
-        // console.log(this.state)
-        // this.state.username=username;
-        // this.state.projectid=projectid;
-        //
-        // console.log(this.state)
     }
 
     componentDidMount(){
 
-        const {projectid} = this.props.match.params;
-        let server="http://localhost:13900";
-        let url =  server+ "/projects/"+projectid;
+        let url =  API.code+ "/projects/"+this.state.projectid;
         let self = this;
         Axios.get(url).then((response) => {
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data});
-            console.log(this.state);
         });
+    }
+
+    star(){
+        const curUser = window.sessionStorage.getItem("user-name");
+        console.log(curUser);
+        let url =  API.code+ "/projects/"+this.state.projectid+"/star/"+curUser;
+        let self = this;
+        Axios.post(url).then((response) => {
+            url=API.code+ "/projects/"+this.state.projectid;
+            Axios.get(url).then((response) => {
+                self.setState({projectInfo:response.data});
+            });
+        });
+
     }
 
 
@@ -123,7 +125,7 @@ export default class ProjectOverview extends React.Component{
                 </div>
 
                 <div className="div1">
-                    <button className="btn btn_star">
+                    <button className="btn btn_star" onClick={this.star.bind(this)}>
                         <img src={imgStar}/>{projectInfo.star_count}
                     </button>
                     <button className="btn btn_branch">

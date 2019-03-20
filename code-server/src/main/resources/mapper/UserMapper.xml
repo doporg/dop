@@ -4,4 +4,8 @@
     <select id="findUserAccessToken" parameterType="string" resultType="string">
         SELECT access_token FROM user WHERE username = #{username}
     </select>
+
+    <insert id="addUser" parameterType="User">
+        INSERT INTO user VALUES (#{username},#{access_token})
+    </insert>
 </mapper>

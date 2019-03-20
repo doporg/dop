@@ -63,17 +63,9 @@ const asideMenuConfig = [
     //     icon: 'account',
     // },
 
-
-
-
-    {
-        name: '自调节集成',
-        path: '/ciadjust',
-        icon: 'cascades',
-    },
     {
         name: '代码管理',
-        path: '/code/waszqt/1',
+        path: '/code/projectlist/personal',
         icon: 'code',
     }
 

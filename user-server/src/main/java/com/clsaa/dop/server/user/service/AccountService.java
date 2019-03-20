@@ -19,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.security.SecureRandom;
 import java.util.UUID;
@@ -69,6 +72,7 @@ public class AccountService {
      * @param email    邮箱
      * @param password 密码
      */
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public void register(String name, String email, String password) {
         BizAssert.validParam(Validator.isUsername(name),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户名非法"));
@@ -78,6 +82,11 @@ public class AccountService {
         BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
         BizAssert.validParam(Validator.isPassword(realPassword.getContent()),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "密码格式错误"));
+        //校验用户名或邮箱是否存在
+        UserBoV1 userBoV1 = this.userService.findUserByEmail(email);
+        BizAssert.allowed(userBoV1 == null, BizCodes.REPETITIVE_USER_EMAIL);
+        userBoV1 = this.userService.findUserByName(name);
+        BizAssert.allowed(userBoV1 == null, BizCodes.REPETITIVE_USER_NAME);
         //清除缓存中已有的注册信息
         String exitRegisterDataStr = this.redisTemplate.opsForValue().get(REGISTER_EMAIL_KEY_PREFIX + email);
         if (exitRegisterDataStr != null) {
