@@ -2,6 +2,7 @@ import Code from './DataOverview'
 import {ProjectList} from './ProjectList'
 import ProjectOverview from './ProjectOverview'
 import NewProject from './NewProject'
+import File from './File'
 import BasicLayout from "../../layouts/BasicLayout";
 import CodeLayout from "../../layouts/CodeLayout";
 
@@ -28,6 +29,11 @@ const codeConfig = [
         layout: CodeLayout,
         component: Code
     },
+    {
+        path: '/code/:username/:projectid/tree/:branch',
+        layout: CodeLayout,
+        component: File
+    }
 
 
 ];

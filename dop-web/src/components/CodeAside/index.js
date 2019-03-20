@@ -32,6 +32,8 @@ class CodeAside extends Component {
     const projectLink="/code/"+username+"/"+projectid;
     const commitLink="/code/"+username+"/"+projectid+"/commits/"+branch;
 
+    const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch;
+
 
     return (
         <Menu mode="inline" selectedKeys={[pathname]} className="ice-menu-custom">
@@ -50,6 +52,15 @@ class CodeAside extends Component {
                         </FoundationSymbol>
                     {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
                     <span className="ice-menu-item-text">{"项目"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={fileLink}>
+                <Link to={fileLink} className="ice-menu-link">
+                    <FoundationSymbol size="small" type="copy" >
+                        <Icon size="small" type="copy" />
+                    </FoundationSymbol>
+                    {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
+                    <span className="ice-menu-item-text">{"文件"}</span>
                 </Link>
             </MenuItem>
             <MenuItem key={commitLink}>
