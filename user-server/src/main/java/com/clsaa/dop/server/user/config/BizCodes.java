@@ -29,13 +29,17 @@ public interface BizCodes {
     /**
      * 用户邮箱已注册
      */
-    BizCode REPETITIVE_USER_EMAIL = new BizCode(1100, "注册失败，此邮箱已注册");
+    BizCode REPETITIVE_USER_EMAIL = new BizCode(13100, "注册失败，此邮箱已注册");
     /**
      * 激活通道已失效
      */
-    BizCode EXPIRED_REGISTER_CODE = new BizCode(1101, "注册失败，激活通道已失效");
+    BizCode EXPIRED_REGISTER_CODE = new BizCode(13101, "注册失败，激活通道已失效");
     /**
      * 用户名密码错误
      */
-    BizCode INVALID_PASSWORD = new BizCode(13100, "用户名密码错误");
+    BizCode INVALID_PASSWORD = new BizCode(13102, "用户名密码错误");
+    /**
+     * 用户名已注册
+     */
+    BizCode REPETITIVE_USER_NAME = new BizCode(13103, "注册失败，此用户名已注册");
 }
