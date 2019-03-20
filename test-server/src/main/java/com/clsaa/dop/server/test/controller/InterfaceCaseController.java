@@ -18,6 +18,7 @@ import java.util.List;
 import static com.clsaa.dop.server.test.doExecute.TestManager.execute;
 
 /**
+ * 接口测试用例相关api
  * @author xihao
  * @version 1.0
  * @since 19/03/2019
