@@ -17,7 +17,7 @@ export default class ProjectList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            sort: this.props.match.params.sort,
+            sort: "personal",
             data: [],
             showData:[],
             pageNo: 1,
@@ -56,7 +56,7 @@ export default class ProjectList extends React.Component {
 
     componentWillMount() {
 
-        let url = API.code + "/projectlist/" + this.state.sort + "/" + sessionStorage.getItem("user-name");
+        let url = API.code + "/projectlist?sort=" + this.state.sort + "&username=" + sessionStorage.getItem("user-name");
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
@@ -66,7 +66,7 @@ export default class ProjectList extends React.Component {
     }
 
     changeSort(sort) {
-        let url = API.code + "/projectlist/" + sort + "/" + sessionStorage.getItem("user-name");
+        let url = API.code + "/projectlist?sort=" + sort + "&username=" + sessionStorage.getItem("user-name");
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
@@ -87,7 +87,7 @@ export default class ProjectList extends React.Component {
     }
 
     handleInputChange(event) {
-        console.log(event.target.value);
+        // console.log(event.target.value);
         const val = event.target.value;
         if (val !== "") {
             const showData = this.state.data.filter(function (item) {
@@ -149,7 +149,7 @@ export default class ProjectList extends React.Component {
                                 let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.showData.length);
                                 return this.state.showData.slice(begin, end).map((item) => {
                                     const path = "/code/" + item.path_with_namespace.substring(0, item.path_with_namespace.indexOf('/')) + "/" + item.id;
-                                    console.log(path);
+                                    // console.log(path);
                                     return (
                                         <li className="list-item">
                                             <div className="list-item-avatar">

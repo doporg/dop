@@ -58,16 +58,22 @@ export default class ProjectOverview extends React.Component{
     }
 
     star(){
-        const curUser = window.sessionStorage.getItem("user-name");
-        console.log(curUser);
-        let url =  API.code+ "/projects/"+this.state.projectid+"/star/"+curUser;
         let self = this;
-        Axios.post(url).then((response) => {
-            url=API.code+ "/projects/"+this.state.projectid;
-            Axios.get(url).then((response) => {
-                self.setState({projectInfo:response.data});
-            });
-        });
+        Axios({
+            method: "POST",
+            url: API.code+ "/projects/"+this.state.projectid+"/star",
+            params: {
+                username:sessionStorage.getItem("user-name"),
+            },
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded',
+            },
+        }).then(response => {
+                let url=API.code+ "/projects/"+this.state.projectid;
+                Axios.get(url).then((response) => {
+                    self.setState({projectInfo:response.data});
+                });
+        })
 
     }
 

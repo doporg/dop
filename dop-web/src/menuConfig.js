@@ -73,7 +73,7 @@ const asideMenuConfig = [
     },
     {
         name: '代码管理',
-        path: '/code/projectlist/personal',
+        path: '/code/projectlist',
         icon: 'code',
     }
 

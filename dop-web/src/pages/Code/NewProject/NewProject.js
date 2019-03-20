@@ -35,10 +35,17 @@ export default class NewProject extends React.Component {
     }
 
     createProject() {
+
+        let data={};
+        data.name=this.state.name;
+        data.description=this.state.description;
+        data.visibility=this.state.visibility;
+        data.initialize_with_readme=this.state.initialize_with_readme;
+        data.username=sessionStorage.getItem("user-name");
         Axios({
             method: "POST",
-            url: API.code + "/projects/" + sessionStorage.getItem("user-name"),
-            data: this.state,
+            url: API.code + "/projects",
+            data: data,
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");

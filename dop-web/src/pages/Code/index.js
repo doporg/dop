@@ -13,7 +13,7 @@ const codeConfig = [
         component: NewProject
     },
     {
-        path: '/code/projectlist/:sort',
+        path: '/code/projectlist',
         layout: BasicLayout,
         component: ProjectList
     },

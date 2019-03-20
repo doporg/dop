@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.dto;
+package com.clsaa.dop.server.code.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
