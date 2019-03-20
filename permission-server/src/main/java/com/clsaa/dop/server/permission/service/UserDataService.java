@@ -1,8 +1,11 @@
 package com.clsaa.dop.server.permission.service;
 
+import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.UserDataDAO;
+import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.UserData;
 import com.clsaa.dop.server.permission.model.po.UserRule;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,12 @@ public class UserDataService {
     private UserDataDAO userDataDAO;
     @Autowired
     private UserRuleService userRuleService;
+    @Autowired
+    private PermissionService permissionService;
+    @Autowired
+    private RoleService roleService;
+
+
 
     /* *
      *
@@ -41,6 +50,8 @@ public class UserDataService {
      */
     public void addData(Long ruleId,Long userId,Long fieldValue,Long cuser,Long muser)
     {
+        UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
+        BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
         UserData userData=UserData.builder()
                 .ruleId(ruleId)
                 .userId(userId)
@@ -53,21 +64,46 @@ public class UserDataService {
         userDataDAO.saveAndFlush(userData);
     }
 
-    public boolean check(Long permissionId,Long userId,String fieldName,Long fieldValue)
+    //验证某个功能点操作的数据是否允许操作
+    public boolean check(String permissionName,Long userId,String fieldName,Long fieldValue)
     {
-        Long ruleId=userRuleService.findUniqueRule("equals",fieldName,permissionId).getId();
-        if(ruleId==null)return false;
-        List<UserData> userDataList= userDataDAO.findByUserIdAndFieldValue(userId,fieldValue);
-        for(UserData userData :userDataList)
-        {
-            if(userData.getRuleId()==ruleId) return true;
+        Long permissionId=permissionService.findByName(permissionName).getId();
+        //查找用户所有角色
+        List<RoleBoV1> roleBoV1List1=roleService.findByUserId(userId);
+        //查找有该功能点的所有角色
+        List<RoleBoV1> roleBoV1List2=roleService.findByPermissionId(permissionId);
+        //查找用户用来实现该功能点的所有角色
+        if(!roleBoV1List1.retainAll(roleBoV1List2))return false;
+        Long ruleId=0l;
+        for (RoleBoV1 roleBoV1 : roleBoV1List1) {
+            if (userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()) != null) {
+                ruleId = userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()).getId();
+            }
         }
+        if(ruleId==0l)return false;
+        if(userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId)!=null)
+        {return true;}
         return false;
     }
 
-    public List<Long> findAllIds(Long permissionId, Long userId,String fieldName)
+    //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
+    public List<Long> findAllIds(String permissionName, Long userId,String fieldName)
     {
-        Long ruleId=userRuleService.findUniqueRule("in",fieldName,permissionId).getId();
+        Long permissionId=permissionService.findByName(permissionName).getId();
+        //查找用户所有角色
+        List<RoleBoV1> roleBoV1List1=roleService.findByUserId(userId);
+        //查找有该功能点的所有角色
+        List<RoleBoV1> roleBoV1List2=roleService.findByPermissionId(permissionId);
+        //查找用户用来实现该功能点的所有角色
+        if(!roleBoV1List1.retainAll(roleBoV1List2))return null;
+        Long ruleId=0l;
+        for (RoleBoV1 roleBoV1 : roleBoV1List1) {
+            if (userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()) != null) {
+                ruleId = userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()).getId();
+            }
+        }
+        if(ruleId==0l)return null;
+
         List<Long> IdList=new ArrayList<>();
         List<UserData> userDataList=userDataDAO.findByRuleId(ruleId);
         for(UserData userData:userDataList){

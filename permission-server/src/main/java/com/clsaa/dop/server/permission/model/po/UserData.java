@@ -20,7 +20,8 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_userData") //引入@Table注解，name赋值为表名
+@Table(name = "t_userData",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"id","rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
 @SQLDelete(sql = "update t_userData set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")

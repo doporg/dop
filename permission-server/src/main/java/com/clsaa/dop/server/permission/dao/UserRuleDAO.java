@@ -17,21 +17,13 @@ import java.util.List;
 public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
 
     /**
-     * 根据功能点ID和作用域名称查询规则
+     * 根据角色ID和作用域名称和规则名称查询规则
      *
-     * @param permissionId  功能点ID
+     * @param roleId  功能点ID
      * @param fieldName  作用域名称
-     *
-     * @return {@link List<UserRule>}
+     * @param rule  规则名称
+     * @return {@link UserRule}
      */
-    public UserRule findByPermissionIdAndFieldName(Long permissionId,String fieldName);
-    /**
-     * 根据规则类型查询规则
-     *
-     * @param rule  规则类型
-     *
-     * @return {@link List<UserRule>}
-     */
-    public List<UserRule> findByRule(String rule);
+    public UserRule findByRoleIdAndFieldNameAndRule(Long roleId,String fieldName,String rule);
 
 }

@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
+import com.clsaa.dop.server.permission.model.po.UserRule;
 import com.clsaa.dop.server.permission.service.UserRuleService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author lzy
  *
  *   /*
- *  * @param permissionId 功能点ID
+ *  * @param roleId 角色ID
  *  * @param fieldName 权限作用域参数名
  *  * @param rule 数据规则
  *
@@ -38,8 +39,8 @@ public class UserRuleController {
     @ApiOperation(value = "添加一个用户数据规则", notes = "添加一个用户数据规则")
     @PostMapping("/v1/users/userrule")
     public void addRule(
-            @ApiParam(name = "permissionId",value = "功能点ID",required = true)
-            @RequestParam(value = "permissionId", required = true)Long permissionId,
+            @ApiParam(name = "roleId",value = "角色ID",required = true)
+            @RequestParam(value = "roleId", required = true)Long roleId,
             @ApiParam(name = "fieldName",value = "权限作用域参数名",required = true)
             @RequestParam(value = "fieldName", required = true)String fieldName,
             @ApiParam(name = "rule",value = "规则",required = true)
@@ -47,6 +48,7 @@ public class UserRuleController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser
     )
     {
-        userRuleService.addRule(permissionId,fieldName,rule,loginUser,loginUser);
+        userRuleService.addRule(roleId,fieldName,rule,loginUser,loginUser);
     }
+
 }

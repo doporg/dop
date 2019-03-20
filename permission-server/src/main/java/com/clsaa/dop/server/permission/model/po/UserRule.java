@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_userRule",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"id","role_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
 @SQLDelete(sql = "update t_userRule set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
@@ -38,11 +38,11 @@ public class UserRule {
     private Long id;
 
     /**
-     * 功能点id
+     * 角色id
      */
     @Basic
-    @Column(name = "permission_id")
-    private Long permissionId;
+    @Column(name = "role_id")
+    private Long roleId;
     /**
      * 权限作用域参数名
      */

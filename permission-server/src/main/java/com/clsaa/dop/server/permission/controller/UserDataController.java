@@ -55,11 +55,12 @@ public class UserDataController {
     }
 
     //判断该用户当前功能点是否可在该条数据执行
-    @ApiOperation(value = "判断该用户当前功能点是否可在该条数据执行", notes = "判断该用户当前功能点是否可在该条数据执行")
+    //使用方法： roleId
+    @ApiOperation(value = "验证某个功能点操作的数据是否允许操作", notes = "验证某个功能点操作的数据是否允许操作")
     @GetMapping("/v1/users/data")
     public boolean check(
-            @ApiParam(name = "permissionId",value = "功能点ID",required = true)
-            @RequestParam(value = "permissionId", required = true) Long permissionId,
+            @ApiParam(name = "permissionName",value = "功能点名称",required = true)
+            @RequestParam(value = "permissionName", required = true) String permissionName,
             @ApiParam(name = "userId",value = "用户ID",required = true)
             @RequestParam(value = "userId", required = true)Long userId,
             @ApiParam(name = "fieldName",value = "作用域参数名称",required = true)
@@ -68,22 +69,22 @@ public class UserDataController {
             @RequestParam(value = "fieldValue", required = true)Long fieldValue
     )
     {
-      return   userDataService.check(permissionId,userId,fieldName,fieldValue);
+      return   userDataService.check(permissionName,userId,fieldName,fieldValue);
     }
 
-    //得到该用户当前功能点可执行的所有数据ID
-    @ApiOperation(value = "得到该用户当前功能点可执行的所有数据", notes = "得到该用户当前功能点可执行的所有数据")
+    //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
+    @ApiOperation(value = "得到某个功能点操作允许操作的数据范围（返回ID列表形式）", notes = "得到某个功能点操作允许操作的数据范围（返回ID列表形式）")
     @GetMapping("/v1/users/datalist")
     public List<Long> findAllIds(
-            @ApiParam(name = "permissionId",value = "功能点ID",required = true)
-            @RequestParam(value = "permissionId", required = true) Long permissionId,
+            @ApiParam(name = "permissionName",value = "功能点名称",required = true)
+            @RequestParam(value = "permissionName", required = true) String permissionName,
             @ApiParam(name = "userId",value = "用户ID",required = true)
             @RequestParam(value = "userId", required = true)Long userId,
             @ApiParam(name = "fieldName",value = "作用域参数名称",required = true)
             @RequestParam(value = "fieldName", required = true)String fieldName
     )
     {
-       return userDataService.findAllIds(permissionId,userId,fieldName);
+       return userDataService.findAllIds(permissionName,userId,fieldName);
     }
 
 

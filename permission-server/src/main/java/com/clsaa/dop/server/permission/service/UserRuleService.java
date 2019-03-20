@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.permission.service;
 
+import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.UserRuleDAO;
 import com.clsaa.dop.server.permission.model.po.UserRule;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class UserRuleService {
 
     /* *
      *
-     *  * @param permissionId 功能点ID
+     *  * @param roleId 角色ID
      *  * @param fieldName 权限作用域参数名
      *  * @param rule 数据规则
      *
@@ -36,10 +38,12 @@ public class UserRuleService {
      *
      * since :2019.3.19
      */
-    public void addRule(Long permissionId,String fieldName,String rule,Long cuser,Long muser)
+    public void addRule(Long roleId,String fieldName,String rule,Long cuser,Long muser)
     {
+        UserRule existUserRule=userRuleDAO.findByRoleIdAndFieldNameAndRule(roleId,fieldName,rule);
+        BizAssert.allowed(existUserRule==null, BizCodes.REPETITIVE_RULE);
         UserRule userRule=UserRule.builder()
-                .permissionId(permissionId)
+                .roleId(roleId)
                 .fieldName(fieldName)
                 .rule(rule)
                 .cuser(cuser)
@@ -51,15 +55,8 @@ public class UserRuleService {
     }
 
     //查找唯一规则
-    public UserRule findUniqueRule(String rule,String fieldName,Long permissionId)
+    public UserRule findUniqueRule(String rule,String fieldName,Long roleId)
     {
-        List<UserRule> userRuleList= userRuleDAO.findByRule(rule);
-        for (UserRule userRule : userRuleList) {
-            if (userRule.getFieldName().equals(fieldName) && userRule.getPermissionId() == permissionId) {
-                return userRule;
-            }
-        }
-        return null;
+        return userRuleDAO.findByRoleIdAndFieldNameAndRule(roleId,fieldName,rule);
     }
-
 }
