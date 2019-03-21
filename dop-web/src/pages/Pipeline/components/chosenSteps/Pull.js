@@ -24,7 +24,7 @@ export default class Pull extends Component{
                     <Input
                         onChange={this.buildMavenGit.bind(this)}
                         className="input"
-                        placeholder={this.props.gitUrl}
+                        value={this.props.gitUrl}
                     />
                 </div>
             </div>

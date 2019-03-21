@@ -34,7 +34,7 @@ export default class PushDockerImage extends Component {
                         <Input
                             onChange={this.buildDockerUserName.bind(this)}
                             className="input"
-                            placeholder={this.props.dockerUserName}
+                            value={this.props.dockerUserName}
                         />
                         <span className="item">
                             <span className="must">*</span>
@@ -43,7 +43,7 @@ export default class PushDockerImage extends Component {
                         <Input
                             onChange={this.buildRepository.bind(this)}
                             className="input"
-                            placeholder={this.props.repository}
+                            value={this.props.repository}
                         />
                         <span className="item">
                             <span className="must">*</span>
@@ -52,7 +52,7 @@ export default class PushDockerImage extends Component {
                         <Input
                             onChange={this.buildRepositoryVersion.bind(this)}
                             className="input"
-                            placeholder={this.props.repositoryVersion}
+                            value={this.props.repositoryVersion}
                         />
                         <span className="item">
                             <span className="must">*</span>
@@ -61,7 +61,7 @@ export default class PushDockerImage extends Component {
                         <Input
                             onChange={this.buildDockerPassword.bind(this)}
                             className="input"
-                            placeholder={this.props.dockerPassword}
+                            value={this.props.dockerPassword}
                             htmlType="password"
                         />
                     </div>

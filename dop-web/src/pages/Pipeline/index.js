@@ -3,6 +3,7 @@ import PipelineInfo from './PipelineInfo/PipelineInfo'
 import PipelineProject from './PipelineProject/PipelineProject'
 import PipelineTest from './test/test'
 import BasicLayout from "../../layouts/BasicLayout";
+import EditPipelineInfo from "./PipelineInfo/EditPipelineInfo";
 
 
 const pipelineConfig = [
@@ -16,7 +17,6 @@ const pipelineConfig = [
         path: '/pipeline/new',
         layout: BasicLayout,
         component: PipelineInfo,
-        isLogin: true
     },
     {
         path: '/pipeline/project/:id',
@@ -25,7 +25,7 @@ const pipelineConfig = [
     }, {
         path: '/pipeline/edit/:id',
         layout: BasicLayout,
-        component: PipelineInfo,
+        component: EditPipelineInfo,
     },{
         path: '/pipeline/test',
         layout: BasicLayout,

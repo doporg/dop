@@ -131,4 +131,21 @@ public class PipelineService {
             return null;
         }
     }
+
+    /**
+     * 更新流水线信息
+     */
+    public void update(PipelineBoV1 pipelineBoV1){
+        Pipeline pipeline = Pipeline.builder()
+                .id(new ObjectId(pipelineBoV1.getId()))
+                .name(pipelineBoV1.getName())
+                .monitor(pipelineBoV1.getMonitor())
+                .stages(pipelineBoV1.getStages())
+                .ctime(pipelineBoV1.getCtime())
+                .mtime(pipelineBoV1.getMtime())
+                .cuser(pipelineBoV1.getCuser())
+                .isDeleted(false)
+                .build();
+        pipelineRepository.save(pipeline);
+    }
 }

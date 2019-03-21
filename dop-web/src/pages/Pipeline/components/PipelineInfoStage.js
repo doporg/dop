@@ -12,13 +12,18 @@ export default class PipelineInfoStage extends Component {
     }
 
     componentWillMount() {
-        let self = this
+        let self = this;
         this.setState({
             currentStage: self.props.currentStage,
             stages: self.props.stages
         })
     }
-
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            stages: nextProps.stages,
+            currentStage: nextProps.currentStage
+        })
+    }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.stages !== this.state.stages) {
             this.props.onChange(this.state.stages)
@@ -57,7 +62,6 @@ export default class PipelineInfoStage extends Component {
             stages: stages,
             currentStage: this.state.currentStage===0?0:this.state.currentStage - 1
         });
-
     }
 
 

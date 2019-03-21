@@ -9,13 +9,29 @@ const {toast} = Feedback;
 
 class App extends Component {
     componentWillMount() {
+        if(window.sessionStorage.getItem('Authorization')){
+            Axios.defaults.headers.common['Authorization'] = "Bearer " + window.sessionStorage.getItem('Authorization');
+        }
+        if(window.sessionStorage.getItem('x-login-token')){
+            Axios.defaults.headers.common['x-login-token'] = window.sessionStorage.getItem('x-login-token');
+        }
+
         Axios.interceptors.response.use((response) => {
             return Promise.resolve(response);
         }, (error) => {
-            if(error.status === 500 && error.message === 'pre:AccessTokenZuulFilter'){
-                window.sessionStorage.removeItem('Authorization');
-                window.sessionStorage.removeItem('x-login-token');
-                window.sessionStorage.removeItem('x-login-user');
+            if (error.response) {
+                console.log(11)
+                toast.show({
+                    type: "error",
+                    content: error.response.data.message,
+                    duration: 1000
+                });
+            } else {
+                console.log('Error', error.message);
+            }
+
+            if(error.status === 500 && error.response.data.message === 'pre:AccessTokenZuulFilter'){
+                window.sessionStorage.clear();
                 toast.show({
                     type: "error",
                     content: "Token失效, 请重新登陆",

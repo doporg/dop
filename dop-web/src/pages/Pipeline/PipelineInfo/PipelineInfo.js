@@ -12,8 +12,10 @@ import PipelineInfoStage from '../components/PipelineInfoStage'
 import './PipelineInfo.scss';
 import Axios from 'axios';
 import API from '../../API';
+import {Feedback} from "@icedesign/base/index";
 
 const {Combobox} = Select;
+const {toast} = Feedback;
 
 export default class PipelineInfo extends Component {
     constructor(props) {
@@ -64,6 +66,14 @@ export default class PipelineInfo extends Component {
             // data: data
         }).then((response)=>{
             console.log(response)
+            if(response.status === 200){
+                toast.show({
+                    type: "success",
+                    content: "保存成功",
+                    duration: 1000
+                });
+                self.props.history.push('/pipeline')
+            }
         })
     }
 

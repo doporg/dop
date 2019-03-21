@@ -27,7 +27,8 @@ export default class PipelineProject extends Component {
         let self = this;
         this.getRuns().then((data) => {
             self.setState({
-                runs: data
+                runs: data,
+                visible: false
             })
         })
     }
@@ -46,12 +47,12 @@ export default class PipelineProject extends Component {
                             content: "该流水线尚未运行",
                             duration: 3000
                         });
+                        resolve(response.data[0]);
                     } else {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
                         }
-
                     }
                 }
                 reject()
@@ -80,8 +81,47 @@ export default class PipelineProject extends Component {
         })
 
     }
+
     clear(){
         clearInterval(this.state.time)
+    }
+
+    removeByIdSQL(id) {
+        let url = API.pipeline + '/v1/delete/byId?id='+id;
+        let self = this;
+        Axios.put(url).then((response) => {
+            if (response.status === 200) {
+                toast.show({
+                    type: "success",
+                    content: "删除成功",
+                    duration: 1000
+                });
+                self.props.history.push('/pipeline')
+            }
+        })
+    }
+
+    deletePipeline() {
+        console.log(11)
+        let url = API.pipeline + '/v1/jenkins/byId?id='+this.state.pipelineId;
+        let self = this;
+        self.setState({
+            visible: true
+        });
+        Axios({
+            method: 'delete',
+            url: url,
+        }).then((response) => {
+            if (response.status === 200) {
+                self.removeByIdSQL(this.state.pipelineId);
+            } else {
+                toast.show({
+                    type: "error",
+                    content: "删除失败",
+                    duration: 1000
+                });
+            }
+        });
     }
 
     render() {
@@ -97,8 +137,8 @@ export default class PipelineProject extends Component {
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
-                        <Button type="secondary" shape="warning" className="button" disabled>
-                            <Icon type="ashbin"/>
+                        <Button type="secondary" shape="warning" className="button" onClick={this.deletePipeline.bind(this)}>
+                            <Icon type="ashbin" />
                             删除流水线
                         </Button>
                     </div>
