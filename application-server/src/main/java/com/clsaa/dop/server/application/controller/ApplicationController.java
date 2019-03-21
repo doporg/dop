@@ -48,11 +48,11 @@ public class ApplicationController {
     }
 
     @ApiOperation(value = "根据ID查询应用信息", notes = "根据ID查询应用项目")
-    @GetMapping(value = "/applicationDetail/{id}")
-    public AppBasicInfoV1 findAppById(@ApiParam(name = "id", value = "id", required = true) @PathVariable(value = "id") Long id) {
-        System.out.print(id);
-        AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);
-        AppBoV1 app = this.applicationService.findAppById(id);
+    @GetMapping(value = "/application/{appId}/urlInfo")
+    public AppBasicInfoV1 findAppById(@ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
+        System.out.print(appId);
+        AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(appId);
+        AppBoV1 app = this.applicationService.findAppById(appId);
         System.out.print(app);
         System.out.print(app.getCtime());
         AppBasicInfoV1 appBasicInfoV1 = AppBasicInfoV1.builder()
@@ -86,17 +86,17 @@ public class ApplicationController {
     }
 
     @ApiOperation(value = "更新应用", notes = "更新应用")
-    @PutMapping(value = "/application/{id}")
-    public void updateApp(@ApiParam(name = "id", value = "应用Id", required = true) @PathVariable(value = "id") Long id,
+    @PutMapping(value = "/application/{appId}")
+    public void updateApp(@ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
                           @ApiParam(name = "description", value = "应用描述", required = true) @RequestParam(value = "description") String description) {
-        this.applicationService.updateApp(id, description);
+        this.applicationService.updateApp(appId, description);
     }
 
     @ApiOperation(value = "删除应用", notes = "删除应用")
-    @DeleteMapping(value = "/application/{id}")
+    @DeleteMapping(value = "/application/{appId}")
     public void deleteApp(
-            @ApiParam(name = "id", value = "项目Id", required = true) @PathVariable(value = "id") Long id) {
-        this.applicationService.deleteApp(id);
+            @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId) {
+        this.applicationService.deleteApp(appId);
 
     }
 }

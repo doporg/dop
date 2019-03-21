@@ -108,7 +108,13 @@ public class AppYamlData {
      * 镜像地址
      */
     @Column(name = "image_url")
-    private String image_url;
+    private String imageUrl;
+
+    /**
+     * yaml文件相对路径
+     */
+    @Column(name = "yaml_file_path")
+    private String yamlFilePath;
 
     /**
      * 副本数量

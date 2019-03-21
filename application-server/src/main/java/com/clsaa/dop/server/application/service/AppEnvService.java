@@ -3,11 +3,15 @@ package com.clsaa.dop.server.application.service;
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.dao.AppVarRepository;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
+import com.clsaa.dop.server.application.model.bo.AppYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.App;
 import com.clsaa.dop.server.application.model.po.AppEnvironment;
+import com.clsaa.dop.server.application.model.po.AppYamlData;
 import com.clsaa.dop.server.application.model.vo.AppEnvDetailV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import io.kubernetes.client.apis.AppsApi;
 import io.kubernetes.client.apis.AppsV1Api;
+import io.kubernetes.client.util.Yaml;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.Watch;
@@ -360,11 +364,100 @@ public class AppEnvService {
      * @param releaseBatch    发布批次
      * @param replicas        副本数量
      */
-    public void updateOrCreateYamlInfoByAppEnvId(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String containers, String releaseStrategy, Integer replicas
-            , Long releaseBatch, String image_url) {
-        this.appYamlService.updataOrCreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
-                , releaseBatch, image_url);
+    public void CreateYamlInfoByAppEnvId(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String containers, String releaseStrategy, Integer replicas
+            , Long releaseBatch, String imageUrl, String yamlFilePath) {
+        this.appYamlService.CreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
+                , releaseBatch, imageUrl, yamlFilePath);
 
+    }
+
+    /**
+     * 更新YAML信息
+     *
+     * @param appEnvId        应用环境id
+     * @param cuser           创建者
+     * @param nameSpace       命名空间
+     * @param service         服务
+     * @param deployment      部署
+     * @param containers      容器
+     * @param releaseStrategy 发布策略
+     * @param releaseBatch    发布批次
+     * @param replicas        副本数量
+     */
+    public void UpdateYamlInfoByAppEnvId(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String containers, String releaseStrategy, Integer replicas
+            , Long releaseBatch, String imageUrl, String yamlFilePath) {
+        this.appYamlService.UpdateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
+                , releaseBatch, imageUrl, yamlFilePath);
+
+    }
+
+
+    public HashMap<String, String> createYamlFileForDeploy(Long appEnvId) throws Exception {
+        AppYamlDataBoV1 appYamlData = this.appYamlService.findYamlDataByEnvId(appEnvId);
+        if (appYamlData.getYamlFilePath() != "") {
+            String service = appYamlData.getService();
+            String nameSpace = appYamlData.getNameSpace();
+            AppsV1Api appsApi = getAppsApi(appEnvId);
+            String deployment = appYamlData.getDeployment();
+            String container = appYamlData.getContainers();
+            String imageUrl = appYamlData.getImageUrl();
+            Integer replicas = appYamlData.getReplicas();
+            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            if (deploymentList != null) {
+                for (int i = 0; i < deploymentList.size(); i++) {
+                    V1Deployment v1Deployment = deploymentList.get(i);
+                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
+                        List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
+                        for (int j = 0; i < containerList.size(); j++) {
+                            if (containerList.get(i).getName().equals(container)) {
+                                containerList.get(i).setImage(imageUrl);
+                            }
+                        }
+                        v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
+                        return new HashMap<String, String>() {{
+                            put("yaml", Yaml.dump(v1Deployment));
+                        }};
+                        //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+                    }
+                }
+            } else {
+                V1Deployment v1Deployment = new V1DeploymentBuilder()
+                        .withNewMetadata()
+                        .withName(service)
+                        .addToLabels("app", service)
+                        .endMetadata()
+                        .withNewSpec()
+                        .withReplicas(replicas)
+                        .withNewSelector()
+                        .addToMatchLabels("app", service)
+                        .endSelector()
+                        .withNewTemplate()
+                        .withNewMetadata()
+                        .addToLabels("app", service)
+                        .endMetadata()
+                        .withNewSpec()
+                        .addNewContainer()
+                        .withName(service)
+                        .withImage(imageUrl)
+                        .endContainer()
+                        .endSpec()
+                        .endTemplate()
+                        .endSpec()
+                        .build();
+                return new HashMap<String, String>() {{
+                    put("yaml", Yaml.dump(v1Deployment));
+                }};
+
+
+                //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+            }
+
+        } else {
+            return new HashMap<String, String>() {{
+                put("path", appYamlData.getYamlFilePath());
+            }};
+        }
+        return null;
     }
 
 }

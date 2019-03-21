@@ -36,7 +36,7 @@ export default class ApplicationVariable extends Component {
 
     //获取变量列表的值
     getApplicationVariableData() {
-        let getUrl = API.gateway + "/application-server/applicationDetail/variable/" + this.state.appId;
+        let getUrl = API.gateway + "/application-server/application/" + this.state.appId + "/variable";
         let _this = this;
         Axios.get(getUrl)
             .then(function (response) {
@@ -64,7 +64,7 @@ export default class ApplicationVariable extends Component {
 
 //删除按钮响应函数
     onDelete(id) {
-        let deleteUrl = API.gateway + "/application-server/applicationDetail/variable/" + id;
+        let deleteUrl = API.gateway + "/application-server/application/variable/" + id;
         let _this = this;
         Axios.delete(deleteUrl)
             .then(function (response) {
@@ -84,7 +84,7 @@ export default class ApplicationVariable extends Component {
 
 //保存按钮响应函数
     onSubmit(id) {
-        let putUrl = API.gateway + "/application-server/applicationDetail/variable/" + id;
+        let putUrl = API.gateway + "/application-server/application/variable/" + id;
         let _this = this;
         Axios.put(putUrl, {
             varValue: _this.field.getValue('value')

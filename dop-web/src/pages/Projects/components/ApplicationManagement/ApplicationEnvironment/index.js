@@ -22,7 +22,7 @@ export default class ApplicationEnvironment extends Component {
     }
 
     getAppEnvData() {
-        let url = API.gateway + "/application-server/application/environment/" + this.state.appId;
+        let url = API.gateway + "/application-server/application/" + this.state.appId + "/allEnv"
         let _this = this;
         Axios.get(url)
             .then(function (response) {
@@ -52,7 +52,7 @@ export default class ApplicationEnvironment extends Component {
     };
 
     onDelete(id) {
-        let deleteUrl = API.gateway + "/application-server/application/environment/" + id
+        let deleteUrl = API.gateway + "/application-server/application/env/" + id
         let _this = this;
         Axios.delete(deleteUrl)
             .then(function (response) {
@@ -78,6 +78,20 @@ export default class ApplicationEnvironment extends Component {
         this.state.showEnvDetail(id)
     }
 
+    getYaml(id) {
+
+
+        let url = API.gateway + "/application-server/application/env/" + {id} + "/yamlFile"
+        Axios.get(url)
+            .then((response) => {
+                console.log(response)///yaml
+            })
+            .catch((response) => {
+                console.log(response)
+            })
+
+    }
+
     cardRender() {
 
         return (
@@ -88,7 +102,9 @@ export default class ApplicationEnvironment extends Component {
                         <Col l={8} key={index}>
                             <Card>
                                 {this.titleRender(item.title, item.id)}
-
+                                <Button onClick={this.getYaml.bind(this, item.id)}>
+                                    部署主干
+                                </Button>
                                 <Button onClick={this.showEnvDetailFun.bind(this, item.id)}>
                                     配置部署
                                 </Button>

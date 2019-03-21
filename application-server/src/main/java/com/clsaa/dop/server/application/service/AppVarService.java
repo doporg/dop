@@ -66,6 +66,11 @@ public class AppVarService {
         this.appVarRepository.saveAndFlush(appVariable);
     }
 
+    public String findValueByAppIdAndKey(Long appId, String key) {
+        return this.appVarRepository.findByAppIdAndVarKey(appId, key);
+    }
+
+
     /**
      * 删除变量
      *

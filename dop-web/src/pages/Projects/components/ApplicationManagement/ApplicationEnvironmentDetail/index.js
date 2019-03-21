@@ -34,6 +34,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.clusterField = new Field(this);
         this.field = new Field(this);
         this.editField = new Field(this);
+        this.yamlPathField = new Field(this);
         console.log(props)
         this.state = {
             id: props.id,
@@ -43,12 +44,13 @@ export default class ApplicationEnvironmentDetail extends Component {
             serviceData: [],
             deploymentData: [],
             containerData: [],
-            createService: false
+            createService: false,
+            useYamlFile: false
         }
     }
 
     getEnvDetailData() {
-        let url = API.gateway + "/application-server/application/environment/detail/" + this.state.id;
+        let url = API.gateway + "/application-server/application/env/" + this.state.id;
         Axios.get(url)
             .then((response) => {
                 console.log(response)
@@ -63,7 +65,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                         editMode: false
                     })
                     let _this = this
-                    let namespaceUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allNamespaces"
+                    let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allNamespaces"
                     Axios.get(namespaceUrl)
                         .then((response) => {
                             console.log("response", response)
@@ -75,7 +77,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                         })
                     if (this.state.nameSpaceData != []) {
                         console.log("envDetailData", _this.state.envDetailData)
-                        let servicesUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allServices"
+                        let servicesUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allServices"
                         Axios.get(servicesUrl, {
                             params: {
                                 namespace: _this.state.envDetailData.nameSpace
@@ -90,7 +92,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                 }
                             })
                         if (this.state.serviceData != []) {
-                            let deploymentUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allDeployment"
+                            let deploymentUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allDeployment"
                             Axios.get(deploymentUrl, {
                                 params: {
                                     namespace: _this.state.envDetailData.nameSpace,
@@ -146,7 +148,7 @@ export default class ApplicationEnvironmentDetail extends Component {
 
             // 没有异常则提交表单
             if (errors == null) {
-                let postUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster"
+                let postUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster"
                 Axios.post(postUrl, {
                     targetClusterUrl: _this.clusterField.getValue("targetClusterUrl"),
                     targetClusterToken: _this.clusterField.getValue("targetClusterToken")
@@ -154,7 +156,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                     .then((response) => {
                             Toast.success("保存成功")
 
-                            let namespaceUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allNamespaces"
+                        let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allNamespaces"
                             Axios.get(namespaceUrl)
                                 .then((response) => {
                                     console.log("response", response)
@@ -175,22 +177,30 @@ export default class ApplicationEnvironmentDetail extends Component {
         })
     }
 
-    testKubernetes = () => {
-        let url = API.gateway + "/application-server/application/environment/detail/cluster"
-        Axios.get(url).then((response) => {
-            console.log(response)
-        })
-            .catch((response) => {
-                console.log(response)
-            })
-
-    }
-
 
     envDetailSubmit() {
         let _this = this;
+        if (this.state.useYamlFile) {
+            this.yamlPathField.validate((errors, values) => {
+                console.log(errors)
+                if (errors == null) {
+                    let url = API.gateway + '/application-server/application/env/' + this.state.id + '/yaml';
+                    Axios.put(url, {}, {
+                            params: {
+                                deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                releaseStrategy: this.field.getValue('releaseStrategy'),
+                                image_url: this.field.getValue('imageUrl'),
+                                releaseBatch: this.field.getValue('releaseBatch'),
+                                yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
+                            }
+                        }
+                    )
+                }
+            })
+
+        }
         if (this.state.createService) {
-            let createServiceUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/services"
+            let createServiceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/service"
             Axios.post(createServiceUrl, {}, {
                 params: {
                     name: this.field.getValue("service"),
@@ -206,28 +216,59 @@ export default class ApplicationEnvironmentDetail extends Component {
 
                         // 没有异常则提交表单
                         if (errors == null) {
-                            let url = API.gateway + '/application-server/application/environment/detail/yaml/' + this.state.id;
-                            Axios.put(url, {}, {
-                                    params: {
-                                        deploymentStrategy: this.field.getValue('deploymentStrategy'),
-                                        nameSpace: this.field.getValue('nameSpace'),
-                                        service: this.field.getValue('service'),
-                                        releaseStrategy: this.field.getValue('releaseStrategy'),
-                                        replicas: this.editField.getValue('replicas'),
-                                        image_url: this.field.getValue('imageUrl'),
-                                        releaseBatch: this.field.getValue('releaseBatch')
-                                    }
-                                }
-                            )
-                                .then(function (response) {
-                                    Toast.success("更新成功！")
+                            let url = API.gateway + '/application-server/application/env/' + this.state.id + "/yaml";
 
-                                    //提交完成后刷新当前页面
-                                    _this.getEnvDetailData()
+                            let existUrl = API.gateway + "/applcation-server/application/env/" + this.state.id + "/yamlStatus"
+                            Axios.get(existUrl)
+                                .then((response) => {
+                                    if (response) {
+                                        Axios.put(url, {}, {
+                                                params: {
+                                                    deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                    service: this.field.getValue('service'),
+                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                    replicas: this.editField.getValue('replicas'),
+                                                    image_url: this.field.getValue('imageUrl'),
+                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                }
+                                            }
+                                        )
+                                            .then(function (response) {
+                                                Toast.success("更新成功！")
+
+                                                //提交完成后刷新当前页面
+                                                _this.getEnvDetailData()
+                                            })
+                                            .catch(function (error) {
+                                                console.log(error);
+                                            });
+
+                                    } else {
+                                        Axios.post(url, {}, {
+                                                params: {
+                                                    deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                    service: this.field.getValue('service'),
+                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                    replicas: this.editField.getValue('replicas'),
+                                                    image_url: this.field.getValue('imageUrl'),
+                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                }
+                                            }
+                                        )
+                                            .then(function (response) {
+                                                Toast.success("更新成功！")
+
+                                                //提交完成后刷新当前页面
+                                                _this.getEnvDetailData()
+                                            })
+                                            .catch(function (error) {
+                                                console.log(error);
+                                            });
+                                    }
                                 })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+
                         }
                     })
                 })
@@ -244,29 +285,58 @@ export default class ApplicationEnvironmentDetail extends Component {
 
             // 没有异常则提交表单
             if (errors == null) {
-                let url = API.gateway + '/application-server/application/environment/detail/yaml/' + this.state.id;
-                Axios.put(url, {}, {
-                        params: {
-                            deploymentStrategy: this.field.getValue('deploymentStrategy'),
-                            nameSpace: this.field.getValue('nameSpace'),
-                            service: this.field.getValue('service'),
-                            deployment: this.field.getValue('deployment'),
-                            containers: this.field.getValue('container'),
-                            releaseStrategy: this.field.getValue('releaseStrategy'),
-                            image_url: this.field.getValue('imageUrl'),
-                            releaseBatch: this.field.getValue('releaseBatch')
-                        }
-                    }
-                )
-                    .then(function (response) {
-                        Toast.success("更新成功！")
+                let url = API.gateway + '/application-server/application/env/' + this.state.id + '/yaml'
+                let existUrl = API.gateway + "/applcation-server/application/env/" + this.state.id + "/yamlStatus"
+                Axios.get(existUrl)
+                    .then((response) => {
+                        if (response) {
+                            Axios.put(url, {}, {
+                                    params: {
+                                        deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                        nameSpace: this.field.getValue('nameSpace'),
+                                        service: this.field.getValue('service'),
+                                        deployment: this.field.getValue('deployment'),
+                                        containers: this.field.getValue('container'),
+                                        releaseStrategy: this.field.getValue('releaseStrategy'),
+                                        image_url: this.field.getValue('imageUrl'),
+                                        releaseBatch: this.field.getValue('releaseBatch')
+                                    }
+                                }
+                            )
+                                .then(function (response) {
+                                    Toast.success("更新成功！")
 
-                        //提交完成后刷新当前页面
-                        _this.getEnvDetailData()
+                                    //提交完成后刷新当前页面
+                                    _this.getEnvDetailData()
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        } else {
+                            Axios.post(url, {}, {
+                                    params: {
+                                        deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                        nameSpace: this.field.getValue('nameSpace'),
+                                        service: this.field.getValue('service'),
+                                        deployment: this.field.getValue('deployment'),
+                                        containers: this.field.getValue('container'),
+                                        releaseStrategy: this.field.getValue('releaseStrategy'),
+                                        image_url: this.field.getValue('imageUrl'),
+                                        releaseBatch: this.field.getValue('releaseBatch')
+                                    }
+                                }
+                            )
+                                .then(function (response) {
+                                    Toast.success("更新成功！")
+
+                                    //提交完成后刷新当前页面
+                                    _this.getEnvDetailData()
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        }
                     })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
             }
         })
     }
@@ -279,7 +349,7 @@ export default class ApplicationEnvironmentDetail extends Component {
     onNamespaceInputUpdate(e, value) {
         this.field.setValue("nameSpace", value.value)
         let _this = this
-        let namespaceUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allServices"
+        let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allServices"
         Axios.get(namespaceUrl, {
             params: {
                 namespace: value.value
@@ -306,7 +376,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.field.setValue("container", "")
         // console.log(_this.field.getValue("nameSpace"))
         if (!this.state.createService) {
-            let namespaceUrl = API.gateway + "/application-server/application/environment/detail/" + this.state.id + "/cluster/allDeployment"
+            let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allDeployment"
             Axios.get(namespaceUrl, {
                 params: {
                     namespace: _this.field.getValue("nameSpace"),
@@ -334,16 +404,177 @@ export default class ApplicationEnvironmentDetail extends Component {
         })
     }
 
+    toggleUseYamlFile() {
+        this.setState({
+            useYamlFile: !this.state.useYamlFile
+        })
+    }
+
     checkDeploymentData() {
         return this.state.createService || (this.state.deploymentData == undefined) || (this.state.deploymentData == "") || (this.state.deploymentData.length < 2) && (this.state.containerData.length == 0 || this.state.containerData[this.state.deploymentData[0]].length < 2)
+    }
+
+    yamlInfoRender() {
+        const {init, getValue} = this.field
+        if (!this.state.useYamlFile) {
+            return (
+                <div>
+
+
+                    <FormItem label="命名空间"
+                              {...formItemLayout}
+                              validateStatus={this.field.getError("nameSpace") ? "error" : ""}
+                              help={this.field.getError("nameSpace") ? "请选择命名空间" : ""}>
+                        <Combobox
+                            placeholder="命名空间"
+                            {...init('nameSpace', {rules: [{required: true, message: "该项不能为空"}]})}
+                            defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.nameSpace}
+                            fillProps="value"
+                            hasClear={true}
+                            onChange={this.onNamespaceInputUpdate.bind(this)}
+                        >
+                            {this.state.nameSpaceData.map((item) => {
+                                return (<Option value={String(item)}>{String(item)}</Option>)
+                            })}
+                        </Combobox>
+                    </FormItem>
+
+                    <FormItem label="服务"
+                              {...formItemLayout}
+                              validateStatus={this.field.getError("service") ? "error" : ""}
+                              help={this.field.getError("service") ? "服务" : ""}>
+                        <Combobox
+                            placeholder="服务"
+                            {...init('service', {rules: [{required: true, message: "该项不能为空"}]})}
+                            fillProps="value"
+                            hasClear={true}
+                            onChange={this.onServiceChange.bind(this)}
+                            onInputBlur={this.onInputBlur.bind(this)}
+                            defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.service}
+
+                        >
+                            {this.state.serviceData.map((item) => {
+                                return (<Option value={String(item)}>{String(item)}</Option>)
+                            })}
+                        </Combobox>
+
+                        <div
+                            onClick={this.toggleCreateService.bind(this)}>{this.state.createService ? "创建服务" : "选择服务"}</div>
+                    </FormItem>
+                    <FormItem style={{display: this.state.createService ? "" : "None"}}
+                              label="端口"
+                              {...formItemLayout}
+                              valiateStatus={this.editField.getError("port") ? "error" : ""}
+                              help={this.editField.getError("port") ? "请输入正确的端口" : ""}
+                    >
+                        <Input placeholder="开放端口"
+                               defaultValue={0}
+                               {...this.editField.init("port", {rules: [{required: true, message: "该项不能为空"}]})}/>
+
+                    </FormItem>
+
+                    <FormItem style={{display: this.state.createService ? "" : "None"}}
+                              label="副本数量"
+                              {...formItemLayout}
+                              validateStatus={this.editField.getError("replicas") ? "error" : ""}
+                              help={this.editField.getError("replicas") ? "副本数量" : ""}>
+                        <NumberPicker min={1}
+                                      max={99}
+                                      placeholder="副本数量"
+                                      defaultValue={0}
+                                      {...this.editField.init('replicas', {
+                                          rules: [{
+                                              required: true,
+                                              message: "该项不能为空"
+                                          }]
+                                      })}/>
+                    </FormItem>
+
+
+                    <FormItem
+                        label="部署"
+                        {...formItemLayout}
+                        validateStatus={this.field.getError("deployment") ? "error" : ""}
+                        help={this.field.getError("deployment") ? "部署" : ""}
+                        style={{display: this.checkDeploymentData() ? "None" : ""}}
+
+                    >
+                        <Combobox
+                            placeholder="部署"
+                            {...init('deployment', {
+                                rules: this.checkDeploymentData() ? "" : [{
+                                    required: true,
+                                    message: "该项不能为空"
+                                }]
+                            })}
+                            fillProps="value"
+                            hasClear={true}
+                            onChange={this.onDeploymentChange.bind(this)}
+                            defaultValue=""
+                        >
+                            {this.state.deploymentData.map((item) => {
+                                return (<Option value={String(item)}>{String(item)}</Option>)
+                            })}
+                        </Combobox>
+                    </FormItem>
+
+                    <FormItem label="容器"
+                              {...formItemLayout}
+                              validateStatus={this.field.getError("container") ? "error" : ""}
+                              help={this.field.getError("container") ? "容器" : ""}
+                              style={{display: this.checkDeploymentData() ? "None" : ""}}
+
+                    >
+                        <Combobox
+
+                            placeholder="容器"
+                            {...init('container', {
+                                rules: this.checkDeploymentData() ? "" : [{
+                                    required: true,
+                                    message: "该项不能为空"
+                                }]
+                            })}
+                            fillProps="value"
+                            hasClear={true}
+                            defaultValue={""}
+                            // onInputUpdate={this.onInputUpdate.bind(this)}
+                        >
+                            {
+                                (this.field.getValue("deployment") == undefined || this.field.getValue("deployment") == "") ? [] : this.state.containerData[this.field.getValue("deployment")].map((item) => {
+                                    return (<Option value={String(item)}>{String(item)}</Option>)
+                                })}
+                        </Combobox>
+                    </FormItem>
+                </div>
+            )
+        } else {
+            return (
+                <FormItem label="Yaml文件路径"
+                          {...formItemLayout}
+                          valiateStatus={this.yamlPathField.getError("yamlFilePath") ? "error" : ""}
+                          help={this.yamlPathField.getError("yamlFilePath") ? "请输入文件路径" : ""}
+                >
+                    <Input placeholder="Yaml文件路径"
+                           defaultValue=""
+                           {...this.yamlPathField.init("yamlFilePath", {
+                               rules: [{
+                                   required: true,
+                                   message: "该项不能为空"
+                               }]
+                           })}/>
+
+                </FormItem>
+            )
+        }
+
     }
 
     formRender() {
         if (this.state.editMode) {
             const {init, getValue} = this.field
+
             // const {clusterInit, clusterGetValue} = this.clusterField
             return (
-
                 <div>
                     <Form>
 
@@ -439,133 +670,11 @@ export default class ApplicationEnvironmentDetail extends Component {
                             </Input>
                         </FormItem>
 
-                        <FormItem label="命名空间"
-                                  {...formItemLayout}
-                                  validateStatus={this.field.getError("nameSpace") ? "error" : ""}
-                                  help={this.field.getError("nameSpace") ? "请选择命名空间" : ""}>
-                            <Combobox
-                                placeholder="命名空间"
-                                {...init('nameSpace', {rules: [{required: true, message: "该项不能为空"}]})}
-                                defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.nameSpace}
-                                fillProps="value"
-                                hasClear={true}
-                                onChange={this.onNamespaceInputUpdate.bind(this)}
-                            >
-                                {this.state.nameSpaceData.map((item) => {
-                                    return (<Option value={String(item)}>{String(item)}</Option>)
-                                })}
-                            </Combobox>
-                        </FormItem>
+                        <div
+                            onClick={this.toggleUseYamlFile.bind(this)}>{this.state.useYamlFile ? "使用Yaml相对路径" : "使用配置"}</div>
 
 
-                        <FormItem label="服务"
-                                  {...formItemLayout}
-                                  validateStatus={this.field.getError("service") ? "error" : ""}
-                                  help={this.field.getError("service") ? "服务" : ""}>
-                            <Combobox
-                                placeholder="服务"
-                                {...init('service', {rules: [{required: true, message: "该项不能为空"}]})}
-                                fillProps="value"
-                                hasClear={true}
-                                onChange={this.onServiceChange.bind(this)}
-                                onInputBlur={this.onInputBlur.bind(this)}
-                                defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.service}
-
-                            >
-                                {this.state.serviceData.map((item) => {
-                                    return (<Option value={String(item)}>{String(item)}</Option>)
-                                })}
-                            </Combobox>
-
-                            <div
-                                onClick={this.toggleCreateService.bind(this)}>{this.state.createService ? "创建服务" : "选择服务"}</div>
-                        </FormItem>
-
-
-                        <FormItem style={{display: this.state.createService ? "" : "None"}}
-                                  label="端口"
-                                  {...formItemLayout}
-                                  valiateStatus={this.editField.getError("port") ? "error" : ""}
-                                  help={this.editField.getError("port") ? "请输入正确的端口" : ""}
-                        >
-                            <Input placeholder="开放端口"
-                                   defaultValue={0}
-                                   {...this.editField.init("port", {rules: [{required: true, message: "该项不能为空"}]})}/>
-
-                        </FormItem>
-
-                        <FormItem style={{display: this.state.createService ? "" : "None"}}
-                                  label="副本数量"
-                                  {...formItemLayout}
-                                  validateStatus={this.editField.getError("replicas") ? "error" : ""}
-                                  help={this.editField.getError("replicas") ? "副本数量" : ""}>
-                            <NumberPicker min={1}
-                                          max={99}
-                                          placeholder="副本数量"
-                                          defaultValue={0}
-                                          {...this.editField.init('replicas', {
-                                              rules: [{
-                                                  required: true,
-                                                  message: "该项不能为空"
-                                              }]
-                                          })}/>
-                        </FormItem>
-
-
-                        <FormItem
-                            label="部署"
-                            {...formItemLayout}
-                            validateStatus={this.field.getError("deployment") ? "error" : ""}
-                            help={this.field.getError("deployment") ? "部署" : ""}
-                            style={{display: this.checkDeploymentData() ? "None" : ""}}
-
-                        >
-                            <Combobox
-                                placeholder="部署"
-                                {...init('deployment', {
-                                    rules: this.checkDeploymentData() ? "" : [{
-                                        required: true,
-                                        message: "该项不能为空"
-                                    }]
-                                })}
-                                fillProps="value"
-                                hasClear={true}
-                                onChange={this.onDeploymentChange.bind(this)}
-                                defaultValue=""
-                            >
-                                {this.state.deploymentData.map((item) => {
-                                    return (<Option value={String(item)}>{String(item)}</Option>)
-                                })}
-                            </Combobox>
-                        </FormItem>
-
-                        <FormItem label="容器"
-                                  {...formItemLayout}
-                                  validateStatus={this.field.getError("container") ? "error" : ""}
-                                  help={this.field.getError("container") ? "容器" : ""}
-                                  style={{display: this.checkDeploymentData() ? "None" : ""}}
-
-                        >
-                            <Combobox
-
-                                placeholder="容器"
-                                {...init('container', {
-                                    rules: this.checkDeploymentData() ? "" : [{
-                                        required: true,
-                                        message: "该项不能为空"
-                                    }]
-                                })}
-                                fillProps="value"
-                                hasClear={true}
-                                defaultValue={""}
-                                // onInputUpdate={this.onInputUpdate.bind(this)}
-                            >
-                                {
-                                    (this.field.getValue("deployment") == undefined || this.field.getValue("deployment") == "") ? [] : this.state.containerData[this.field.getValue("deployment")].map((item) => {
-                                        return (<Option value={String(item)}>{String(item)}</Option>)
-                                    })}
-                            </Combobox>
-                        </FormItem>
+                        {this.yamlInfoRender()}
 
 
                         <Button onClick={this.envDetailConfirm.bind(this)}
@@ -616,7 +725,6 @@ export default class ApplicationEnvironmentDetail extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
         return (
             <div>
                 {this.formRender()}

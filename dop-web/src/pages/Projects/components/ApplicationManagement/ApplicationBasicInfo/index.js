@@ -56,7 +56,7 @@ export default class ApplicationBasicInfo extends Component {
     componentDidMount() {
 
         let _this = this;
-        let url = API.gateway + '/application-server/applicationDetail/' + _this.state.appId;
+        let url = API.gateway + '/application-server/application/' + _this.state.appId + "/urlInfo";
 
         //获取应用基本信息
         Axios.get(url)
@@ -146,7 +146,7 @@ export default class ApplicationBasicInfo extends Component {
                         Toast.success("更新成功！")
 
                         //提交完成后刷新当前页面
-                        let url = API.gateway + '/application-server/applicationDetail/' + _this.state.appId;
+                        let url = API.gateway + '/application-server/application/' + _this.state.appId + '/urlInfo';
                         Axios.get(url)
                             .then(function (response) {
                                 console.log(response)
@@ -176,7 +176,7 @@ export default class ApplicationBasicInfo extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.gateway + '/application-server/applicationDetail/' + this.state.appId
+                let url = API.gateway + '/application-server/application/' + this.state.appId + "/urlInfo"
                 Axios.put(url, {}, {
                         params: {
                             warehouseUrl: this.field.getValue("warehouseUrl"),
@@ -190,7 +190,7 @@ export default class ApplicationBasicInfo extends Component {
                     .then(function (response) {
                         Toast.success("更新成功！")
                         //提交完成后刷新当前页面
-                        let url = API.gateway + '/application-server/applicationDetail/' + _this.state.appId;
+                        let url = API.gateway + '/application-server/application/' + _this.state.appId + "/urlInfo";
                         Axios.get(url)
                             .then(function (response) {
                                 console.log(response)

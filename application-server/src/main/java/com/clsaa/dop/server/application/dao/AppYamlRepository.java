@@ -18,4 +18,6 @@ public interface AppYamlRepository extends JpaRepository<AppYamlData, Long> {
      */
     Optional<AppYamlData> findByAppEnvId(Long appEnvId);
 
+    Long countByAppEnvId(Long appEnvId);
+
 }

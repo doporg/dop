@@ -25,6 +25,16 @@ public class AppYamlDataBoV1 {
      */
     private String service;
 
+    /**
+     * 对应部署
+     */
+    private String deployment;
+
+    /**
+     * 对应容器
+     */
+    private String containers;
+
 
     /**
      * 发布策略
@@ -34,7 +44,25 @@ public class AppYamlDataBoV1 {
     /**
      * 镜像地址
      */
-    private String image_url;
+    private String imageUrl;
+
+
+    /**
+     * 发布批次
+     */
+
+    private Long releaseBatch;
+
+
+    /**
+     * yaml文件相对路径
+     */
+    private String yamlFilePath;
+
+    /**
+     * 副本数量
+     */
+    private Integer replicas;
 
 
 }
