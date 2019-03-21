@@ -1,10 +1,8 @@
-package com.clsaa.dop.server.code.model.vo.file;
+package com.clsaa.dop.server.code.model.bo.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * @author wsy
@@ -12,9 +10,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BranchAndTagVo {
+public class ChildrenBo {
 
     private String value;
     private String label;
-    private List<ChildrenVo> children;
+
 }

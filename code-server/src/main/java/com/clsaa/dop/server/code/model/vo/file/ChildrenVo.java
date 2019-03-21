@@ -4,17 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * @author wsy
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BranchAndTagVo {
+public class ChildrenVo {
 
     private String value;
     private String label;
-    private List<ChildrenVo> children;
+
 }

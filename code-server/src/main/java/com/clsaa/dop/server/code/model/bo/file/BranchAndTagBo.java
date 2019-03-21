@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BranchAndTagBo {
 
-    private List<String> branches;
-    private List<String> tags;
+    private String value;
+    private String label;
+    private List<ChildrenBo> children;
 }

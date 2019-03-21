@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.file.BranchAndTagBo;
+import com.clsaa.dop.server.code.model.bo.file.ChildrenBo;
 import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
 import com.clsaa.dop.server.code.model.vo.file.BranchAndTagVo;
+import com.clsaa.dop.server.code.model.vo.file.ChildrenVo;
 import com.clsaa.dop.server.code.model.vo.file.TreeNodeVo;
 import com.clsaa.dop.server.code.service.FileService;
 import com.clsaa.dop.server.code.util.BeanUtils;
@@ -43,9 +45,31 @@ public class FileController {
 
     @ApiOperation(value = "查找项目的分支名和tag名",notes = "根据项目id查找项目的分支名和tag名")
     @GetMapping("/projects/{id}/repository/branchandtag")
-    public BranchAndTagVo findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public List<BranchAndTagVo> findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") int id,
                                            @ApiParam(value = "用户名")@RequestParam("username") String username){
-        return BeanUtils.convertType(fileService.findBranchAndTag(id,username),BranchAndTagVo.class);
+
+        List<BranchAndTagBo> bos=fileService.findBranchAndTag(id,username);
+        List<BranchAndTagVo> vos=new ArrayList<>();
+
+        List<ChildrenVo> branches=new ArrayList<>();
+        List<ChildrenVo> tags=new ArrayList<>();
+
+        for(ChildrenBo childrenBo:bos.get(0).getChildren()){
+            branches.add(BeanUtils.convertType(childrenBo,ChildrenVo.class));
+        }
+
+        for(ChildrenBo childrenBo:bos.get(1).getChildren()){
+            tags.add(BeanUtils.convertType(childrenBo,ChildrenVo.class));
+        }
+
+        BranchAndTagVo vo1=new BranchAndTagVo("branch","branch",branches);
+        BranchAndTagVo vo2=new BranchAndTagVo("tag","tag",tags);
+
+        vos.add(vo1);
+        vos.add(vo2);
+
+        return vos;
+
     }
 
 

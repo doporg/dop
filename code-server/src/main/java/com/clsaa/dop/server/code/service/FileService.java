@@ -46,23 +46,27 @@ public class FileService {
      * @param username 用户名
      * @return 分支名和tag名
      */
-    public BranchAndTagBo findBranchAndTag(int id, String username){
+    public List<BranchAndTagBo> findBranchAndTag(int id, String username){
 
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",username,BranchBo.class);
         List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",username,TagBo.class);
 
-        List<String> branches=new ArrayList<>();
-        List<String> tags=new ArrayList<>();
+        List<ChildrenBo> branches=new ArrayList<>();
+        List<ChildrenBo> tags=new ArrayList<>();
 
         for(BranchBo branchBo:branchBos){
-            branches.add(branchBo.getName());
+            branches.add(new ChildrenBo(branchBo.getName(),branchBo.getName()));
         }
 
         for(TagBo tagBo:tagBos){
-            tags.add(tagBo.getName());
+            tags.add(new ChildrenBo(tagBo.getName(),tagBo.getName()));
         }
 
-        return new BranchAndTagBo(branches,tags);
+        List<BranchAndTagBo> res=new ArrayList<>();
+        res.add(new BranchAndTagBo("branch","branch",branches));
+        res.add(new BranchAndTagBo("tag","tag",tags));
+
+        return res;
 
     }
 }
