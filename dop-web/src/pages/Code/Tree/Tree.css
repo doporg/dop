@@ -1,0 +1,127 @@
+.file-container{
+    background-color: rgb(255, 255, 255);
+    min-height: 300px;
+    position: relative;
+}
+
+.div-tree-top{
+    display: flex;
+    align-items:center ;
+    height: 80px;
+    padding-left: 20px;
+    background-color: #f7f8fa;
+    border-top: 1px solid #dce0e6;
+    border-bottom: 1px solid #dce0e6;
+    color: #7f8fa4;
+
+}
+
+.div-tree-item{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
+    border-bottom: 1px solid #dce0e6;
+}
+
+.div-tree-item:hover{
+    background-color: #defbf9;
+}
+
+.div-tree-item-dark{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
+    border-bottom: 1px solid #dce0e6;
+    background-color: #f7f8fa;
+}
+
+.div-tree-item-dark:hover{
+    background-color: #defbf9;
+}
+
+
+
+.div-tree-item-dark-title{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
+    border-bottom: 1px solid #dce0e6;
+    background-color: #f7f8fa;
+
+}
+
+.text-tree-title{
+    font-weight: bold;
+}
+
+.text-tree-name-title{
+    display: inline-block;
+    width: 38%;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.text-tree-commit-title{
+    display: inline-block;
+    width: 50%;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.text-tree-update-title{
+    display: inline-block;
+    width: 10%;
+    font-size: 15px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.text-tree-name{
+    display: inline-block;
+    width: 38%;
+    font-size: 15px;
+}
+
+.text-tree-commit{
+    display: inline-block;
+    width: 50%;
+    font-size: 15px;
+    color: #848484;
+}
+
+.text-tree-update{
+    display: inline-block;
+    width: 10%;
+    text-align: right;
+    font-size: 15px;
+    color: #585858;
+}
+
+
+.div-tree-item img{
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+.div-tree-item-dark img{
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+a{
+    color:black;
+}
+
+a:hover{
+    cursor:pointer;
+}
+
+
+
