@@ -13,6 +13,7 @@ import {Code,ProjectList,ProjectOverview,NewProject} from '../pages/Code'
 import CodeLayout from '../layouts/CodeLayout';
 import {Permission} from "../pages/Permissions";
 import {Role,UserRoleMapping} from "../pages/Roles";
+import DataRules from "../pages/DataRules/DataRules";
 
 const baseConfig = [
     {
@@ -108,7 +109,12 @@ const roleConfig = [
     },
 ];
 
-
+const dataRulesConfig=[    {
+    path: '/dataRules',
+    layout: BasicLayout,
+    component: DataRules,
+},
+];
 const codeConfig = [
 
     {
@@ -158,6 +164,6 @@ const projectConfig = [
     }
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig,...dataRulesConfig, ...baseConfig];
 
 export default routerConfig;

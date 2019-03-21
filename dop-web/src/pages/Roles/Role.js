@@ -256,6 +256,7 @@ export default class Role extends Component {
         });
     }
 
+
     //确认删除操作以及
     //删除功能点
     onConfirm = id => {
@@ -327,7 +328,7 @@ export default class Role extends Component {
         };
         //窗口按钮定义
         const footer = (
-            <a onClick={this.onClose} href="javascript:;">
+            <a onClick={this.onClose} href="javascript:">
                 取消
             </a>
         );
@@ -439,6 +440,7 @@ export default class Role extends Component {
                     </Form>
                 </Dialog>
 
+
                 <Dialog
                     title="角色功能点列表"
                     visible={this.state.permissionVisible}
@@ -477,8 +479,8 @@ export default class Role extends Component {
                     isLoading={this.state.isLoading}
                     dataSource={this.state.currentData}>
                     <Table.Column title="角色名称" dataIndex="name"/>
-                    <Table.Column title="最后修改人"   dataIndex="muser"/>
-                    <Table.Column title="最后修改时间" dataIndex="mtime"/>
+                    <Table.Column title="创建人"   dataIndex="muser"/>
+                    <Table.Column title="创建时间" dataIndex="mtime"/>
                     <Table.Column title="编辑角色" cell={showPermission} width="10%"/>
                     <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 

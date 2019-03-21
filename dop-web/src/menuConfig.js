@@ -57,11 +57,11 @@ const asideMenuConfig = [
         path: '/roles',
         icon: 'account',
     },
-    // {
-    //     name: '用户管理',
-    //     path: '/roles',
-    //     icon: 'account',
-    // },
+    {
+        name: '数据权限',
+        path: '/dataRules',
+        icon: 'filter',
+    },
 
 
 
