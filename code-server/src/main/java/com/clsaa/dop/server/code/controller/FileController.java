@@ -31,11 +31,12 @@ public class FileController {
     @GetMapping("/projects/{id}/repository/tree")
     public List<TreeNodeVo> findTree(@ApiParam(value = "项目id") @PathVariable("id") int id,
                                      @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
-                                     @ApiParam(value = "路径") @RequestParam("path")String path){
+                                     @ApiParam(value = "路径") @RequestParam("path")String path,
+                                     @ApiParam(value = "用户名")@RequestParam("username") String username){
 
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
-        List<TreeNodeBo> treeNodeBos=fileService.findTree(id,ref,path);
+        List<TreeNodeBo> treeNodeBos=fileService.findTree(id,ref,path,username);
         for(TreeNodeBo treeNodeBo:treeNodeBos){
             treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
         }

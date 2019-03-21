@@ -22,13 +22,13 @@ public class FileService {
      * @param path 文件路径
      * @return path下的所有文件和文件夹节点
      */
-    public List<TreeNodeBo> findTree(int id, String ref, String path){
+    public List<TreeNodeBo> findTree(int id, String ref, String path,String username){
 
-        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+path,TreeNodeBo.class);
+        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+path,username,TreeNodeBo.class);
 
         for(TreeNodeBo treeNode:treeNodeBos){
             //获得最近提交的一次
-            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?path="+treeNode.getPath(),CommitBo.class).get(0);
+            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?path="+treeNode.getPath(),username,CommitBo.class).get(0);
             treeNode.setCommit_id(commit.getId());
             treeNode.setCommit_msg(commit.getMessage());
             List<String> res=TimeUtil.natureTime(commit.getCommitted_date());
