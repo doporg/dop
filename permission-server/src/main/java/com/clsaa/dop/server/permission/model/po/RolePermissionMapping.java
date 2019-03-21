@@ -5,6 +5,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 @Where(clause = "is_deleted =false")
 @Table(name = "t_role_permission_mapping",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id","id"})}) //引入@Table注解，name赋值为表名
-public class RolePermissionMapping {
+public class RolePermissionMapping implements Serializable {
 
     private static final long serialVersionUID = 552000262L;
     /**

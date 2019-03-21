@@ -19,11 +19,27 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
     /**
      * 根据角色ID和作用域名称和规则名称查询规则
      *
-     * @param roleId  功能点ID
+     * @param roleId  角色ID
      * @param fieldName  作用域名称
      * @param rule  规则名称
      * @return {@link UserRule}
      */
     public UserRule findByRoleIdAndFieldNameAndRule(Long roleId,String fieldName,String rule);
+
+    /**
+     * 根据角色ID查询规则
+     *
+     * @param roleId  角色ID
+     * @return {@link List<UserRule>}
+     */
+    public List<UserRule> findByRoleId(Long roleId);
+
+    /**
+     * 根据角色ID删除规则
+     *
+     * @param roleId  角色ID
+     * @return
+     */
+    public void deleteByRoleId(Long roleId);
 
 }

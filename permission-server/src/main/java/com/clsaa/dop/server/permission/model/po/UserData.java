@@ -5,6 +5,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -20,12 +21,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "t_userData",
+@Table(name = "t_user_data",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"id","rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_userData set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_user_data set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class UserData {
+public class UserData implements Serializable {
     private static final long serialVersionUID = 552000265L;
 
     /**
