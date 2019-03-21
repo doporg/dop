@@ -1,11 +1,11 @@
 package com.clsaa.dop.server.code.service;
 
-import com.clsaa.dop.server.code.model.bo.file.CommitBo;
-import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
+import com.clsaa.dop.server.code.model.bo.file.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,5 +37,32 @@ public class FileService {
         }
 
         return treeNodeBos;
+    }
+
+
+    /**
+     * 查找项目所有的分支名和tag名
+     * @param id 项目id
+     * @param username 用户名
+     * @return 分支名和tag名
+     */
+    public BranchAndTagBo findBranchAndTag(int id, String username){
+
+        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",username,BranchBo.class);
+        List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",username,TagBo.class);
+
+        List<String> branches=new ArrayList<>();
+        List<String> tags=new ArrayList<>();
+
+        for(BranchBo branchBo:branchBos){
+            branches.add(branchBo.getName());
+        }
+
+        for(TagBo tagBo:tagBos){
+            tags.add(tagBo.getName());
+        }
+
+        return new BranchAndTagBo(branches,tags);
+
     }
 }

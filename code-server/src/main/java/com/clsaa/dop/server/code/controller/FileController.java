@@ -1,6 +1,8 @@
 package com.clsaa.dop.server.code.controller;
 
+import com.clsaa.dop.server.code.model.bo.file.BranchAndTagBo;
 import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
+import com.clsaa.dop.server.code.model.vo.file.BranchAndTagVo;
 import com.clsaa.dop.server.code.model.vo.file.TreeNodeVo;
 import com.clsaa.dop.server.code.service.FileService;
 import com.clsaa.dop.server.code.util.BeanUtils;
@@ -38,5 +40,14 @@ public class FileController {
 
         return treeNodeVos;
     }
+
+    @ApiOperation(value = "查找项目的分支名和tag名",notes = "根据项目id查找项目的分支名和tag名")
+    @GetMapping("/projects/{id}/repository/branchandtag")
+    public BranchAndTagVo findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                           @ApiParam(value = "用户名")@RequestParam("username") String username){
+        return BeanUtils.convertType(fileService.findBranchAndTag(id,username),BranchAndTagVo.class);
+    }
+
+
 
 }
