@@ -39,7 +39,7 @@ public class InterfaceCaseDto {
 
     private CaseStatus status;
 
-    private List<InterfaceStage> stages;
+    private List<InterfaceStageDto> stages;
 
     // ----------- common property ---------
     private LocalDateTime ctime;

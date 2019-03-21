@@ -1,5 +1,6 @@
-package com.clsaa.dop.server.test.mapper;
+package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
 import com.clsaa.dop.server.test.model.po.ManualCase;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,15 @@ import org.springframework.stereotype.Component;
  * @since 06/03/2019
  */
 @Component
-public class ManualCaseServiceMapper extends AbstractCommonServiceMapper<ManualCase, ManualCaseDto> {
+public class ManualCaseDtoMapper extends AbstractCommonServiceMapper<ManualCase, ManualCaseDto> {
 
     @Override
-    Class<ManualCase> getSourceClass() {
+    public Class<ManualCase> getSourceClass() {
         return ManualCase.class;
     }
 
     @Override
-    Class<ManualCaseDto> getTargetClass() {
+    public Class<ManualCaseDto> getTargetClass() {
         return ManualCaseDto.class;
     }
 }

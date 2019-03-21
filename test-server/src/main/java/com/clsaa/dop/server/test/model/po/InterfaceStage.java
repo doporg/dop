@@ -33,13 +33,19 @@ public class InterfaceStage {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "stage_id", referencedColumnName = "id")
+    @JoinColumn(name = "stage_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<RequestScript> requestScripts;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
-    @JoinColumn(name = "stage_id", referencedColumnName = "id")
+    @JoinColumn(name = "stage_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<WaitOperation> waitOperations;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private InterfaceCase interfaceCase;
 
     // ----------- common property ---------
     @Id
