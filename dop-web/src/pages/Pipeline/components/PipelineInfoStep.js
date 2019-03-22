@@ -20,6 +20,7 @@ export default class PipelineInfoStep extends Component {
             stage: this.props.stage,
             availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本"],
             steps: [],
+            currentStep: null,
             chosenStep: {
                 taskName: ""
             }
@@ -34,11 +35,9 @@ export default class PipelineInfoStep extends Component {
             };
             self.setState({chosenStep})
         }
-        if (nextProps.stage) {
-            self.setState({
-                stage: nextProps.stage,
-            })
-        }
+        self.setState({
+            stage: nextProps.stage,
+        })
     }
 
     formChange(value) {
@@ -149,6 +148,7 @@ export default class PipelineInfoStep extends Component {
      *  点击编辑task
      * */
     editTask(chosenStep) {
+
         console.log(chosenStep)
         this.setState({
             chosenStep
@@ -202,6 +202,7 @@ export default class PipelineInfoStep extends Component {
         });
         this.props.onChange(this.state.stage)
     }
+
     buildDockerPassword(value) {
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
@@ -213,7 +214,8 @@ export default class PipelineInfoStep extends Component {
         });
         this.props.onChange(this.state.stage)
     }
-    shell(value){
+
+    shell(value) {
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
         });
@@ -227,106 +229,124 @@ export default class PipelineInfoStep extends Component {
 
     render() {
         return (
-            <FormBinderWrapper
-                value={this.state.stage}
-                onChange={this.formChange.bind(this)}
-                ref="form"
-            >
-                <div className="pipeline-info-step">
-                    <h3 className="header">阶段设置</h3>
-                    <div>
-                        <span className="label">名称: </span>
-                        <FormBinder name="name" required message="请输入阶段的名称">
-                            <Input
-                                placeholder={this.state.stage?this.state.stage.name:null}
-                            />
-                        </FormBinder>
-                        <FormError className="form-item-error" name="name"/>
-                    </div>
-                    <div className="task">
-                            <span className="task-label-set">
-                                任务设置:
-                                <p>*请注意任务顺序</p>
-                            </span>
-                        <div className="choose-task">
-                            <Combobox
-                                filterLocal={false}
-                                placeholder="请选择任务"
-                                onChange={this.selectStep.bind(this)}
-                                dataSource={this.state.availableSteps}
-                            />
-                            {(() => {
-                                if (this.state.stage && this.state.stage.steps) {
-                                    return (this.state.stage.steps.map((item, index) => {
-                                        let chosenStyle = item.taskName === this.state.chosenStep.taskName ? "chosen task-label" : "task-label";
-                                        return (
-                                            <div className="chosen-task" key={index}>
-                                                <IceLabel className={chosenStyle}>
-                                                <span
-                                                    onClick={this.editTask.bind(this, item)}
-                                                >{item.taskName}</span>
-                                                    <Icon type="close" size="xs" className="close"
-                                                          onClick={this.closeTask.bind(this, index)}
-                                                    />
-                                                </IceLabel>
-                                            </div>
-                                        )
-                                    }))
-                                }
-                            })()}
-                        </div>
-                        {(() => {
-                            if (this.state.chosenStep.taskName) {
-                                return (
-                                    <div className="chosen-task-detail">
+            <div>
+                {(() => {
+                    if (this.state.stage) {
+                        return (
+                            <FormBinderWrapper
+                                value={this.state.stage}
+                                onChange={this.formChange.bind(this)}
+                                ref="form"
+                            >
+                                <div className="pipeline-info-step">
+                                    <h3 className="header">阶段设置</h3>
+                                    <div>
+                                        <span className="label">名称: </span>
+                                        <FormBinder name="name" required message="请输入阶段的名称">
+                                            <Input
+                                                value={this.state.stage.name}
+                                            />
+                                        </FormBinder>
+                                        <FormError className="form-item-error" name="name"/>
+                                    </div>
+                                    <div className="task">
+                                    <span className="task-label-set">
+                                        任务设置:
+                                        <p>*请注意任务顺序</p>
+                                    </span>
+                                        <div className="choose-task">
+                                            <Combobox
+                                                filterLocal={false}
+                                                placeholder="请选择任务"
+                                                onChange={this.selectStep.bind(this)}
+                                                dataSource={this.state.availableSteps}
+                                            />
+                                            {(() => {
+                                                if (this.state.stage && this.state.stage.steps) {
+                                                    return (this.state.stage.steps.map((item, index) => {
+                                                        let chosenStyle = item.taskName === this.state.chosenStep.taskName ? "chosen task-label" : "task-label";
+                                                        return (
+                                                            <div className="chosen-task" key={index}>
+                                                                <IceLabel className={chosenStyle}>
+                                                        <span
+                                                            onClick={this.editTask.bind(this, item)}
+                                                        >{item.taskName}</span>
+                                                                    <Icon type="close" size="xs" className="close"
+                                                                          onClick={this.closeTask.bind(this, index)}
+                                                                    />
+                                                                </IceLabel>
+                                                            </div>
+                                                        )
+                                                    }))
+                                                }
+                                            })()}
+                                        </div>
                                         {(() => {
-                                            switch (this.state.chosenStep.taskName) {
-                                                case "拉取代码":
-                                                    return (
-                                                        <Pull onChange={this.gitUrl.bind(this)}/>
-                                                    );
-                                                case "构建maven":
-                                                    return (
-                                                        <Maven/>
-                                                    );
-                                                case "构建node":
-                                                    return (
-                                                        <Node/>
-                                                    );
-                                                case "构建docker镜像":
-                                                    return (
-                                                        <DockerImage
-                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                            onRepositoryChange={this.buildRepository.bind(this)}
-                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
-                                                        />
-                                                    );
-                                                case "推送docker镜像":
-                                                    return (
-                                                        <PushDockerImage
-                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                            onRepositoryChange={this.buildRepository.bind(this)}
-                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
-                                                            onDockerPasswordChange={this.buildDockerPassword.bind(this)}
-                                                        />
-                                                    );
-                                                case "自定义脚本":
-                                                    return (
-                                                        <Shell
-                                                            onShellChange={this.shell.bind(this)}
-                                                        />
-                                                    );
-                                                default:
+                                            if (this.state.chosenStep.taskName) {
+                                                return (
+                                                    <div className="chosen-task-detail">
+                                                        {(() => {
+                                                            switch (this.state.chosenStep.taskName) {
+                                                                case "拉取代码":
+                                                                    return (
+                                                                        <Pull onChange={this.gitUrl.bind(this)}
+                                                                              gitUrl={this.state.chosenStep.gitUrl}
+                                                                        />
+                                                                    );
+                                                                case "构建maven":
+                                                                    return (
+                                                                        <Maven/>
+                                                                    );
+                                                                case "构建node":
+                                                                    return (
+                                                                        <Node/>
+                                                                    );
+                                                                case "构建docker镜像":
+                                                                    return (
+                                                                        <DockerImage
+                                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
+                                                                            onRepositoryChange={this.buildRepository.bind(this)}
+                                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
+                                                                            dockerUserName={this.state.chosenStep.dockerUserName}
+                                                                            repository={this.state.chosenStep.repository}
+                                                                            repositoryVersion={this.state.chosenStep.repositoryVersion}
+                                                                        />
+                                                                    );
+                                                                case "推送docker镜像":
+                                                                    return (
+                                                                        <PushDockerImage
+                                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
+                                                                            onRepositoryChange={this.buildRepository.bind(this)}
+                                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
+                                                                            onDockerPasswordChange={this.buildDockerPassword.bind(this)}
+                                                                            dockerUserName={this.state.chosenStep.dockerUserName}
+                                                                            repository={this.state.chosenStep.repository}
+                                                                            repositoryVersion={this.state.chosenStep.repositoryVersion}
+                                                                            dockerPassword={this.state.chosenStep.dockerPassword}
+                                                                        />
+                                                                    );
+                                                                case "自定义脚本":
+                                                                    return (
+                                                                        <Shell
+                                                                            onShellChange={this.shell.bind(this)}
+                                                                            shell={this.state.chosenStep.shell}
+                                                                        />
+                                                                    );
+                                                                default:
+                                                            }
+                                                        })()}
+                                                    </div>
+                                                )
                                             }
                                         })()}
                                     </div>
-                                )
-                            }
-                        })()}
-                    </div>
 
-                </div>
-            </FormBinderWrapper>
+                                </div>
+                            </FormBinderWrapper>
+                        )
+                    }
+                })()}
+            </div>
         )
     }
 }

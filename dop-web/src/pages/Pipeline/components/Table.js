@@ -26,12 +26,11 @@ export default class PipelineTable extends Component {
         let url = API.pipeline + '/v1/pipelines';
         let self = this;
         Axios.get(url).then((response) => {
-            let dataSource = response.data.sort((a, b) => {
-                return (a.name - b.name)
-            });
-            for(let i=0;i<dataSource.length;i++){
-                if(dataSource[i].isDeleted){
-                    dataSource.splice(i, 1)
+            let dataSource = []
+            let data = response.data.sort();
+            for (let i = 0; i < data.length; i++) {
+                if (!data[i].isDeleted) {
+                    dataSource.push(data[i])
                 }
             }
             self.setState({
@@ -41,7 +40,7 @@ export default class PipelineTable extends Component {
     }
 
     removeByIdSQL(id) {
-        let url = API.pipeline + '/v1/delete/byId?id='+id;
+        let url = API.pipeline + '/v1/delete/byId?id=' + id;
         let self = this;
         Axios.put(url).then((response) => {
             let pipelineInfo = this.state.dataSource;
@@ -62,8 +61,9 @@ export default class PipelineTable extends Component {
         })
     }
 
+
     deletePipeline(pipelineInfo) {
-        let url = API.pipeline + '/v1/pipeline/byId?id='+pipelineInfo.id;
+        let url = API.pipeline + '/v1/jenkins/byId?id=' + pipelineInfo.id;
         let self = this;
         self.setState({
             visible: true
@@ -95,7 +95,11 @@ export default class PipelineTable extends Component {
      *  表格 创建时间
      * */
     renderCreateTime(value) {
-        return value[0] + "-" + value[1] + "-" + value[2] + " " + value[3] + ":" + value[4]
+        if (value) {
+            return value[0] + "-" + value[1] + "-" + value[2] + "  " +
+                (value[3] < 10 ? '0' + value[3] : value[3]) + ":" +
+                (value[4] < 10 ? '0' + value[4] : value[4])
+        }
     }
 
     /**
@@ -103,11 +107,20 @@ export default class PipelineTable extends Component {
      * */
     renderOperation(value, index, record) {
         let router = "/pipeline/project/" + record.id;
+        let edit = "/pipeline/edit/" + record.id;
         return (
             <div>
                 <Link to={router}>
                     <Button type="primary" size="small">查看</Button>
                 </Link>
+                <Link to={edit}>
+                    <Button
+                        type="normal"
+                        size="small"
+                        className="button"
+                    >编辑</Button>
+                </Link>
+
                 <Button
                     type="primary"
                     shape="warning"

@@ -61,9 +61,10 @@ public class JenkinsController {
         this.jenkinsService.deleteJob(id);
     }
 
-    @ApiOperation(value = "创建流水线", notes = "根据流水线信息创建流水线")
+    @ApiOperation(value = "创建流水线", notes = "根据流水线信息创建流水线, 流水线的名称是id")
     @PostMapping("/v1/jenkins")
     public void create(@RequestBody PipelineBoV1 pipelineBoV1) {
+        System.out.println(pipelineBoV1);
         this.jenkinsService.createJob(pipelineBoV1, "1.0");
     }
 
