@@ -48,22 +48,8 @@ public class RequestUtil {
 
     public static void main(String[] args) {
 
-//        List<NameValuePair> list=new ArrayList<>();
-//        NameValuePair p1= new BasicNameValuePair("grant_type","password");
-//        NameValuePair p2= new BasicNameValuePair("username","root");
-//        NameValuePair p3= new BasicNameValuePair("password","Dop123456789");
-//        list.add(p1);
-//        list.add(p2);
-//        list.add(p3);
-//        String result= httpPost("http://gitlab.dop.clsaa.com/oauth/token",list);
-//        System.out.println(result);
-
-        List<ProjectBo> list = getList("/projects?simple=true&membership=true", "waszqt", ProjectBo.class);
-
-        for (ProjectBo temp : list)
-            System.out.println(temp);
-
-//        System.out.println("ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899".length());
+        String url=api+"/projects/3/repository/commits?ref_name=master";
+        FormatUtil.printJson(httpGet(url));
 
     }
 

@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,10 +37,15 @@ public class FileController {
 
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
-        List<TreeNodeBo> treeNodeBos=fileService.findTree(id,ref,path,username);
-        for(TreeNodeBo treeNodeBo:treeNodeBos){
-            treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
+        try {
+            List<TreeNodeBo> treeNodeBos = fileService.findTree(id,ref,path,username);
+            for(TreeNodeBo treeNodeBo:treeNodeBos){
+                treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
+
 
         return treeNodeVos;
     }
