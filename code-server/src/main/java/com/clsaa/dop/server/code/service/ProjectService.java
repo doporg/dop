@@ -85,11 +85,11 @@ public class ProjectService {
         List<ProjectListBo> listBos;
 
         if(sort.equals("personal")) {
-            listBos=RequestUtil.getList("/projects?membership=true&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
         }else if(sort.equals("starred")){
-            listBos=RequestUtil.getList("/projects?starred=true&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?starred=true",username,ProjectListBo.class);
         }else {
-            listBos=RequestUtil.getList("/projects?visibility=public&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?visibility=public",username,ProjectListBo.class);
         }
 
         return listBos;

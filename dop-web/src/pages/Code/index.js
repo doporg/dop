@@ -5,8 +5,6 @@ import NewProject from './NewProject'
 import Tree from './Tree'
 import BasicLayout from "../../layouts/BasicLayout";
 import CodeLayout from "../../layouts/CodeLayout";
-import Blob from "./Blob/Blob";
-import CommitList from './CommitList';
 
 const codeConfig = [
 
@@ -35,17 +33,8 @@ const codeConfig = [
         path: '/code/:username/:projectid/tree/:branch',
         layout: CodeLayout,
         component: Tree
-    },
-    {
-        path: '/code/:username/:projectid/blob/:branch',
-        layout: CodeLayout,
-        component: Blob
-    },
-    {
-        path: '/code/:username/:projectid/commitlist/:branch',
-        layout: CodeLayout,
-        component: CommitList
     }
+
 
 ];
 
