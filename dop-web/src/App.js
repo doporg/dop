@@ -5,7 +5,9 @@ import {RSA} from "./pages/Login";
 import Axios from 'axios';
 import {Feedback} from "@icedesign/base";
 import API from './pages/API'
+import CryptoJS from 'crypto-js'
 const {toast} = Feedback;
+
 
 class App extends Component {
     componentWillMount() {

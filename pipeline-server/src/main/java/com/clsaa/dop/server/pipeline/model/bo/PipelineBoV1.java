@@ -65,6 +65,20 @@ public class PipelineBoV1 {
     @SerializedName("mtime")
     private LocalDateTime mtime;
 
+    /**
+     * 流水线所属项目的id
+     */
+    @Field("appId")
+    @SerializedName("appId")
+    private Long appId;
+
+    /**
+     * 流水线所属环境的id
+     */
+    @Field("appEnvId")
+    @SerializedName("appEnvId")
+    private Long appEnvId;
+
 
     /**
      * 是否删除

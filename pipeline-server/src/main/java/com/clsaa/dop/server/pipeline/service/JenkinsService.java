@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,17 @@ public class JenkinsService {
         return "CreateJobSuccess";
     }
 
+    /**
+     * 根据jenkinsfile创建流水线
+     * */
+    public void createByJenkinsfile(String name, String script){
+        try {
+            jenkins.createJob(name, new JobConfig("1.0", script).getXml());
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+    }
+
     /***
      * 删除流水线
      * param: 流水线的名称
@@ -63,5 +75,7 @@ public class JenkinsService {
             System.out.println(e.toString());
         }
     }
+
+
 }
 

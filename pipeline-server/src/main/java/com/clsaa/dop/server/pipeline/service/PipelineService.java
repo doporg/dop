@@ -4,9 +4,11 @@ package com.clsaa.dop.server.pipeline.service;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
+import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import org.bson.types.ObjectId;
+import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.HttpEntity;
@@ -144,8 +146,30 @@ public class PipelineService {
                 .ctime(pipelineBoV1.getCtime())
                 .mtime(pipelineBoV1.getMtime())
                 .cuser(pipelineBoV1.getCuser())
+                .appEnvId(pipelineBoV1.getAppEnvId())
+                .appId(pipelineBoV1.getAppId())
                 .isDeleted(false)
                 .build();
         pipelineRepository.save(pipeline);
+    }
+
+    /**
+     * 根据用户id查找，返回该用户的流水线信息
+     */
+    public List<PipelineV1Project> getPipelineById(Long cuser){
+        List<Pipeline> pipelines = this.pipelineRepository.findByCuser(cuser);
+        List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
+        for(int i=0;i<pipelines.size();i++){
+            if(!pipelines.get(i).getIsDeleted()){
+                PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
+                        .id(pipelines.get(i).getId().toString())
+                        .name(pipelines.get(i).getName())
+                        .ctime(pipelines.get(i).getCtime())
+                        .cuser(pipelines.get(i).getCuser())
+                        .build();
+                pipelineV1Projects.add(pipelineV1Project);
+            }
+        }
+        return pipelineV1Projects;
     }
 }

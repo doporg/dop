@@ -2,9 +2,7 @@ package com.clsaa.dop.server.pipeline.model.vo;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 
 
 import java.util.ArrayList;
@@ -17,6 +15,9 @@ import java.util.ArrayList;
  */
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PipelineVoV1 {
 
     /**

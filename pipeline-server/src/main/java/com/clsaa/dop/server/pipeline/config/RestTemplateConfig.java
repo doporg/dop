@@ -20,8 +20,9 @@ public class RestTemplateConfig {
         @Override
         public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
             HttpHeaders headers = request.getHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "Basic emZsOnpmbA==");
+//            headers.add(HttpHeaders.AUTHORIZATION, "Basic emZsOnpmbA==");
             headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+            headers.add(HttpHeaders.USER_AGENT, "");
             return execution.execute(request, body);
         }
     }
