@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.pipeline.model.bo;
 
+import com.clsaa.dop.server.pipeline.model.po.Jenkinsfile;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
@@ -38,6 +39,18 @@ public class PipelineBoV1 {
      */
     @SerializedName("monitor")
     private String monitor;
+
+    /**
+     *  配置方式
+     * */
+    @SerializedName("config")
+    private String config;
+
+    /**
+     *  Jenkinsfile
+     * */
+    @SerializedName("jenkinsfile")
+    private Jenkinsfile jenkinsfile;
 
     /**
      * 流水线阶段

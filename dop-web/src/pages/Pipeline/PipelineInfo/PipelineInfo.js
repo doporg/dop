@@ -28,7 +28,9 @@ export default class PipelineInfo extends Component {
                 cuser: "1",
                 //监听设置
                 monitor: "",
-                stages: []
+                config:"",
+                stages: [],
+                jenkinsfile:{}
             },
             // monitor: ["自动触发", "手动触发"],
             monitor: ["自动触发"],
@@ -76,12 +78,13 @@ export default class PipelineInfo extends Component {
     }
 
     saveJenkinsfile() {
-        let name = this.state.pipeline.name;
+        let pipeline = this.state.pipeline;
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
         let self = this;
-        jenkinsFileInfo.name = name;
-        let url = API.pipeline + "/v1/jenkins/jenkinsfile";
-        Axios.post(url, jenkinsFileInfo).then((response) => {
+        pipeline.jenkinsfile = jenkinsFileInfo;
+        let url = API.pipeline + "/v1/pipeline/jenkinsfile";
+        console.log(pipeline)
+        Axios.post(url, pipeline).then((response) => {
             if (response.status === 200) {
                 toast.show({
                     type: "success",
@@ -153,7 +156,7 @@ export default class PipelineInfo extends Component {
 
                         <div className="form-item">
                             <span className="form-item-label">配置流水线: </span>
-                            <FormBinder name="jenkinsfile" required message="配置设置">
+                            <FormBinder name="config" required message="配置设置">
                                 <Combobox
                                     onChange={this.selectJenkinsFile.bind(this)}
                                     dataSource={this.state.jenkinsFile}
@@ -162,7 +165,7 @@ export default class PipelineInfo extends Component {
                                 >
                                 </Combobox>
                             </FormBinder>
-                            <FormError className="form-item-error" name="jenkinsfile"/>
+                            <FormError className="form-item-error" name="config"/>
                         </div>
 
                         {(() => {

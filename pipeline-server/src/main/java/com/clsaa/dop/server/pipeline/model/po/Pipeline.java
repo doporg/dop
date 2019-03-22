@@ -46,6 +46,20 @@ public class Pipeline {
     private String monitor;
 
     /**
+     *  配置方式
+     * */
+    @Field("config")
+    @SerializedName("config")
+    private String config;
+
+    /**
+     *  Jenkinsfile
+     * */
+    @Field("jenkinsfile")
+    @SerializedName("jenkinsfile")
+    private Jenkinsfile jenkinsfile;
+
+    /**
      * 流水线阶段
      */
     @Field("stages")

@@ -19,14 +19,20 @@ export default class Jenkinsfile extends Component{
                     <div className="form-item">
                         <span className="form-item-label">仓库地址: </span>
                         <FormBinder name="git" required message="请输入仓库地址">
-                            <Input placeholder="请输入仓库地址" />
+                            <Input
+                                placeholder="请输入仓库地址"
+                                value={this.props.jenkinsfile.git}
+                            />
                         </FormBinder>
                         <FormError className="form-item-error" name="git"/>
                     </div>
                     <div className="form-item">
                         <span className="form-item-label">Jenkinsfile<br />路径: </span>
                         <FormBinder name="path" required message="请输入Jenkinsfile路径">
-                            <Input placeholder="请输入Jenkinsfile路径"/>
+                            <Input
+                                placeholder="请输入Jenkinsfile路径"
+                                value={this.props.jenkinsfile.path}
+                            />
                         </FormBinder>
                         <FormError className="form-item-error" name="path"/>
                     </div>

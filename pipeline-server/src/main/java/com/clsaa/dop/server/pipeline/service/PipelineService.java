@@ -7,6 +7,7 @@ import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import org.bson.types.ObjectId;
 import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class PipelineService {
                 .id(id)
                 .name(pipelineV1.getName())
                 .monitor(pipelineV1.getMonitor())
+                .config(pipelineV1.getConfig())
                 .stages(pipelineV1.getStages())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
@@ -70,6 +72,38 @@ public class PipelineService {
         restTemplate.postForEntity(url, pipelineBoV1, String.class);
     }
 
+    public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {
+        ObjectId id = new ObjectId();
+        Pipeline pipeline = Pipeline.builder()
+                .id(id)
+                .name(pipelineV2.getName())
+                .monitor(pipelineV2.getMonitor())
+                .config(pipelineV2.getConfig())
+                .jenkinsfile(pipelineV2.getJenkinsfile())
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .cuser(pipelineV2.getCuser())
+                .isDeleted(false)
+                .build();
+
+        pipelineRepository.insert(pipeline);
+
+        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
+        PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
+                .id(id.toString())
+                .name(pipelineV2.getName())
+                .monitor(pipelineV2.getMonitor())
+                .config(pipelineV2.getConfig())
+                .jenkinsfile(pipelineV2.getJenkinsfile())
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .cuser(pipelineV2.getCuser())
+                .isDeleted(false)
+                .build();
+
+        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+    }
+
     /**
      * 获得全部流水线信息, 存在返回全部流水线信息，若不存在返回null
      */
@@ -81,6 +115,8 @@ public class PipelineService {
                     .id(pipelines.get(i).getId().toString())
                     .name(pipelines.get(i).getName())
                     .monitor(pipelines.get(i).getMonitor())
+                    .config(pipelines.get(i).getConfig())
+                    .jenkinsfile(pipelines.get(i).getJenkinsfile())
                     .stages(pipelines.get(i).getStages())
                     .ctime(pipelines.get(i).getCtime())
                     .mtime(pipelines.get(i).getMtime())
@@ -122,6 +158,8 @@ public class PipelineService {
                     .id(pipeline.getId().toString())
                     .name(pipeline.getName())
                     .monitor(pipeline.getMonitor())
+                    .config(pipeline.getConfig())
+                    .jenkinsfile(pipeline.getJenkinsfile())
                     .stages(pipeline.getStages())
                     .ctime(pipeline.getCtime())
                     .mtime(pipeline.getMtime())
@@ -142,6 +180,8 @@ public class PipelineService {
                 .id(new ObjectId(pipelineBoV1.getId()))
                 .name(pipelineBoV1.getName())
                 .monitor(pipelineBoV1.getMonitor())
+                .config(pipelineBoV1.getConfig())
+                .jenkinsfile(pipelineBoV1.getJenkinsfile())
                 .stages(pipelineBoV1.getStages())
                 .ctime(pipelineBoV1.getCtime())
                 .mtime(pipelineBoV1.getMtime())

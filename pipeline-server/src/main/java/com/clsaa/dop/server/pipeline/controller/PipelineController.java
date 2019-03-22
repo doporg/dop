@@ -5,6 +5,7 @@ import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
@@ -36,6 +37,12 @@ public class PipelineController {
     @PostMapping("/v1/pipeline")
     public void addUserV1(@RequestBody PipelineVoV1 pipelineV1) {
         this.pipelineService.addPipeline(pipelineV1);
+    }
+
+    @ApiOperation(value = "通过jenkinsfile添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
+    @PostMapping("/v1/pipeline/jenkinsfile")
+    public void addUserV1Byjenkinsfile(@RequestBody PipelineVoV2 pipelineV2) {
+        this.pipelineService.addPipelineWithJenkins(pipelineV2);
     }
 
     @ApiOperation(value = "查找所有流水线信息", notes = "查找所有流水线信息，若成功返回流水线所有的信息，失败返回null")
