@@ -2,9 +2,7 @@ package com.clsaa.dop.server.pipeline.model.bo;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -20,6 +18,8 @@ import java.util.ArrayList;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PipelineBoV1 {
     /**
      * 流水线id

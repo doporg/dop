@@ -83,51 +83,72 @@ export default class Login extends Component {
         })
     }
 
-    submit(data) {
-        let url = API.gateway + '/login-server/v1/login';
+    getUser(){
+        let url = API.gateway + '/user-server/v1/users';
         let self = this;
-        PublicKey().then((publicKey) => {
-            data.password = Encryption(data.passwd, publicKey);
-            delete data.passwd;
-            data.client = "DOP_WEB";
-            data.deviceId = data.email;
-            Axios({
-                url: url,
-                method: 'post',
-                data: data
-            }).then((response) => {
-                if (response.status === 200) {
-                    Axios.defaults.headers.common['x-login-token'] = response.data;
-                    Axios.defaults.headers.common['x-login-user'] = response.data;
-                    window.sessionStorage.setItem("x-login-token", response.data);
-                    window.sessionStorage.setItem("x-login-user", response.data);
-                    self.props.history.push('/project')
-                } else {
-                    toast.show({
-                        type: "error",
-                        content: "发生未知错误",
-                        duration: 1000
-                    });
-                }
-                self.setState({
-                    visible: false
-                });
-            }).catch((error) => {
-                toast.show({
-                    type: "error",
-                    content: error.message,
-                    duration: 3000
-                });
-                self.setState({
-                    visible: false
-                });
-            })
-        }).catch((error) => {
+        Axios.get(url).then((response)=>{
+            window.sessionStorage.setItem('user-id', response.data.id);
+            window.sessionStorage.setItem('user-name', response.data.name);
+            window.sessionStorage.setItem('user-email', response.data.email);
+        }).catch((error)=>{
             toast.show({
                 type: "error",
                 content: error.message,
-                duration: 3000
+                duration: 1000
             });
+        })
+    }
+
+    login(data) {
+        let url = API.gateway + '/login-server/v1/login';
+        let self = this;
+        return new Promise((resolve, reject)=>{
+            PublicKey().then((publicKey) => {
+                data.password = Encryption(data.passwd, publicKey);
+                delete data.passwd;
+                data.client = "DOP_WEB";
+                data.deviceId = data.email;
+                Axios({
+                    url: url,
+                    method: 'post',
+                    data: data
+                }).then((response) => {
+                    if (response.status === 200) {
+                        Axios.defaults.headers.common['x-login-token'] = response.data;
+                        Axios.defaults.headers.common['x-login-user'] = response.data;
+                        window.sessionStorage.setItem("x-login-token", response.data);
+                        window.sessionStorage.setItem("x-login-user", response.data);
+                        resolve()
+                    } else {
+                        toast.show({
+                            type: "error",
+                            content: "发生未知错误",
+                            duration: 1000
+                        });
+                        reject()
+                    }
+                    self.setState({
+                        visible: false
+                    });
+                }).catch((error) => {
+                    self.setState({
+                        visible: false
+                    })
+                })
+            }).catch((error) => {
+                self.setState({
+                    visible: false
+                })
+            })
+        })
+
+    }
+    submit(data){
+        let self = this
+        this.login(data).then(()=>{
+            self.getUser()
+        }).then(()=>{
+            self.props.history.push('/project')
         })
     }
 

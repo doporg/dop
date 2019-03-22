@@ -21,8 +21,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})},
-        indexes = {@Index(columnList = "email")})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}),
+                @UniqueConstraint(columnNames = {"name"})},
+        indexes = {@Index(columnList = "email"),
+                @Index(columnList = "name")})
 public class User implements Serializable {
     /**
      * 用户类型枚举

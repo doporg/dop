@@ -49,8 +49,9 @@ public class InterfaceCase {
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "case_id", referencedColumnName = "id")
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<InterfaceStage> stages;
 
     // ----------- common property ---------

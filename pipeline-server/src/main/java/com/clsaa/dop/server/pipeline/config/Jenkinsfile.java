@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.pipeline.config;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
-import com.clsaa.dop.server.pipeline.model.po.Task;
+import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -27,13 +27,13 @@ public class Jenkinsfile {
 
             String name = stage.getName();
             this.stages += "stage(\'" + name + "\'){ \n";
-            ArrayList<Task> tasks = stage.getTasks();
-            if(tasks.size() == 0){
+            ArrayList<Step> steps = stage.getSteps();
+            if(steps.size() == 0){
                 this.stages += "echo \'  没有运行的脚本 \' \n";
             }
-            for(int j = 0;j < tasks.size(); j++){
+            for(int j = 0;j < steps.size(); j++){
                 this.stages += "steps{\n";
-                Task task = tasks.get(j);
+                Step task = steps.get(j);
                 String taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
                 String dockerUserName = task.getDockerUserName();

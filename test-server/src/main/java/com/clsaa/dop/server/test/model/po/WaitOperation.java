@@ -31,6 +31,10 @@ public class WaitOperation {
     @Column(name = "operation_order")
     private int order;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "stage_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private InterfaceStage interfaceStage;
+
     // ----------- common property ---------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

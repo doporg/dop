@@ -9,7 +9,8 @@ import Logo from '../Logo/index';
 import './index.scss';
 import API from "../../pages/API";
 import Axios from "axios/index";
-const { toast } = Feedback;
+
+const {toast} = Feedback;
 
 // @withRouter
 class Header extends Component {
@@ -26,23 +27,13 @@ class Header extends Component {
         };
     }
 
-    componentWillMount(){
-        let url = API.gateway + '/user-server/v1/users';
-        let self = this;
-        Axios.get(url).then((response)=>{
-            self.setState({
-                user: response.data
-            });
-            window.sessionStorage.setItem('user-id', response.data.id);
-            window.sessionStorage.setItem('user-name', response.data.name);
-            window.sessionStorage.setItem('user-email', response.data.email);
-        }).catch((error)=>{
-            toast.show({
-                type: "error",
-                content: error.message,
-                duration: 1000
-            });
-        })
+    componentWillMount() {
+        let user = {
+            name: window.sessionStorage.getItem('user-name')
+        };
+        this.setState({
+            user: user
+        });
     }
 
     logout() {
