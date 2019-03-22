@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
@@ -8,7 +9,14 @@ import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,6 +32,8 @@ public class PipelineService {
 
     @Autowired
     private PipelineRepository pipelineRepository;
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 添加流水线信息
@@ -42,6 +52,20 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
+
+        String url = "http://localhost:13600/v1/jenkins";
+        PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
+                .id(id.toString())
+                .name(pipelineV1.getName())
+                .monitor(pipelineV1.getMonitor())
+                .stages(pipelineV1.getStages())
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .cuser(pipelineV1.getCuser())
+                .isDeleted(false)
+                .build();
+
+        restTemplate.postForEntity(url, pipelineBoV1, String.class);
     }
 
     /**
@@ -106,5 +130,22 @@ public class PipelineService {
         }else{
             return null;
         }
+    }
+
+    /**
+     * 更新流水线信息
+     */
+    public void update(PipelineBoV1 pipelineBoV1){
+        Pipeline pipeline = Pipeline.builder()
+                .id(new ObjectId(pipelineBoV1.getId()))
+                .name(pipelineBoV1.getName())
+                .monitor(pipelineBoV1.getMonitor())
+                .stages(pipelineBoV1.getStages())
+                .ctime(pipelineBoV1.getCtime())
+                .mtime(pipelineBoV1.getMtime())
+                .cuser(pipelineBoV1.getCuser())
+                .isDeleted(false)
+                .build();
+        pipelineRepository.save(pipeline);
     }
 }

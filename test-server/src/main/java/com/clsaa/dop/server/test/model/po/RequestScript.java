@@ -32,7 +32,8 @@ public class RequestScript {
     private HttpMethod httpMethod;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @JoinColumn(name = "request_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<RequestHeader> requestHeaders;
 
@@ -41,7 +42,8 @@ public class RequestScript {
 
     // check point concerned
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @JoinColumn(name = "request_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<RequestCheckPoint> requestCheckPoints;
 
@@ -52,7 +54,8 @@ public class RequestScript {
     private Long retryInterval;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "request_id", referencedColumnName = "id")
+    @JoinColumn(name = "request_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<UrlResultParam> resultParams;
 
@@ -61,6 +64,10 @@ public class RequestScript {
 
     @Column(name = "operation_order")
     private int order;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "stage_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private InterfaceStage interfaceStage;
 
     // ----------- common property ---------
     @Id

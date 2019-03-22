@@ -35,6 +35,10 @@ public class RequestCheckPoint {
 
     private String value;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private RequestScript requestScript;
+
     // ----------- common property ---------
     private LocalDateTime ctime;
 

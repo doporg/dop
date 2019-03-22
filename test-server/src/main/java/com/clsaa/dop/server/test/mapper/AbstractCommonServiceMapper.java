@@ -17,9 +17,9 @@ import static org.springframework.util.CollectionUtils.isEmpty;
  */
 public abstract class AbstractCommonServiceMapper<SOURCE, TARGET> implements ServiceMapper<SOURCE, TARGET> {
 
-    abstract Class<SOURCE> getSourceClass();
+    public abstract Class<SOURCE> getSourceClass();
 
-    abstract Class<TARGET> getTargetClass();
+    public abstract Class<TARGET> getTargetClass();
 
     public Optional<SOURCE> inverseConvert(TARGET target){
         return Optional.of(target)

@@ -13,9 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
-    @SerializedName("id")
-    private Long id;
+public class Step {
 
     /**
      * 任务名称

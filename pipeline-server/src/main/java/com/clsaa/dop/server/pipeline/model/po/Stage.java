@@ -18,8 +18,6 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class Stage {
 
-    @SerializedName("id")
-    private Long id;
 
     /**
      * 流水线阶段名称
@@ -30,6 +28,6 @@ public class Stage {
     /**
      * 流水线阶段要做的任务
      */
-    @SerializedName("tasks")
-    private ArrayList<Task> tasks;
+    @SerializedName("steps")
+    private ArrayList<Step> steps;
 }

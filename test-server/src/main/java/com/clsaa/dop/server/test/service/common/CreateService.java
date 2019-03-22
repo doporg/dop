@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.service.common;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -7,11 +8,13 @@ import java.util.Optional;
  * @version 1.0
  * @since 06/03/2019
  */
-public interface CreateService<DTO> {
+public interface CreateService<PARAM> {
 
     /**
-     * @param data 需要创建的数据
+     * @param param 需要创建的数据
      * @return 创建成功的数据
      */
-    Optional<DTO> create(DTO data);
+    Optional<PARAM> create(PARAM param);
+
+    List<PARAM> create(List<PARAM> params);
 }

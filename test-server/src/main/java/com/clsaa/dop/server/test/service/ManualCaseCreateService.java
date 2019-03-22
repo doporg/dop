@@ -2,6 +2,7 @@ package com.clsaa.dop.server.test.service;
 
 import com.clsaa.dop.server.test.mapper.ServiceMapper;
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
+import com.clsaa.dop.server.test.model.param.ManualCaseParam;
 import com.clsaa.dop.server.test.model.po.ManualCase;
 import com.clsaa.dop.server.test.service.common.CommonCreateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Component;
  * @since 06/03/2019
  */
 @Component
-public class ManualCaseCreateService extends CommonCreateServiceImpl<ManualCase, ManualCaseDto, Long> {
+public class ManualCaseCreateService extends CommonCreateServiceImpl<ManualCaseParam, ManualCase, Long> {
 
     @Autowired
-    public ManualCaseCreateService(ServiceMapper<ManualCase, ManualCaseDto> serviceMapper, JpaRepository<ManualCase, Long> repository) {
+    public ManualCaseCreateService(ServiceMapper<ManualCaseParam, ManualCase> serviceMapper, JpaRepository<ManualCase, Long> repository) {
         super(serviceMapper, repository);
     }
 
