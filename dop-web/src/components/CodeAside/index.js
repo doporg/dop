@@ -30,7 +30,7 @@ class CodeAside extends Component {
     }
 
     const projectLink="/code/"+username+"/"+projectid;
-    const commitLink="/code/"+username+"/"+projectid+"/commits/"+branch;
+    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+branch;
 
     const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch;
 
