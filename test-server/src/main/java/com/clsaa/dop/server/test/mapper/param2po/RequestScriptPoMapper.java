@@ -9,6 +9,7 @@ import com.clsaa.dop.server.test.model.po.UrlResultParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,17 +45,27 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
         List<RequestHeader> requestHeaders = requestHeaderPoMapper.convert(requestScriptParam.getRequestHeaders());
         List<RequestCheckPoint> checkPoints = checkPointPoMapper.convert(requestScriptParam.getRequestCheckPoints());
         List<UrlResultParam> resultParams = resultParamPoMapper.convert(requestScriptParam.getResultParams());
-        return super.convert(requestScriptParam).map(requestScript -> {
-            requestScript.setRequestHeaders(requestHeaders);
-            requestScript.setRequestCheckPoints(checkPoints);
-            requestScript.setResultParams(resultParams);
+        return super.convert(requestScriptParam)
+                .map(requestScript -> {
+                        requestScript.setRequestHeaders(requestHeaders);
+                        requestScript.setRequestCheckPoints(checkPoints);
+                        requestScript.setResultParams(resultParams);
 
-            //inject RequestScript into joined Objects
-            requestHeaders.forEach(requestHeader -> requestHeader.setRequestScript(requestScript));
-            checkPoints.forEach(checkPoint -> checkPoint.setRequestScript(requestScript));
-            resultParams.forEach(urlResultParam -> urlResultParam.setRequestScript(requestScript));
+                        //inject RequestScript into joined Objects
+                        requestHeaders.forEach(requestHeader -> requestHeader.setRequestScript(requestScript));
+                        checkPoints.forEach(checkPoint -> checkPoint.setRequestScript(requestScript));
+                        resultParams.forEach(urlResultParam -> urlResultParam.setRequestScript(requestScript));
 
-            return requestScript;
-        });
+                        return requestScript;
+                    })
+                .map(po -> {
+                        LocalDateTime current = LocalDateTime.now();
+                        po.setCtime(current);
+                        po.setMtime(current);
+                        //todo set user
+                        po.setCuser(110L);
+                        po.setMuser(110L);
+                        return po;
+                    });
     }
 }

@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
+import com.clsaa.dop.server.test.doExecute.Operation;
 import com.clsaa.dop.server.test.enums.Stage;
 import com.clsaa.dop.server.test.model.po.RequestScript;
 import com.clsaa.dop.server.test.model.po.WaitOperation;
@@ -10,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Predicate;
+
+import static com.clsaa.dop.server.test.doExecute.TestManager.FAIL_RESULT;
 
 /**
  * @author xihao
@@ -29,6 +33,10 @@ public class InterfaceStageDto {
 
     private List<WaitOperationDto> waitOperations;
 
+    private List<Operation> operations;
+
+    private boolean success = true;
+
     // ----------- common property ---------
     private Long id;
 
@@ -41,4 +49,13 @@ public class InterfaceStageDto {
     private Long muser;
 
     private boolean deleted;
+
+    public boolean isSuccess() {
+        return operations.stream().
+                noneMatch(operation -> operation.result().equals(FAIL_RESULT));
+    }
+
+    public boolean fail() {
+        return !isSuccess();
+    }
 }
