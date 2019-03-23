@@ -9,6 +9,7 @@ import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
 import {Input, Button, Select, Loading} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import PipelineInfoStage from '../components/PipelineInfoStage'
+import Jenkinsfile from '../components/Jenkinsfile'
 import './PipelineInfo.scss';
 import Axios from 'axios';
 import API from '../../API';
@@ -29,9 +30,17 @@ export default class EditPipelineInfo extends Component {
                 cuser: "1",
                 //监听设置
                 monitor: "",
-                stages: []
+                config:"",
+                stages: [],
+                jenkinsfile:{}
             },
             monitor: ["自动触发", "手动触发"],
+            jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
+            haveJenkinsFile: null,
+            jenkinsFileInfo: {
+                git: "",
+                path: ""
+            }
 
         };
     }
@@ -49,6 +58,15 @@ export default class EditPipelineInfo extends Component {
         Axios.get(url).then((response) => {
             console.log(response)
             if (response.status === 200) {
+                if(response.data.stages === null){
+                    response.data.stages = []
+                }
+                if(response.data.jenkinsfile === null){
+                    response.data.jenkinsfile = {
+                        git: "",
+                        path: ""
+                    }
+                }
                 self.setState({
                     pipeline: response.data,
                     visible: false
@@ -80,28 +98,105 @@ export default class EditPipelineInfo extends Component {
         });
     }
 
+    selectJenkinsFile(value) {
+        this.setState({
+            haveJenkinsFile: value
+        })
+    }
+
+    jenkinsFileData(jenkinsFileInfo) {
+        this.setState({
+            jenkinsFileInfo
+        });
+    }
+
     stages(value) {
         let pipeline = Object.assign({}, this.state.pipeline, {stages: value});
         this.setState({pipeline})
     }
 
-    save() {
+    saveJenkinsfile() {
         let self = this;
         let url = API.pipeline + '/v1/pipeline/update';
-        console.log(self.state.pipeline)
         Axios({
             method: 'put',
             url: url,
             data: self.state.pipeline
         }).then((response) => {
             if (response.status === 200) {
-                toast.show({
-                    type: "success",
-                    content: "保存成功",
-                    duration: 1000
-                });
-                self.props.history.push('/pipeline')
+                self.deleteJenkins.bind(self).then(()=>{
+                    self.createJenkinsfile.bind(self)
+                }).then(()=>{
+                    toast.show({
+                        type: "success",
+                        content: "保存成功",
+                        duration: 1000
+                    });
+                    self.props.history.push('/pipeline')
+                })
             }
+        }).catch(()=>{
+            toast.show({
+                type: "error",
+                content: "请检查您的路径",
+                duration: 1000
+            });
+        })
+    }
+
+    save() {
+        let self = this;
+        let url = API.pipeline + '/v1/pipeline/update';
+        Axios({
+            method: 'put',
+            url: url,
+            data: self.state.pipeline
+        }).then((response) => {
+            if (response.status === 200) {
+                self.deleteJenkins().then(()=>{
+                    self.createJenkins()
+                }).then(()=>{
+                    toast.show({
+                        type: "success",
+                        content: "保存成功",
+                        duration: 1000
+                    });
+                    self.props.history.push('/pipeline')
+                })
+            }
+        })
+    }
+    createJenkins(){
+        let url = API.pipeline + '/v1/jenkins';
+        let data = this.state.pipeline;
+        return new Promise((resolve)=>{
+            Axios.post(url, data).then((response) => {
+                if (response.status === 200) {
+                    resolve()
+                }
+            });
+        })
+    }
+    createJenkinsfile(){
+        let url = API.pipeline + '/v1/jenkins/jenkinsfile';
+        let data = this.state.pipeline;
+        return new Promise((resolve)=>{
+            Axios.post(url, data).then((response) => {
+                if (response.status === 200) {
+                    resolve()
+                }
+            });
+        })
+    }
+
+    deleteJenkins(){
+        let url = API.pipeline + '/v1/jenkins/byId?id=' + this.state.pipelineId;
+        return new Promise((resolve, reject)=>{
+            Axios.delete(url).then((response) => {
+                if (response.status === 200) {
+                    resolve()
+                }
+            });
         })
     }
 
@@ -120,7 +215,7 @@ export default class EditPipelineInfo extends Component {
                             <div className="form-item">
                                 <span className="form-item-label">流水线名称: </span>
                                 <FormBinder name="name" required message="请输入流水线的名称">
-                                    <Input placeholder="请输入流水线的名称"/>
+                                    <Input placeholder="请输入流水线的名称" className="combobox"/>
                                 </FormBinder>
                                 <FormError className="form-item-error" name="name"/>
                             </div>
@@ -130,19 +225,46 @@ export default class EditPipelineInfo extends Component {
                                     <Combobox
                                         onChange={this.selectMonitor.bind(this)}
                                         dataSource={this.state.monitor}
-                                        placeholder="请选择监听设置"
+                                        placeholder={this.state.pipeline.monitor}
+                                        className="combobox"
                                     >
                                     </Combobox>
                                 </FormBinder>
                                 <FormError className="form-item-error" name="monitor"/>
                             </div>
 
-                            <div className="step-wrapper">
-                                <span className="label">配置流水线: </span>
-                                <PipelineInfoStage stages={this.state.pipeline.stages}
-                                                   currentStage={0}
-                                                   onChange={this.stages.bind(this)}/>
+                            <div className="form-item">
+                                <span className="form-item-label">配置流水线: </span>
+                                <FormBinder name="config" required message="配置设置">
+                                    <Combobox
+                                        onChange={this.selectJenkinsFile.bind(this)}
+                                        dataSource={this.state.jenkinsFile}
+                                        placeholder={this.state.pipeline.config}
+                                        className="combobox"
+                                    >
+                                    </Combobox>
+                                </FormBinder>
+                                <FormError className="form-item-error" name="config"/>
                             </div>
+
+                            {(() => {
+                                if (this.state.pipeline.config === '自带Jenkinsfile') {
+                                    return (
+                                        <Jenkinsfile
+                                            jenkinsfile={this.state.pipeline.jenkinsfile}
+                                            onChange={this.jenkinsFileData.bind(this)}
+                                        />
+                                    )
+                                } else {
+                                    return (
+                                        <PipelineInfoStage
+                                            stages={this.state.pipeline.stages}
+                                            currentStage={0}
+                                            onChange={this.stages.bind(this)}
+                                        />
+                                    )
+                                }
+                            })()}
 
                         </div>
                     </FormBinderWrapper>
@@ -153,7 +275,10 @@ export default class EditPipelineInfo extends Component {
                     <div className="footer-container">
                         <Button type="primary"
                                 className="button"
-                                onClick={this.save.bind(this)}
+                                onClick={
+                                    this.state.haveJenkinsFile === "自带Jenkinsfile" ?
+                                        this.saveJenkinsfile.bind(this) : this.save.bind(this)
+                                }
                         >保存</Button>
                         <Link to='/pipeline'>
                             <Button type="normal"

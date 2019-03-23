@@ -46,11 +46,39 @@ public class Pipeline {
     private String monitor;
 
     /**
+     *  配置方式
+     * */
+    @Field("config")
+    @SerializedName("config")
+    private String config;
+
+    /**
+     *  Jenkinsfile
+     * */
+    @Field("jenkinsfile")
+    @SerializedName("jenkinsfile")
+    private Jenkinsfile jenkinsfile;
+
+    /**
      * 流水线阶段
      */
     @Field("stages")
     @SerializedName("stages")
     private ArrayList<Stage> stages;
+
+    /**
+     * 流水线所属项目的id
+     */
+    @Field("appId")
+    @SerializedName("appId")
+    private Long appId;
+
+    /**
+     * 流水线所属环境的id
+     */
+    @Field("appEnvId")
+    @SerializedName("appEnvId")
+    private Long appEnvId;
 
     /**
      * 创建时间

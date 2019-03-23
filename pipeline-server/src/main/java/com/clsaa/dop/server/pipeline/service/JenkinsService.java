@@ -8,11 +8,15 @@ import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
 import com.offbytwo.jenkins.model.JobWithDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +46,7 @@ public class JenkinsService {
      * param: 流水线的信息, 版本
      * */
     public String createJob(PipelineBoV1 pipelineBoV1, String version){
+        System.out.println(1111);
         Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getStages());
         String name = pipelineBoV1.getId();
         try {
@@ -50,6 +55,17 @@ public class JenkinsService {
             return e.toString();
         }
         return "CreateJobSuccess";
+    }
+
+    /**
+     * 根据jenkinsfile创建流水线
+     * */
+    public void createByJenkinsfile (String name, String git, String path){
+        try {
+            jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
     }
 
     /***
@@ -63,5 +79,7 @@ public class JenkinsService {
             System.out.println(e.toString());
         }
     }
+
+
 }
 

@@ -64,8 +64,13 @@ public class JenkinsController {
     @ApiOperation(value = "创建流水线", notes = "根据流水线信息创建流水线, 流水线的名称是id")
     @PostMapping("/v1/jenkins")
     public void create(@RequestBody PipelineBoV1 pipelineBoV1) {
-        System.out.println(pipelineBoV1);
         this.jenkinsService.createJob(pipelineBoV1, "1.0");
+    }
+
+    @ApiOperation(value = "创建流水线", notes = "根据jenkinsfile创建流水线, 流水线的名称是id")
+    @PostMapping("/v1/jenkins/jenkinsfile")
+    public void jenkinsfile(@RequestBody PipelineBoV1 pipelineBoV1) {
+        this.jenkinsService.createByJenkinsfile(pipelineBoV1.getId(), pipelineBoV1.getJenkinsfile().getGit(), pipelineBoV1.getJenkinsfile().getPath());
     }
 
     @ApiOperation(value = "运行流水线", notes = "根据流水线id查找开始运行流水线")

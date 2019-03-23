@@ -22,6 +22,7 @@ public class RestTemplateConfig {
             HttpHeaders headers = request.getHeaders();
             headers.add(HttpHeaders.AUTHORIZATION, "Basic emZsOnpmbA==");
             headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
+            headers.add(HttpHeaders.USER_AGENT, "");
             return execution.execute(request, body);
         }
     }
