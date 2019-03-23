@@ -4,6 +4,8 @@ import Axios from 'axios';
 import API from "../../API";
 import copy from 'copy-to-clipboard';
 import {Feedback} from '@icedesign/base';
+import { Balloon } from "@icedesign/base";
+import ReactTooltip from 'react-tooltip'
 
 import imgCopy from './imgs/copy.png';
 import imgFolder from './imgs/folder.png';
@@ -38,9 +40,8 @@ export default class CommitList extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+this.state.projectid+"/repository/commits?ref_name="+this.state.ref+"&username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+this.state.ref+"&username="+sessionStorage.getItem("user-name");
         Axios.get(url).then(response=>{
-            // console.log(response.data);
             self.setState({
                 commitList:response.data,
                 showList:response.data
@@ -54,7 +55,7 @@ export default class CommitList extends React.Component{
         if(val!==""){
             const showList=this.state.commitList.filter(function (item) {
                 return item.message.indexOf(val)!==-1;
-            })
+            });
             this.setState({
                 msgInput:val,
                 showList:showList
@@ -69,7 +70,7 @@ export default class CommitList extends React.Component{
 
     changeRef(value, data, extra) {
 
-        let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?ref_name="+value+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+value+"&username="+sessionStorage.getItem("user-name");
         let self=this;
         Axios.get(url).then(response=>{
             // console.log(response.data);
@@ -133,12 +134,18 @@ export default class CommitList extends React.Component{
                                                 </div>
                                                 <div className="div-commit-operation">
                                                     <span className="text-commit-short-id">{commitList[j].short_id}</span>
-                                                    <button className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[j].id)}>
-                                                        <img src={imgCopy}/>
+                                                    <button data-tip data-for='copy' className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[j].id)}>
+                                                        <img src={imgCopy} className="img-commit-copy-sha"/>
                                                     </button>
-                                                    <button className="btn-commit-browse-file">
-                                                        <img src={imgFolder}/>
+                                                    <button data-tip data-for='browse' className="btn-commit-browse-file">
+                                                        <img src={imgFolder} className="img-commit-browse-file"/>
                                                     </button>
+                                                    <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>
+                                                        <span>复制提交sha到剪贴板</span>
+                                                    </ReactTooltip>
+                                                    <ReactTooltip id='browse' place="bottom" type='dark' effect='solid'>
+                                                        <span>查看文件</span>
+                                                    </ReactTooltip>
                                                 </div>
                                             </div>
                                         )
@@ -163,12 +170,18 @@ export default class CommitList extends React.Component{
                                         </div>
                                         <div className="div-commit-operation">
                                             <span className="text-commit-short-id">{commitList[i].short_id}</span>
-                                            <button className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[i].id)}>
-                                                <img src={imgCopy}/>
+                                            <button data-tip data-for='copy' className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[i].id)}>
+                                                <img src={imgCopy} className="img-commit-copy-sha"/>
                                             </button>
-                                            <button className="btn-commit-browse-file">
-                                                <img src={imgFolder}/>
+                                            <button data-tip data-for='browse' className="btn-commit-browse-file">
+                                                <img src={imgFolder} className="img-commit-browse-file"/>
                                             </button>
+                                            <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>
+                                                <span>复制提交sha到剪贴板</span>
+                                            </ReactTooltip>
+                                            <ReactTooltip id='browse' place="bottom" type='dark' effect='solid'>
+                                                <span>查看文件</span>
+                                            </ReactTooltip>
                                         </div>
                                     </div>
                                 )
@@ -180,6 +193,8 @@ export default class CommitList extends React.Component{
 
                     })()
                 }
+
+
             </div>
         )
     }

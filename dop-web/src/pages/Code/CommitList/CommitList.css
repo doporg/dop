@@ -5,30 +5,26 @@
 }
 
 .div-commit-list-top{
-    /*display: flex;*/
-    /*align-items:center ;*/
-    height: 80px;
+    height: 60px;
     padding-left: 20px;
-    background-color: #f7f8fa;
-    border-top: 1px solid #dce0e6;
-    border-bottom: 1px solid #dce0e6;
-    color: #7f8fa4;
 
 }
 
 .select-branch{
     float: left;
-    margin: 20px 0 auto 10px;
+    margin: 15px 0 auto 10px;
 }
 
 
 .input-commit-msg-right{
     width:350px;
-    height: 40px;
+    height: 30px;
     padding: 15px;
     float: right;
-    margin-right: 30px;
-    margin-top: 20px;
+    margin-right: 25px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border: 1px solid #c9c9c9;
 }
 
 .div-commit-date{
@@ -36,7 +32,7 @@
     line-height: 30px;
     font-size: 15px;
     padding-left: 15px;
-    background-color: #f4f4f4;
+    background-color: #fbfbfb;
     border-bottom: 1px solid #f1f1f1;
 }
 
@@ -48,12 +44,12 @@
 
 .div-commit-item-avatar{
     float: left;
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     border-radius: 50%;
     background-color: #cfeeec;
-    line-height: 50px;
-    margin-top: 5px;
+    line-height: 40px;
+    margin-top: 10px;
     text-align: center;
     margin-right: 15px;
 }
@@ -67,14 +63,13 @@
 .div-commit-item-content-up{
     height: 25px;
     line-height: 25px;
-    font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
 }
 .div-commit-item-content-down{
     height: 25px;
     line-height: 25px;
-    font-size: 14px;
-    color: #848484;
+    font-size: 13px;
+    color: #797979;
 }
 
 .div-commit-operation{
@@ -94,7 +89,7 @@
     display: inline-block;
     height: 30px;
     line-height: 30px;
-    width: 70px;
+    width: 100px;
     background-color: #f8f8f8;
     text-align: center;
     border-right: 1px solid #e4e4e4;
@@ -117,15 +112,17 @@
     text-align: center;
 }
 
-.btn-commit-copy-sha img{
+.img-commit-browse-file{
+    width: 15px;
+    height: 12px;
+    vertical-align: middle;
+}
+
+.img-commit-copy-sha{
     width: 15px;
     height: 15px;
     vertical-align: middle;
 }
 
-.btn-commit-browse-file img{
-    width: 15px;
-    height: 15px;
-    vertical-align: middle;
-}
+
 
