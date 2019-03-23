@@ -110,9 +110,12 @@ export default class EditPipelineInfo extends Component {
         });
     }
 
-    stages(value) {
+    setStages(value, currentStage) {
         let pipeline = Object.assign({}, this.state.pipeline, {stages: value});
-        this.setState({pipeline})
+        this.setState({
+            pipeline: pipeline,
+            currentStage: currentStage
+        })
     }
 
     saveJenkinsfile() {
@@ -259,8 +262,8 @@ export default class EditPipelineInfo extends Component {
                                     return (
                                         <PipelineInfoStage
                                             stages={this.state.pipeline.stages}
-                                            currentStage={0}
-                                            onChange={this.stages.bind(this)}
+                                            currentStage={this.state.currentStage}
+                                            onChange={this.setStages.bind(this)}
                                         />
                                     )
                                 }
