@@ -1,32 +1,23 @@
 package com.clsaa.dop.server.application.service;
 
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
-import com.clsaa.dop.server.application.dao.AppVarRepository;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
-import com.clsaa.dop.server.application.model.bo.AppYamlDataBoV1;
-import com.clsaa.dop.server.application.model.po.App;
+import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
+import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.AppEnvironment;
-import com.clsaa.dop.server.application.model.po.AppYamlData;
-import com.clsaa.dop.server.application.model.vo.AppEnvDetailV1;
+import com.clsaa.dop.server.application.model.po.KubeCredential;
+import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import com.clsaa.dop.server.application.util.BeanUtils;
-import io.kubernetes.client.apis.AppsApi;
 import io.kubernetes.client.apis.AppsV1Api;
 import io.kubernetes.client.util.Yaml;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.Watch;
-import org.apache.commons.configuration.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.ApiException;
-import io.kubernetes.client.Configuration;
 import io.kubernetes.client.apis.CoreV1Api;
-import io.kubernetes.client.util.Config;
-import io.kubernetes.client.util.KubeConfig;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +26,14 @@ import java.util.stream.Collectors;
 @Service(value = "AppEnvService")
 public class AppEnvService {
     @Autowired
-    AppYamlService appYamlService;
+    KubeYamlService kubeYamlService;
 
     @Autowired
     AppEnvRepository appEnvRepository;
 
+
+    @Autowired
+    KubeCredentialService kubeCredentialService;
 
     /**
      * 根据appId查询环境信息
@@ -94,6 +88,10 @@ public class AppEnvService {
                 .deploymentStrategy(AppEnvironment.DeploymentStrategy.valueOf(deploymentStrategy))
                 .build();
         this.appEnvRepository.saveAndFlush(appEnvironment);
+        if (deploymentStrategy.equals("KUBERNETES")) {
+            this.kubeCredentialService.createCredentialByAppEnvId(cuser, appEnvironment.getId());
+        }
+
     }
 
     /**
@@ -131,9 +129,9 @@ public class AppEnvService {
      * @renturn ApiClient
      */
     public ApiClient getClient(Long id) {
-        AppEnvironment appEnv = this.appEnvRepository.findById(id).orElse(null);
-        String url = appEnv.getTargetClusterUrl();
-        String token = appEnv.getTargetClusterToken();
+        KubeCredentialBoV1 kubeCredentialBoV1 = this.kubeCredentialService.findByAppEnvId(id);
+        String url = kubeCredentialBoV1.getTargetClusterUrl();
+        String token = kubeCredentialBoV1.getTargetClusterToken();
         ApiClient client = Config.fromToken(url,
                 token,
                 false);
@@ -186,15 +184,12 @@ public class AppEnvService {
     /**
      * 更新url和token信息
      *
-     * @param id    应用环境id
+     * @param appEnvId    应用环境id
      * @param url   url
      * @param token token
      */
-    public void updateUrlAndToken(Long id, String url, String token) {
-        AppEnvironment appEnvironment = this.appEnvRepository.findById(id).orElse(null);
-        appEnvironment.setTargetClusterUrl(url);
-        appEnvironment.setTargetClusterToken(token);
-        this.appEnvRepository.saveAndFlush(appEnvironment);
+    public void updateUrlAndToken(Long muser, Long appEnvId, String url, String token) {
+        this.kubeCredentialService.updateClusterInfo(muser, appEnvId, url, token);
     }
 
 
@@ -365,8 +360,8 @@ public class AppEnvService {
      * @param replicas        副本数量
      */
     public void CreateYamlInfoByAppEnvId(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String containers, String releaseStrategy, Integer replicas
-            , Long releaseBatch, String imageUrl, String yamlFilePath) {
-        this.appYamlService.CreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
+            , Long releaseBatch, String imageUrl, String yamlFilePath) throws Exception {
+        this.kubeYamlService.CreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, imageUrl, yamlFilePath);
 
     }
@@ -385,79 +380,27 @@ public class AppEnvService {
      * @param replicas        副本数量
      */
     public void UpdateYamlInfoByAppEnvId(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String containers, String releaseStrategy, Integer replicas
-            , Long releaseBatch, String imageUrl, String yamlFilePath) {
-        this.appYamlService.UpdateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
+            , Long releaseBatch, String imageUrl, String yamlFilePath) throws Exception {
+        this.kubeYamlService.UpdateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, imageUrl, yamlFilePath);
 
     }
 
 
     public HashMap<String, String> createYamlFileForDeploy(Long appEnvId) throws Exception {
-        AppYamlDataBoV1 appYamlData = this.appYamlService.findYamlDataByEnvId(appEnvId);
-        if (appYamlData.getYamlFilePath() != "") {
-            String service = appYamlData.getService();
-            String nameSpace = appYamlData.getNameSpace();
-            AppsV1Api appsApi = getAppsApi(appEnvId);
-            String deployment = appYamlData.getDeployment();
-            String container = appYamlData.getContainers();
-            String imageUrl = appYamlData.getImageUrl();
-            Integer replicas = appYamlData.getReplicas();
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
-            if (deploymentList != null) {
-                for (int i = 0; i < deploymentList.size(); i++) {
-                    V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
-                        List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
-                        for (int j = 0; i < containerList.size(); j++) {
-                            if (containerList.get(i).getName().equals(container)) {
-                                containerList.get(i).setImage(imageUrl);
-                            }
-                        }
-                        v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        return new HashMap<String, String>() {{
-                            put("yaml", Yaml.dump(v1Deployment));
-                        }};
-                        //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
-                    }
-                }
-            } else {
-                V1Deployment v1Deployment = new V1DeploymentBuilder()
-                        .withNewMetadata()
-                        .withName(service)
-                        .addToLabels("app", service)
-                        .endMetadata()
-                        .withNewSpec()
-                        .withReplicas(replicas)
-                        .withNewSelector()
-                        .addToMatchLabels("app", service)
-                        .endSelector()
-                        .withNewTemplate()
-                        .withNewMetadata()
-                        .addToLabels("app", service)
-                        .endMetadata()
-                        .withNewSpec()
-                        .addNewContainer()
-                        .withName(service)
-                        .withImage(imageUrl)
-                        .endContainer()
-                        .endSpec()
-                        .endTemplate()
-                        .endSpec()
-                        .build();
-                return new HashMap<String, String>() {{
-                    put("yaml", Yaml.dump(v1Deployment));
-                }};
 
-
-                //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
-            }
-
+        KubeYamlDataBoV1 kubeYamlDataBoV1 = this.kubeYamlService.findYamlDataByEnvId(appEnvId);
+        if (kubeYamlDataBoV1.getYamlFilePath() == "") {
+            return new HashMap<String, String>() {{
+                put("path", kubeYamlDataBoV1.getYamlFilePath());
+            }};
         } else {
             return new HashMap<String, String>() {{
-                put("path", appYamlData.getYamlFilePath());
+                put("yaml", kubeYamlDataBoV1.getDeploymentEditableYaml());
             }};
         }
-        return null;
+
+
     }
 
 }

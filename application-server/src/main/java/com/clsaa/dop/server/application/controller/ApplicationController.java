@@ -38,10 +38,10 @@ public class ApplicationController {
 
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")
-    @GetMapping(value = "/application/{projectId}")
+    @GetMapping(value = "/application")
     public Pagination<AppV1> findApplicationByProjectId(@ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                        @ApiParam(name = "projectId", value = "项目ID", required = true) @PathVariable(value = "projectId") Long projectId,
+                                                        @ApiParam(name = "projectId", value = "项目ID", required = true) @RequestParam(value = "projectId") Long projectId,
                                                         @ApiParam(name = "queryKey", value = "搜索关键字", defaultValue = "") @RequestParam(value = "queryKey", defaultValue = "") String queryKey) {
 
         return this.applicationService.findApplicationByProjectIdOrderByCtimeWithPage(pageNo, pageSize, projectId, queryKey);

@@ -26,15 +26,6 @@ public class AppEnvBoV1 {
      */
     private String title;
 
-    /**
-     * 目标集群Url
-     */
-    private String targetClusterUrl;
-
-    /**
-     * 目标集群Token
-     */
-    private String targetClusterToken;
 
     /**
      * 部署策略

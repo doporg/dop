@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update app_environment set is_deleted = true where id = ?")
+@SQLDelete(sql = "update kube_yaml_data set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class AppYamlData {
+public class KubeYamlData {
     @Id
     @GeneratedValue
     private Long id;
@@ -102,7 +102,7 @@ public class AppYamlData {
      */
     @Column(name = "release_strategy")
     @Enumerated(EnumType.STRING)
-    private AppYamlData.ReleaseStrategy releaseStrategy;
+    private KubeYamlData.ReleaseStrategy releaseStrategy;
 
     /**
      * 镜像地址
@@ -121,6 +121,12 @@ public class AppYamlData {
      */
     @Column(name = "replicas")
     private Integer replicas;
+
+    /**
+     * 部署的yaml
+     */
+    @Column(name = "deployment_editable_yaml", length = 1000)
+    private String deploymentEditableYaml;
 
     public enum ReleaseStrategy {
 

@@ -38,7 +38,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         console.log(props)
         this.state = {
             id: props.id,
-            editMode: true,
+            editMode: false,
             envDetailData: [],
             nameSpaceData: [],
             serviceData: [],
@@ -218,10 +218,11 @@ export default class ApplicationEnvironmentDetail extends Component {
                         if (errors == null) {
                             let url = API.gateway + '/application-server/application/env/' + this.state.id + "/yaml";
 
-                            let existUrl = API.gateway + "/applcation-server/application/env/" + this.state.id + "/yamlStatus"
+                            let existUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/yamlStatus"
                             Axios.get(existUrl)
                                 .then((response) => {
-                                    if (response) {
+                                    console.log("responsssss", response)
+                                    if (response.data) {
                                         Axios.put(url, {}, {
                                                 params: {
                                                     deploymentStrategy: this.field.getValue('deploymentStrategy'),
@@ -229,7 +230,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                                     service: this.field.getValue('service'),
                                                     releaseStrategy: this.field.getValue('releaseStrategy'),
                                                     replicas: this.editField.getValue('replicas'),
-                                                    image_url: this.field.getValue('imageUrl'),
+                                                    imageUrl: this.field.getValue('imageUrl'),
                                                     releaseBatch: this.field.getValue('releaseBatch')
                                                 }
                                             }
@@ -252,7 +253,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                                     service: this.field.getValue('service'),
                                                     releaseStrategy: this.field.getValue('releaseStrategy'),
                                                     replicas: this.editField.getValue('replicas'),
-                                                    image_url: this.field.getValue('imageUrl'),
+                                                    imageUrl: this.field.getValue('imageUrl'),
                                                     releaseBatch: this.field.getValue('releaseBatch')
                                                 }
                                             }
@@ -286,10 +287,11 @@ export default class ApplicationEnvironmentDetail extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 let url = API.gateway + '/application-server/application/env/' + this.state.id + '/yaml'
-                let existUrl = API.gateway + "/applcation-server/application/env/" + this.state.id + "/yamlStatus"
+                let existUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/yamlStatus"
                 Axios.get(existUrl)
                     .then((response) => {
-                        if (response) {
+                        console.log(response)
+                        if (response.data) {
                             Axios.put(url, {}, {
                                     params: {
                                         deploymentStrategy: this.field.getValue('deploymentStrategy'),
@@ -298,7 +300,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                         deployment: this.field.getValue('deployment'),
                                         containers: this.field.getValue('container'),
                                         releaseStrategy: this.field.getValue('releaseStrategy'),
-                                        image_url: this.field.getValue('imageUrl'),
+                                        imageUrl: this.field.getValue('imageUrl'),
                                         releaseBatch: this.field.getValue('releaseBatch')
                                     }
                                 }
@@ -321,7 +323,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                         deployment: this.field.getValue('deployment'),
                                         containers: this.field.getValue('container'),
                                         releaseStrategy: this.field.getValue('releaseStrategy'),
-                                        image_url: this.field.getValue('imageUrl'),
+                                        imageUrl: this.field.getValue('imageUrl'),
                                         releaseBatch: this.field.getValue('releaseBatch')
                                     }
                                 }
@@ -433,7 +435,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                             hasClear={true}
                             onChange={this.onNamespaceInputUpdate.bind(this)}
                         >
-                            {this.state.nameSpaceData.map((item) => {
+                            {this.state.nameSpaceData.length == 0 ? "" : this.state.nameSpaceData.map((item) => {
                                 return (<Option value={String(item)}>{String(item)}</Option>)
                             })}
                         </Combobox>
@@ -453,7 +455,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                             defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.service}
 
                         >
-                            {this.state.serviceData.map((item) => {
+                            {this.state.serviceData.length == 0 ? "" : this.state.serviceData.map((item) => {
                                 return (<Option value={String(item)}>{String(item)}</Option>)
                             })}
                         </Combobox>
@@ -512,7 +514,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                             onChange={this.onDeploymentChange.bind(this)}
                             defaultValue=""
                         >
-                            {this.state.deploymentData.map((item) => {
+                            {this.state.deploymentData.length == 0 ? "" : this.state.deploymentData.map((item) => {
                                 return (<Option value={String(item)}>{String(item)}</Option>)
                             })}
                         </Combobox>

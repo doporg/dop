@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.application.model.vo;
 
 import com.clsaa.dop.server.application.model.po.AppEnvironment;
-import com.clsaa.dop.server.application.model.po.AppYamlData;
+import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AppEnvDetailV1 {
+public class AppEnvK8sV1 {
 
     private Long id;
 
@@ -46,7 +46,7 @@ public class AppEnvDetailV1 {
     /**
      * 发布策略
      */
-    private AppYamlData.ReleaseStrategy releaseStrategy;
+    private KubeYamlData.ReleaseStrategy releaseStrategy;
 
 
     /**

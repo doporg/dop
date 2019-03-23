@@ -3,21 +3,19 @@ package com.clsaa.dop.server.application.controller;
 
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
-import com.clsaa.dop.server.application.model.bo.AppYamlDataBoV1;
-import com.clsaa.dop.server.application.model.po.AppEnvironment;
-import com.clsaa.dop.server.application.model.po.AppUrlInfo;
-import com.clsaa.dop.server.application.model.po.AppVariable;
-import com.clsaa.dop.server.application.model.po.AppYamlData;
-import com.clsaa.dop.server.application.model.vo.AppEnvDetailV1;
+import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
+import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
+import com.clsaa.dop.server.application.model.po.KubeCredential;
+import com.clsaa.dop.server.application.model.vo.AppEnvK8sV1;
 import com.clsaa.dop.server.application.model.vo.AppEnvV1;
 import com.clsaa.dop.server.application.model.vo.ClusterInfoV1;
 import com.clsaa.dop.server.application.service.AppEnvService;
-import com.clsaa.dop.server.application.service.AppVarService;
-import com.clsaa.dop.server.application.service.AppYamlService;
+import com.clsaa.dop.server.application.service.KubeCredentialService;
+import com.clsaa.dop.server.application.service.KubeYamlService;
 import com.clsaa.dop.server.application.util.BeanUtils;
-import io.kubernetes.client.models.V1NamespaceList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
@@ -41,7 +39,9 @@ public class AppEnvController {
     @Autowired
     AppEnvService appEnvService;
     @Autowired
-    AppYamlService appYamlService;
+    KubeYamlService kubeYamlService;
+    @Autowired
+    KubeCredentialService kubeCredentialService;
 
     @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境变量")
     @GetMapping(value = "/application/{appId}/allEnv")
@@ -52,24 +52,25 @@ public class AppEnvController {
 
     @ApiOperation(value = "查询应用环境详情", notes = "根据应用环境信息ID查询应用环境详情")
     @GetMapping(value = "/application/env/{appEnvId}")
-    public AppEnvDetailV1 findEnvironmentDetailById(
+    public AppEnvK8sV1 findEnvironmentDetailById(
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         AppEnvBoV1 appEnvBoV1 = this.appEnvService.findEnvironmentDetailById(appEnvId);
-        AppYamlDataBoV1 appYamlDataBoV1 = this.appYamlService.findYamlDataByEnvId(appEnvId);
-        if (appYamlDataBoV1 == null
+        KubeCredentialBoV1 kubeCredential = kubeCredentialService.findByAppEnvId(appEnvId);
+        KubeYamlDataBoV1 kubeYamlDataBoV1 = this.kubeYamlService.findYamlDataByEnvId(appEnvId);
+        if (kubeYamlDataBoV1 == null
         ) {
             return null;
         }
-        AppEnvDetailV1 appEnvDetailV1 = AppEnvDetailV1.builder()
+        AppEnvK8sV1 appEnvK8sV1 = AppEnvK8sV1.builder()
                 .id(appEnvId)
                 .deploymentStrategy(appEnvBoV1.getDeploymentStrategy())
-                .imageUrl(appYamlDataBoV1.getImageUrl())
-                .nameSpace(appYamlDataBoV1.getNameSpace())
-                .releaseStrategy(appYamlDataBoV1.getReleaseStrategy())
-                .service(appYamlDataBoV1.getService())
-                .targetClusterUrl(appEnvBoV1.getTargetClusterUrl())
+                .imageUrl(kubeYamlDataBoV1.getImageUrl())
+                .nameSpace(kubeYamlDataBoV1.getNameSpace())
+                .releaseStrategy(kubeYamlDataBoV1.getReleaseStrategy())
+                .service(kubeYamlDataBoV1.getService())
+                .targetClusterUrl(kubeCredential.getTargetClusterUrl())
                 .build();
-        return appEnvDetailV1;
+        return appEnvK8sV1;
     }
 
 
@@ -106,7 +107,7 @@ public class AppEnvController {
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
             @ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
-            @ApiParam(name = "yamlFilePath", value = "镜像地址", required = true) @RequestParam(value = "yamlFilePath") String yamlFilePath) {
+            @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.appEnvService.CreateYamlInfoByAppEnvId(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, imageUrl, yamlFilePath);
     }
@@ -125,7 +126,7 @@ public class AppEnvController {
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
             @ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
-            @ApiParam(name = "yamlFilePath", value = "镜像地址", required = true) @RequestParam(value = "yamlFilePath") String yamlFilePath) {
+            @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.appEnvService.UpdateYamlInfoByAppEnvId(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, imageUrl, yamlFilePath);
     }
@@ -134,7 +135,7 @@ public class AppEnvController {
     @GetMapping(value = "/application/env/{appEnvId}/yamlStatus")
     public Boolean isExistYamlData(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
-        return this.appYamlService.isExistYamlData(appEnvId);
+        return this.kubeYamlService.isExistYamlData(appEnvId);
     }
 
     @ApiOperation(value = "获取命名空间", notes = "获取命名空间")
@@ -198,10 +199,11 @@ public class AppEnvController {
     @ApiOperation(value = "更新集群信息", notes = "更新集群信息")
     @PostMapping(value = "/application/env/{appEnvId}/cluster")
     public void updateUrlAndToken(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "clusterInfoV1", name = "clusterInfoV1", required = true) @RequestBody ClusterInfoV1 clusterInfoV1) {
         try {
-            this.appEnvService.updateUrlAndToken(appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
+            this.appEnvService.updateUrlAndToken(muser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
         } catch (Exception e) {
             System.out.print(e);
         }

@@ -1,17 +1,16 @@
 package com.clsaa.dop.server.application.model.bo;
 
-import com.clsaa.dop.server.application.model.po.AppYamlData;
+import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import lombok.*;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppYamlDataBoV1 {
+public class KubeYamlDataBoV1 {
 
     private Long id;
 
@@ -39,7 +38,7 @@ public class AppYamlDataBoV1 {
     /**
      * 发布策略
      */
-    private AppYamlData.ReleaseStrategy releaseStrategy;
+    private KubeYamlData.ReleaseStrategy releaseStrategy;
 
     /**
      * 镜像地址
@@ -63,6 +62,11 @@ public class AppYamlDataBoV1 {
      * 副本数量
      */
     private Integer replicas;
+
+    /**
+     * 部署的yaml
+     */
+    private String deploymentEditableYaml;
 
 
 }

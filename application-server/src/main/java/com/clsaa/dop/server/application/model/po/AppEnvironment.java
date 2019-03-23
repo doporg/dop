@@ -84,17 +84,6 @@ public class AppEnvironment {
     private String title;
 
 
-    /**
-     * 目标集群Url
-     */
-    @Column(name = "target_cluster_url")
-    private String targetClusterUrl;
-
-    /**
-     * 目标集群Token
-     */
-    @Column(name = "target_cluster_token", length = 1000)
-    private String targetClusterToken;
 
 
     /**
