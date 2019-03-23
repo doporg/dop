@@ -79,6 +79,22 @@ public class FileController {
 
     }
 
+    @ApiOperation(value = "查找文件内容",notes = "根据项目id，文件路径，ref查找文件内容")
+    @GetMapping("/projects/{id}/repository/blob")
+    public String findFileContent(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                  @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
+                                  @ApiParam(value = "branch,tag or commit")@RequestParam("ref") String ref,
+                                  @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+        try {
+            return fileService.findFileContent(id,file_path,ref,username);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
 
 
 }

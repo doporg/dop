@@ -48,7 +48,7 @@ public class RequestUtil {
 
     public static void main(String[] args) {
 
-        String url=api+"/projects/3/repository/commits?ref_name=master";
+        String url=api+"/projects/3/repository/commits?path=kk%2fjj%2f3.txt";
         FormatUtil.printJson(httpGet(url));
 
     }
@@ -100,6 +100,20 @@ public class RequestUtil {
 
         return JSON.parseObject(httpGet(url), clazz);
 
+    }
+
+    /**
+     * 发送get请求到gitlab，返回字符串类型
+     */
+    public static String getString(String path,String username){
+
+        String access_token = userService.findUserAccessToken(username);
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "access_token=" + access_token;
+
+        return httpGet(url);
     }
 
     /**

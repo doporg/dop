@@ -71,4 +71,20 @@ public class FileService {
         return res;
 
     }
+
+    /**
+     * 根据分支和路径获得文件的内容
+     * @param id 项目id
+     * @param file_path 文件路径(原始路径，需要urlencode)
+     * @param ref branch,tag or commit
+     * @param username 用户名
+     * @return 文件内容(raw)
+     */
+    public String findFileContent(int id,String file_path,String ref,String username) throws UnsupportedEncodingException {
+
+        file_path=URLEncoder.encode(file_path,"GBK");
+
+         return RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,username);
+
+    }
 }
