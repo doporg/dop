@@ -2,12 +2,13 @@ import React from 'react'
 import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import {Link} from 'react-router-dom';
-
+import FoundationSymbol from 'foundation-symbol';
 import './Tree.css'
 import API from "../../API";
 
 import imgFile from './imgs/file.png';
 import imgFolder from './imgs/folder.png';
+import imgSearch from './imgs/search.png';
 
 export default class Tree extends React.Component{
 
@@ -97,7 +98,7 @@ export default class Tree extends React.Component{
                                         temp_str += "/";
                                     }
                                     temp_str += strs[i];
-                                    paths.push(<a>&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;</a>);
+                                    paths.push(<span className="text-tree-separator">&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>);
                                     paths.push(<a onClick={this.changePath.bind(this,temp_str)}>{strs[i]}</a>);
                                 }
 
@@ -110,12 +111,20 @@ export default class Tree extends React.Component{
                             }
                         })()
                     }
+                    <button className="btn-search-file">
+                        <img src={imgSearch} className="img-tree-search"/>
+                        <span className="text-tree-search">查找文件</span>
+                    </button>
                 </div>
-                <div className="div-tree-item">
+
+
+                <div className="div-tree-title">
                     <span style={{marginRight:18}} className="text-tree-name-title">名称</span>
                     <span className="text-tree-commit-title">最后提交</span>
                     <span className="text-tree-update-title">最后更新</span>
                 </div>
+
+
 
                 {
                     (()=>{
@@ -146,29 +155,19 @@ export default class Tree extends React.Component{
                 }
                 {
                     (()=> {
-                        let count;
-                        if(this.state.path==="/") count=0;
-                        else count = 1;
 
                         return this.state.treeInfo.map(treeNode=>{
                             // if(count++%2===0){
                                 return (
-                                    <div className={
-                                        (()=>{
-                                        if(count++%2===0)
-                                            return "div-tree-item";
-                                        else
-                                            return "div-tree-item-dark";
-                                        })()
-                                    }>
-                                        <img src={
+                                    <div className="div-tree-item">
+                                        {
                                             (()=>{
                                                 if(treeNode.type==="tree")
-                                                    return imgFolder;
+                                                    return <img src={imgFolder} className="img-tree-folder"/>;
                                                 else
-                                                    return imgFile;
+                                                    return <img src={imgFile} className="img-tree-file"/>;
                                             })()
-                                        }/>
+                                        }
                                         <span className="text-tree-name">
                                             <a onClick={
                                                 (()=>{
@@ -184,6 +183,8 @@ export default class Tree extends React.Component{
                         })
                     })()
                 }
+
+
             </div>
         );
     }

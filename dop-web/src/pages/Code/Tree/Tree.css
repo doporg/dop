@@ -7,13 +7,46 @@
 .div-tree-top{
     display: flex;
     align-items:center ;
-    height: 80px;
+    height: 60px;
     padding-left: 20px;
-    background-color: #f7f8fa;
+    position: relative;
+
+}
+
+.btn-search-file{
+    position:absolute;
+    border: 1px solid #d6d6d6;
+    height: 30px;
+    top:15px;
+    right: 30px;
+    border-radius: 5px;
+}
+
+.btn-search-file:hover{
+    background-color: #e8e8e8;
+}
+
+.img-tree-search{
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.text-tree-search{
+    vertical-align: middle;
+    font-size: 15px;
+}
+
+.div-tree-title{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 15px;
     border-top: 1px solid #dce0e6;
     border-bottom: 1px solid #dce0e6;
-    color: #7f8fa4;
-
+    background-color: #f7f8fa;
 }
 
 .div-tree-item{
@@ -26,35 +59,16 @@
 }
 
 .div-tree-item:hover{
-    background-color: #defbf9;
+    background-color: #edfdff;
 }
 
-.div-tree-item-dark{
-    display: flex;
-    align-items: center;
-    height: 50px;
-    line-height: 50px;
-    padding: 0 15px;
-    border-bottom: 1px solid #dce0e6;
-    background-color: #f7f8fa;
+.div-tree-content{
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 20px;
+    border: 1px solid #d6d6d6;
 }
 
-.div-tree-item-dark:hover{
-    background-color: #defbf9;
-}
-
-
-
-.div-tree-item-dark-title{
-    display: flex;
-    align-items: center;
-    height: 50px;
-    line-height: 50px;
-    padding: 0 15px;
-    border-bottom: 1px solid #dce0e6;
-    background-color: #f7f8fa;
-
-}
 
 .text-tree-title{
     font-weight: bold;
@@ -103,24 +117,27 @@
     color: #585858;
 }
 
+.img-tree-folder{
+    width: 15px;
+    height: 12px;
+    margin-right: 5px;
+}
 
-.div-tree-item img{
+.img-tree-file{
     width: 15px;
     height: 15px;
     margin-right: 5px;
 }
-.div-tree-item-dark img{
-    width: 15px;
-    height: 15px;
-    margin-right: 5px;
+
+
+.text-tree-separator{
+    color: #b1b1b1;
 }
 
-a{
-    color:black;
-}
 
 a:hover{
     cursor:pointer;
+    color: black;
 }
 
 
