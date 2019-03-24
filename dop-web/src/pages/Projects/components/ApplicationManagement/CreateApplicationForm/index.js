@@ -40,7 +40,7 @@ export default class ApplicationForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.gateway + '/application-server/application/' + this.state.projectId;
+                let url = API.gateway + '/application-server/app/' + this.state.projectId;
                 Axios.post(url, {}, {
                         params: {
                             title: this.field.getValue('title'),

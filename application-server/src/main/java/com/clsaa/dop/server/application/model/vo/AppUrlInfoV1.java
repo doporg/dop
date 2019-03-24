@@ -7,13 +7,31 @@ import lombok.Setter;
 @Setter
 public class AppUrlInfoV1 {
 
+
+    /**
+     * 仓库地址
+     */
     private String warehouseUrl;
 
+
+    /**
+     * 开发数据库地址
+     */
     private String productionDbUrl;
 
+    /**
+     * 测试数据库地址
+     */
     private String testDbUrl;
 
+
+    /**
+     * 开发域名
+     */
     private String productionDomain;
 
+    /**
+     * 测试域名
+     */
     private String testDomain;
 }

@@ -46,11 +46,11 @@ public class ProjectController {
 
 
     @ApiOperation(value = "创建项目", notes = "创建项目")
-    @PostMapping(value = "/project/{organizationId}")
+    @PostMapping(value = "/project")
 
     public void createProject(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
                               @ApiParam(name = "title", value = "项目名称", required = true) @RequestParam(value = "title") String title,
-                              @ApiParam(name = "organizationId", value = "组织名称", required = true) @PathVariable Long organizationId,
+                              @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId,
                               @ApiParam(name = "projectDescription", value = "项目描述", defaultValue = "") @RequestParam(value = "projectDescription", required = false) String projectDescription) {
 
 

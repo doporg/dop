@@ -7,25 +7,19 @@ import java.time.LocalDateTime;
 
 
 /**
- * 应用Url信息业务层对象
+ * K8s集群认证信息业务层对象
  *
  * @author Bowen
- * @since 2019-3-10
+ * @since 2019-3-23
  **/
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUrlInfoBoV1 {
-
+public class KubeCredentialBoV1 {
 
     private Long id;
-
-    /**
-     * 应用ID
-     */
-    private Long appId;
 
     /**
      * 创建者
@@ -48,27 +42,12 @@ public class AppUrlInfoBoV1 {
     private LocalDateTime mtime;
 
     /**
-     * 仓库URL
+     * 目标集群Url
      */
-    private String warehouseUrl;
+    private String targetClusterUrl;
 
     /**
-     * 开发数据库URL
+     * 目标集群Token
      */
-    private String productionDbUrl;
-
-    /**
-     * 测试数据库URL
-     */
-    private String testDbUrl;
-
-    /**
-     * 开发域名
-     */
-    private String productionDomain;
-
-    /**
-     * 测试域名
-     */
-    private String testDomain;
+    private String targetClusterToken;
 }

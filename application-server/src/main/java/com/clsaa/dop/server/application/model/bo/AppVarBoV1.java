@@ -20,8 +20,16 @@ public class AppVarBoV1 {
 
     private Long id;
 
+
+    /**
+     * 键
+     */
     private String varKey;
 
+
+    /**
+     * 值
+     */
     private String varValue;
 
 

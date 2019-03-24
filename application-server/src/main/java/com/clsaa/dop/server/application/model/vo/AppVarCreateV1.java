@@ -12,6 +12,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AppVarCreateV1 {
+    /**
+     * 键
+     */
     private String varKey;
+    /**
+     * 值
+     */
     private String varValue;
 }

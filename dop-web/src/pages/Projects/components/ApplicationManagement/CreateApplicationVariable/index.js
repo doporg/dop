@@ -58,7 +58,7 @@ class ApplicationVariableForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let postUrl = API.gateway + "/application-server/applicationDetail/variable/" + this.state.appId;
+                let postUrl = API.gateway + "/application-server/app/" + this.state.appId + "/variable";
                 Axios.post(postUrl, {
                         "varKey": _this.field.getValue('key'),
                         "varValue": _this.field.getValue('value')

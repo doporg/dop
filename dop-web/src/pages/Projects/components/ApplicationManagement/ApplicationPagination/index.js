@@ -41,11 +41,12 @@ export default class ApplicationPagination extends Component {
 
     //刷新列表数据
     refreshList(currentPage, searchKey) {
-        let url = API.gateway + '/application-server/application/' + this.state.projectId;
+        let url = API.gateway + '/application-server/app'
         let _this = this;
         let tmpData = [];
         Axios.get(url, {
             params: {
+                projectId: this.state.projectId,
                 pageNo: currentPage,
                 pageSize: 15,
                 queryKey: searchKey
