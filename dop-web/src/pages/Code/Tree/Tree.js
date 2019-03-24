@@ -103,7 +103,7 @@ export default class Tree extends React.Component{
         return (
             <div className="file-container">
                 <div className="div-tree-top">
-                    <CascaderSelect style={{marginRight:20}}  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <CascaderSelect style={{marginRight:20,width:200}}  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
                     {
                         (()=>{
                             let path=this.state.path;

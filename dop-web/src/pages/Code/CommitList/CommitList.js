@@ -19,8 +19,9 @@ export default class CommitList extends React.Component{
 
     constructor(props){
         super(props);
-        const {projectid,branch}=this.props.match.params;
+        const {projectid,branch,username}=this.props.match.params;
         this.state={
+            username:username,
             projectid: projectid,
             ref:branch,
             refOptions: [],
@@ -99,7 +100,8 @@ export default class CommitList extends React.Component{
         return (
             <div className="commit-list-container">
                 <div className="div-commit-list-top">
-                    <CascaderSelect className="select-branch"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <CascaderSelect style={{width:200,marginRight:20}} className="select-branch"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <a className="link-commit-root" href={"http://" + window.location.host + "/#/code/"+this.state.username+"/"+this.state.projectid+"/tree/"+this.state.ref+"/"+encodeURIComponent("/") }>根目录</a>
                     <input value={this.state.msgInput} onChange={this.handleInputChange.bind(this)} className="input-commit-msg-right" placeholder="输入commit message查找commit"/>
                 </div>
                 {

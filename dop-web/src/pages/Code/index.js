@@ -37,7 +37,7 @@ const codeConfig = [
         component: Tree
     },
     {
-        path: '/code/:username/:projectid/blob/:branch',
+        path: '/code/:username/:projectid/blob/:ref/:path',
         layout: CodeLayout,
         component: Blob
     },
