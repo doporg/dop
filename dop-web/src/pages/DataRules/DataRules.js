@@ -8,22 +8,23 @@ import {Input,Button, Field, Table, Dialog, Feedback,Form} from "@icedesign/base
 import Pagination from "@icedesign/base/lib/pagination";
 import API from "../API";
 import Axios from "axios";
-import {Option} from "@icedesign/base/lib/select";
 import BalloonConfirm from "@icedesign/balloon-confirm";
 import {Link} from "react-router-dom";
 import Select from "@icedesign/base/lib/select";
 const { Item: FormItem } = Form;
 
 
-
+let roleMap=new Map()
 export default class DataRules extends Component
 {
     constructor(props) {
         super(props);
         this.field = new Field(this);
+        this.dataField=new Field(this);
         this.state = {
             currentData : [],
             roleList:[],
+            currentRuleId:0,
             userList:[{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                 {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                 {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"}],
@@ -49,25 +50,38 @@ export default class DataRules extends Component
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let url = API.gateway + "/permission-server/v1/userRules" ;
-        let params=
-            {
-                pageNo:this.state.pageNo,
-                pageSize:this.state.pageSize
-            }
-        Axios.get(url,{params:(params)}).then((response) => {
-            this.setState({
-                pageNo:response.data.pageNo,
-                totalCount:response.data.totalCount,
-                currentData:response.data.pageList,
-                isLoading:false
+        let getRoleUrl=API.gateway+"/permission-server/v1/roles/roles";
+        /*先得到角色与ID的映射表*/
+        Axios.get(getRoleUrl).then(response1=>{
+            response1.data.forEach(item=>{
+                roleMap.set(item.id,item.name)
             })
-        }).catch((error)=>{
-            // handle error
-            console.log(error);
-        }).then(()=>{
-            // always executed
-        });
+            console.log(roleMap)
+            let url = API.gateway + "/permission-server/v1/userRules" ;
+            let params=
+                {
+                    pageNo:this.state.pageNo,
+                    pageSize:this.state.pageSize
+                }
+            Axios.get(url,{params:(params)}).then((response) => {
+                response.data.pageList.forEach(item=>{
+                    item.roleId=roleMap.get(item.roleId)
+                })
+                console.log(response.data.pageList)
+                this.setState({
+                    pageNo:response.data.pageNo,
+                    totalCount:response.data.totalCount,
+                    currentData:response.data.pageList,
+                    isLoading:false
+                })
+            }).catch((error)=>{
+                // handle error
+                console.log(error);
+            }).then(()=>{
+                // always executed
+            });
+        })
+
     }
     //翻页
     onChange=currentPage=> {
@@ -133,6 +147,7 @@ export default class DataRules extends Component
                 )
         })
     }
+
     //弹出创建数据规则窗
     onRuleOpen = () => {
 
@@ -183,7 +198,9 @@ export default class DataRules extends Component
     //弹出添加用户数据窗口
     addUserData=record=>{
         console.log(record)
-
+        //获取当前选择的规则ID并填入
+        this.setState({currentRuleId:record.id})
+        //将用户列表填入下拉选项中
         let tmpList=[]
         this.state.userList.forEach(item=>{
             tmpList.push({label:item.name,value:item.id})
@@ -201,11 +218,36 @@ export default class DataRules extends Component
             dataVisible: false
         });
     };
+
+    //重置用户数据窗口
+    handleResetData(e) {
+        e.preventDefault();
+        this.dataField.reset();
+    }
+    //提交用户数据
+    handleSubmitData(e)
+    {
+        e.preventDefault();
+        this.dataField.validate((errors, values)=>{
+            if(errors){
+                console.log("Errors in form!!!");
+                return;}
+            this.setState({dataVisible: false})
+            let url=API.gateway+"/permission-server/v1/userData"
+            let params={ruleId:this.state.currentRuleId,userId:values.userId,fieldValue:values.fieldValue}
+
+            Axios.post(url,{},{params:(params)}).then(response=>{
+                Feedback.toast.success("创建用户数据成功！")
+            })
+
+        })
+    }
     render() {
 
         const { init } = this.field;
+        const initData=this.dataField.init;
         const dialogStyle= {
-            width: "60%" ,height:"7000"
+            width: "60%" ,height:"70"
         }
 
         const formItemLayout = {
@@ -259,7 +301,8 @@ export default class DataRules extends Component
                 onClose={this.onRuleClose}
                 style={dialogStyle}
                 minMargin={5}
-                footer={footer}>
+                footer={footer}
+                shouldUpdatePosition={true}>
 
                 <Form field={this.field}>
                     <FormItem
@@ -309,7 +352,7 @@ export default class DataRules extends Component
                             确定
                         </Button>
                         &nbsp;&nbsp;&nbsp;
-                        <Button onClick={this.handleReset.bind(this)}>重置</Button>
+                        <Button onClick={this.handleSubmit.bind(this)}>重置</Button>
                     </FormItem>
 
                 </Form>
@@ -323,23 +366,48 @@ export default class DataRules extends Component
                 style={dialogStyle}
                 minMargin={5}
                 footer={footer2}
+                shouldUpdatePosition={true}
             >
-                <Form field={this.field}>
+                <Form field={this.dataField}>
                     <FormItem label="用户：" {...formItemLayout} required>
-                        <Select dataSource={this.state.userSelectList}>
+                        <Select dataSource={this.state.userSelectList}
+                                {...initData("userId")}>
 
                         </Select>
                     </FormItem>
+
+                    <FormItem label="作用域参数值：" {...formItemLayout} required>
+                        <Input
+                            maxLength={10}
+                            hasLimitHint
+                            placeholder="请输入参数值(如想为projectId=1的项目添加，则输入1)"
+                            {...initData("fieldValue", {
+                                rules: [
+                                    { required: true, min: 1, message: "请输入参数值！" },
+                                ]
+                            })}
+                        />
+                    </FormItem>
+
+                    <FormItem wrapperCol={{ offset: 6 }}>
+                        <Button type="primary" onClick={this.handleSubmitData.bind(this)}>
+                            确定
+                        </Button>
+                        &nbsp;&nbsp;&nbsp;
+                        <Button onClick={this.handleResetData.bind(this)}>重置</Button>
+                    </FormItem>
+
                 </Form>
             </Dialog>
 
             <Table
                 isLoading={this.state.isLoading}
                 dataSource={this.state.currentData}>
-                <Table.Column title="规则ID" dataIndex="id"/>
-                <Table.Column title="角色ID"   dataIndex="roleId"/>
-                <Table.Column title="权限作用域参数名" dataIndex="fieldName"/>
-                <Table.Column title="规则" dataIndex="rule"/>
+                <Table.Column title="规则ID" dataIndex="id" width="10%"/>
+                <Table.Column title="角色名称"   dataIndex="roleId" width="10%"/>
+                <Table.Column title="权限作用域参数名" dataIndex="fieldName" width="15%"/>
+                <Table.Column title="规则" dataIndex="rule" width="10%"/>
+                <Table.Column title="规则描述" dataIndex="description" />
                 <Table.Column title="添加用户数据" cell={addUserData}  width="10%" />
                 <Table.Column title="删除操作" cell={deleteRule}  width="10%" />
 

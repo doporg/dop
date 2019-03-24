@@ -12,10 +12,12 @@ import Form from "../Role";
  *
  *
  * */
+
 export default class UserRoleMapping extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            /*此时按当前角色来查找用户，因为只有拥有此角色，用户才能进行相应的操作，才能规定范围*/
             currentData : [{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                             {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                              {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
@@ -23,11 +25,14 @@ export default class UserRoleMapping extends Component {
             currentUserId:0,
             currentRoles:[],
             currentPermissions:[],
+            currentUserData:[],
             roleList:[],
             visible:false,
             permissionVisible:false,
-            isLoading:true,
+            userDataVisible:false,
 
+            isLoading:true,
+            permissionIsLoading:true,
             pageNo:1,
             pageSize:8,
             totalCount:0
@@ -45,7 +50,9 @@ export default class UserRoleMapping extends Component {
 
         console.log(id)
         //获取当前用户角色
-        this.setState({currentUserId:id})
+        this.setState({
+            currentUserId:id ,
+            currentRoles:[]})
         let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
         let param={userId:id}
         Axios.get(getRoleUrl,{params:(param)}).then(response=>
@@ -66,6 +73,10 @@ export default class UserRoleMapping extends Component {
 
     onPermissionClose=reason=>{
         this.setState({permissionVisible:false})
+    }
+
+    onUserDataClose=reason=>{
+        this.setState({userDataVisible:false})
     }
 
     //关闭用户角色弹窗
@@ -112,21 +123,60 @@ export default class UserRoleMapping extends Component {
     showPermissions=id=>{
 
         //获取当前用户的功能点
-        this.setState({currentUserId:id})
+        this.setState({
+            currentPermissions:[],
+            currentUserId:id ,
+            permissionIsLoading:true})
         let getPermissionUrl=API.gateway+"/permission-server/v1/users/permissions/{id}"
         let param={userId:id}
         Axios.get(getPermissionUrl,{params:(param)}).then(response=>
         {
-            this.setState({currentPermissions:response.data})
+            this.setState({currentPermissions:response.data ,permissionIsLoading:false})
         })
 
         this.setState({permissionVisible:true
         });
     }
 
+    //弹出用户数据窗口
+    showUserData=id=>{
+
+        //获取当前用户的所有可操作数据
+        this.setState({
+            currentUserId:id,
+            currentUserData:[]
+        })
+        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let param={userId:id}
+        Axios.get(getDataUrl,{params:(param)}).then(response=>
+        {
+            this.setState({currentUserData:response.data})
+        })
+
+        this.setState({userDataVisible:true
+        });
+    }
+    //删除用户数据
+    deleteUserData=id=>{
+        console.log("用户ID"+id)
+        let url=API.gateway+"/permission-server/v1/userData/{id}"
+        let param={id:id}
+        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let userId={userId:this.state.currentUserId}
+        Axios.delete(url,{params:(param)}).then(response=>
+            //再次获取该用户所有数据
+
+            Axios.get(getDataUrl,{params:(userId)}).then(response=>
+            {
+                Feedback.toast.success("成功删除！")
+                this.setState({currentUserData:response.data})
+            })
+        )
+    }
+
     render() {
         const dialogStyle= {
-            width: "60%" ,height:"7000"
+            width: "60%" ,height:"70%"
         }
         const showRoles =(value, index, record)=>{
             return(
@@ -138,13 +188,24 @@ export default class UserRoleMapping extends Component {
                 <button onClick={this.showPermissions.bind(this,record.id)}>查看功能点</button>
             )
         }
+        const showUserData =(value, index, record)=>{
+            return(
+                <button onClick={this.showUserData.bind(this,record.id)}>查看数据</button>
+            )
+        }
         const footer=(
-            <a onClick={this.onClose} href="javascript:;">
+            <a onClick={this.onClose} href="javascript:">
                 取消
             </a>
         )
         const footer2=(
-            <a onClick={this.onPermissionClose} href="javascript:;">
+            <a onClick={this.onPermissionClose} href="javascript:">
+                取消
+            </a>
+        )
+
+        const footer3=(
+            <a onClick={this.onUserDataClose} href="javascript:">
                 取消
             </a>
         )
@@ -161,6 +222,12 @@ export default class UserRoleMapping extends Component {
             );
         }
 
+        const deleteUserData=(value, index, record)=>{
+            return (
+                <button onClick={this.deleteUserData.bind(this, record.id)}>删除</button>
+            );
+        }
+
         return(
             <div>
                 <Dialog
@@ -170,6 +237,7 @@ export default class UserRoleMapping extends Component {
                     style={dialogStyle}
                     minMargin={5}
                     footer={footer}
+                    shouldUpdatePosition={true}
                 >
                             <h2>已关联角色</h2>
                             <Table
@@ -196,11 +264,32 @@ export default class UserRoleMapping extends Component {
                     onClose={this.onPermissionClose}
                     style={dialogStyle}
                     minMargin={5}
-                    footer={footer2}>
+                    footer={footer2}
+                    shouldUpdatePosition={true}>
                     <Table
+                        isLoading={this.state.permissionIsLoading}
                         dataSource={this.state.currentPermissions}>
                         <Table.Column  title="名称" dataIndex="name" />
                         <Table.Column  title="功能点描述" dataIndex="description" />
+                    </Table>
+
+                </Dialog>
+
+                <Dialog
+                    title="用户数据表"
+                    visible={this.state.userDataVisible}
+                    onClose={this.onUserDataClose}
+                    style={dialogStyle}
+                    minMargin={5}
+                    footer={footer3}
+                    shouldUpdatePosition={true}>
+                    <Table
+                        dataSource={this.state.currentUserData}>
+                        <Table.Column  title="ID" dataIndex="id" width="10%" />
+                        <Table.Column  title="规则ID" dataIndex="ruleId" width="10%" />
+                        <Table.Column  title="数据描述" dataIndex="description" />
+                        <Table.Column  title="作用域参数值" dataIndex="fieldValue" width="15%" />
+                        <Table.Column  title="删除操作" cell={deleteUserData}  width="10%" />
                     </Table>
 
                 </Dialog>
@@ -211,8 +300,9 @@ export default class UserRoleMapping extends Component {
                     <Table.Column title="用户名称" dataIndex="name"/>
                     <Table.Column title="用户邮箱"   dataIndex="email"/>
                     <Table.Column title="最后修改时间" dataIndex="mtime"/>
-                    <Table.Column title="分配角色" cell={showRoles}width="10%"/>
-                    <Table.Column title="查看功能点" cell={showPermissions}width="10%"/>
+                    <Table.Column title="分配角色" cell={showRoles} width="10%"/>
+                    <Table.Column title="查看可操作数据" cell={showUserData} width="10%"/>
+                    <Table.Column title="查看功能点" cell={showPermissions} width="10%"/>
 
                 </Table>
             </div>

@@ -271,7 +271,8 @@ export default class Permission extends Component {
                 onClose={this.onClose}
                 style={dialogStyle}
                 minMargin={5}
-                footer={footer}>
+                footer={footer}
+                shouldUpdatePosition={true}>
 
                 <Form field={this.field}>
 

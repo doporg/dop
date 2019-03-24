@@ -175,7 +175,7 @@ export default class Role extends Component {
         })
     }
 
-    //通过get请求中的userid获取username的函数
+    //通过get请求中的userId获取username的函数
     getUserName=(data)=>{
         let axiosList=[]
         let muserSet=[]
@@ -385,7 +385,8 @@ export default class Role extends Component {
                     onClose={this.onClose}
                     style={dialogStyle}
                     minMargin={5}
-                    footer={footer}>
+                    footer={footer}
+                    shouldUpdatePosition={true}>
 
                     <Form field={this.field}>
                         <FormItem
@@ -448,7 +449,7 @@ export default class Role extends Component {
                     style={dialogStyle}
                     minMargin={5}
                     footer={footer2}
-                    >
+                    shouldUpdatePosition={true}>
                         <Form>
                             <FormItem>
                                 <h2>已有功能点</h2>
@@ -478,6 +479,7 @@ export default class Role extends Component {
                 <Table
                     isLoading={this.state.isLoading}
                     dataSource={this.state.currentData}>
+                    <Table.Column title="角色ID" dataIndex="id"/>
                     <Table.Column title="角色名称" dataIndex="name"/>
                     <Table.Column title="创建人"   dataIndex="muser"/>
                     <Table.Column title="创建时间" dataIndex="mtime"/>
