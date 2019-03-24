@@ -66,7 +66,7 @@ export default class Tree extends React.Component{
     }
 
     componentWillReceiveProps(nextProps, nextState) {
-        console.log('componentWillReceiveProps');
+        // console.log('componentWillReceiveProps');
 
         let {username,projectid,path,ref}=nextProps.match.params;
         path=decodeURIComponent(path);
@@ -94,6 +94,13 @@ export default class Tree extends React.Component{
 
     }
 
+    readFile(path){
+
+        let {username,projectid,ref}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
+
+    }
 
 
     render(){
@@ -194,6 +201,8 @@ export default class Tree extends React.Component{
                                                 (()=>{
                                                     if(treeNode.type==="tree")
                                                         return this.changePath.bind(this,treeNode.path);
+                                                    else
+                                                        return this.readFile.bind(this,treeNode.path);
                                                 })()
                                             }>{treeNode.name}</a>
                                         </span>
