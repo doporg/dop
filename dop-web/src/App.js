@@ -22,7 +22,6 @@ class App extends Component {
             return Promise.resolve(response);
         }, (error) => {
             if (error.response) {
-                console.log(11)
                 toast.show({
                     type: "error",
                     content: error.response.data.message,

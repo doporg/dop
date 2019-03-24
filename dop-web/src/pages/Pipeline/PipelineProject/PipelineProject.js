@@ -87,7 +87,7 @@ export default class PipelineProject extends Component {
     }
 
     removeByIdSQL(id) {
-        let url = API.pipeline + '/v1/delete/byId?id='+id;
+        let url = API.pipeline + '/v1/delete/'+id;
         let self = this;
         Axios.put(url).then((response) => {
             if (response.status === 200) {
@@ -103,7 +103,7 @@ export default class PipelineProject extends Component {
 
     deletePipeline() {
         console.log(11)
-        let url = API.pipeline + '/v1/jenkins/byId?id='+this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/'+this.state.pipelineId;
         let self = this;
         self.setState({
             visible: true

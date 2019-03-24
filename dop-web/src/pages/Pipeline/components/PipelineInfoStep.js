@@ -289,8 +289,9 @@ export default class PipelineInfoStep extends Component {
                                                             switch (this.state.chosenStep.taskName) {
                                                                 case "拉取代码":
                                                                     return (
-                                                                        <Pull onChange={this.gitUrl.bind(this)}
-                                                                              gitUrl={this.state.chosenStep.gitUrl}
+                                                                        <Pull
+                                                                            onChange={this.gitUrl.bind(this)}
+                                                                            gitUrl={this.state.chosenStep.gitUrl}
                                                                         />
                                                                     );
                                                                 case "构建maven":

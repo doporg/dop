@@ -25,7 +25,7 @@ export default class PipelineInfo extends Component {
             // 流水线的基本信息
             pipeline: {
                 name: "",
-                cuser: "1",
+                cuser: window.sessionStorage.getItem('user-id'),
                 //监听设置
                 monitor: "",
                 config:"",

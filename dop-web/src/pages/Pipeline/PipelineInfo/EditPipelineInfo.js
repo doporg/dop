@@ -27,7 +27,7 @@ export default class EditPipelineInfo extends Component {
             visible: false,
             pipeline: {
                 name: "",
-                cuser: "1",
+                cuser: window.sessionStorage.getItem('user-id'),
                 //监听设置
                 monitor: "",
                 config:"",
@@ -50,7 +50,7 @@ export default class EditPipelineInfo extends Component {
     }
 
     getPipeline() {
-        let url = API.pipeline + '/v1/pipeline/byId?id=' + this.state.pipelineId;
+        let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
         let self = this;
         self.setState({
             visible: true
@@ -193,7 +193,7 @@ export default class EditPipelineInfo extends Component {
     }
 
     deleteJenkins(){
-        let url = API.pipeline + '/v1/jenkins/byId?id=' + this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/' + this.state.pipelineId;
         return new Promise((resolve, reject)=>{
             Axios.delete(url).then((response) => {
                 if (response.status === 200) {
