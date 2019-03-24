@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,11 +81,31 @@ public class FileService {
      * @param username 用户名
      * @return 文件内容(raw)
      */
-    public String findFileContent(int id,String file_path,String ref,String username) throws UnsupportedEncodingException {
+    public BlobBo findFileContent(int id, String file_path, String ref, String username) throws UnsupportedEncodingException {
+
 
         file_path=URLEncoder.encode(file_path,"GBK");
 
-         return RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,username);
+        String content=RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,username);
+
+        BlobBo blobBo=RequestUtil.get("/projects/"+id+"/repository/files/"+file_path+"?ref="+ref,username,BlobBo.class);
+
+        blobBo.setFile_content(content);
+
+        int size=blobBo.getSize();
+
+        if(size<1024){
+            blobBo.setFile_size(size+"B");
+        }else if(size<(1024*1024)){
+            blobBo.setFile_size(size/1024+"KB");
+        }else if(size<(1024*1024*1024)){
+            blobBo.setFile_size(size/(1024*1024)+"MB");
+        }else {
+            blobBo.setFile_size(size/(1024*1024*1024)+"GB");
+        }
+
+        return blobBo;
+
 
     }
 }

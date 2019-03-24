@@ -48,8 +48,8 @@ public class RequestUtil {
 
     public static void main(String[] args) {
 
-        String url=api+"/projects/3/repository/commits?path=kk%2fjj%2f3.txt";
-        FormatUtil.printJson(httpGet(url));
+        String url=api+"/projects/3/repository/files/kk%2f1.txt/raw?ref=master";
+        System.out.println(httpGet(url));
 
     }
 
@@ -173,7 +173,7 @@ public class RequestUtil {
             //4.处理结果，这里将结果返回为字符串
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                result = EntityUtils.toString(entity);
+                result = EntityUtils.toString(entity,"utf-8");
             }
         } catch (IOException e) {
             e.printStackTrace();

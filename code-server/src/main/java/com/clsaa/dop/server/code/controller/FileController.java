@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.controller;
 import com.clsaa.dop.server.code.model.bo.file.BranchAndTagBo;
 import com.clsaa.dop.server.code.model.bo.file.ChildrenBo;
 import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
+import com.clsaa.dop.server.code.model.vo.file.BlobVo;
 import com.clsaa.dop.server.code.model.vo.file.BranchAndTagVo;
 import com.clsaa.dop.server.code.model.vo.file.ChildrenVo;
 import com.clsaa.dop.server.code.model.vo.file.TreeNodeVo;
@@ -81,18 +82,21 @@ public class FileController {
 
     @ApiOperation(value = "查找文件内容",notes = "根据项目id，文件路径，ref查找文件内容")
     @GetMapping("/projects/{id}/repository/blob")
-    public String findFileContent(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public BlobVo findFileContent(@ApiParam(value = "项目id")@PathVariable("id") int id,
                                   @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
                                   @ApiParam(value = "branch,tag or commit")@RequestParam("ref") String ref,
                                   @ApiParam(value = "用户名")@RequestParam("username") String username){
 
+        BlobVo bolbVo=null;
+
         try {
-            return fileService.findFileContent(id,file_path,ref,username);
+            bolbVo=BeanUtils.convertType(fileService.findFileContent(id,file_path,ref,username),BlobVo.class) ;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return "";
+        return bolbVo;
+
     }
 
 
