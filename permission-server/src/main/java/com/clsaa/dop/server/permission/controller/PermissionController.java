@@ -124,7 +124,7 @@ public class PermissionController {
     //验证登录用户是否拥有特定功能点
     public boolean checkUserPermission( @ApiParam(name = "permissionId",value = "功能点ID",required = true)
                                             @RequestParam(value = "permissionId", required = true) Long permissionId,
-                                        @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
+                                        @RequestParam("userId") Long loginUser)
     {
         return permissionService.checkUserPermission(permissionId,loginUser);
     }

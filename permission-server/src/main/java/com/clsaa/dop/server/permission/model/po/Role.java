@@ -26,9 +26,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_role",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"name","id"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_role set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_role set is_deleted = true, name = CONCAT(uuid(),name) where id = ?")
 @Where(clause = "is_deleted =false")
 public class Role implements Serializable {
 

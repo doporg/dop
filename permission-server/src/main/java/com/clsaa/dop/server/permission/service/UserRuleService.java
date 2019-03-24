@@ -12,6 +12,7 @@ import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -19,9 +20,11 @@ import org.springframework.stereotype.Service;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.security.RolesAllowed;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +40,12 @@ public class UserRuleService {
 
     @Autowired
     private UserRuleDAO userRuleDAO;
+
+    @Autowired
+    private UserDataService userDataService;
+
+    @Autowired
+    private RoleService roleService;
 
     /* *
      *
@@ -60,6 +69,7 @@ public class UserRuleService {
                 .roleId(roleId)
                 .fieldName(fieldName)
                 .rule(rule)
+                .description("身为 "+roleService.findById(roleId).getName()+" 有权操作 "+fieldName+" "+rule+" {x,x,...}的数据")
                 .cuser(cuser)
                 .muser(muser)
                 .ctime(LocalDateTime.now())
@@ -108,6 +118,8 @@ public class UserRuleService {
     public void deleteById(Long id)
     {
         userRuleDAO.deleteById(id);
+        userDataService.deleteByRuleId(id);
+
     }
 
     //根据角色ID删除规则
@@ -117,4 +129,14 @@ public class UserRuleService {
         userRuleDAO.deleteByRoleId(roleId);
     }
 
+    //根据ID查找规则
+    public UserRule findById(Long id)
+    {
+        Optional<UserRule> permission=userRuleDAO.findById(id);
+        if(permission.isPresent())
+        {
+            return permission.get();
+        }
+        return null;
+    }
 }

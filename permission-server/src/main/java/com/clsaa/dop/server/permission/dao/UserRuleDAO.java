@@ -42,4 +42,5 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
      */
     public void deleteByRoleId(Long roleId);
 
+
 }

@@ -22,10 +22,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 //重写SQL删除语句
-@SQLDelete(sql = "update t_role_permission_mapping set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_role_permission_mapping set is_deleted = true,permission_id = uuid()+permission_id where id = ?")
 @Where(clause = "is_deleted =false")
 @Table(name = "t_role_permission_mapping",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id","id"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id"})}) //引入@Table注解，name赋值为表名
 public class RolePermissionMapping implements Serializable {
 
     private static final long serialVersionUID = 552000262L;

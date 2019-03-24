@@ -22,9 +22,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_data",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"id","rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_user_data set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_user_data set is_deleted = true ,rule_id = uuid()+rule_id where id = ?")
 @Where(clause = "is_deleted =false")
 public class UserData implements Serializable {
     private static final long serialVersionUID = 552000265L;
@@ -55,6 +55,12 @@ public class UserData implements Serializable {
     @Basic
     @Column(name = "field_value")
     private Long fieldValue;
+    /**
+     * 描述
+     */
+    @Basic
+    @Column(name = "description")
+    private String description;
 
     /* 表里都要有的字段*/
     /**

@@ -35,4 +35,21 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
      */
     public UserData findByUserIdAndFieldValueAndRuleId(Long userId,Long fieldValue,Long ruleId);
 
+    /**
+     * 根据用户ID查找数据
+     *
+     * @param userId  用户ID
+     *
+     * @return {@link List<UserData>}
+     */
+    public List<UserData> findByUserId(Long userId);
+
+    /**
+     * 根据规则id删除数据
+     *
+     * @param ruleId  规则ID
+     *
+     */
+    public void deleteByRuleId(Long ruleId);
+
 }

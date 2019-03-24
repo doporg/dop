@@ -2,9 +2,12 @@ package com.clsaa.dop.server.permission.service;
 
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.UserDataDAO;
+import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.UserData;
 import com.clsaa.dop.server.permission.model.po.UserRule;
+import com.clsaa.dop.server.permission.model.vo.UserDataV1;
+import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *  用户数据表的增删改查
@@ -52,10 +56,13 @@ public class UserDataService {
     {
         UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
         BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
+        UserRule userRule=userRuleService.findById(ruleId);
         UserData userData=UserData.builder()
                 .ruleId(ruleId)
                 .userId(userId)
                 .fieldValue(fieldValue)
+                .description("身为 "+roleService.findById(userRule.getRoleId()).getName()+
+                " 有权操作 "+userRule.getFieldName()+" "+userRule.getRule()+" {作用域参数值} 的数据")
                 .cuser(cuser)
                 .muser(muser)
                 .ctime(LocalDateTime.now())
@@ -114,4 +121,23 @@ public class UserDataService {
         }
         return IdList;
     }
+
+    //根据用户ID查找数据
+    public List<UserDataV1> findByUserId(Long userId)
+    {
+        return userDataDAO.findByUserId(userId).stream().map(p-> BeanUtils.convertType(p, UserDataV1.class)).collect(Collectors.toList());
+    }
+
+    //根据规则ID删除数据
+    public void deleteByRuleId(Long ruleId)
+    {
+        userDataDAO.deleteByRuleId(ruleId);
+    }
+
+    //根据ID删除数据
+    public void deleteById(Long id)
+    {
+        userDataDAO.deleteById(id);
+    }
+
 }

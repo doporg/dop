@@ -37,7 +37,10 @@ public class UserRuleV1 implements Serializable {
      * 规则
      */
     private String rule;
-
+    /**
+     * 描述
+     */
+    private String description;
     /* 表里都要有的字段*/
     /**
      * 创建时间

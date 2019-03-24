@@ -23,9 +23,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_rule",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"id","role_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_user_rule set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_user_rule set is_deleted = true,field_name = CONCAT(uuid(),field_name) where id = ?")
 @Where(clause = "is_deleted =false")
 public class UserRule implements Serializable {
     private static final long serialVersionUID = 552000266L;
@@ -56,6 +56,12 @@ public class UserRule implements Serializable {
     @Basic
     @Column(name = "rule")
     private String rule;
+    /**
+     * 描述
+     */
+    @Basic
+    @Column(name = "description")
+    private String description;
 
     /* 表里都要有的字段*/
     /**

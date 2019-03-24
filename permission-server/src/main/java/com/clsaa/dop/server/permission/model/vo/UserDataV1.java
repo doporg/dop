@@ -38,7 +38,10 @@ public class UserDataV1 implements Serializable {
      * 参数值
      */
     private Long fieldValue;
-
+    /**
+     * 描述
+     */
+    private String description;
     /* 表里都要有的字段*/
     /**
      * 创建时间

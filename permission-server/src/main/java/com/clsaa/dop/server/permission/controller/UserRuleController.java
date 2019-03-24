@@ -72,7 +72,7 @@ public class UserRuleController {
 
     //根据角色ID查找规则
     @ApiOperation(value = "根据角色ID查找规则", notes = "根据角色ID查找规则")
-    @GetMapping("/v1/userRules/{roleId}")
+    @GetMapping("/v1/userRules?roleId=:roleId")
     public List<UserRuleV1> findByRoleId(
             @ApiParam(name = "roleId",value = "角色ID",required = true)
             @RequestParam(value = "roleId", required = true)Long roleId
