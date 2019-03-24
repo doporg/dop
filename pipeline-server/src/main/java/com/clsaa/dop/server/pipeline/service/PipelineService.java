@@ -212,4 +212,12 @@ public class PipelineService {
         }
         return pipelineV1Projects;
     }
+
+    /**
+     * 根据envid， 查询pipelineid
+     */
+    public String getPipelineIdByEnvId(Long envid){
+        Pipeline pipeline = this.pipelineRepository.findByAppEnvId(envid);
+        return pipeline.getId().toString();
+    }
 }

@@ -29,9 +29,6 @@ public class K8sController {
             ApiClient client = Config.defaultClient();
             Configuration.setDefaultApiClient(client);
 
-
-
-
         }catch (Exception e){
 
         }

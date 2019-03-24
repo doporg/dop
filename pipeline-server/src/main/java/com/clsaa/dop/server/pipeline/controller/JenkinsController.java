@@ -4,6 +4,7 @@ import com.clsaa.dop.server.pipeline.config.BizCodes;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
+import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.service.BlueOceanService;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
 import com.clsaa.rest.result.bizassert.BizAssert;
@@ -25,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

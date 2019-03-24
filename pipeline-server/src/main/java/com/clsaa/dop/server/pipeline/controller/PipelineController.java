@@ -89,8 +89,12 @@ public class PipelineController {
         pipelineBoV1.setAppId(appid);
         pipelineBoV1.setAppEnvId(envid);
         this.pipelineService.update(pipelineBoV1);
+    }
 
-//       return  this.pipelineService.getPipelineById(cuser);
+    @ApiOperation(value = "根据流水线env-id, 查询pipelineid")
+    @GetMapping("/v1/pipeline/appId/{appId}")
+    public String getPipelineIdByEnvId(@PathVariable(value = "appId") Long appId) {
+        return this.pipelineService.getPipelineIdByEnvId(appId);
     }
 
 }
