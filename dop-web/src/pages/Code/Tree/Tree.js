@@ -17,29 +17,47 @@ export default class Tree extends React.Component{
 
         super(props);
 
-        const {projectid,branch}=this.props.match.params;
+        let {username,projectid,path,ref}=this.props.match.params;
 
+        path=decodeURIComponent(path);
+        // console.log(path);
 
         this.state = {
+            username:username,
             projectid: projectid,
-            ref: branch,
+            ref: ref,
             refOptions: [],
-            path: "/",
+            path: path,
             treeInfo: [],//name,type,path,commit_id,commit_msg,commit_date,commit_time
         }
 
     }
 
     componentWillMount() {
-        let url=API.code + "/projects/"+this.state.projectid+"/repository/tree?path="+this.state.path+"&ref="+this.state.ref+"&username="+sessionStorage.getItem("user-name");
+
+        let {username,projectid,path,ref}=this.state;
+
+        this.loadData(username,projectid,path,ref);
+    }
+
+
+    loadData(username,projectid,path,ref){
+
+        // let {projectid,path,ref}=this.state;
+
+        let url=API.code + "/projects/"+projectid+"/repository/tree?path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
         let self=this;
         Axios.get(url).then(response => {
             self.setState({
+                username:username,
+                projectid:projectid,
+                path:path,
+                ref:ref,
                 treeInfo:response.data
             })
         });
 
-        url=API.code+"/projects/"+this.state.projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
         Axios.get(url).then(response=>{
             self.setState({
                 refOptions:response.data
@@ -47,37 +65,40 @@ export default class Tree extends React.Component{
         });
     }
 
+    componentWillReceiveProps(nextProps, nextState) {
+        console.log('componentWillReceiveProps');
+
+        let {username,projectid,path,ref}=nextProps.match.params;
+        path=decodeURIComponent(path);
+        // console.log(path);
+        this.loadData(username,projectid,path,ref);
+
+    }
+
+
 
 
     changeRef(value, data, extra) {
 
-        let url=API.code + "/projects/"+this.state.projectid+"/repository/tree?path="+this.state.path+"&ref="+value+"&username="+sessionStorage.getItem("user-name");
-        let self=this;
-        Axios.get(url).then(response => {
-            self.setState({
-                ref:value,
-                path:"/",
-                treeInfo:response.data
-            })
-        });
+        let {username,projectid}=this.state;
+        let path="/";//切换ref将路径设为根目录，以免子目录不存在
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path);
+
     }
 
     changePath(path){
-        let url=API.code + "/projects/"+this.state.projectid+"/repository/tree?path="+path+"&ref="+this.state.ref+"&username="+sessionStorage.getItem("user-name");
-        let self=this;
-        Axios.get(url).then(response => {
-            self.setState({
-                path:path,
-                treeInfo:response.data
-            })
-        });
+
+        let {username,projectid,ref}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+
     }
 
 
 
     render(){
 
-        const {projectid,branch,username}=this.props.match.params;
+        // const {projectid,branch,username}=this.props.match.params;
 
         return (
             <div className="file-container">

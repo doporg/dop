@@ -16,8 +16,8 @@
 .btn-search-file{
     position:absolute;
     border: 1px solid #d6d6d6;
-    height: 30px;
-    top:15px;
+    height: 36px;
+    top:12px;
     right: 30px;
     border-radius: 5px;
 }
@@ -71,21 +71,21 @@
 
 
 .text-tree-title{
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .text-tree-name-title{
     display: inline-block;
     width: 38%;
     font-size: 15px;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .text-tree-commit-title{
     display: inline-block;
     width: 50%;
     font-size: 15px;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .text-tree-update-title{
@@ -93,7 +93,7 @@
     width: 10%;
     font-size: 15px;
     text-align: right;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .text-tree-name{

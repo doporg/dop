@@ -32,7 +32,7 @@ const codeConfig = [
         component: Code
     },
     {
-        path: '/code/:username/:projectid/tree/:branch',
+        path: '/code/:username/:projectid/tree/:ref/:path',
         layout: CodeLayout,
         component: Tree
     },
