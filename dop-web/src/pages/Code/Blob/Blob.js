@@ -72,6 +72,8 @@ export default class Blob extends React.Component{
 
         let {username,projectid,path,ref}=nextProps.match.params;
 
+        path=decodeURIComponent(path);
+
         let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
         let self=this;
         Axios.get(url).then(response=>{
@@ -101,6 +103,14 @@ export default class Blob extends React.Component{
         let {username,projectid,ref}=this.state;
 
         window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+
+    }
+
+    editFile(){
+
+        let {username,path,projectid,ref}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -144,7 +154,7 @@ export default class Blob extends React.Component{
                     <span className="text-file-name">{this.state.blobInfo.file_name}</span>
                     <span className="text-file-size">&nbsp;&nbsp;{this.state.blobInfo.file_size}</span>
                     <div className="div-blob-operation">
-                        <button className="btn-blob-edit">编辑</button>
+                        <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>
                         <button className="btn-blob-delete">删除</button>
                     </div>
                 </div>
