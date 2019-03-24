@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.application.model.vo;
 
-import com.clsaa.dop.server.application.model.po.AppEnvironment;
+import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +34,11 @@ public class AppEnvK8sV1 {
     private String imageUrl;
 
     /**
+     * YAMLFILEPATH
+     */
+    private String yamlFilePath;
+
+    /**
      * 命名空间
      */
     private String nameSpace;
@@ -52,6 +57,6 @@ public class AppEnvK8sV1 {
     /**
      * 部署策略
      */
-    private AppEnvironment.DeploymentStrategy deploymentStrategy;
+    private AppEnv.DeploymentStrategy deploymentStrategy;
 
 }

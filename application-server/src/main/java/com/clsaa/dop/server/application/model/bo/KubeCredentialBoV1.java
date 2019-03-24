@@ -3,6 +3,7 @@ package com.clsaa.dop.server.application.model.bo;
 import lombok.*;
 
 import javax.persistence.Column;
+import java.time.LocalDateTime;
 
 
 /**
@@ -17,6 +18,29 @@ import javax.persistence.Column;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KubeCredentialBoV1 {
+
+    private Long id;
+
+    /**
+     * 创建者
+     */
+    private Long cuser;
+
+    /**
+     * 修改者
+     */
+    private Long muser;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime ctime;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime mtime;
+
     /**
      * 目标集群Url
      */

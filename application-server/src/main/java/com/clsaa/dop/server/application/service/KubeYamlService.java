@@ -5,6 +5,7 @@ import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.apis.AppsV1Api;
+import io.kubernetes.client.apis.CoreApi;
 import io.kubernetes.client.models.V1Container;
 import io.kubernetes.client.models.V1Deployment;
 import io.kubernetes.client.models.V1DeploymentBuilder;
@@ -57,10 +58,9 @@ public class KubeYamlService {
                     .releaseBatch(releaseBatch)
                 .releaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy))
                 .imageUrl(imageUrl)
-                .yamlFilePath(yamlFilePath)
-                    .build();
+                .build();
 
-        if (kubeYamlData.getYamlFilePath() != "") {
+        if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = appEnvService.getAppsApi(appEnvId);
             List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
@@ -71,13 +71,15 @@ public class KubeYamlService {
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container)) {
                                 containerList.get(i).setImage(imageUrl);
+                                break;
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        break;
                         //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
                     }
-                    kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                 }
 
             } else {
@@ -108,7 +110,11 @@ public class KubeYamlService {
 
                 //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
             }
+            kubeYamlData.setYamlFilePath("");
 
+        } else {
+            kubeYamlData.setYamlFilePath(yamlFilePath);
+            kubeYamlData.setDeploymentEditableYaml("");
         }
 
         this.kubeYamlRepository.saveAndFlush(kubeYamlData);
@@ -141,11 +147,11 @@ public class KubeYamlService {
         kubeYamlData.setReplicas(replicas);
         kubeYamlData.setReleaseBatch(releaseBatch);
         kubeYamlData.setImageUrl(imageUrl);
-        kubeYamlData.setYamlFilePath(yamlFilePath);
+
         kubeYamlData.setReleaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy));
 
 
-        if (kubeYamlData.getYamlFilePath() != "") {
+        if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = appEnvService.getAppsApi(appEnvId);
             List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
@@ -156,13 +162,14 @@ public class KubeYamlService {
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container)) {
                                 containerList.get(i).setImage(imageUrl);
+                                break;
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-
-                        //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        break;
                     }
-                    kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                 }
 
             } else {
@@ -189,11 +196,17 @@ public class KubeYamlService {
                         .endTemplate()
                         .endSpec()
                         .build();
+
+
                 kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
 
                 //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
             }
+            kubeYamlData.setYamlFilePath("");
 
+        } else {
+            kubeYamlData.setYamlFilePath(yamlFilePath);
+            kubeYamlData.setDeploymentEditableYaml("");
         }
 
         this.kubeYamlRepository.saveAndFlush(kubeYamlData);

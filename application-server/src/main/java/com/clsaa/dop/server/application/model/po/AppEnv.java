@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -24,9 +23,9 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update app_environment set is_deleted = true where id = ?")
+@SQLDelete(sql = "update app_env set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class AppEnvironment {
+public class AppEnv {
 
     @Id
     @GeneratedValue
@@ -69,13 +68,18 @@ public class AppEnvironment {
     @Column(nullable = false, name = "app_id")
     private Long appId;
 
+    /**
+     * PIPELINEID
+     */
+    @Column(name = "pipeline_id")
+    private String pipelineId;
 
     /**
      * 部署策略
      */
     @Column(nullable = false, name = "deployment_strategy")
     @Enumerated(EnumType.STRING)
-    private AppEnvironment.DeploymentStrategy deploymentStrategy;
+    private AppEnv.DeploymentStrategy deploymentStrategy;
 
     /**
      * 环境名称
@@ -91,7 +95,7 @@ public class AppEnvironment {
      */
     @Column(nullable = false, name = "environment_level")
     @Enumerated(EnumType.STRING)
-    private AppEnvironment.EnvironmentLevel environmentLevel;
+    private AppEnv.EnvironmentLevel environmentLevel;
 
 
     public enum EnvironmentLevel {
@@ -128,6 +132,15 @@ public class AppEnvironment {
         ;
 
         private String code;
+
+        public static DeploymentStrategy of(String code) {
+            for (DeploymentStrategy e : DeploymentStrategy.values()) {
+                if (e.code.equals(code)) {
+                    return e;
+                }
+            }
+            return null;
+        }
 
         DeploymentStrategy(String code) {
             this.code = code;

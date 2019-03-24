@@ -67,7 +67,7 @@ export default class ApplicationDetail extends Component {
     envDetailRender() {
         if (this.state.showEnvDetail) {
             return (
-                <ApplicationEnvironmentDetail id={this.state.envId}/>
+                <ApplicationEnvironmentDetail id={this.state.envId} appId={this.state.appId}/>
             )
         } else {
             return (<div></div>)

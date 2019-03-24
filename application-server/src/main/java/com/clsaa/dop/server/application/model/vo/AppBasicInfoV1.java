@@ -32,15 +32,31 @@ public class AppBasicInfoV1 {
      */
     private String description;
 
-    //仓库地址
+
+    /**
+     * 仓库地址
+     */
     private String warehouseUrl;
 
-    //开发数据库地址
+
+    /**
+     * 开发数据库地址
+     */
     private String productionDbUrl;
-    //测试数据库地址
+
+    /**
+     * 测试数据库地址
+     */
     private String testDbUrl;
-    //开发域名
+
+
+    /**
+     * 开发域名
+     */
     private String productionDomain;
-    //测试域名
+
+    /**
+     * 测试域名
+     */
     private String testDomain;
 }

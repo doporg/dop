@@ -4,12 +4,9 @@ import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
 import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
 import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
-import com.clsaa.dop.server.application.model.po.AppEnvironment;
-import com.clsaa.dop.server.application.model.po.KubeCredential;
-import com.clsaa.dop.server.application.model.po.KubeYamlData;
+import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.apis.AppsV1Api;
-import io.kubernetes.client.util.Yaml;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +45,11 @@ public class AppEnvService {
     /**
      * 创建环境信息
      *
-     * @param appEnvironment appEnvironment
+     * @param appEnv appEnv
      * @return
      */
-    public void createAppEnv(AppEnvironment appEnvironment) {
-        this.appEnvRepository.saveAndFlush(appEnvironment);
+    public void createAppEnv(AppEnv appEnv) {
+        this.appEnvRepository.saveAndFlush(appEnv);
     }
 
 
@@ -63,8 +60,8 @@ public class AppEnvService {
      * @return AppEnvBoV1
      */
     public AppEnvBoV1 findEnvironmentDetailById(Long id) {
-        AppEnvironment appEnvironment = this.appEnvRepository.findById(id).orElse(null);
-        return BeanUtils.convertType(appEnvironment, AppEnvBoV1.class);
+        AppEnv appEnv = this.appEnvRepository.findById(id).orElse(null);
+        return BeanUtils.convertType(appEnv, AppEnvBoV1.class);
     }
 
     /**
@@ -77,19 +74,19 @@ public class AppEnvService {
      * @param deploymentStrategy 发布策略
      */
     public void createEnvironmentByAppId(Long appId, Long cuser, String title, String environmentLever, String deploymentStrategy) {
-        AppEnvironment appEnvironment = AppEnvironment.builder()
+        AppEnv appEnv = AppEnv.builder()
                 .appId(appId)
                 .title(title)
                 .cuser(cuser)
                 .muser(cuser)
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
-                .environmentLevel(AppEnvironment.EnvironmentLevel.valueOf(environmentLever))
-                .deploymentStrategy(AppEnvironment.DeploymentStrategy.valueOf(deploymentStrategy))
+                .environmentLevel(AppEnv.EnvironmentLevel.valueOf(environmentLever))
+                .deploymentStrategy(AppEnv.DeploymentStrategy.valueOf(deploymentStrategy))
                 .build();
-        this.appEnvRepository.saveAndFlush(appEnvironment);
-        if (deploymentStrategy.equals("KUBERNETES")) {
-            this.kubeCredentialService.createCredentialByAppEnvId(cuser, appEnvironment.getId());
+        this.appEnvRepository.saveAndFlush(appEnv);
+        if (AppEnv.DeploymentStrategy.KUBERNETES == AppEnv.DeploymentStrategy.of(deploymentStrategy)) {
+            this.kubeCredentialService.createCredentialByAppEnvId(cuser, appEnv.getId());
         }
 
     }
@@ -192,6 +189,26 @@ public class AppEnvService {
         this.kubeCredentialService.updateClusterInfo(muser, appEnvId, url, token);
     }
 
+    /**
+     * 更新Pipeline信息
+     *
+     * @param appEnvId 应用环境id
+     * @param muser    修改者
+     */
+    public void updatePipeline(Long muser, Long appEnvId, String pipelineId) {
+        AppEnv appEnv = this.appEnvRepository.findById(appEnvId).orElse(null);
+        appEnv.setPipelineId(pipelineId);
+        this.appEnvRepository.saveAndFlush(appEnv);
+    }
+
+    /**
+     * 更新Pipeline信息
+     *
+     * @param appEnvId 应用环境id
+     */
+    public AppEnvBoV1 getPipeline(Long appEnvId) {
+        return BeanUtils.convertType(this.appEnvRepository.findById(appEnvId).orElse(null), AppEnvBoV1.class);
+    }
 
     /**
      * 根据命名空间及服务名称获取部署
@@ -390,13 +407,14 @@ public class AppEnvService {
     public HashMap<String, String> createYamlFileForDeploy(Long appEnvId) throws Exception {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.kubeYamlService.findYamlDataByEnvId(appEnvId);
-        if (kubeYamlDataBoV1.getYamlFilePath() == "") {
-            return new HashMap<String, String>() {{
-                put("path", kubeYamlDataBoV1.getYamlFilePath());
-            }};
-        } else {
+        if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
             return new HashMap<String, String>() {{
                 put("yaml", kubeYamlDataBoV1.getDeploymentEditableYaml());
+            }};
+
+        } else {
+            return new HashMap<String, String>() {{
+                put("path", kubeYamlDataBoV1.getYamlFilePath());
             }};
         }
 

@@ -67,7 +67,7 @@ public class AppVarService {
     }
 
     public String findValueByAppIdAndKey(Long appId, String key) {
-        return this.appVarRepository.findByAppIdAndVarKey(appId, key);
+        return this.appVarRepository.findByAppIdAndVarKey(appId, key).getVarValue();
     }
 
 

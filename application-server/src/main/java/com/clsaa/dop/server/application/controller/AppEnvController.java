@@ -7,6 +7,7 @@ import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
 import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.KubeCredential;
 import com.clsaa.dop.server.application.model.vo.AppEnvK8sV1;
+import com.clsaa.dop.server.application.model.vo.AppEnvPipelineV1;
 import com.clsaa.dop.server.application.model.vo.AppEnvV1;
 import com.clsaa.dop.server.application.model.vo.ClusterInfoV1;
 import com.clsaa.dop.server.application.service.AppEnvService;
@@ -44,14 +45,14 @@ public class AppEnvController {
     KubeCredentialService kubeCredentialService;
 
     @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境变量")
-    @GetMapping(value = "/application/{appId}/allEnv")
+    @GetMapping(value = "/app/{appId}/allEnv")
     public List<AppEnvV1> findEnvironmentByAppId(
             @ApiParam(value = "appId", name = "应用ID", required = true) @PathVariable(value = "appId") Long appId) {
         return this.appEnvService.findEnvironmentByAppId(appId).stream().map(l -> BeanUtils.convertType(l, AppEnvV1.class)).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "查询应用环境详情", notes = "根据应用环境信息ID查询应用环境详情")
-    @GetMapping(value = "/application/env/{appEnvId}")
+    @GetMapping(value = "/app/env/{appEnvId}")
     public AppEnvK8sV1 findEnvironmentDetailById(
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         AppEnvBoV1 appEnvBoV1 = this.appEnvService.findEnvironmentDetailById(appEnvId);
@@ -69,13 +70,14 @@ public class AppEnvController {
                 .releaseStrategy(kubeYamlDataBoV1.getReleaseStrategy())
                 .service(kubeYamlDataBoV1.getService())
                 .targetClusterUrl(kubeCredential.getTargetClusterUrl())
+                .yamlFilePath(kubeYamlDataBoV1.getYamlFilePath())
                 .build();
         return appEnvK8sV1;
     }
 
 
     @ApiOperation(value = "删除应用环境", notes = "根据应用环境ID删除应用环境")
-    @DeleteMapping(value = "/application/env/{appEnvId}")
+    @DeleteMapping(value = "/app/env/{appEnvId}")
     public void deleteEnvironmentById(
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         this.appEnvService.deleteEnvironmentById(appEnvId);
@@ -83,7 +85,7 @@ public class AppEnvController {
 
 
     @ApiOperation(value = "根据应用id创建应用环境", notes = "根据应用id创建应用环境")
-    @PostMapping(value = "/application/{appId}/env")
+    @PostMapping(value = "/app/{appId}/env")
     public void createEnvironmentByAppId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             @ApiParam(value = "appId", name = "appId", required = true) @PathVariable(value = "appId") Long appId,
@@ -94,7 +96,7 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "创建yaml信息", notes = "创建yaml信息")
-    @PostMapping(value = "/application/env/{appEnvId}/yaml")
+    @PostMapping(value = "/app/env/{appEnvId}/yaml")
     public void CreateYamlInfoByAppEnvId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
@@ -112,8 +114,26 @@ public class AppEnvController {
                 , releaseBatch, imageUrl, yamlFilePath);
     }
 
+    @ApiOperation(value = "更新流水线信息", notes = "更新流水线信息")
+    @PutMapping(value = "/app/env/{appEnvId}/pipeline")
+    public void UpdatePipelineByAppEnvId(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "pipelineId", name = "pipelineId", required = true) @RequestParam(value = "pipelineId") String pipelineId
+    ) {
+        this.appEnvService.updatePipeline(cuser, appEnvId, pipelineId);
+    }
+
+    @ApiOperation(value = "获取流水线信息", notes = "获取流水线信息")
+    @GetMapping(value = "/app/env/{appEnvId}/pipeline")
+    public AppEnvPipelineV1 getPipelineByAppEnvId(
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId
+    ) {
+        return BeanUtils.convertType(this.appEnvService.getPipeline(appEnvId), AppEnvPipelineV1.class);
+    }
+
     @ApiOperation(value = "更新yaml信息", notes = "更新yaml信息")
-    @PutMapping(value = "/application/env/{appEnvId}/yaml")
+    @PutMapping(value = "/app/env/{appEnvId}/yaml")
     public void UpdateYamlInfoByAppEnvId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
@@ -132,14 +152,14 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "判断yaml是否存在", notes = "判断yaml是否存在")
-    @GetMapping(value = "/application/env/{appEnvId}/yamlStatus")
+    @GetMapping(value = "/app/env/{appEnvId}/yamlStatus")
     public Boolean isExistYamlData(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         return this.kubeYamlService.isExistYamlData(appEnvId);
     }
 
     @ApiOperation(value = "获取命名空间", notes = "获取命名空间")
-    @GetMapping(value = "/application/env/{appEnvId}/cluster/allNamespaces")
+    @GetMapping(value = "/app/env/{appEnvId}/cluster/allNamespaces")
     public List<String> getNameSpaceByUrlAndToken(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId
     ) {
@@ -152,7 +172,7 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "获取服务", notes = "获取服务")
-    @GetMapping(value = "/application/env/{appEnvId}/cluster/allServices")
+    @GetMapping(value = "/app/env/{appEnvId}/cluster/allServices")
     public List<String> getServiceByNameSpace(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace
@@ -166,7 +186,7 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "获取部署", notes = "获取部署")
-    @GetMapping(value = "/application/env/{appEnvId}/cluster/allDeployment")
+    @GetMapping(value = "/app/env/{appEnvId}/cluster/allDeployment")
     public HashMap<String, Object> getDeploymentByNameSpaceAndService(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
@@ -181,7 +201,7 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "创建服务", notes = "创建服务")
-    @PostMapping(value = "/application/env/{appEnvId}/cluster/service")
+    @PostMapping(value = "/app/env/{appEnvId}/cluster/service")
     public void createServiceByNameSpace(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
@@ -197,7 +217,7 @@ public class AppEnvController {
 
 
     @ApiOperation(value = "更新集群信息", notes = "更新集群信息")
-    @PostMapping(value = "/application/env/{appEnvId}/cluster")
+    @PostMapping(value = "/app/env/{appEnvId}/cluster")
     public void updateUrlAndToken(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
@@ -210,7 +230,7 @@ public class AppEnvController {
     }
 
     @ApiOperation(value = "获取传输的yaml文件", notes = "获取传输的yaml文件")
-    @GetMapping(value = "/application/env/{appEnvId}/yamlFile")
+    @GetMapping(value = "/app/env/{appEnvId}/yamlFile")
     public HashMap<String, String> createYamlFileForDeploy(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         try {

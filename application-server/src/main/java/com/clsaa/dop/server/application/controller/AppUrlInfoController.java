@@ -24,13 +24,13 @@ public class AppUrlInfoController {
     private AppUrlInfoService appUrlInfoService;
 
     //@ApiOperation(value = "查询应用基本Url", notes = "根据应用ID查询应用基本Url")
-    //@GetMapping(value = "/applicationDetail")
+    //@GetMapping(value = "/appDetail")
     //public AppUrlInfoV1 findAppUrlInfoByAppId(@ApiParam(name = "appId", value = "appId", required = true) @RequestParam(value = "appId") Long appId) {
     //    return BeanUtils.convertType(this.appUrlInfoService.findAppUrlInfoByAppId(appId), AppUrlInfoV1.class);
     //}
 
     @ApiOperation(value = "修改应用基本Url", notes = "根据应用ID修改应用基本Url")
-    @PutMapping(value = "/application/{appId}/urlInfo")
+    @PutMapping(value = "/app/{appId}/urlInfo")
     public void updateAppUrlInfoByAppId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
             @ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId,
@@ -43,7 +43,7 @@ public class AppUrlInfoController {
     }
 
     //@ApiOperation(value = "删除应用", notes = "删除应用")
-    //@DeleteMapping(value = "/application")
+    //@DeleteMapping(value = "/app")
     //public void deleteApp(
     //        @ApiParam(name = "id", value = "项目Id", required = true) @RequestParam(value = "id") String sId) {
     //

@@ -26,6 +26,6 @@ public interface AppVarRepository extends JpaRepository<AppVariable, Long> {
      * @param varKey 键
      * @return {@link String} varValue
      */
-    String findByAppIdAndVarKey(Long appId, String varKey);
+    AppVariable findByAppIdAndVarKey(Long appId, String varKey);
 
 }

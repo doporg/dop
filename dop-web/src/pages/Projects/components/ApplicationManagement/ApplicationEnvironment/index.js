@@ -22,7 +22,7 @@ export default class ApplicationEnvironment extends Component {
     }
 
     getAppEnvData() {
-        let url = API.gateway + "/application-server/application/" + this.state.appId + "/allEnv"
+        let url = API.gateway + "/application-server/app/" + this.state.appId + "/allEnv"
         let _this = this;
         Axios.get(url)
             .then(function (response) {
@@ -52,7 +52,7 @@ export default class ApplicationEnvironment extends Component {
     };
 
     onDelete(id) {
-        let deleteUrl = API.gateway + "/application-server/application/env/" + id
+        let deleteUrl = API.gateway + "/application-server/app/env/" + id
         let _this = this;
         Axios.delete(deleteUrl)
             .then(function (response) {
@@ -81,7 +81,7 @@ export default class ApplicationEnvironment extends Component {
     getYaml(id) {
 
 
-        let url = API.gateway + "/application-server/application/env/" + {id} + "/yamlFile"
+        let url = API.gateway + "/application-server/app/env/" + {id} + "/yamlFile"
         Axios.get(url)
             .then((response) => {
                 console.log(response)///yaml

@@ -13,7 +13,7 @@ import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
 import {Col, Row} from "@alifd/next/lib/grid";
-
+import PipelineBindPage from "../PipelineBindPage"
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Toast = Feedback.toast;
@@ -24,7 +24,7 @@ const formItemLayout = {
 const {Combobox} = Select;
 
 /**
- * 展示应用环境详情的列表（仅编辑界面）
+ * 展示应用环境详情的列表
  * @author Bowen
  **/
 export default class ApplicationEnvironmentDetail extends Component {
@@ -37,6 +37,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.yamlPathField = new Field(this);
         console.log(props)
         this.state = {
+            appId: props.appId,
             id: props.id,
             editMode: false,
             envDetailData: [],
@@ -45,12 +46,13 @@ export default class ApplicationEnvironmentDetail extends Component {
             deploymentData: [],
             containerData: [],
             createService: false,
-            useYamlFile: false
+            useYamlFile: false,
+            yamlFilePath: ""
         }
     }
 
     getEnvDetailData() {
-        let url = API.gateway + "/application-server/application/env/" + this.state.id;
+        let url = API.gateway + "/application-server/app/env/" + this.state.id;
         Axios.get(url)
             .then((response) => {
                 console.log(response)
@@ -64,8 +66,13 @@ export default class ApplicationEnvironmentDetail extends Component {
                         envDetailData: response.data,
                         editMode: false
                     })
+                    if (response.data.yamlFilePath != "") {
+                        this.setState({
+                            useYamlFile: true
+                        })
+                    }
                     let _this = this
-                    let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allNamespaces"
+                    let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allNamespaces"
                     Axios.get(namespaceUrl)
                         .then((response) => {
                             console.log("response", response)
@@ -77,7 +84,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                         })
                     if (this.state.nameSpaceData != []) {
                         console.log("envDetailData", _this.state.envDetailData)
-                        let servicesUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allServices"
+                        let servicesUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allServices"
                         Axios.get(servicesUrl, {
                             params: {
                                 namespace: _this.state.envDetailData.nameSpace
@@ -92,7 +99,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                                 }
                             })
                         if (this.state.serviceData != []) {
-                            let deploymentUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allDeployment"
+                            let deploymentUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allDeployment"
                             Axios.get(deploymentUrl, {
                                 params: {
                                     namespace: _this.state.envDetailData.nameSpace,
@@ -148,7 +155,7 @@ export default class ApplicationEnvironmentDetail extends Component {
 
             // 没有异常则提交表单
             if (errors == null) {
-                let postUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster"
+                let postUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster"
                 Axios.post(postUrl, {
                     targetClusterUrl: _this.clusterField.getValue("targetClusterUrl"),
                     targetClusterToken: _this.clusterField.getValue("targetClusterToken")
@@ -156,7 +163,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                     .then((response) => {
                             Toast.success("保存成功")
 
-                        let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allNamespaces"
+                        let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allNamespaces"
                             Axios.get(namespaceUrl)
                                 .then((response) => {
                                     console.log("response", response)
@@ -184,97 +191,103 @@ export default class ApplicationEnvironmentDetail extends Component {
             this.yamlPathField.validate((errors, values) => {
                 console.log(errors)
                 if (errors == null) {
-                    let url = API.gateway + '/application-server/application/env/' + this.state.id + '/yaml';
+                    let url = API.gateway + '/application-server/app/env/' + this.state.id + '/yaml';
                     Axios.put(url, {}, {
                             params: {
                                 deploymentStrategy: this.field.getValue('deploymentStrategy'),
                                 releaseStrategy: this.field.getValue('releaseStrategy'),
-                                image_url: this.field.getValue('imageUrl'),
+                                imageUrl: this.field.getValue('imageUrl'),
                                 releaseBatch: this.field.getValue('releaseBatch'),
                                 yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
                             }
                         }
-                    )
-                }
-            })
+                    ).then((response) => {
+                        Toast.success("更新成功！")
 
-        }
-        if (this.state.createService) {
-            let createServiceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/service"
-            Axios.post(createServiceUrl, {}, {
-                params: {
-                    name: this.field.getValue("service"),
-                    namespace: this.field.getValue("nameSpace"),
-                    port: this.editField.getValue('port'),
-                }
-            })
-                .then(() => {
-                    Toast.success("服务创建成功")
-                    this.field.validate((errors, values) => {
-
-                        console.log(errors, values);
-
-                        // 没有异常则提交表单
-                        if (errors == null) {
-                            let url = API.gateway + '/application-server/application/env/' + this.state.id + "/yaml";
-
-                            let existUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/yamlStatus"
-                            Axios.get(existUrl)
-                                .then((response) => {
-                                    console.log("responsssss", response)
-                                    if (response.data) {
-                                        Axios.put(url, {}, {
-                                                params: {
-                                                    deploymentStrategy: this.field.getValue('deploymentStrategy'),
-                                                    nameSpace: this.field.getValue('nameSpace'),
-                                                    service: this.field.getValue('service'),
-                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
-                                                    replicas: this.editField.getValue('replicas'),
-                                                    imageUrl: this.field.getValue('imageUrl'),
-                                                    releaseBatch: this.field.getValue('releaseBatch')
-                                                }
-                                            }
-                                        )
-                                            .then(function (response) {
-                                                Toast.success("更新成功！")
-
-                                                //提交完成后刷新当前页面
-                                                _this.getEnvDetailData()
-                                            })
-                                            .catch(function (error) {
-                                                console.log(error);
-                                            });
-
-                                    } else {
-                                        Axios.post(url, {}, {
-                                                params: {
-                                                    deploymentStrategy: this.field.getValue('deploymentStrategy'),
-                                                    nameSpace: this.field.getValue('nameSpace'),
-                                                    service: this.field.getValue('service'),
-                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
-                                                    replicas: this.editField.getValue('replicas'),
-                                                    imageUrl: this.field.getValue('imageUrl'),
-                                                    releaseBatch: this.field.getValue('releaseBatch')
-                                                }
-                                            }
-                                        )
-                                            .then(function (response) {
-                                                Toast.success("更新成功！")
-
-                                                //提交完成后刷新当前页面
-                                                _this.getEnvDetailData()
-                                            })
-                                            .catch(function (error) {
-                                                console.log(error);
-                                            });
-                                    }
-                                })
-
-                        }
+                        //提交完成后刷新当前页面
+                        _this.getEnvDetailData()
                     })
-                })
+                }
+            })
+
         } else {
-            this.postYamlInfo()
+            if (this.state.createService) {
+                let createServiceUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/service"
+                Axios.post(createServiceUrl, {}, {
+                    params: {
+                        name: this.field.getValue("service"),
+                        namespace: this.field.getValue("nameSpace"),
+                        port: this.editField.getValue('port'),
+                    }
+                })
+                    .then(() => {
+                        Toast.success("服务创建成功")
+                        this.field.validate((errors, values) => {
+
+                            console.log(errors, values);
+
+                            // 没有异常则提交表单
+                            if (errors == null) {
+                                let url = API.gateway + '/application-server/app/env/' + this.state.id + "/yaml";
+
+                                let existUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/yamlStatus"
+                                Axios.get(existUrl)
+                                    .then((response) => {
+                                        console.log("responsssss", response)
+                                        if (response.data) {
+                                            Axios.put(url, {}, {
+                                                    params: {
+                                                        deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                                        nameSpace: this.field.getValue('nameSpace'),
+                                                        service: this.field.getValue('service'),
+                                                        releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                        replicas: this.editField.getValue('replicas'),
+                                                        imageUrl: this.field.getValue('imageUrl'),
+                                                        releaseBatch: this.field.getValue('releaseBatch')
+                                                    }
+                                                }
+                                            )
+                                                .then(function (response) {
+                                                    Toast.success("更新成功！")
+
+                                                    //提交完成后刷新当前页面
+                                                    _this.getEnvDetailData()
+                                                })
+                                                .catch(function (error) {
+                                                    console.log(error);
+                                                });
+
+                                        } else {
+                                            Axios.post(url, {}, {
+                                                    params: {
+                                                        deploymentStrategy: this.field.getValue('deploymentStrategy'),
+                                                        nameSpace: this.field.getValue('nameSpace'),
+                                                        service: this.field.getValue('service'),
+                                                        releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                        replicas: this.editField.getValue('replicas'),
+                                                        imageUrl: this.field.getValue('imageUrl'),
+                                                        releaseBatch: this.field.getValue('releaseBatch')
+                                                    }
+                                                }
+                                            )
+                                                .then(function (response) {
+                                                    Toast.success("更新成功！")
+
+                                                    //提交完成后刷新当前页面
+                                                    _this.getEnvDetailData()
+                                                })
+                                                .catch(function (error) {
+                                                    console.log(error);
+                                                });
+                                        }
+                                    })
+
+                            }
+                        })
+                    })
+            } else {
+                this.postYamlInfo()
+            }
         }
     }
 
@@ -286,8 +299,8 @@ export default class ApplicationEnvironmentDetail extends Component {
 
             // 没有异常则提交表单
             if (errors == null) {
-                let url = API.gateway + '/application-server/application/env/' + this.state.id + '/yaml'
-                let existUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/yamlStatus"
+                let url = API.gateway + '/application-server/app/env/' + this.state.id + '/yaml'
+                let existUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/yamlStatus"
                 Axios.get(existUrl)
                     .then((response) => {
                         console.log(response)
@@ -351,7 +364,7 @@ export default class ApplicationEnvironmentDetail extends Component {
     onNamespaceInputUpdate(e, value) {
         this.field.setValue("nameSpace", value.value)
         let _this = this
-        let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allServices"
+        let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allServices"
         Axios.get(namespaceUrl, {
             params: {
                 namespace: value.value
@@ -378,7 +391,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.field.setValue("container", "")
         // console.log(_this.field.getValue("nameSpace"))
         if (!this.state.createService) {
-            let namespaceUrl = API.gateway + "/application-server/application/env/" + this.state.id + "/cluster/allDeployment"
+            let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.id + "/cluster/allDeployment"
             Axios.get(namespaceUrl, {
                 params: {
                     namespace: _this.field.getValue("nameSpace"),
@@ -466,7 +479,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                     <FormItem style={{display: this.state.createService ? "" : "None"}}
                               label="端口"
                               {...formItemLayout}
-                              valiateStatus={this.editField.getError("port") ? "error" : ""}
+                              validateStatus={this.editField.getError("port") ? "error" : ""}
                               help={this.editField.getError("port") ? "请输入正确的端口" : ""}
                     >
                         <Input placeholder="开放端口"
@@ -553,11 +566,11 @@ export default class ApplicationEnvironmentDetail extends Component {
             return (
                 <FormItem label="Yaml文件路径"
                           {...formItemLayout}
-                          valiateStatus={this.yamlPathField.getError("yamlFilePath") ? "error" : ""}
+                          validateStatus={this.yamlPathField.getError("yamlFilePath") ? "error" : ""}
                           help={this.yamlPathField.getError("yamlFilePath") ? "请输入文件路径" : ""}
                 >
                     <Input placeholder="Yaml文件路径"
-                           defaultValue=""
+                           defaultValue={this.state.envDetailData.yamlFilePath}
                            {...this.yamlPathField.init("yamlFilePath", {
                                rules: [{
                                    required: true,
@@ -579,6 +592,21 @@ export default class ApplicationEnvironmentDetail extends Component {
             return (
                 <div>
                     <Form>
+
+
+                        <FormItem label="部署方式"
+                                  {...formItemLayout}
+                                  validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
+                                  help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}>
+                            <Select placeholder="部署方式"
+                                    defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.deploymentStrategy}
+                                    {...init('deploymentStrategy', {rules: [{required: true, message: "该项不能为空"}]})}>
+                                <Option value="KUBERNETES">Kubernetes部署</Option>
+                                <Option value="test">测试</Option>
+                            </Select>
+                        </FormItem>
+
+                        <PipelineBindPage appId={this.state.appId} appEnvId={this.state.id}/>
 
                         <FormItem label="目标集群URL"
                                   {...formItemLayout}
@@ -608,26 +636,6 @@ export default class ApplicationEnvironmentDetail extends Component {
                                        }]
                                    })}>
                             </Input>
-                        </FormItem>
-
-
-                        <Button onClick={this.clusterInfoSubmit.bind(this)}
-                                type="primary"
-                                style={{marginRight: "5px"}}>
-                            提交
-                        </Button>
-
-                        < Button> 取消 </Button>
-
-                        <FormItem label="部署方式"
-                                  {...formItemLayout}
-                                  validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
-                                  help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}>
-                            <Select placeholder="部署方式"
-                                    defaultValue={this.state.envDetailData == [] ? "" : this.state.envDetailData.deploymentStrategy}
-                                    {...init('deploymentStrategy', {rules: [{required: true, message: "该项不能为空"}]})}>
-                                <Option value="KUBERNETES">Kubernetes部署</Option>
-                            </Select>
                         </FormItem>
 
 
@@ -687,6 +695,19 @@ export default class ApplicationEnvironmentDetail extends Component {
                         < Button onClick={this.toggleEditMode.bind(this)}>
                             取消
                         </Button>
+
+
+
+                        <Button onClick={this.clusterInfoSubmit.bind(this)}
+                                type="primary"
+                                style={{marginRight: "5px"}}>
+                            提交
+                        </Button>
+
+                        < Button> 取消 </Button>
+
+
+
                     </Form>
                 </div>
             )
@@ -710,11 +731,15 @@ export default class ApplicationEnvironmentDetail extends Component {
                     <div>镜像地址</div>
                     <div>{this.state.envDetailData.imageUrl}</div>
                 </Row>
-                <Row>
+                <Row style={{display: this.state.envDetailData.yamlFilePath == "" ? "None" : ""}}>
+                    <div>YAML路径</div>
+                    <div>{this.state.envDetailData.yamlFilePath}</div>
+                </Row>
+                <Row style={{display: this.state.envDetailData.yamlFilePath == "" ? "" : "None"}}>
                     <div>命名空间</div>
                     <div>{this.state.envDetailData.nameSpace}</div>
                 </Row>
-                <Row>
+                <Row style={{display: this.state.envDetailData.yamlFilePath == "" ? "" : "None"}}>
                     <div>服务</div>
                     <div>{this.state.envDetailData.service}</div>
                 </Row>
