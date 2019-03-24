@@ -3,6 +3,8 @@ package com.clsaa.dop.server.code.service;
 import com.clsaa.dop.server.code.model.bo.file.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -107,5 +109,33 @@ public class FileService {
         return blobBo;
 
 
+    }
+
+
+    /**
+     * 更新文件并作为一次提交
+     * @param id 项目id
+     * @param file_path 文件路径
+     * @param branch 分支
+     * @param content 更新的文件内容
+     * @param commit_message 提交信息
+     * @param username 用户
+     * @throws UnsupportedEncodingException
+     */
+    public void updateFile(int id,String file_path,String branch,String content,String commit_message,String username) throws UnsupportedEncodingException {
+
+
+        NameValuePair p1=new BasicNameValuePair("branch",branch);
+        NameValuePair p2=new  BasicNameValuePair("content",content);
+        NameValuePair p3=new  BasicNameValuePair("commit_message",commit_message);
+
+        List<NameValuePair> list=new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+        list.add(p3);
+
+        String path="/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK");
+
+        RequestUtil.put(path,username,list);
     }
 }

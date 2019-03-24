@@ -99,6 +99,22 @@ public class FileController {
 
     }
 
+    @PutMapping("/projects/{id}/repository/blob")
+    public void updateFile(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                           @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
+                           @ApiParam(value = "分支")@RequestParam("branch") String branch,
+                           @ApiParam(value = "更新文件内容")@RequestParam("content") String content,
+                           @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
+                           @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+        try {
+            fileService.updateFile(id,file_path,branch,content,commit_message,username);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
 }

@@ -11,6 +11,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,10 +49,24 @@ public class RequestUtil {
     //    管理员的token
     private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
 
-        String url=api+"/projects/3/repository/files/kk%2f1.txt/raw?ref=master";
-        System.out.println(httpGet(url));
+//        String url=api+"/projects/3/repository/files/kk%2f1.txt/raw?ref=master";
+//        System.out.println(httpGet(url));
+
+        String path=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/1.txt","GBK");
+        NameValuePair p1=new  BasicNameValuePair("branch","master");
+        NameValuePair p2=new  BasicNameValuePair("content","123\n456\n哈哈哈\n");
+        NameValuePair p3=new  BasicNameValuePair("commit_message","update 1.txt!!!!!!");
+        NameValuePair p4=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
+
+        List<NameValuePair> list=new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+        list.add(p3);
+        list.add(p4);
+
+        System.out.println(httpPut(path,list));
 
     }
 
@@ -146,6 +163,23 @@ public class RequestUtil {
     }
 
 
+    /**
+     * 发送put请求到gitlab
+     *
+     * @param path     路径
+     * @param username 用户名
+     * @param params   参数键值对
+     * @return 返回状态码
+     */
+    public static int put(String path,String username, List<NameValuePair> params){
+        String url = api + path;
+        NameValuePair p = new BasicNameValuePair("access_token", userService.findUserAccessToken(username));
+        params.add(p);
+        return httpPut(url,params);
+
+    }
+
+
 
 
     /**
@@ -226,6 +260,45 @@ public class RequestUtil {
         return result;
 
     }
+
+    /**
+     * 发送http put请求
+     *
+     * @param url        路径
+     * @param formparams 参数键值对
+     * @return 状态码
+     */
+    private static int httpPut(String url, List<NameValuePair> formparams) {
+
+
+        CloseableHttpClient httpclients = HttpClients.createDefault();
+
+        HttpPut httpPut = new HttpPut(url);
+
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+
+        httpPut.setEntity(entity);
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclients.execute(httpPut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int result = response.getStatusLine().getStatusCode();
+
+        try {
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+
+
 
 
     /**
