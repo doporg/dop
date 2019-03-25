@@ -28,6 +28,10 @@ public class RequestCheckPointDto {
 
     private String value;
 
+    private String message;
+
+    private boolean success = true;
+
     // ----------- common property ---------
     private LocalDateTime ctime;
 
@@ -38,4 +42,9 @@ public class RequestCheckPointDto {
     private Long muser;
 
     private boolean deleted;
+
+    public void fail(String message) {
+        this.message = message;
+        this.success = false;
+    }
 }

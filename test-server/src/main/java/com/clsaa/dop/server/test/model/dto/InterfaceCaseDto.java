@@ -41,6 +41,8 @@ public class InterfaceCaseDto {
 
     private List<InterfaceStageDto> stages;
 
+    private boolean executeSuccess;
+
     // ----------- common property ---------
     private LocalDateTime ctime;
 
@@ -52,4 +54,7 @@ public class InterfaceCaseDto {
 
     private boolean deleted;
 
+    public boolean isExecuteSuccess() {
+        return stages.stream().noneMatch(InterfaceStageDto::fail);
+    }
 }
