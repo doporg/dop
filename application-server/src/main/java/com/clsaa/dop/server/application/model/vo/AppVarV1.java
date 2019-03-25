@@ -13,6 +13,10 @@ import javax.persistence.Column;
 @Getter
 @Setter
 public class AppVarV1 {
+
     private Long id;
+    /**
+     * 键
+     */
     private String varKey;
 }

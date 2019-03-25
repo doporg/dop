@@ -61,7 +61,7 @@ class ApplicationEnvironmentForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let postUrl = API.gateway + "/application-server/application/environment/" + this.state.appId;
+                let postUrl = API.gateway + "/application-server/app/" + this.state.appId + "/env/";
                 Axios.post(postUrl, {}, {
                         params: {
                             "title": _this.field.getValue('title'),

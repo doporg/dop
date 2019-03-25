@@ -1,9 +1,7 @@
 package com.clsaa.dop.server.application.model.bo;
 
-import com.clsaa.dop.server.application.model.po.AppEnvironment;
+import com.clsaa.dop.server.application.model.po.AppEnv;
 import lombok.*;
-
-import javax.persistence.Column;
 
 
 /**
@@ -27,40 +25,19 @@ public class AppEnvBoV1 {
     private String title;
 
     /**
-     * 目标集群
+     * 流水线Id
      */
-    private String targetCluster;
-
-    /**
-     * 命名空间
-     */
-    private String nameSpace;
-
-    /**
-     * 对应服务
-     */
-    private String service;
-
-    /**
-     * 发布批次
-     */
-    private Integer releaseBatch;
-
-
-    /**
-     * 发布策略
-     */
-    private AppEnvironment.ReleaseStrategy releaseStrategy;
+    private String pipelineId;
 
     /**
      * 部署策略
      */
-    private AppEnvironment.DeploymentStrategy deploymentStrategy;
+    private AppEnv.DeploymentStrategy deploymentStrategy;
 
 
     /**
      * 环境级别
      */
-    private AppEnvironment.EnvironmentLevel environmentLevel;
+    private AppEnv.EnvironmentLevel environmentLevel;
 
 }

@@ -19,4 +19,13 @@ public interface AppVarRepository extends JpaRepository<AppVariable, Long> {
      */
     List<AppVariable> findAllByAppId(Long appId, Sort sort);
 
+    /**
+     * 根据appId 和 varKey 查询varValue
+     *
+     * @param appId  应用Id
+     * @param varKey 键
+     * @return {@link String} varValue
+     */
+    AppVariable findByAppIdAndVarKey(Long appId, String varKey);
+
 }

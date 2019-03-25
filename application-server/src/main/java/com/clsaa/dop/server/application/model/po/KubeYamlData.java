@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -12,22 +11,21 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 应用环境信息实体类
+ * 应用Yaml信息实体类
  *
  * @author ZhengBowen
  * @version v1
- * @summary 应用环境信息实体类
- * @since 2019-3-14
+ * @summary 应用Yaml信息实体类
+ * @since 2019-3-18
  */
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update app_environment set is_deleted = true where id = ?")
+@SQLDelete(sql = "update kube_yaml_data set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class AppEnvironment {
-
+public class KubeYamlData {
     @Id
     @GeneratedValue
     private Long id;
@@ -64,31 +62,10 @@ public class AppEnvironment {
 
 
     /**
-     * APPID
+     * APPENVID
      */
-    @Column(nullable = false, name = "app_id")
-    private Long appId;
-
-
-    /**
-     * 部署策略
-     */
-    @Column(nullable = false, name = "deployment_strategy")
-    @Enumerated(EnumType.STRING)
-    private AppEnvironment.DeploymentStrategy deploymentStrategy;
-
-    /**
-     * 环境名称
-     */
-    @Column(nullable = false, name = "title")
-    private String title;
-
-
-    /**
-     * 目标集群
-     */
-    @Column(name = "target_cluster")
-    private String targetCluster;
+    @Column(nullable = false, name = "app_env_id")
+    private Long appEnvId;
 
     /**
      * 命名空间
@@ -103,6 +80,18 @@ public class AppEnvironment {
     private String service;
 
     /**
+     * 对应部署
+     */
+    @Column(name = "deployment")
+    private String deployment;
+
+    /**
+     * 对应容器
+     */
+    @Column(name = "containers")
+    private String containers;
+
+    /**
      * 发布批次
      */
     @Column(name = "release_batch")
@@ -113,41 +102,31 @@ public class AppEnvironment {
      */
     @Column(name = "release_strategy")
     @Enumerated(EnumType.STRING)
-    private AppEnvironment.ReleaseStrategy releaseStrategy;
-
+    private KubeYamlData.ReleaseStrategy releaseStrategy;
 
     /**
-     * 环境级别
+     * 镜像地址
      */
-    @Column(nullable = false, name = "environment_level")
-    @Enumerated(EnumType.STRING)
-    private AppEnvironment.EnvironmentLevel environmentLevel;
+    @Column(name = "image_url")
+    private String imageUrl;
 
+    /**
+     * yaml文件相对路径
+     */
+    @Column(name = "yaml_file_path")
+    private String yamlFilePath;
 
-    public enum EnvironmentLevel {
+    /**
+     * 副本数量
+     */
+    @Column(name = "replicas")
+    private Integer replicas;
 
-        /**
-         * 日常环境
-         */
-        DAILY("DAILY"),
-
-        /**
-         * 预发环境
-         */
-        PRERELEASE("PRERELEASE"),
-
-        /**
-         * 正式环境
-         */
-        RELEASE("RELEASE"),
-        ;
-
-        private String code;
-
-        EnvironmentLevel(String code) {
-            this.code = code;
-        }
-    }
+    /**
+     * 部署的yaml
+     */
+    @Column(name = "deployment_editable_yaml", length = 1000)
+    private String deploymentEditableYaml;
 
     public enum ReleaseStrategy {
 
@@ -170,20 +149,6 @@ public class AppEnvironment {
         private String code;
 
         ReleaseStrategy(String code) {
-            this.code = code;
-        }
-    }
-
-    public enum DeploymentStrategy {
-        /**
-         * Kubernetes部署
-         */
-        KUBERNETES("KUBERNETES"),
-        ;
-
-        private String code;
-
-        DeploymentStrategy(String code) {
             this.code = code;
         }
     }

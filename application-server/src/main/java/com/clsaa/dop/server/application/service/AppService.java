@@ -1,15 +1,11 @@
 package com.clsaa.dop.server.application.service;
 
 
-import com.clsaa.dop.server.application.dao.AppUrlInfoRepository;
-import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.dao.AppRepository;
-import com.clsaa.dop.server.application.dao.AppVarRepository;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
 import com.clsaa.dop.server.application.model.po.App;
+import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.model.po.AppUrlInfo;
-import com.clsaa.dop.server.application.model.po.AppEnvironment;
-import com.clsaa.dop.server.application.model.po.AppVariable;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
@@ -25,8 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service(value = "ApplicationService")
-public class ApplicationService {
+@Service(value = "AppService")
+public class AppService {
     @Autowired
     private AppRepository appRepository;
     @Autowired
@@ -142,18 +138,18 @@ public class ApplicationService {
 
         Long appId = app.getId();
 
-        AppEnvironment appEnvironment = AppEnvironment.builder()
+        AppEnv appEnv = AppEnv.builder()
                 .appId(appId)
                 .ctime(ctime)
                 .cuser(cuser)
                 .is_deleted(false)
                 .mtime(mtime)
                 .muser(cuser)
-                .deploymentStrategy(AppEnvironment.DeploymentStrategy.KUBERNETES)
+                .deploymentStrategy(AppEnv.DeploymentStrategy.KUBERNETES)
                 .title("日常开发")
-                .environmentLevel(AppEnvironment.EnvironmentLevel.DAILY)
+                .environmentLevel(AppEnv.EnvironmentLevel.DAILY)
                 .build();
-        this.appEnvService.createAppEnv(appEnvironment);
+        this.appEnvService.createAppEnv(appEnv);
 
         AppUrlInfo appUrlInfo = AppUrlInfo.builder()
                 .appId(appId)

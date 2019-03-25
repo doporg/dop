@@ -40,9 +40,10 @@ export default class ProjectForm extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.gateway + '/application-server/project/123';
+                let url = API.gateway + '/application-server/project'
                 Axios.post(url, {}, {
                         params: {
+                            organizationId: "123",
                             title: this.field.getValue('title')
                             // private: this.field.getValue('title'),
                             // projectDescription:this.field.getValue('description')}

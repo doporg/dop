@@ -55,7 +55,7 @@ export default class ApplicationList extends Component {
     onDelete = (id) => {
 
 
-        let url = API.gateway + '/application-server/application/' + id;
+        let url = API.gateway + '/application-server/app/' + id;
         let _this = this;
         console.log("id", id)
         Axios.delete(url)
