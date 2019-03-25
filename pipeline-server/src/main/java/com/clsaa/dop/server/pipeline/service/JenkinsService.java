@@ -46,7 +46,6 @@ public class JenkinsService {
      * param: 流水线的信息, 版本
      * */
     public String createJob(PipelineBoV1 pipelineBoV1, String version){
-        System.out.println(1111);
         Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getStages());
         String name = pipelineBoV1.getId();
         try {

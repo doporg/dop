@@ -1,9 +1,26 @@
 import React, {Component} from 'react';
-import {Input} from '@icedesign/base';
+import {Input, Select} from '@icedesign/base';
+import API from '../../../API'
+import Axios from 'axios'
 import '../Styles.scss'
 
+const {Combobox} = Select;
 
 export default class Pull extends Component{
+    constructor(props){
+        super(props);
+    }
+    componentWillMount(){
+        if(this.props.projectId){
+            let url = API.gateway + "/application-server/applicationDetail/" + this.props.projectId;
+            let self = this;
+            Axios.get(url).then((response)=>{
+                if(response.status === 200){
+                    self.props.onChange(response.data.warehouse);
+                }
+            })
+        }
+    }
 
     /**
      *  构建-填入git地址

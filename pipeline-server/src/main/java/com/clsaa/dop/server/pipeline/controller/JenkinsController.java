@@ -4,6 +4,7 @@ import com.clsaa.dop.server.pipeline.config.BizCodes;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
+import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.service.BlueOceanService;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
 import com.clsaa.rest.result.bizassert.BizAssert;
@@ -25,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,8 +56,8 @@ public class JenkinsController {
     }
 
     @ApiOperation(value = "删除流水线", notes = "根据id删除流水线")
-    @DeleteMapping("/v1/jenkins/byId")
-    public void delete(String id) {
+    @DeleteMapping("/v1/jenkins/{id}")
+    public void delete(@PathVariable(value = "id") String id) {
         BizAssert.validParam(StringUtils.isNotBlank(id),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "参数id非法"));
         this.jenkinsService.deleteJob(id);
@@ -96,4 +98,5 @@ public class JenkinsController {
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         return responseEntity.getBody();
     }
+
 }

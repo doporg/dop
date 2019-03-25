@@ -52,16 +52,16 @@ public class PipelineController {
     }
 
     @ApiOperation(value = "根据id删除流水线", notes = "根据id对流水线进行逻辑删除")
-    @PutMapping("/v1/delete/byId")
-    public void deleteById(String id) {
+    @PutMapping("/v1/delete/{id}")
+    public void deleteById(@PathVariable(value = "id") String id) {
         BizAssert.validParam(StringUtils.isNotBlank(id),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "参数id非法"));
         this.pipelineService.deleteById(id);
     }
 
     @ApiOperation(value = "根据id查找流水线信息")
-    @GetMapping("/v1/pipeline/byId")
-    public PipelineBoV1 findById(String id) {
+    @GetMapping("/v1/pipeline/{id}")
+    public PipelineBoV1 findById(@PathVariable(value = "id") String id) {
         BizAssert.validParam(StringUtils.isNotBlank(id),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "参数id非法"));
         return this.pipelineService.findById(new ObjectId(id));
@@ -79,7 +79,7 @@ public class PipelineController {
         return  this.pipelineService.getPipelineById(cuser);
     }
 
-    @ApiOperation(value = "根据用户id查找，返回该用户的流水线信息")
+    @ApiOperation(value = "根据流水线信息id, 设置appid和envid")
     @PostMapping("/v1/pipeline/appId")
     public void setAppId(String pipelineId, Long appid, Long envid) {
         BizAssert.validParam(StringUtils.isNotBlank(pipelineId),
@@ -89,8 +89,12 @@ public class PipelineController {
         pipelineBoV1.setAppId(appid);
         pipelineBoV1.setAppEnvId(envid);
         this.pipelineService.update(pipelineBoV1);
+    }
 
-//       return  this.pipelineService.getPipelineById(cuser);
+    @ApiOperation(value = "根据流水线env-id, 查询pipelineid")
+    @GetMapping("/v1/pipeline/appId/{appId}")
+    public String getPipelineIdByEnvId(@PathVariable(value = "appId") Long appId) {
+        return this.pipelineService.getPipelineIdByEnvId(appId);
     }
 
 }

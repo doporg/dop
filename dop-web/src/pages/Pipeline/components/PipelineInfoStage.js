@@ -91,7 +91,7 @@ export default class PipelineInfoStage extends Component {
         this.setState({
             stages
         });
-        this.props.onChange(stages)
+        this.props.onChange(stages, this.state.currentStage)
     }
     render() {
         return (

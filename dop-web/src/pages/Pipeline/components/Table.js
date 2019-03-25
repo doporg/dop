@@ -40,7 +40,7 @@ export default class PipelineTable extends Component {
     }
 
     removeByIdSQL(id) {
-        let url = API.pipeline + '/v1/delete/byId?id=' + id;
+        let url = API.pipeline + '/v1/delete/' + id;
         let self = this;
         Axios.put(url).then((response) => {
             let pipelineInfo = this.state.dataSource;
@@ -63,7 +63,7 @@ export default class PipelineTable extends Component {
 
 
     deletePipeline(pipelineInfo) {
-        let url = API.pipeline + '/v1/jenkins/byId?id=' + pipelineInfo.id;
+        let url = API.pipeline + '/v1/jenkins/' + pipelineInfo.id;
         let self = this;
         self.setState({
             visible: true

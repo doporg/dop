@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {Balloon, Icon, Feedback} from '@icedesign/base';
+import {Balloon, Icon} from '@icedesign/base';
 import Menu, {SubMenu, Item as MenuItem} from '@icedesign/menu';
 import FoundationSymbol from 'foundation-symbol';
 import IceImg from '@icedesign/img';
 import {headerMenuConfig} from '../../menuConfig';
 import Logo from '../Logo/index';
 import './index.scss';
-import API from "../../pages/API";
-import Axios from "axios/index";
 
-const {toast} = Feedback;
 
 // @withRouter
 class Header extends Component {

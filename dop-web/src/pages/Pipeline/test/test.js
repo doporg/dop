@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PipelineInfoStage from '../components/PipelineInfoStage'
+import Pull from '../components/chosenSteps/Pull'
 
 
 export default class PipelineTest extends Component {
@@ -15,7 +15,9 @@ export default class PipelineTest extends Component {
     render() {
         return (
             <div>
-                <PipelineInfoStage stages={this.state.stages} currentStage={0} onChange={this.stages}/>
+                <Pull
+                    // projectId={435}
+                />
             </div>
         )
     }
