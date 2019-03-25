@@ -17,7 +17,7 @@ import Select, {Option} from "@icedesign/base/lib/select";
 
 const { Item: FormItem } = Form;
 const { Group: RadioGroup } = Radio;
-
+let cUserMap=new Map()
 export default class Permission extends Component {
 
 
@@ -28,6 +28,7 @@ export default class Permission extends Component {
             currentData : [],
             visible:false,
             deleteVisible:false,
+            ruleVisible:false,
             isLoading:true,
             InputInfo:
                 {
@@ -72,7 +73,7 @@ export default class Permission extends Component {
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/permissions" ;
+        let url = API.gateway + "/permission-server/v1/permissions" ;
         let params=
             {
                 pageNo:this.state.pageNo,
@@ -84,6 +85,10 @@ export default class Permission extends Component {
                 totalCount:response.data.totalCount})
             //先不要set currentData,先用 response.data.pageList
             Axios.all(this.getUserName(response.data.pageList)).then(()=>{
+                console.log(cUserMap)
+                response.data.pageList.forEach(item=>{
+                    item.cuser=cUserMap.get(item.cuser)
+                })
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -97,7 +102,7 @@ export default class Permission extends Component {
     onChange=currentPage=> {
 
         this.setState({isLoading:true})
-        let url = API.permission + "/v1/permissions" ;
+        let url = API.gateway + "/permission-server/v1/permissions" ;
         let params=
             {
                 pageNo:currentPage,
@@ -111,6 +116,10 @@ export default class Permission extends Component {
                 totalCount:response.data.totalCount}
                );
             Axios.all(this.getUserName(response.data.pageList)).then(()=>{
+                console.log(cUserMap)
+                response.data.pageList.forEach(item=>{
+                    item.cuser=cUserMap.get(item.cuser)
+                })
                 this.setState({currentData:response.data.pageList})
                 this.setState({isLoading:false})
             })
@@ -122,18 +131,23 @@ export default class Permission extends Component {
         console.log(this.state.pageNo)
     }
 
-    onKeyDown(e, opts) {
-        console.log('onKeyDown', opts);
-    }
+
 
     //通过get请求中的userid获取username的函数
     getUserName=(data)=>{
         let axiosList=[]
+        let cuserSet=[]
         data.forEach(item=>{
-            let url = API.gateway + "/user-server/v1/users/"+item.cuser
-            axiosList.push(Axios.get(url).then((response) => {
-                item.cuser=response.data.name
-            }))
+            cuserSet.push(item.cuser)
+        })
+        console.log(cuserSet)
+        cuserSet = new Set(cuserSet)
+        console.log(cuserSet)
+        cuserSet.forEach(item=>{
+                    let url = API.gateway + "/user-server/v1/users/"+item
+                    axiosList.push(Axios.get(url).then((response) => {
+                        cUserMap.set(item,response.data.name)
+                    }))
         })
         return axiosList
     }
@@ -150,7 +164,7 @@ export default class Permission extends Component {
                 return;
             }
             //检测重复的url以及参数
-            let byNameUrl=API.permission+"/v1/permissions/byName"
+            let byNameUrl=API.gateway+"/permission-server/v1/permissions/byName"
             let byNameParams=
                 {name:values.name}
 
@@ -202,7 +216,7 @@ export default class Permission extends Component {
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.permission + "/v1/permissions/{id}" ;
+        let url = API.gateway + "/permission-server/v1/permissions/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -230,7 +244,7 @@ export default class Permission extends Component {
         };
         //窗口按钮定义
         const footer = (
-            <a onClick={this.onClose} href="javascript:;">
+            <a onClick={this.onClose} href="javascript:">
                 取消
             </a>
         );
@@ -257,7 +271,8 @@ export default class Permission extends Component {
                 onClose={this.onClose}
                 style={dialogStyle}
                 minMargin={5}
-                footer={footer}>
+                footer={footer}
+                shouldUpdatePosition={true}>
 
                 <Form field={this.field}>
 
@@ -332,9 +347,9 @@ export default class Permission extends Component {
                     isLoading={this.state.isLoading}>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
-                <Table.Column title="创建人"   dataIndex="cuser"/>
+                <Table.Column title="创建人" dataIndex="cuser"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
-                <Table.Column title="删除操作" cell={renderDelete} width="20%" />
+                <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
             </Table>
             <Pagination total={this.state.totalCount}

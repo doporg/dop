@@ -52,6 +52,9 @@ public class RoleService {
     @Autowired
     //关联关系service
     private UserRoleMappingService userRoleMappingService;
+    @Autowired
+    //关联关系service
+    private UserRuleService userRuleService;
 
     /* *
      *
@@ -129,12 +132,13 @@ public class RoleService {
     {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
-    //根据ID删除角色,并删除关联关系
+    //根据ID删除角色,并删除关联关系和数据规则
     @Transactional
     public void deleteById(Long id)
 
     {
         rolePermissionMappingService.deleteByRoleId(id);
+        userRuleService.deleteByRoleId(id);
         roleRepository.deleteById(id);
     }
 

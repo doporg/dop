@@ -109,4 +109,9 @@ public class RolePermissionMappingService {
         });
     }
 
+    //根据角色ID和功能点ID查找关联关系
+    public RolePermissionMapping findByRoleIdAndPermissionId(Long roleId,Long permissionId)
+    {
+       return rolePermissionMappingDAO.findByRoleIdAndPermissionId(roleId,permissionId);
+    }
 }
