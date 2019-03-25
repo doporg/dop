@@ -65,4 +65,13 @@ public class UserCredentialService {
                 .findUserCredentialByUserIdAndType(userId, UserCredential.Type.DOP_LOGIN_EMAIL);
         return BeanUtils.convertType(userCredential, UserCredentialBoV1.class);
     }
+
+    /**
+     * 根据用户id和凭据类型删除用户凭据
+     *
+     * @param userId 用户id
+     * @param type   凭据类型
+     */
+    public void deleteUserCredentialByUserIdAndType(Long userId, UserCredential.Type type) {
+    }
 }

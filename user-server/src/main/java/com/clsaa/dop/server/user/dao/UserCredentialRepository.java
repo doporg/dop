@@ -17,4 +17,5 @@ public interface UserCredentialRepository extends JpaRepository<UserCredential, 
      * @return {@link UserCredential}
      */
     UserCredential findUserCredentialByUserIdAndType(Long userId, UserCredential.Type type);
+
 }

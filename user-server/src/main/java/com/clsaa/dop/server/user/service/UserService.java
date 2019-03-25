@@ -134,11 +134,17 @@ public class UserService {
         BizAssert.validParam(user != null,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "未注册邮箱"));
         String strongPassword = StrongPassword.encrypt(realPassword.getContent()).getContent();
-        System.out.println("strong password : " + strongPassword);
         this.userCredentialService.updateUserCredentialByUserIdAndType(user.getId(), strongPassword, UserCredential.Type.DOP_LOGIN_EMAIL);
         this.redisTemplate.delete(AccountService.RESET_BY_EMAIL_KEY_PREFIX + email);
     }
 
+    /**
+     * 根据email和password查询用户信息
+     *
+     * @param email    email
+     * @param password RSA公钥加密过的password
+     * @return {@link UserBoV1}
+     */
     public UserBoV1 findUserByEmailAndPassword(String email, String password) {
         User user = this.userRepository.findUserByEmail(email);
         BizAssert.validParam(user != null,
@@ -151,10 +157,7 @@ public class UserService {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户凭据中的邮箱与用户邮箱不一致"));
         CryptoResult realPassword = RSA.decryptByPrivateKey(password, this.userProperties.getAccount().getSecret().getRSAPrivateKey());
         BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
-        System.out.println(realPassword.getContent());
-        System.out.println(userCredentialBoV1.getCredential());
         boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
-        System.out.println(verifyResult);
         BizAssert.pass(verifyResult, BizCodes.INVALID_PASSWORD);
         return BeanUtils.convertType(user, UserBoV1.class);
     }
