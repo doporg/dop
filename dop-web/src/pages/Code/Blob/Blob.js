@@ -2,6 +2,7 @@ import React from 'react'
 import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
+import { Dialog } from '@icedesign/base';
 
 import './Blob.css'
 
@@ -25,9 +26,25 @@ export default class Blob extends React.Component{
             ref:ref,
             refOptions:[],
             lineCount:0,
-            blobInfo:{}
+            blobInfo:{},
+            deleteVisible:false,
+            commit_message:""
         }
     }
+
+    openDelete(){
+        this.setState({
+            deleteVisible:true
+        });
+    }
+
+    closeDelete(){
+        this.setState({
+            deleteVisible:false
+        });
+    }
+
+
 
     changeCode(e){
         const val=e.target.value;
@@ -84,9 +101,18 @@ export default class Blob extends React.Component{
                 path:path,
                 ref:ref,
                 blobInfo:response.data,
-                lineCount:response.data.file_content.split("\n").length
+                lineCount:response.data.file_content.split("\n").length,
+                deleteVisible:false,
+                commit_message:""
             })
-        })
+        });
+
+        url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        Axios.get(url).then(response=>{
+            self.setState({
+                refOptions:response.data
+            })
+        });
     }
 
 
@@ -112,6 +138,36 @@ export default class Blob extends React.Component{
 
         window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path);
 
+    }
+
+    changeCommitMsg(e){
+        this.setState({
+            commit_message:e.target.value
+        });
+    }
+
+    deleteFile(){
+
+        let {projectid,path,ref,commit_message,username} = this.state;
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&branch="+ref+"&commit_message="+commit_message+"&username="+sessionStorage.getItem("user-name");
+        console.log(url);
+        Axios.delete(url).then(response=>{
+
+            let strs=path.split("/");
+            if(strs.length===1){
+                path="/"
+            }else {
+                path="";
+                for(let i=0;i<strs.length-1;i++){
+                    if(i!==0) {
+                        path += "/";
+                    }
+                    path+=strs[i];
+                }
+            }
+            window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+
+        })
     }
 
     render(){
@@ -155,7 +211,7 @@ export default class Blob extends React.Component{
                     <span className="text-file-size">&nbsp;&nbsp;{this.state.blobInfo.file_size}</span>
                     <div className="div-blob-operation">
                         <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>
-                        <button className="btn-blob-delete">删除</button>
+                        <button className="btn-blob-delete" onClick={this.openDelete.bind(this)}>删除</button>
                     </div>
                 </div>
                  <div className="div-line-number">
@@ -173,6 +229,18 @@ export default class Blob extends React.Component{
                 </div>
                 <textarea value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} readOnly>
                 </textarea>
+
+                <Dialog
+                    visible={this.state.deleteVisible}
+                    onOk={this.deleteFile.bind(this)}
+                    onCancel={this.closeDelete.bind(this)}
+                    onClose={this.closeDelete.bind(this)}
+                    title={"删除"+this.state.blobInfo.file_name}
+                    footerAlign="left"
+                >
+                    <div className="div-blob-delete-title">提交信息</div>
+                    <textarea value={this.state.commit_message} className="input-area-code-commit" onChange={this.changeCommitMsg.bind(this)} />
+                </Dialog>
 
             </div>
         );

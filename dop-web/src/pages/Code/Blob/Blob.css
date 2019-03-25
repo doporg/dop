@@ -129,6 +129,19 @@
     resize:none;
 }
 
+.div-blob-delete-title{
+    font-size: 15px;
+    height: 50px;
+    line-height: 50px;
+}
+
+.input-area-code-commit{
+    width: 500px;
+    height: 200px;
+    display: block;
+    margin-bottom: 20px;
+}
+
 .text-file-name{
     font-weight: bold;
     font-size: 15px;
