@@ -35,48 +35,63 @@ export default class UserTable extends Component {
         <FormBinderWrapper value={formValue} onChange={this.formChange}>
           <Row wrap>
             <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>学校:</span>
+              <span style={styles.label}>用例归属:</span>
               <FormBinder name="university">
                 <Select placeholder="请选择" style={{ width: '200px' }}>
-                  <Select.Option value="zhejiang">浙江大学</Select.Option>
-                  <Select.Option value="fudan">上海复旦</Select.Option>
-                  <Select.Option value="zhongshan">中山大学</Select.Option>
+                  <Select.Option value="mine">我的用例</Select.Option>
+                  <Select.Option value="all">所有用例</Select.Option>
                 </Select>
               </FormBinder>
             </Col>
+
             <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>院系:</span>
+              <span style={styles.label}>类型:</span>
               <FormBinder name="college">
                 <Select placeholder="请选择" style={{ width: '200px' }}>
-                  <Select.Option value="computer">计算机学院</Select.Option>
-                  <Select.Option value="design">设计学院</Select.Option>
+                  <Select.Option value="manual">手工测试</Select.Option>
+                  <Select.Option value="interface">接口测试</Select.Option>
+                  <Select.Option value="all">所有</Select.Option>
                 </Select>
               </FormBinder>
             </Col>
+
             <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>班级:</span>
-              <FormBinder name="class">
-                <Input />
+              <span style={styles.label}>所属分组:</span>
+              <FormBinder name="college">
+                <Select placeholder="请选择" style={{ width: '200px' }}>
+                  <Select.Option value="success">分组1</Select.Option>
+                  <Select.Option value="fail">分组2</Select.Option>
+                  <Select.Option value="block">分组3</Select.Option>
+                  <Select.Option value="all">所有</Select.Option>
+                </Select>
               </FormBinder>
             </Col>
+
             <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>姓名:</span>
+              <span style={styles.label}>执行结果:</span>
+              <FormBinder name="college">
+                <Select placeholder="请选择" style={{ width: '200px' }}>
+                  <Select.Option value="success">成功</Select.Option>
+                  <Select.Option value="fail">失败</Select.Option>
+                  <Select.Option value="block">阻塞</Select.Option>
+                  <Select.Option value="all">所有</Select.Option>
+                </Select>
+              </FormBinder>
+            </Col>
+
+            <Col xxs="24" l="8" style={styles.formCol}>
+              <span style={styles.label}>创建者:</span>
               <FormBinder name="name">
                 <Input />
               </FormBinder>
             </Col>
-            <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>电话:</span>
-              <FormBinder name="phone">
-                <Input />
-              </FormBinder>
-            </Col>
-            <Col xxs="24" l="8" style={styles.formCol}>
-              <span style={styles.label}>角色:</span>
-              <FormBinder name="role">
-                <Input />
-              </FormBinder>
-            </Col>
+
+            {/*<Col xxs="24" l="8" style={styles.formCol}>*/}
+              {/*<span style={styles.label}>角色:</span>*/}
+              {/*<FormBinder name="role">*/}
+                {/*<Input />*/}
+              {/*</FormBinder>*/}
+            {/*</Col>*/}
           </Row>
         </FormBinderWrapper>
       </IceContainer>

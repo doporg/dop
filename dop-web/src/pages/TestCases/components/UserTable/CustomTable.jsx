@@ -72,11 +72,11 @@ export default class CustomTable extends Component {
 
   render() {
     return (
-      <IceContainer title="用户列表">
+      <IceContainer title="用例列表">
         <Row wrap style={styles.headRow}>
           <Col l="12">
             <Button type="primary" style={styles.button}>
-              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加用户
+              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加测试用例
             </Button>
           </Col>
           <Col l="12" style={styles.center}>
@@ -87,7 +87,7 @@ export default class CustomTable extends Component {
               导入
             </Button>
             <Button type="normal" style={{ ...styles.button, marginLeft: 10 }}>
-              下载
+              修改
             </Button>
           </Col>
         </Row>
@@ -95,14 +95,13 @@ export default class CustomTable extends Component {
           dataSource={this.getData()}
           rowSelection={{ onChange: this.onChange }}
         >
-          <Table.Column title="序号" dataIndex="id" width={100} />
-          <Table.Column title="姓名" dataIndex="name" width={100} />
-          <Table.Column title="学校" dataIndex="university" width={200} />
-          <Table.Column title="院校" dataIndex="college" width={200} />
-          <Table.Column title="班级" dataIndex="class" width={100} />
-          <Table.Column title="联系电话" dataIndex="phone" width={200} />
-          <Table.Column title="角色" dataIndex="role" width={200} />
-          <Table.Column title="启动/停用" width={100} cell={() => <Switch />} />
+          <Table.Column title="用例编号" dataIndex="id" width={100} />
+          <Table.Column title="用例名称" dataIndex="name" width={100} />
+          <Table.Column title="类型" dataIndex="type" width={100} />
+          <Table.Column title="状态" dataIndex="status" width={100} />
+          <Table.Column title="执行结果" dataIndex="executeResult" width={100} />
+          <Table.Column title="创建者" dataIndex="cuser" width={100} />
+          <Table.Column title="执行/终止" width={100} cell={() => <Switch />} />
           <Table.Column title="操作" width={100} cell={this.renderOper} />
         </Table>
         <Pagination

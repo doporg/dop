@@ -32,7 +32,7 @@ const asideMenuConfig = [
   },
   {
     name: '测试管理',
-    path: '/test',
+    path: '/testCases',
     icon: 'repair',
   },
   {
@@ -64,11 +64,6 @@ const asideMenuConfig = [
     name: '代码管理',
     path: '/code/projectlist/personal',
     icon: 'code',
-  },
-  {
-    name: 'testCases',
-    path: '/testCases',
-    icon: 'repair',
   },
 ];
 
