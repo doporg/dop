@@ -9,28 +9,29 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 角色关联功能点持久层对象，对应角色与功能点关联表中每条数据
+ * 用户规则表，用于数据权限的控制
  *
  * @author lzy
  *
- * since :2019.3.7
+ * since :2019.3.19
  */
+
 @Entity
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "t_user_rule",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_role_permission_mapping set is_deleted = true,permission_id = uuid()+permission_id where id = ?")
+@SQLDelete(sql = "update t_user_rule set is_deleted = true,field_name = CONCAT(uuid(),field_name) where id = ?")
 @Where(clause = "is_deleted =false")
-@Table(name = "t_role_permission_mapping",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id"})}) //引入@Table注解，name赋值为表名
-public class RolePermissionMapping implements Serializable {
+public class UserRule implements Serializable {
+    private static final long serialVersionUID = 552000266L;
 
-    private static final long serialVersionUID = 552000262L;
     /**
-     * 角色-功能点关联ID
+     * 用户数据规则ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,17 +39,29 @@ public class RolePermissionMapping implements Serializable {
     private Long id;
 
     /**
-     * 功能点id
-     */
-    @Basic
-    @Column(name = "permission_id")
-    private Long permissionId;
-    /**
      * 角色id
      */
     @Basic
     @Column(name = "role_id")
     private Long roleId;
+    /**
+     * 权限作用域参数名
+     */
+    @Basic
+    @Column(name = "field_name")
+    private String fieldName;
+    /**
+     * 规则
+     */
+    @Basic
+    @Column(name = "rule")
+    private String rule;
+    /**
+     * 描述
+     */
+    @Basic
+    @Column(name = "description")
+    private String description;
 
     /* 表里都要有的字段*/
     /**
@@ -82,4 +95,5 @@ public class RolePermissionMapping implements Serializable {
     @Column(name="is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserRoleMappingDAO extends JpaRepository<UserRoleMapping, Long>
 {
     /**
-     * 根据角色ID和功能点ID查询关联关系
+     * 根据角色ID和用户ID查询关联关系
      *
      * @param userId  用户ID
      * @param roleId  角色ID
@@ -35,8 +35,8 @@ public interface UserRoleMappingDAO extends JpaRepository<UserRoleMapping, Long>
     /**
      * 根据用户ID查询关联关系
      *
-     * @param userId  功能点ID
-     * @return {@link UserRoleMapping}
+     * @param userId  用户ID
+     * @return {@link  List<UserRoleMapping>}
      */
     List<UserRoleMapping> findByUserId(Long userId);
 
