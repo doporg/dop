@@ -98,7 +98,9 @@ public class RequestScriptDto implements Operation {
     }
 
     private void setResultFail() {
-        this.result = FAIL_RESULT;
+        if (!FAIL_RESULT.equals(this.result)) {
+            this.result = FAIL_RESULT;
+        }
     }
 
     private void setResultSuccess() {
