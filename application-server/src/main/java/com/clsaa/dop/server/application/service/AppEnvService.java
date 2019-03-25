@@ -101,24 +101,5 @@ public class AppEnvService {
         this.appEnvRepository.deleteById(id);
     }
 
-    /**
-     * 更新Pipeline信息
-     *
-     * @param appEnvId 应用环境id
-     * @param muser    修改者
-     */
-    public void updatePipeline(Long muser, Long appEnvId, String pipelineId) {
-        AppEnv appEnv = this.appEnvRepository.findById(appEnvId).orElse(null);
-        appEnv.setPipelineId(pipelineId);
-        this.appEnvRepository.saveAndFlush(appEnv);
-    }
 
-    /**
-     * 更新Pipeline信息
-     *
-     * @param appEnvId 应用环境id
-     */
-    public AppEnvBoV1 getPipeline(Long appEnvId) {
-        return BeanUtils.convertType(this.appEnvRepository.findById(appEnvId).orElse(null), AppEnvBoV1.class);
-    }
 }

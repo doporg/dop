@@ -24,10 +24,6 @@ public class AppEnvBoV1 {
      */
     private String title;
 
-    /**
-     * 流水线Id
-     */
-    private String pipelineId;
 
     /**
      * 部署策略

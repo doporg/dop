@@ -71,23 +71,7 @@ public class AppEnvController {
     }
 
 
-    @ApiOperation(value = "更新流水线信息", notes = "更新流水线信息")
-    @PutMapping(value = "/app/env/{appEnvId}/pipeline")
-    public void UpdatePipelineByAppEnvId(
-            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
-            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
-            @ApiParam(value = "pipelineId", name = "pipelineId", required = true) @RequestParam(value = "pipelineId") String pipelineId
-    ) {
-        this.appEnvService.updatePipeline(cuser, appEnvId, pipelineId);
-    }
 
-    @ApiOperation(value = "获取流水线信息", notes = "获取流水线信息")
-    @GetMapping(value = "/app/env/{appEnvId}/pipeline")
-    public AppEnvPipelineV1 getPipelineByAppEnvId(
-            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId
-    ) {
-        return BeanUtils.convertType(this.appEnvService.getPipeline(appEnvId), AppEnvPipelineV1.class);
-    }
 
 
 }
