@@ -8,10 +8,7 @@ import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -54,19 +51,22 @@ public class RequestUtil {
 //        String url=api+"/projects/3/repository/files/kk%2f1.txt/raw?ref=master";
 //        System.out.println(httpGet(url));
 
-        String path=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/1.txt","GBK");
-        NameValuePair p1=new  BasicNameValuePair("branch","master");
-        NameValuePair p2=new  BasicNameValuePair("content","123\n456\n哈哈哈\n");
-        NameValuePair p3=new  BasicNameValuePair("commit_message","update 1.txt!!!!!!");
-        NameValuePair p4=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
+//        String path=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/1.txt","GBK");
+//        NameValuePair p1=new  BasicNameValuePair("branch","master");
+//        NameValuePair p2=new  BasicNameValuePair("content","123\n456\n哈哈哈\n");
+//        NameValuePair p3=new  BasicNameValuePair("commit_message","update 1.txt!!!!!!");
+//        NameValuePair p4=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
+//
+//        List<NameValuePair> list=new ArrayList<>();
+//        list.add(p1);
+//        list.add(p2);
+//        list.add(p3);
+//        list.add(p4);
 
-        List<NameValuePair> list=new ArrayList<>();
-        list.add(p1);
-        list.add(p2);
-        list.add(p3);
-        list.add(p4);
+        String url=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/test.txt","GBK")+"?branch=master&commit_message=删除test.txt"+
+                "&access_token=1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02";
 
-        System.out.println(httpPut(path,list));
+        System.out.println(httpDelete(url));
 
     }
 
@@ -179,6 +179,21 @@ public class RequestUtil {
 
     }
 
+    /**
+     * 发送delete请求到gitlab
+     */
+    public static int delete(String path,String username){
+
+        String access_token = userService.findUserAccessToken(username);
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "access_token=" + access_token;
+
+        return httpDelete(url);
+    }
+
+
 
 
 
@@ -264,7 +279,7 @@ public class RequestUtil {
     /**
      * 发送http put请求
      *
-     * @param url        路径
+     * @param url 路径
      * @param formparams 参数键值对
      * @return 状态码
      */
@@ -296,6 +311,40 @@ public class RequestUtil {
         return result;
 
     }
+
+    /**
+     * 发送http delete请求
+     *
+     * @param url 路径
+     * @return 状态码
+     */
+    private static int httpDelete(String url) {
+
+
+        CloseableHttpClient httpclients = HttpClients.createDefault();
+
+        HttpDelete httpDelete = new HttpDelete(url);
+
+        CloseableHttpResponse response = null;
+        try {
+            response = httpclients.execute(httpDelete);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int result = response.getStatusLine().getStatusCode();
+
+        try {
+            response.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+
 
 
 

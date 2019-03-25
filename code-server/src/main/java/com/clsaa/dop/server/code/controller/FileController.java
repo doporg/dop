@@ -99,6 +99,7 @@ public class FileController {
 
     }
 
+    @ApiOperation(value = "更新文件内容",notes = "更新文件内容，并作为一次提交")
     @PutMapping("/projects/{id}/repository/blob")
     public void updateFile(@ApiParam(value = "项目id")@PathVariable("id") int id,
                            @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
@@ -109,6 +110,23 @@ public class FileController {
 
         try {
             fileService.updateFile(id,file_path,branch,content,commit_message,username);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @ApiOperation(value = "删除文件",notes = "删除文件，并作为一次提交")
+    @DeleteMapping("/projects/{id}/repository/blob")
+    public void deleteFile(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                           @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
+                           @ApiParam(value = "分支")@RequestParam("branch") String branch,
+                           @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
+                           @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+        try {
+            fileService.deleteFile(id,file_path,branch,commit_message,username);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

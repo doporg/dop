@@ -138,4 +138,20 @@ public class FileService {
 
         RequestUtil.put(path,username,list);
     }
+
+
+    /**
+     * 删除一个文件
+     * @param id 项目id
+     * @param file_path 文件路径
+     * @param branch 分支
+     * @param commit_message 提交信息
+     * @param username 用户名
+     * @throws UnsupportedEncodingException
+     */
+    public void deleteFile(int id,String file_path,String branch,String commit_message,String username) throws UnsupportedEncodingException {
+
+        String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
+        RequestUtil.delete(path,username);
+    }
 }
