@@ -14,20 +14,9 @@ import CodeLayout from '../layouts/CodeLayout';
 import {permissionConfig} from "../pages/Permissions";
 import {roleConfig} from "../pages/Roles";
 import {dataRulesConfig} from "../pages/DataRules";
+import TestCases, {testConfig} from "../pages/TestCases";
 
 const baseConfig = [
-    {
-        path: '*',
-        layout: BasicLayout,
-        component: NotFound,
-    },
-];
-const projectConfig = [
-    {
-        path: '/project',
-        layout: BasicLayout,
-        component: Projects,
-    },
     {
         path: '*',
         layout: BasicLayout,
@@ -94,7 +83,6 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
 const codeConfig = [
 
     {
@@ -141,9 +129,14 @@ const projectConfig = [
         path: '/application/environment/detail',
         layout: BasicLayout,
         component: ApplicationEnvironmentDetail
-    }
+    },
+    {
+        path: '*',
+        layout: BasicLayout,
+        component: NotFound,
+    },
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...dataRulesConfig, ...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...dataRulesConfig, ...baseConfig, testConfig];
 
 export default routerConfig;
