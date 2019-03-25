@@ -11,9 +11,9 @@ import {Login, Register, RegisterTransfer, ModifyPwd} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
 import {Code,ProjectList,ProjectOverview,NewProject} from '../pages/Code'
 import CodeLayout from '../layouts/CodeLayout';
-import {Permission} from "../pages/Permissions";
-import {Role,UserRoleMapping} from "../pages/Roles";
-import DataRules from "../pages/DataRules/DataRules";
+import {permissionConfig} from "../pages/Permissions";
+import {roleConfig} from "../pages/Roles";
+import {dataRulesConfig} from "../pages/DataRules";
 
 const baseConfig = [
     {
@@ -87,34 +87,6 @@ const ciadjustConfig = [
     }
 ];
 
-const permissionConfig = [
-    //permission
-    {
-        path: '/permissions',
-        layout: BasicLayout,
-        component: Permission,
-    },
-];
-const roleConfig = [
-    //role
-    {
-        path: '/roles',
-        layout: BasicLayout,
-        component: Role,
-    },
-    {
-        path: '/roles/userwithrole',
-        layout: BasicLayout,
-        component: UserRoleMapping,
-    },
-];
-
-const dataRulesConfig=[    {
-    path: '/dataRules',
-    layout: BasicLayout,
-    component: DataRules,
-},
-];
 const codeConfig = [
 
     {
@@ -164,6 +136,6 @@ const projectConfig = [
     }
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig,...dataRulesConfig, ...baseConfig];
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...dataRulesConfig, ...baseConfig];
 
 export default routerConfig;

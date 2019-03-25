@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Dialog, Feedback, Field, Table} from "@icedesign/base";
 import API from "../../API";
 import Axios from "axios";
-import Form from "../Role";
 
 /**
  *  用户关联角色管理
