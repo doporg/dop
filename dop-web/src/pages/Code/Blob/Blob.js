@@ -3,6 +3,7 @@ import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import { Dialog } from '@icedesign/base';
+import ReactTooltip from 'react-tooltip'
 
 import './Blob.css'
 
@@ -168,6 +169,23 @@ export default class Blob extends React.Component{
 
     }
 
+    isOnBranch(){
+
+        let {ref,refOptions}=this.state;
+
+        if(refOptions.length===0)
+            return false;
+
+        let branches=refOptions[0].children;
+        for(let i=0;i<branches.length;i++){
+            if(branches[i].value===ref)
+                return true;
+        }
+
+        return false;
+
+    }
+
 
 
     changeRef(value, data, extra){
@@ -270,10 +288,27 @@ export default class Blob extends React.Component{
                     <img src={imgFile}/>
                     <span className="text-file-name">{this.state.blobInfo.file_name}</span>
                     <span className="text-file-size">&nbsp;&nbsp;{this.state.blobInfo.file_size}</span>
-                    <div className="div-blob-operation">
-                        <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>
-                        <button className="btn-blob-delete" onClick={this.openDelete.bind(this)}>删除</button>
-                    </div>
+
+                    {
+                        (()=>{
+                            if(this.isOnBranch()){
+                                return (
+                                    <div className="div-blob-operation">
+                                        <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>
+                                        <button className="btn-blob-delete" onClick={this.openDelete.bind(this)}>删除</button>
+                                    </div>
+                                )
+                            }else {
+                                return (
+                                    <div className="div-blob-operation">
+                                        <button className="btn-blob-disabled" onClick={this.editFile.bind(this)} disabled="disabled">编辑</button>
+                                        <button className="btn-blob-disabled" onClick={this.openDelete.bind(this)} disabled="disabled">删除</button>
+                                    </div>
+                                )
+                            }
+                        })()
+                    }
+
                 </div>
                  <div className="div-line-number">
 
