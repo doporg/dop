@@ -9,6 +9,12 @@ import {pipelineConfig} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {loginConfig} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
+import {Code,ProjectList,ProjectOverview,NewProject} from '../pages/Code'
+import CodeLayout from '../layouts/CodeLayout';
+import {permissionConfig} from "../pages/Permissions";
+import {roleConfig} from "../pages/Roles";
+import {dataRulesConfig} from "../pages/DataRules";
+
 const baseConfig = [
     {
         path: '*',
@@ -34,9 +40,9 @@ const projectConfig = [
     {
         path: '/application/environment/detail',
         layout: BasicLayout,
-        component: ApplicationEnvironmentDetail
-    }
-]
+        component: ApplicationEnvironmentDetail,
+    },
+];
 
 
 
@@ -50,5 +56,55 @@ const ciadjustConfig = [
 ];
 
 const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
+const codeConfig = [
+
+    {
+        path: '/code/projects/new',
+        layout: BasicLayout,
+        component: NewProject
+    },
+    {
+        path: '/code/projectlist/:sort',
+        layout: BasicLayout,
+        component: ProjectList
+    },
+    {
+        path: '/code/:username/:projectid',
+        layout: CodeLayout,
+        component: ProjectOverview
+
+    },
+    {
+        path: '/code/:username/:projectid/commits/:branch',
+        layout: CodeLayout,
+        component: Code
+    },
+
+
+];
+
+const projectConfig = [
+    {
+        path: '/project',
+        layout: BasicLayout,
+        component: Projects,
+    }, {
+        path: '/application',
+        layout: BasicLayout,
+        component: Application,
+    },
+    {
+        path: '/applicationDetail',
+        layout: BasicLayout,
+        component: ApplicationDetail,
+    },
+    {
+        path: '/application/environment/detail',
+        layout: BasicLayout,
+        component: ApplicationEnvironmentDetail
+    }
+];
+
+const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...codeConfig, ...permissionConfig, ...roleConfig, ...dataRulesConfig, ...baseConfig];
 
 export default routerConfig;

@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @Table(name = "t_permission",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_permission set is_deleted = true where id = ?")
+@SQLDelete(sql = "update t_permission set is_deleted = true, name = CONCAT(uuid(),name) where id = ?")
 @Where(clause = "is_deleted =false")
 public class Permission implements Serializable {
 

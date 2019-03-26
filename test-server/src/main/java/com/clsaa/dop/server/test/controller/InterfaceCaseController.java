@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.execute;
+import static java.util.Objects.requireNonNull;
 
 /**
  * 接口测试用例相关api
@@ -55,10 +56,10 @@ public class InterfaceCaseController {
     }
 
     @GetMapping("/execute/{id}")
-    public String getExecuteResult(@PathVariable("id") Long id) {
+    public InterfaceCaseDto getExecuteResult(@PathVariable("id") Long id) {
         BizAssert.validParam(id >= 0, BizCodes.INVALID_PARAM.getCode(), "请求执行的测试用例id不合法");
         InterfaceCaseDto interfaceCaseDto = interfaceCaseQueryService.selectByPk(id).orElse(null);
-        return execute(interfaceCaseDto);
+        return execute(requireNonNull(interfaceCaseDto));
     }
 
 }

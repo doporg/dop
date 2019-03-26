@@ -38,4 +38,14 @@ public interface BizCodes {
      * 关联关系重复
      */
     BizCode REPETITIVE_MAPPING = new BizCode(133002, "创建失败，该关联关系已存在");
+    /**
+     * 数据规则重复
+     */
+    BizCode REPETITIVE_RULE = new BizCode(133003, "创建失败，该数据规则已存在");
+    /**
+     * 数据权限重复
+     */
+    BizCode REPETITIVE_DATA = new BizCode(133004, "创建失败，该数据权限已存在");
+
+
 }

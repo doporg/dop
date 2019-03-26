@@ -9,11 +9,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 角色关联功能点持久层对象，对应角色与功能点关联表中每条数据
+ * 用户数据表，用于数据权限的控制
  *
  * @author lzy
  *
- * since :2019.3.7
+ * since :2019.3.19
  */
 @Entity
 @Getter
@@ -21,16 +21,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "t_user_data",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_role_permission_mapping set is_deleted = true,permission_id = uuid()+permission_id where id = ?")
+@SQLDelete(sql = "update t_user_data set is_deleted = true ,rule_id = uuid()+rule_id where id = ?")
 @Where(clause = "is_deleted =false")
-@Table(name = "t_role_permission_mapping",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id"})}) //引入@Table注解，name赋值为表名
-public class RolePermissionMapping implements Serializable {
+public class UserData implements Serializable {
+    private static final long serialVersionUID = 552000265L;
 
-    private static final long serialVersionUID = 552000262L;
     /**
-     * 角色-功能点关联ID
+     * 用户数据ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,17 +38,29 @@ public class RolePermissionMapping implements Serializable {
     private Long id;
 
     /**
-     * 功能点id
+     * 规则ID
      */
     @Basic
-    @Column(name = "permission_id")
-    private Long permissionId;
+    @Column(name = "rule_id")
+    private Long ruleId;
     /**
-     * 角色id
+     *  用户ID
      */
     @Basic
-    @Column(name = "role_id")
-    private Long roleId;
+    @Column(name = "user_id")
+    private Long userId;
+    /**
+     * 参数值
+     */
+    @Basic
+    @Column(name = "field_value")
+    private Long fieldValue;
+    /**
+     * 描述
+     */
+    @Basic
+    @Column(name = "description")
+    private String description;
 
     /* 表里都要有的字段*/
     /**
