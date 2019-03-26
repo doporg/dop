@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import {Dialog, Feedback, Field, Form, Table} from '@icedesign/base';
+import {Dialog, Feedback, Field, Form, Loading, Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Icon} from '@icedesign/base';
 import {Row, Col} from "@alifd/next/lib/grid";
 import CreateApplicationVariableDialog from "../CreateApplicationVariable";
 import Input from "@icedesign/base/lib/input";
+import {List} from "@icedesign/base/lib/upload";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -25,6 +26,7 @@ export default class ApplicationVariable extends Component {
             appId: props.appId,
             varData: [],
             editMode: false,
+            loading: true
 
         }
     }
@@ -36,15 +38,31 @@ export default class ApplicationVariable extends Component {
 
     //获取变量列表的值
     getApplicationVariableData() {
+        this.setState({
+            loading: true
+        })
         let getUrl = API.gateway + "/application-server/app/" + this.state.appId + "/variable";
         let _this = this;
         Axios.get(getUrl)
             .then(function (response) {
-                console
+
                 _this.setState({
                     varData: response.data,
-                    editMode: false
+                    loading: false,
+
+
                 })
+                let list = {}
+                response.data.map((item) => {
+                    console.log("item", item)
+                    list[item.varKey] = false
+                })
+                console.log("list", list)
+                _this.setState({
+                    editMode: list
+
+                })
+
             })
 
     }
@@ -66,8 +84,13 @@ export default class ApplicationVariable extends Component {
     onDelete(id) {
         let deleteUrl = API.gateway + "/application-server/app/variable/" + id;
         let _this = this;
+        this.setState({
+            loading: true
+        })
+
         Axios.delete(deleteUrl)
             .then(function (response) {
+
                 Toast.success("删除成功")
                 _this.refreshApplicationVariableList();
             })
@@ -86,26 +109,34 @@ export default class ApplicationVariable extends Component {
     onSubmit(id) {
         let putUrl = API.gateway + "/application-server/app/variable/" + id;
         let _this = this;
+        this.setState({
+            loading: true
+        })
         Axios.put(putUrl, {
-            varValue: _this.field.getValue('value')
+            varValue: _this.field.getValue(id)
         })
             .then(function (response) {
+
                 Toast.success("修改成功")
                 _this.refreshApplicationVariableList();
             })
     }
 
     //取消按钮响应函数
-    onCancel() {
+    onCancel(name) {
+        let temp = this.state.editMode
+        temp[name] = false
         this.setState({
-            editMode: false
+            editMode: temp
         })
     }
 
     //编辑图标响应函数
-    onEdit() {
+    onEdit(name) {
+        let temp = this.state.editMode
+        temp[name] = true
         this.setState({
-            editMode: true
+            editMode: temp
         })
     }
 
@@ -124,43 +155,47 @@ export default class ApplicationVariable extends Component {
         const valueRender = (value, index, record) => {
             console.log(record);
 
-            if (this.state.editMode) {
+
+            if (this.state.editMode[record.varKey]) {
                 return <div>
                     <Form>
                         <FormItem>
-                            <Input {...init("value")} placeholder="Value"/>
+                            <Input {...init(record.id)} placeholder="Value"/>
                         </FormItem>
                     </Form>
                     <div onClick={this.submitConfirm.bind(this, record.id)}>保存</div>
-                    <div onClick={this.onCancel.bind(this)}>取消</div>
+                    <div onClick={this.onCancel.bind(this, record.varKey)}>取消</div>
                 </div>
             } else {
                 return <div>
                     <div style={{float: "left", textAlign: "left"}}>******</div>
                     <Icon type="edit"
-                          onClick={this.onEdit.bind(this)}
+                          onClick={this.onEdit.bind(this, record.varKey)}
                           style={{float: "right", color: "#81c7ff"}}/>
                 </div>
             }
         }
 
         return (
-            <div style={{width: "48%", margin: "0 auto"}}>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+            >
+                <div style={{width: "48%", margin: "0 auto"}}>
                     <CreateApplicationVariableDialog
                         refreshApplicationVariableList={this.refreshApplicationVariableList.bind(this)}
                         appId={this.state.appId}/>
-                <div>
+                    <div>
 
-                    <Table style={{width: "100%"}}
-                           dataSource={this.state.varData}>
-                        <Table.Column cell={keyRender}
-                                      title="Key"
-                                      dataIndex="key"/>
-                        <Table.Column cell={valueRender}
-                                      title="Value"/>
-                    </Table>
+                        <Table style={{width: "100%"}}
+                               dataSource={this.state.varData}>
+                            <Table.Column cell={keyRender}
+                                          title="Key"
+                                          dataIndex="key"/>
+                            <Table.Column cell={valueRender}
+                                          title="Value"/>
+                        </Table>
+                    </div>
                 </div>
-            </div>
+            </Loading>
         )
     }
 

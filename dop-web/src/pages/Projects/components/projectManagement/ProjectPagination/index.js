@@ -1,5 +1,4 @@
-
-import {Pagination} from "@icedesign/base";
+import {Pagination, Loading} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API.js"
 import Axios from "axios";
@@ -30,7 +29,8 @@ export default class ProjectPagination extends Component {
             currentData: [],
             //总页数
             totalPage: 1,
-            queryKey: props.searchKey
+            queryKey: props.searchKey,
+            loading: true
             // searchData: [],
             // searchKey: ""
         };
@@ -41,6 +41,9 @@ export default class ProjectPagination extends Component {
     //刷新数据列表
 
     refreshList(current, key) {
+        this.setState({
+            loading: true
+        })
         let tmpData = [];
         let url = API.gateway + '/application-server/project';
         let _this = this;
@@ -102,7 +105,8 @@ export default class ProjectPagination extends Component {
                     console.log(tmpData);
                     //赋值
                     _this.setState({
-                        currentData: tmpData
+                        currentData: tmpData,
+                        loading: false
                     });
                 }))
 
@@ -145,7 +149,9 @@ export default class ProjectPagination extends Component {
         * 将项目列表作为翻页器的子组件，数据由翻页器传递给应用列表显示
          */
             <div>
-                <ProjectList currentData={this.state.currentData}/>
+                <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
+                    <ProjectList currentData={this.state.currentData}/>
+                </Loading>
                 <Pagination style={styles.body}
                             current={this.state.current}
                             onChange={this.handleChange}

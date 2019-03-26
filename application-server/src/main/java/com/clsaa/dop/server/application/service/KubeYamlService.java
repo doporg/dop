@@ -250,6 +250,14 @@ public class KubeYamlService {
         return BeanUtils.convertType(this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null), KubeYamlDataBoV1.class);
     }
 
+    public void updateDeploymentYaml(Long muser, Long appEnvId, String deploymentYaml) {
+        KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
+        kubeYamlData.setMtime(LocalDateTime.now());
+        kubeYamlData.setMuser(muser);
+        kubeYamlData.setDeploymentEditableYaml(deploymentYaml);
+        this.kubeYamlRepository.saveAndFlush(kubeYamlData);
+    }
+
 
     /**
      * 根据id获取client
@@ -412,7 +420,7 @@ public class KubeYamlService {
                         .endMetadata()
                         .withNewSpec()
                         .addNewRule()
-                        .withHost("www.dop.clsaa.com")
+                        .withHost("*")
                         .withNewHttp()
                         .addNewPath()
                         .withNewBackend()
