@@ -95,6 +95,14 @@ export default class CommitList extends React.Component{
         toast.success("已将commit sha复制到剪贴板")
     }
 
+    browseFile(commit_id){
+
+        let {username,projectid}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/");
+
+    }
+
 
     render(){
         return (
@@ -139,7 +147,7 @@ export default class CommitList extends React.Component{
                                                     <button data-tip data-for='copy' className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[j].id)}>
                                                         <img src={imgCopy} className="img-commit-copy-sha"/>
                                                     </button>
-                                                    <button data-tip data-for='browse' className="btn-commit-browse-file">
+                                                    <button data-tip data-for='browse' className="btn-commit-browse-file" onClick={this.browseFile.bind(this,commitList[j].id)}>
                                                         <img src={imgFolder} className="img-commit-browse-file"/>
                                                     </button>
                                                     <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>
@@ -175,7 +183,7 @@ export default class CommitList extends React.Component{
                                             <button data-tip data-for='copy' className="btn-commit-copy-sha" onClick={this.copySha.bind(this,commitList[i].id)}>
                                                 <img src={imgCopy} className="img-commit-copy-sha"/>
                                             </button>
-                                            <button data-tip data-for='browse' className="btn-commit-browse-file">
+                                            <button data-tip data-for='browse' className="btn-commit-browse-file" onClick={this.browseFile.bind(this,commitList[i].id)}>
                                                 <img src={imgFolder} className="img-commit-browse-file"/>
                                             </button>
                                             <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>

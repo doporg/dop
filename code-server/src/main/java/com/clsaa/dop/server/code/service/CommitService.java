@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,21 @@ public class CommitService {
             url+="&path="+URLEncoder.encode(path,"GBK");
         }
 
-        List<CommitBo> commitBos= RequestUtil.getList(url,username,CommitBo.class);
+        //取出所有的分页
+        List<CommitBo> commitBos=new ArrayList<>();
+        int page=1;
+        while(true) {
+            String temp_url=url+"&per_page=50&page="+page++;
+            List<CommitBo> temp = RequestUtil.getList(temp_url, username, CommitBo.class);
+            if(temp.size()==0) {
+                System.out.println("break!!!!!");
+                break;
+            }else {
+                commitBos.addAll(temp);
+            }
+        }
+
+
         for(CommitBo commitBo:commitBos){
             List<String> strs=TimeUtil.natureTime(commitBo.getAuthored_date());
             commitBo.setAuthored_date(strs.get(0));

@@ -61,6 +61,14 @@ public class RequestUtil {
 //        params.add(p7);
 //        params.add(p8);
 
+    public static void main(String[] args) {
+
+        String url=api+"/projects/3/repository/commits?ref_name=master&per_page=50&page=2";
+
+        FormatUtil.printJson(httpGet(url));
+    }
+
+
 
 //
 //        System.out.println(httpPost1("http://gitlab.dop.clsaa.com/profile/personal_access_tokens",params));
