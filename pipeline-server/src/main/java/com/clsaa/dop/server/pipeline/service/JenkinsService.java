@@ -2,6 +2,8 @@ package com.clsaa.dop.server.pipeline.service;
 
 import com.clsaa.dop.server.pipeline.config.Jenkinsfile;
 import com.clsaa.dop.server.pipeline.config.JobConfig;
+import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
+import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.offbytwo.jenkins.JenkinsServer;
@@ -49,7 +51,11 @@ public class JenkinsService {
         Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getStages());
         String name = pipelineBoV1.getId();
         try {
-            jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
+            if(jenkins.getJob(name) == null){
+                jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
+            }else{
+                jenkins.updateJob(name, new JobConfig("2.0", jenkinsfile.getScript()).getXml());
+            }
         }catch (Exception e){
             return e.toString();
         }
@@ -61,9 +67,29 @@ public class JenkinsService {
      * */
     public void createByJenkinsfile (String name, String git, String path){
         try {
-            jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
+            if(jenkins.getJob(name) == null){
+                jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
+            }else{
+                jenkins.updateJob(name, new JobConfig("1.0", git, path).getXml());
+            }
+
         }catch (Exception e){
             System.out.println(e.toString());
+        }
+    }
+
+    /**
+     * 根据流水线的名字的到运行结果
+     * */
+    public String getBuildOutputText (String name){
+        Map<String, String> result = new HashMap<String, String>();
+        try{
+            Map<String, Job> jobs = jenkins.getJobs();
+            JobWithDetails job = jobs.get(name).details();
+            Build builds = job.getLastBuild();
+            return builds.details().getConsoleOutputText();
+        }catch (Exception e){
+            return e.toString();
         }
     }
 
