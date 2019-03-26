@@ -17,6 +17,13 @@ public class KubeCredentialService {
     @Autowired
     AppEnvCredentialMappingService appEnvCredentialMappingService;
 
+    /**
+     * 更新url和token信息
+     *
+     * @param appEnvId 应用环境id
+     * @param url      url
+     * @param token    token
+     */
     public void updateClusterInfo(Long muser, Long appEnvId, String url, String token) {
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential kubeCredential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
@@ -31,6 +38,8 @@ public class KubeCredentialService {
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         return BeanUtils.convertType(this.kubeCredentialRepository.findById(credentialId).orElse(null), KubeCredentialBoV1.class);
     }
+
+
 
     public void createCredentialByAppEnvId(Long cuser, Long appEnvId) {
         KubeCredential kubeCredential = KubeCredential.builder()

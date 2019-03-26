@@ -69,12 +69,6 @@ public class AppEnv {
     private Long appId;
 
     /**
-     * PIPELINEID
-     */
-    @Column(name = "pipeline_id")
-    private String pipelineId;
-
-    /**
      * 部署策略
      */
     @Column(nullable = false, name = "deployment_strategy")

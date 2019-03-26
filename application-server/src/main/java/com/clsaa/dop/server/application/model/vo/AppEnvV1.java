@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.application.model.vo;
 
+import com.clsaa.dop.server.application.model.po.AppEnv;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,5 +23,10 @@ public class AppEnvV1 {
      */
     private String title;
 
+
+    /**
+     * 部署策略
+     */
+    private AppEnv.DeploymentStrategy deploymentStrategy;
 
 }
