@@ -32,20 +32,8 @@ public class CommitService {
             url+="&path="+URLEncoder.encode(path,"GBK");
         }
 
-        //取出所有的分页
-        List<CommitBo> commitBos=new ArrayList<>();
-        int page=1;
-        while(true) {
-            String temp_url=url+"&per_page=50&page="+page++;
-            List<CommitBo> temp = RequestUtil.getList(temp_url, username, CommitBo.class);
-            if(temp.size()==0) {
-                System.out.println("break!!!!!");
-                break;
-            }else {
-                commitBos.addAll(temp);
-            }
-        }
-
+        List<CommitBo> commitBos=RequestUtil.getList(url, username, CommitBo.class);
+        
 
         for(CommitBo commitBo:commitBos){
             List<String> strs=TimeUtil.natureTime(commitBo.getAuthored_date());
