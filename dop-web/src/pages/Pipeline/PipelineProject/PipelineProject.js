@@ -9,6 +9,7 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import './PipelineProject.scss'
+
 const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
@@ -17,7 +18,13 @@ export default class PipelineProject extends Component {
         this.state = {
             visible: false,
             pipelineId: this.props.match.params.id,
-            runs: {},
+            runs: {
+                _links: {
+                    self: {
+                        href: ""
+                    }
+                }
+            },
             queue: [],
             time: ""
         }
@@ -25,18 +32,30 @@ export default class PipelineProject extends Component {
 
     componentDidMount() {
         let self = this;
-        this.getRuns().then((data) => {
-            self.setState({
-                runs: data,
-                visible: false
+        // this.getRuns().then((data) => {
+        //     self.setState({
+        //         runs: data,
+        //     })
+        // })
+        self.setState({
+            visible: true
+        });
+        let time = setInterval(() => {
+            this.getRuns().then((data) => {
+                self.setState({
+                    runs: data,
+                    visible: false
+                })
             })
-        })
+        }, 5000);
+        self.setState({
+            time: time
+        });
     }
 
 
     getRuns() {
-        let url = API.pipeline + '/v1/jenkins/runs?id='+ this.state.pipelineId;
-        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
+        let url = API.pipeline + '/v1/jenkins/runs?id=' + this.state.pipelineId;
         let self = this;
         return new Promise((resolve, reject) => {
             Axios.get(url).then((response) => {
@@ -61,14 +80,18 @@ export default class PipelineProject extends Component {
     }
 
     buildPipeline() {
-        let url = API.pipeline + '/v1/jenkins/build?id='+ this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         let self = this;
+        self.setState({
+            visible: true
+        });
         Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {
                     this.getRuns().then((data) => {
                         self.setState({
-                            runs: data
+                            runs: data,
+                            visible: false
                         })
                     })
                 }, 5000);
@@ -76,18 +99,24 @@ export default class PipelineProject extends Component {
                     runs: response.data,
                     time: time
                 });
-
             }
         })
-
     }
 
-    clear(){
-        clearInterval(this.state.time)
+    clear() {
+        clearInterval(this.state.time);
+        this.setResult()
+    }
+
+    setResult() {
+        let url = API.pipeline + '/v1/resultOutput/notify/'+ this.state.pipelineId;
+        Axios.post(url).then((response) => {
+            console.log(response);
+        })
     }
 
     removeByIdSQL(id) {
-        let url = API.pipeline + '/v1/delete/'+id;
+        let url = API.pipeline + '/v1/delete/' + id;
         let self = this;
         Axios.put(url).then((response) => {
             if (response.status === 200) {
@@ -101,9 +130,12 @@ export default class PipelineProject extends Component {
         })
     }
 
+    editPipeline() {
+        this.props.history.push("/pipeline/edit/" + this.state.pipelineId)
+    }
+
     deletePipeline() {
-        console.log(11)
-        let url = API.pipeline + '/v1/jenkins/'+this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/' + this.state.pipelineId;
         let self = this;
         self.setState({
             visible: true
@@ -133,12 +165,13 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button" disabled>
+                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
-                        <Button type="secondary" shape="warning" className="button" onClick={this.deletePipeline.bind(this)}>
-                            <Icon type="ashbin" />
+                        <Button type="secondary" shape="warning" className="button"
+                                onClick={this.deletePipeline.bind(this)}>
+                            <Icon type="ashbin"/>
                             删除流水线
                         </Button>
                     </div>

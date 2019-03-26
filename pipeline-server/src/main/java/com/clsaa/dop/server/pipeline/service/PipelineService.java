@@ -3,9 +3,11 @@ package com.clsaa.dop.server.pipeline.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
+import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
+import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import org.bson.types.ObjectId;
@@ -37,6 +39,8 @@ public class PipelineService {
     private PipelineRepository pipelineRepository;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private ResultOutputService resultOutputService;
 
     /**
      * 添加流水线信息
@@ -56,6 +60,7 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
+        resultOutputService.create(pipeline);
 
         String url = "http://localhost:13600/v1/jenkins";
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
@@ -87,6 +92,7 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
+        resultOutputService.create(pipeline);
 
         String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
@@ -145,6 +151,7 @@ public class PipelineService {
                 .isDeleted(true)
                 .build();
         this.pipelineRepository.save(pipeline);
+        this.resultOutputService.delete(id);
     }
 
     /**

@@ -92,9 +92,9 @@ public class PipelineController {
     }
 
     @ApiOperation(value = "根据流水线env-id, 查询pipelineid")
-    @GetMapping("/v1/pipeline/appId/{appId}")
-    public String getPipelineIdByEnvId(@PathVariable(value = "appId") Long appId) {
-        return this.pipelineService.getPipelineIdByEnvId(appId);
+    @GetMapping("/v1/pipeline/envId/{envId}")
+    public String getPipelineIdByEnvId(@PathVariable(value = "envId") Long envId) {
+        return this.pipelineService.getPipelineIdByEnvId(envId);
     }
 
 }
