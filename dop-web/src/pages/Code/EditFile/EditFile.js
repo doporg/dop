@@ -1,8 +1,10 @@
 import React from 'react'
 import Axios from 'axios';
 import API from "../../API";
+import FoundationSymbol from 'foundation-symbol';
 
 import './EditFile.css'
+import imgBranch from './imgs/branch.png';
 
 export default class EditFile extends React.Component{
 
@@ -93,8 +95,14 @@ export default class EditFile extends React.Component{
             <div className="edit-file-container">
                 <div className="edit-file-section">
                     <div className="div-edit-file-top">
-                        <span className="text-edit-file-title">编辑文件</span>
-                        <span className="text-edit-file-name">{this.state.blobInfo.file_name+" ("+this.state.ref+")"}</span>
+                        <span className="text-edit-file-title">
+                            <FoundationSymbol type="publish"/>
+                            &nbsp;编辑文件
+                        </span>
+
+                        <img src={imgBranch}/>
+                        <span className="text-edit-file-branch">{this.state.ref}</span>
+                        <span className="text-edit-file-name">{this.state.blobInfo.file_name}</span>
                     </div>
                     <div className="div-line-number-edit">
 

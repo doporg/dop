@@ -20,7 +20,6 @@ export default class Tree extends React.Component{
         let {username,projectid,path,ref}=this.props.match.params;
 
         path=decodeURIComponent(path);
-        // console.log(path);
 
         this.state = {
             username:username,
@@ -42,8 +41,6 @@ export default class Tree extends React.Component{
 
 
     loadData(username,projectid,path,ref){
-
-        // let {projectid,path,ref}=this.state;
 
         let url=API.code + "/projects/"+projectid+"/repository/tree?path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
         let self=this;
@@ -70,7 +67,6 @@ export default class Tree extends React.Component{
 
         let {username,projectid,path,ref}=nextProps.match.params;
         path=decodeURIComponent(path);
-        // console.log(path);
         this.loadData(username,projectid,path,ref);
 
     }
@@ -105,8 +101,6 @@ export default class Tree extends React.Component{
 
     render(){
 
-        // const {projectid,branch,username}=this.props.match.params;
-
         return (
             <div className="file-container">
                 <div className="div-tree-top">
@@ -129,9 +123,6 @@ export default class Tree extends React.Component{
                                     paths.push(<span className="text-tree-separator">&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;</span>);
                                     paths.push(<a onClick={this.changePath.bind(this,temp_str)}>{strs[i]}</a>);
                                 }
-
-                                // console.log(strs);
-                                // console.log(paths);
 
                                 return paths;
                             }else {
@@ -185,7 +176,7 @@ export default class Tree extends React.Component{
                     (()=> {
 
                         return this.state.treeInfo.map(treeNode=>{
-                            // if(count++%2===0){
+
                                 return (
                                     <div className="div-tree-item">
                                         {

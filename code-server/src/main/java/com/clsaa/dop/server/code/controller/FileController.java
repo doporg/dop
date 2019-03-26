@@ -11,6 +11,7 @@ import com.clsaa.dop.server.code.service.FileService;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,6 +88,7 @@ public class FileController {
                                   @ApiParam(value = "branch,tag or commit")@RequestParam("ref") String ref,
                                   @ApiParam(value = "用户名")@RequestParam("username") String username){
 
+
         BlobVo bolbVo=null;
 
         try {
@@ -107,6 +109,8 @@ public class FileController {
                            @ApiParam(value = "更新文件内容")@RequestParam("content") String content,
                            @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
                            @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+
 
         try {
             fileService.updateFile(id,file_path,branch,content,commit_message,username);
@@ -131,6 +135,14 @@ public class FileController {
             e.printStackTrace();
         }
 
+    }
+
+    @ApiOperation(value = "查找项目所有的文件路径",notes = "根据项目id，分支或tag查找项目所有的文件的路径")
+    @GetMapping("/projects/{id}/repository/filepathlist")
+    public List<String> findAllFilePath(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                @ApiParam(value = "分支或tag")@RequestParam("ref") String ref,
+                                @ApiParam(value = "用户名")@RequestParam("username") String username){
+        return fileService.findAllFilePath(id,ref,username);
     }
 
 

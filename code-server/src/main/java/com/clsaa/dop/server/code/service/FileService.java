@@ -86,7 +86,7 @@ public class FileService {
     public BlobBo findFileContent(int id, String file_path, String ref, String username) throws UnsupportedEncodingException {
 
 
-        file_path=URLEncoder.encode(file_path,"GBK");
+        file_path=URLEncoder.encode(file_path,"GBK").replaceAll("\\+","%20");
 
         String content=RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,username);
 
@@ -157,11 +157,25 @@ public class FileService {
     }
 
 
-
-
+    /**
+     * 查找项目所有的文件路径
+     * @param id 项目id
+     * @param ref 分支或tag
+     * @param username 用户名
+     * @return 所有文件路径
+     */
     public List<String> findAllFilePath(int id,String ref,String username){
 
         String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
+        List<FilePathBo> filePathBos=RequestUtil.getList(path,username,FilePathBo.class);
+        List<String> res=new ArrayList<>();
+        for(FilePathBo filePathBo:filePathBos){
+            if(filePathBo.getType().equals("blob")){
+                res.add(filePathBo.getPath());
+            }
+        }
+
+        return res;
 
 
     }

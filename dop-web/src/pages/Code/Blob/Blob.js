@@ -26,7 +26,7 @@ export default class Blob extends React.Component{
             ref:ref,
             refOptions:[],
             lineCount:0,
-            blobInfo:{},
+            blobInfo:{},//file_name,file_size,file_content
             deleteVisible:false,
             commit_message:""
         }
