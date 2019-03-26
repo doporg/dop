@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.bo;
+package com.clsaa.dop.server.code.model.bo.project;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagBo {
-    String name;
+public class BranchBo {
+
+    private String name;
 }

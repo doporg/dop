@@ -1,17 +1,12 @@
-package com.clsaa.dop.server.code.model.bo;
+package com.clsaa.dop.server.code.model.vo.project;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author wsy
  */
-
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProjectBo {
+public class ProjectVo {
 
     private int id;
     private String description;
@@ -25,6 +20,6 @@ public class ProjectBo {
     private String file_size;
     private int commit_count;
     private int branch_count;
-    private StatisticsBo statistics;
+
 
 }

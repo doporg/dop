@@ -2,7 +2,7 @@ package com.clsaa.dop.server.code.service;
 
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.dao.UserMapper;
-import com.clsaa.dop.server.code.model.bo.TokenBo;
+import com.clsaa.dop.server.code.model.bo.user.TokenBo;
 import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import org.apache.http.NameValuePair;

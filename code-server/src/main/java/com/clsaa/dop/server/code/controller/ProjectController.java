@@ -1,9 +1,9 @@
 package com.clsaa.dop.server.code.controller;
 
-import com.clsaa.dop.server.code.model.bo.ProjectListBo;
+import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
 import com.clsaa.dop.server.code.model.dto.project.ProjectDto;
-import com.clsaa.dop.server.code.model.vo.ProjectListVo;
-import com.clsaa.dop.server.code.model.vo.ProjectVo;
+import com.clsaa.dop.server.code.model.vo.project.ProjectListVo;
+import com.clsaa.dop.server.code.model.vo.project.ProjectVo;
 import com.clsaa.dop.server.code.service.ProjectService;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;

@@ -1,8 +1,6 @@
 package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
-import com.clsaa.dop.server.code.model.bo.ProjectBo;
-import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -17,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
