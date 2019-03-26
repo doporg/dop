@@ -223,8 +223,21 @@ public class PipelineService {
     /**
      * 根据envid， 查询pipelineid
      */
-    public String getPipelineIdByEnvId(Long envid){
-        Pipeline pipeline = this.pipelineRepository.findByAppEnvId(envid);
-        return pipeline.getId().toString();
+    public List<PipelineV1Project> getPipelineIdByEnvId(Long envid){
+        System.out.println(envid);
+        List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
+        List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
+        for(int i=0;i<pipelines.size();i++){
+            if(!pipelines.get(i).getIsDeleted()){
+                PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
+                        .id(pipelines.get(i).getId().toString())
+                        .name(pipelines.get(i).getName())
+                        .ctime(pipelines.get(i).getCtime())
+                        .cuser(pipelines.get(i).getCuser())
+                        .build();
+                pipelineV1Projects.add(pipelineV1Project);
+            }
+        }
+        return pipelineV1Projects;
     }
 }
