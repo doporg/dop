@@ -112,6 +112,7 @@ public class FileService {
     }
 
 
+
     /**
      * 更新文件并作为一次提交
      * @param id 项目id
@@ -153,5 +154,15 @@ public class FileService {
 
         String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
         RequestUtil.delete(path,username);
+    }
+
+
+
+
+    public List<String> findAllFilePath(int id,String ref,String username){
+
+        String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
+
+
     }
 }

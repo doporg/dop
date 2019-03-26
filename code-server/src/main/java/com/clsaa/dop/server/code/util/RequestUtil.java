@@ -46,29 +46,34 @@ public class RequestUtil {
     //    管理员的token
     private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-
-//        String url=api+"/projects/3/repository/files/kk%2f1.txt/raw?ref=master";
-//        System.out.println(httpGet(url));
-
-//        String path=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/1.txt","GBK");
-//        NameValuePair p1=new  BasicNameValuePair("branch","master");
-//        NameValuePair p2=new  BasicNameValuePair("content","123\n456\n哈哈哈\n");
-//        NameValuePair p3=new  BasicNameValuePair("commit_message","update 1.txt!!!!!!");
-//        NameValuePair p4=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
+//    public static void main(String[] args) throws UnsupportedEncodingException {
 //
-//        List<NameValuePair> list=new ArrayList<>();
-//        list.add(p1);
-//        list.add(p2);
-//        list.add(p3);
-//        list.add(p4);
+//        NameValuePair p1=new BasicNameValuePair("utf8","✓");
+//        NameValuePair p2=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
+//        NameValuePair p3=new BasicNameValuePair("personal_access_token[name]","tt2");
+//        NameValuePair p4=new BasicNameValuePair("personal_access_token[expires_at]","");
+//        NameValuePair p5=new BasicNameValuePair("personal_access_token[scopes][]","api");
+//        NameValuePair p6=new BasicNameValuePair("personal_access_token[scopes][]","read_user");
+//        NameValuePair p7=new BasicNameValuePair("personal_access_token[scopes][]","read_repository");
+//        NameValuePair p8=new BasicNameValuePair("personal_access_token[scopes][]","read_registry");
+//
+//        List<NameValuePair> params=new ArrayList<>();
+//        params.add(p1);
+//        params.add(p2);
+//        params.add(p3);
+//        params.add(p4);
+//        params.add(p5);
+//        params.add(p6);
+//        params.add(p7);
+//        params.add(p8);
 
-        String url=api+"/projects/3/repository/files/"+URLEncoder.encode("kk/test.txt","GBK")+"?branch=master&commit_message=删除test.txt"+
-                "&access_token=1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02";
 
-        System.out.println(httpDelete(url));
+//
+//        System.out.println(httpPost1("http://gitlab.dop.clsaa.com/profile/personal_access_tokens",params));
+//
+//    }
 
-    }
+
 
     /**
      * 发送get请求到gitlab，返回一个对象列表
