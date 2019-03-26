@@ -46,7 +46,7 @@ export default class PipelineBindPage extends Component {
 
     onEdit() {
         let _this = this
-        let pipelineListUrl = "http://open.dop.clsaa.com/pipeline-server/v1/pipeline/cuser"
+        let pipelineListUrl = API.gateway + "/pipeline-server/v1/pipeline/cuser"
         Axios.get(pipelineListUrl, {
             params: {
                 cuser: 1
@@ -64,7 +64,7 @@ export default class PipelineBindPage extends Component {
 
     getPipelineData() {
         let _this = this
-        let getUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/pipeline"
+        let getUrl = API.gateway + "/pipeline-server/v1/pipeline/appId/" + this.state.appEnvId
         Axios.get(getUrl)
             .then((response) => {
                 console.log("pipelineId", response)
@@ -74,7 +74,7 @@ export default class PipelineBindPage extends Component {
                     })
                 } else {
 
-                    Axios.get("http://open.dop.clsaa.com/pipeline-server/v1/pipeline/byId", {
+                    Axios.get(API.gateway + "/pipeline-server/v1/pipeline/byId", {
                         params: {
                             id: response.data.pipelineId
                         }
@@ -90,7 +90,7 @@ export default class PipelineBindPage extends Component {
                 }
             })
 
-        let pipelineListUrl = "http://open.dop.clsaa.com/pipeline-server/v1/pipeline/cuser"
+        let pipelineListUrl = API.gateway + "/pipeline-server/v1/pipeline/cuser"
         Axios.get(pipelineListUrl, {
             params: {
                 cuser: 1
@@ -117,39 +117,39 @@ export default class PipelineBindPage extends Component {
             console.log(errors);
             if (errors == null) {
 
-                let updateUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/pipeline"
-                Axios.put(updateUrl, {}, {
+                // let updateUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/pipeline"
+                // Axios.put(updateUrl, {}, {
+                //     params: {
+                //         pipelineId: _this.field.getValue('pipeline')
+                //     }
+                // })
+                //     .then((response) => {
+
+                let bindUrl = API.gateway + "/pipeline-server/v1/pipeline/appId"
+                Axios.post(bindUrl, {}, {
                     params: {
-                        pipelineId: _this.field.getValue('pipeline')
+                        envid: this.state.appEnvId,
+                        pipelineId: _this.field.getValue('pipeline'),
+                        appid: this.state.appId
                     }
                 })
                     .then((response) => {
-
-                        let bindUrl = "http://open.dop.clsaa.com/pipeline-server/v1/pipeline/appId"
-                        Axios.post(bindUrl, {}, {
-                            params: {
-                                envid: this.state.appEnvId,
-                                pipelineId: _this.field.getValue('pipeline'),
-                                appid: this.state.appId
-                            }
-                        })
-                            .then((response) => {
-                                console.log("response", response)
-                                Toast.success("更新流水线成功")
-                                _this.getPipelineData()
-
-                            })
-                            .catch((response, error) => {
-                                console.log("error", error)
-                                Toast.error("更新失败")
-                            })
-
+                        console.log("response", response)
+                        Toast.success("更新流水线成功")
+                        _this.getPipelineData()
 
                     })
-                    .catch((response) => {
-                        console.log(response)
+                    .catch((response, error) => {
+                        console.log("error", error)
                         Toast.error("更新失败")
                     })
+
+
+                // })
+                // .catch((response) => {
+                //     console.log(response)
+                //     Toast.error("更新失败")
+                // })
 
 
             }
