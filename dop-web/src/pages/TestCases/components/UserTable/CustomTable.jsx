@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Table, Switch, Icon, Button, Grid, Pagination } from '@icedesign/base';
 import IceContainer from '@icedesign/container';
+import CreateManualCaseDialog from "../CreateTestCases/CreateManualCaseDialog";
 
 const { Row, Col } = Grid;
 
@@ -17,6 +18,7 @@ export default class CustomTable extends Component {
     this.state = {
       formValue: {},
       current: 1,
+      createdCaseNeedRefresh: false
     };
   }
 
@@ -70,13 +72,25 @@ export default class CustomTable extends Component {
     );
   };
 
+  refreshCaseList() {
+    this.setState({
+      createdCaseNeedRefresh: true
+    });
+    console.log("createdCaseNeedRefresh");
+  }
+
   render() {
     return (
       <IceContainer title="用例列表">
         <Row wrap style={styles.headRow}>
           <Col l="12">
-            <Button type="primary" style={styles.button}>
-              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加测试用例
+            {/*<Button type="primary" style={styles.button}>*/}
+              {/*<Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加手工测试用例*/}
+            {/*</Button>*/}
+            <CreateManualCaseDialog/>
+
+            <Button type="primary" style={{ ...styles.button, marginLeft: 10}}>
+              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加接口测试用例
             </Button>
           </Col>
           <Col l="12" style={styles.center}>
@@ -91,6 +105,7 @@ export default class CustomTable extends Component {
             </Button>
           </Col>
         </Row>
+
         <Table
           dataSource={this.getData()}
           rowSelection={{ onChange: this.onChange }}
