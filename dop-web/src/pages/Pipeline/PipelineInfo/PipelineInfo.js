@@ -32,7 +32,6 @@ export default class PipelineInfo extends Component {
                 stages: [],
                 jenkinsfile:{}
             },
-            // monitor: ["自动触发", "手动触发"],
             monitor: ["自动触发"],
             jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
             haveJenkinsFile: null,
