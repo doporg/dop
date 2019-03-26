@@ -101,7 +101,7 @@ public class RequestUtil {
             String temp_url=url+"&per_page=50&page="+page++;
             List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
             if(temp_list.size()==0){
-                System.out.println("BREAK!!!!!!!");
+//                System.out.println("BREAK!!!!!!!");
                 break;
             }else {
                 list.addAll(temp_list);
