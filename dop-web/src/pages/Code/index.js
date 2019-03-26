@@ -8,6 +8,7 @@ import CodeLayout from "../../layouts/CodeLayout";
 import Blob from "./Blob";
 import EditFile from './EditFile'
 import CommitList from './CommitList';
+import FilePathList from './FilePathList';
 
 const codeConfig = [
 
@@ -51,7 +52,12 @@ const codeConfig = [
         path: '/code/:username/:projectid/commitlist/:branch',
         layout: CodeLayout,
         component: CommitList
-    }
+    },
+    {
+        path: '/code/:username/:projectid/filepathlist/:ref',
+        layout: CodeLayout,
+        component: FilePathList
+    },
 
 ];
 

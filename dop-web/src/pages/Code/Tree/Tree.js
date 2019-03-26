@@ -99,6 +99,15 @@ export default class Tree extends React.Component{
     }
 
 
+    findFile(){
+
+        let {username,projectid,ref}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
+
+    }
+
+
     render(){
 
         return (
@@ -130,7 +139,7 @@ export default class Tree extends React.Component{
                             }
                         })()
                     }
-                    <button className="btn-search-file">
+                    <button className="btn-search-file" onClick={this.findFile.bind(this)}>
                         <img src={imgSearch} className="img-tree-search"/>
                         <span className="text-tree-search">查找文件</span>
                     </button>

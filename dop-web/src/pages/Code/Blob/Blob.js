@@ -170,6 +170,14 @@ export default class Blob extends React.Component{
         })
     }
 
+    findFile(){
+
+        let {username,projectid,ref}=this.state;
+
+        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
+
+    }
+
     render(){
 
         return (
@@ -200,7 +208,7 @@ export default class Blob extends React.Component{
                             return paths;
                         })()
                     }
-                    <button className="btn-search-file">
+                    <button className="btn-search-file" onClick={this.findFile.bind(this)}>
                         <img src={imgSearch} className="img-blob-search"/>
                         <span className="text-blob-search">查找文件</span>
                     </button>
