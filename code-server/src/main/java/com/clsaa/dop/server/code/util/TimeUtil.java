@@ -2,6 +2,9 @@ package com.clsaa.dop.server.code.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +21,23 @@ public class TimeUtil {
     private final static long HOUR = 1000 * 60 * 60L;
     private final static long MINUTE = 1000 * 60L;
 
+    private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    public static void main(String[] args) {
+        LocalDateTime dt1= LocalDateTime.parse("2019-02-26T07:57:50.000Z",dtf);
+        System.out.println(dt1);
+        dt1=dt1.plusHours(8);
+        System.out.println(dt1);
+//        String str=dtf2.format(dt1);
+        System.out.println(dt1.toString());
+
+//        LocalDateTime now=LocalDateTime.now();
+//
+//        System.out.println(now);
+//
+//        System.out.println(now.toInstant(ZoneOffset.UTC).toEpochMilli());
+    }
+
     /**
      * 2019-02-26T07:57:50.000Z
      *
@@ -25,29 +45,13 @@ public class TimeUtil {
      * @return
      */
     public static List<String> natureTime(String lastTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        Date date = null;
-        try {
-            date = sdf.parse(lastTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-//        System.out.println(date);
-
-        //加上8小时的时区差距
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
-        c.add(Calendar.HOUR_OF_DAY, 8);
-        date = c.getTime();
-
-//        System.out.println(date);
-
-        String commit_date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        LocalDateTime dt_commit=LocalDateTime.parse(lastTime,dtf);
+        dt_commit=dt_commit.plusHours(8);
 
         //计算距现在的时长
-        Date now = new Date();
-        long between = now.getTime() - date.getTime();
+        LocalDateTime dt_now=LocalDateTime.now();
+        long between = dt_now.toInstant(ZoneOffset.UTC).toEpochMilli() - dt_commit.toInstant(ZoneOffset.UTC).toEpochMilli();
         String commit_time;
         if (between > YEAR) {
             commit_time = ((between - YEAR) / YEAR + 1) + "年前";
@@ -64,16 +68,17 @@ public class TimeUtil {
         }
 
         List<String> res = new ArrayList<>();
+        String commit_date=dt_commit.toString();
         res.add(commit_date);
         res.add(commit_time);
 
         return res;
     }
 
-    public static void main(String[] args) {
-        List<String> res= TimeUtil.natureTime("2019-03-20T13:03:46.000Z");
-        System.out.println(res.get(0));
-        System.out.println(res.get(1));
-
-    }
+//    public static void main(String[] args) {
+//        List<String> res= TimeUtil.natureTime("2019-03-20T13:03:46.000Z");
+//        System.out.println(res.get(0));
+//        System.out.println(res.get(1));
+//
+//    }
 }
