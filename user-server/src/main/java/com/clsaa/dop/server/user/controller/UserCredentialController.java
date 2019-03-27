@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.user.controller;
 
 import com.clsaa.dop.server.user.model.po.UserCredential;
+import com.clsaa.dop.server.user.model.vo.UserCredentialV1;
 import com.clsaa.dop.server.user.service.UserCredentialService;
+import com.clsaa.dop.server.user.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +44,13 @@ public class UserCredentialController {
                                      @ApiParam(value = "凭证，如token，密码等") @RequestParam("credential") String credential,
                                      @ApiParam(value = "凭证类型，用于标识凭证的用途") @RequestParam("type") UserCredential.Type type) {
         this.userCredentialService.updateUserCredentialByUserIdAndType(userId, credential, type);
+    }
+
+    @ApiOperation(value = "查询用户凭证", notes = "根据用户id查询用户凭证, 凭证使用RSAPrivateKey加密，需使用PublicKey解密")
+    @GetMapping("/v1/users/{userId}/credential")
+    public UserCredentialV1 getUserCredentialV1ByUserId(@ApiParam(value = "用户id") @PathVariable("userId") Long userId,
+                                                        @ApiParam(value = "凭证类型，用于标识凭证的用途") @RequestParam("type") UserCredential.Type type) {
+        return BeanUtils.convertType(
+                this.userCredentialService.findUserCredentialByUserIdAndType(userId, type), UserCredentialV1.class);
     }
 }
