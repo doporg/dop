@@ -35,14 +35,22 @@ export default class NewProject extends React.Component {
     }
 
     createProject() {
+
+        let data={};
+        data.name=this.state.name;
+        data.description=this.state.description;
+        data.visibility=this.state.visibility;
+        data.initialize_with_readme=this.state.initialize_with_readme;
+        data.username=sessionStorage.getItem("user-name");
         Axios({
             method: "POST",
-            url: API.code + "/projects/" + sessionStorage.getItem("user-name"),
-            data: this.state,
+            url: API.code + "/projects",
+            data: data,
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");
-            window.location.href = "http://" + window.location.host + "/#/code/projectlist/personal";
+            this.props.history.push("/code/projectlist/personal");
+            // window.location.href = "http://" + window.location.host + "/#/code/projectlist/personal";
         }).catch(error => {
             toast.error("创建失败");
         })
@@ -65,7 +73,7 @@ export default class NewProject extends React.Component {
 
         // console.log(this.state);
         return (
-            <div className="container">
+            <div className="new-container">
                 <div className="div_title">
                     新建项目
                 </div>
