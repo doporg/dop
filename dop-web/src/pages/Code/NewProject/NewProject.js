@@ -49,7 +49,8 @@ export default class NewProject extends React.Component {
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");
-            window.location.href = "http://" + window.location.host + "/#/code/projectlist/personal";
+            this.props.history.push("/code/projectlist/personal");
+            // window.location.href = "http://" + window.location.host + "/#/code/projectlist/personal";
         }).catch(error => {
             toast.error("创建失败");
         })

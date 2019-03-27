@@ -16,9 +16,10 @@
     color: black;
 }
 
-.select-branch{
+.select-ref-commit-list{
     float: left;
-    margin: 25px 0 auto 10px;
+    margin: 25px 20px auto 10px;
+    width: 200px;
 }
 
 .link-commit-root{

@@ -68,7 +68,7 @@ export default class EditFile extends React.Component{
     commitUpdate(){
 
         let {projectid,path,ref,commit_message}=this.state;
-        console.log(this.state.blobInfo.file_content);
+        // console.log(this.state.blobInfo.file_content);
         Axios({
             method: "PUT",
             url: API.code+ "/projects/"+projectid+"/repository/blob",
@@ -85,7 +85,9 @@ export default class EditFile extends React.Component{
         }).then(response => {
             let {username,path,projectid,ref}=this.state;
 
-            window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
+            this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path));
+
+            // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
         })
     }
 

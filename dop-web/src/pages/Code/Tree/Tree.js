@@ -115,7 +115,8 @@ export default class Tree extends React.Component{
 
         let {username,projectid}=this.state;
         let path="/";//切换ref将路径设为根目录，以免子目录不存在
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path));
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path);
 
     }
 
@@ -123,7 +124,10 @@ export default class Tree extends React.Component{
 
         let {username,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
+
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -131,7 +135,9 @@ export default class Tree extends React.Component{
 
         let {username,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path));
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -140,7 +146,9 @@ export default class Tree extends React.Component{
 
         let {username,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
+        this.props.history.push("/code/"+username+"/"+projectid+"/filepathlist/"+ref);
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
 
     }
 
@@ -150,7 +158,7 @@ export default class Tree extends React.Component{
         return (
             <div className="file-container">
                 <div className="div-tree-top">
-                    <CascaderSelect style={{marginRight:20,width:200}}  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <CascaderSelect className="select-ref-tree"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
                     {
                         (()=>{
                             let path=this.state.path;

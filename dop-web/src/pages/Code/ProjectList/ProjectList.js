@@ -114,7 +114,6 @@ export default class ProjectList extends React.Component {
 
     render() {
 
-        // alert(window.location.host);
 
         return (
             <div className="container">

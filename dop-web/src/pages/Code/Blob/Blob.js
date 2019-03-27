@@ -192,14 +192,18 @@ export default class Blob extends React.Component{
 
         let {username,projectid,path}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+value+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+value+"/"+encodeURIComponent(path));
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+value+"/"+encodeURIComponent(path);
     }
 
     changePath(path){
 
         let {username,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -207,7 +211,9 @@ export default class Blob extends React.Component{
 
         let {username,path,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path));
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -236,7 +242,10 @@ export default class Blob extends React.Component{
                     path+=strs[i];
                 }
             }
-            window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
+
+            this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
+
+            // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
 
         })
     }
@@ -245,7 +254,9 @@ export default class Blob extends React.Component{
 
         let {username,projectid,ref}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
+        this.props.history.push("/code/"+username+"/"+projectid+"/filepathlist/"+ref);
+
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
 
     }
 
@@ -254,7 +265,7 @@ export default class Blob extends React.Component{
         return (
             <div className="blob-container">
                 <div className="div-blob-top">
-                    <CascaderSelect style={{marginRight:20,width:200}}  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <CascaderSelect className="select-ref-blob"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
                     {
                         (()=>{
                             let path=this.state.path;

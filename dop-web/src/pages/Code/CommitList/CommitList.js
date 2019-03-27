@@ -99,8 +99,15 @@ export default class CommitList extends React.Component{
 
         let {username,projectid}=this.state;
 
-        window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/");
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/"));
 
+        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/");
+
+    }
+
+    rootLink(){
+        let {username,projectid,ref}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/"));
     }
 
 
@@ -108,8 +115,8 @@ export default class CommitList extends React.Component{
         return (
             <div className="commit-list-container">
                 <div className="div-commit-list-top">
-                    <CascaderSelect style={{width:200,marginRight:20}} className="select-branch"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
-                    <a className="link-commit-root" href={"http://" + window.location.host + "/#/code/"+this.state.username+"/"+this.state.projectid+"/tree/"+this.state.ref+"/"+encodeURIComponent("/") }>根目录</a>
+                    <CascaderSelect className="select-ref-commit-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <a className="link-commit-root" onClick={this.rootLink.bind(this)}>根目录</a>
                     <input value={this.state.msgInput} onChange={this.handleInputChange.bind(this)} className="input-commit-msg-right" placeholder="输入commit message查找commit"/>
                 </div>
                 {

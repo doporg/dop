@@ -117,14 +117,18 @@ export default class FilePathList extends React.Component{
 
         let {username,projectid,ref}=this.state;
 
-        return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
+        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path))
+
+        // return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
     }
 
     treeRootLink(){
 
         let {username,projectid,ref}=this.state;
 
-        return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
+        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/"));
+
+        // return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
 
     }
 
@@ -132,8 +136,8 @@ export default class FilePathList extends React.Component{
         return (
             <div className="file-list-container">
                 <div className="div-file-list-top">
-                    <CascaderSelect style={{marginRight:20,width:200}}  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
-                    <a href={this.treeRootLink()}>根目录</a>
+                    <CascaderSelect className="select-ref-file-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <a onClick={this.treeRootLink.bind(this)}>根目录</a>
                     <span className="text-file-list-separator">/</span>
                     <input className="input-file-list-search" placeholder="输入路径搜索文件" value={this.state.path} onChange={this.changePath.bind(this)}/>
                 </div>
@@ -143,7 +147,7 @@ export default class FilePathList extends React.Component{
                                 return (
                                     <div className="div-file-list-item">
                                         <img src={imgFile}/>
-                                        <a href={this.blobLink(item)}>{item}</a>
+                                        <a onClick={this.blobLink.bind(this,item)}>{item}</a>
                                     </div>
                                 )
                          })

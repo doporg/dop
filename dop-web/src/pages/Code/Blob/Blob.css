@@ -160,3 +160,8 @@
 .text-file-size{
     font-size: 12px;
 }
+
+.select-ref-blob{
+    margin-right:20px;
+    width:200px
+}

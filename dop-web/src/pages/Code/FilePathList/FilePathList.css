@@ -59,3 +59,8 @@
 .div-file-list-item a{
     color: black;
 }
+
+.select-ref-file-list{
+    margin-right:20px;
+    width:200px;
+}
