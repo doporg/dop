@@ -1,11 +1,17 @@
 package com.clsaa.dop.server.user.service;
 
+import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.dao.UserCredentialRepository;
 import com.clsaa.dop.server.user.model.bo.UserCredentialBoV1;
 import com.clsaa.dop.server.user.model.po.UserCredential;
 import com.clsaa.dop.server.user.util.BeanUtils;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -47,7 +53,8 @@ public class UserCredentialService {
      */
     public void updateUserCredentialByUserIdAndType(Long userId, String credential, UserCredential.Type type) {
         UserCredential userCredential = this.userCredentialRepository
-                .findUserCredentialByUserIdAndType(userId, UserCredential.Type.DOP_LOGIN_EMAIL);
+                .findUserCredentialByUserIdAndType(userId, type);
+        BizAssert.found(userCredential != null, new BizCode(BizCodes.INVALID_PARAM.getCode(), "凭证标识不存在"));
         userCredential.setCredential(credential);
         userCredential.setMtime(LocalDateTime.now());
         this.userCredentialRepository.saveAndFlush(userCredential);
@@ -62,7 +69,7 @@ public class UserCredentialService {
      */
     public UserCredentialBoV1 findUserCredentialByUserIdAndType(Long userId, UserCredential.Type type) {
         UserCredential userCredential = this.userCredentialRepository
-                .findUserCredentialByUserIdAndType(userId, UserCredential.Type.DOP_LOGIN_EMAIL);
+                .findUserCredentialByUserIdAndType(userId, type);
         return BeanUtils.convertType(userCredential, UserCredentialBoV1.class);
     }
 
@@ -72,6 +79,9 @@ public class UserCredentialService {
      * @param userId 用户id
      * @param type   凭据类型
      */
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public void deleteUserCredentialByUserIdAndType(Long userId, UserCredential.Type type) {
+        BizAssert.validParam(type != UserCredential.Type.DOP_LOGIN_EMAIL, BizCodes.INVALID_OPERATION_FOR_CREDENTIAL);
+        this.userCredentialRepository.deleteUserCredentialByUserIdAndType(userId, type);
     }
 }

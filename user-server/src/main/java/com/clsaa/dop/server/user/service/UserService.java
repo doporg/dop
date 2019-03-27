@@ -103,8 +103,9 @@ public class UserService {
                         .encryptByPrivateKey(realPassword.getContent(),
                                 this.userProperties.getAccount().getSecret().getRSAPrivateKey()).getContent();
                 ImmutableMap<String, Object> registerParam = ImmutableMap.of(
+                        "id", savedUser.getId(),
                         "email", user.getEmail(),
-                        "password", realPassword,
+                        "password", realPassword.getContent(),
                         "name", user.getName()
                 );
                 JSONObject jsonObject = new JSONObject(registerParam);
@@ -167,12 +168,13 @@ public class UserService {
         String passwordEncryptByPrivateKey = RSA
                 .encryptByPrivateKey(realPassword.getContent(),
                         this.userProperties.getAccount().getSecret().getRSAPrivateKey()).getContent();
-        ImmutableMap<String, Object> registerParam = ImmutableMap.of(
+        ImmutableMap<String, Object> updateParam = ImmutableMap.of(
+                "id", user.getId(),
                 "email", user.getEmail(),
-                "password", realPassword,
+                "password", realPassword.getContent(),
                 "name", user.getName()
         );
-        JSONObject jsonObject = new JSONObject(registerParam);
+        JSONObject jsonObject = new JSONObject(updateParam);
         try {
             this.messageSender.send(this.updateAccountTopic,
                     UUID.randomUUID().toString(), jsonObject.toJSONString());

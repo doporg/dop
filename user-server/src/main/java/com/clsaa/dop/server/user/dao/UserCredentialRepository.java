@@ -18,4 +18,12 @@ public interface UserCredentialRepository extends JpaRepository<UserCredential, 
      */
     UserCredential findUserCredentialByUserIdAndType(Long userId, UserCredential.Type type);
 
+
+    /**
+     * 通过用户id和凭证类型删除凭证
+     *
+     * @param userId 用户id
+     * @param type   凭证类型
+     */
+    void deleteUserCredentialByUserIdAndType(Long userId, UserCredential.Type type);
 }
