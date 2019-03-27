@@ -1,12 +1,10 @@
 package com.clsaa.dop.server.code.controller;
 
-import com.clsaa.dop.server.code.model.bo.ProjectListBo;
-import com.clsaa.dop.server.code.model.dto.ProjectDto;
-import com.clsaa.dop.server.code.model.po.User;
-import com.clsaa.dop.server.code.model.vo.ProjectListVo;
-import com.clsaa.dop.server.code.model.vo.ProjectVo;
+import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
+import com.clsaa.dop.server.code.model.dto.project.ProjectDto;
+import com.clsaa.dop.server.code.model.vo.project.ProjectListVo;
+import com.clsaa.dop.server.code.model.vo.project.ProjectVo;
 import com.clsaa.dop.server.code.service.ProjectService;
-import com.clsaa.dop.server.code.service.UserService;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,14 +31,16 @@ public class ProjectController {
     }
 
     @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")
-    @PostMapping("/projects/{id}/star/{username}")
-    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")int id,@ApiParam(value = "用户名") @PathVariable("username")String username){
+    @PostMapping("/projects/{id}/star")
+    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")int id,
+                            @ApiParam(value = "用户名") @RequestParam("username")String username){
         projectService.starProject(id,username);
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
-    @GetMapping("/projectlist/{sort}/{username}")
-    public List<ProjectListVo> findProjectList(@ApiParam(value = "分类")@PathVariable("sort")String sort,@ApiParam(value = "用户名")@PathVariable("username")String username){
+    @GetMapping("/projectlist")
+    public List<ProjectListVo> findProjectList(@ApiParam(value = "分类")@RequestParam("sort")String sort,
+                                               @ApiParam(value = "用户名")@RequestParam("username")String username){
         List<ProjectListBo> listBos= projectService.findProjectList(sort,username);
         List<ProjectListVo> listVos=new ArrayList<>();
         for(ProjectListBo temp:listBos)
@@ -49,9 +49,15 @@ public class ProjectController {
     }
 
     @ApiOperation(value="新建一个项目",notes = "新建一个项目，包括一些基本信息")
-    @PostMapping("/projects/{username}")
-    public void addProject(@ApiParam(value = "项目基本信息")@RequestBody ProjectDto projectDto, @ApiParam(value = "用户名")@PathVariable("username") String username){
-        projectService.addProject(projectDto.getName(),projectDto.getDescription(),projectDto.getVisibility(),projectDto.getInitialize_with_readme(),username);
+    @PostMapping("/projects")
+    public void addProject(@ApiParam(value = "项目基本信息")@RequestBody ProjectDto projectDto){
+        projectService.addProject(
+                projectDto.getName(),
+                projectDto.getDescription(),
+                projectDto.getVisibility(),
+                projectDto.getInitialize_with_readme(),
+                projectDto.getUsername()
+        );
     }
 
 

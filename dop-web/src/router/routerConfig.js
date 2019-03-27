@@ -9,11 +9,10 @@ import {pipelineConfig} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {loginConfig} from '../pages/Login'
 import Ciadjust from '../pages/Ciadjust';
-import {Code,ProjectList,ProjectOverview,NewProject} from '../pages/Code'
-import CodeLayout from '../layouts/CodeLayout';
 import {permissionConfig} from "../pages/Permissions";
 import {roleConfig} from "../pages/Roles";
 import {dataRulesConfig} from "../pages/DataRules";
+import codeConfig from '../pages/Code'
 
 const baseConfig = [
     {

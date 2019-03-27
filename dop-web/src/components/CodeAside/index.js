@@ -24,13 +24,16 @@ class CodeAside extends Component {
     const { location } = this.props;
     const { pathname } = location;
     const { username,projectid } = this.props.match.params;
+    //需要改成请求获得项目的默认分支名
     let branch = "master";
-    if(this.props.match.params.hasOwnProperty('branch')){
-      branch=this.props.match.params.branch;
-    }
+    // if(this.props.match.params.hasOwnProperty('branch')){
+    //   branch=this.props.match.params.branch;
+    // }
 
     const projectLink="/code/"+username+"/"+projectid;
-    const commitLink="/code/"+username+"/"+projectid+"/commits/"+branch;
+    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+branch;
+
+    const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch+"/"+encodeURIComponent("/");
 
 
     return (
@@ -50,6 +53,15 @@ class CodeAside extends Component {
                         </FoundationSymbol>
                     {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
                     <span className="ice-menu-item-text">{"项目"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={fileLink}>
+                <Link to={fileLink} className="ice-menu-link">
+                    <FoundationSymbol size="small" type="copy" >
+                        <Icon size="small" type="copy" />
+                    </FoundationSymbol>
+                    {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
+                    <span className="ice-menu-item-text">{"文件"}</span>
                 </Link>
             </MenuItem>
             <MenuItem key={commitLink}>
