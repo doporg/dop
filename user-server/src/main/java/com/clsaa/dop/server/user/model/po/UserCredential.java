@@ -21,7 +21,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_credential", schema = "db_dop_user_server",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "type"})},
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"userId", "type"}),
+                @UniqueConstraint(columnNames = {"identifier", "type"})},
         indexes = {@Index(columnList = "userId")})
 public class UserCredential implements Serializable {
     /**
@@ -33,7 +34,15 @@ public class UserCredential implements Serializable {
         /**
          * DOP EMAIL类型登录凭据
          */
-        DOP_LOGIN_EMAIL("DOP_LOGIN_EMAIL");
+        DOP_LOGIN_EMAIL("DOP_LOGIN_EMAIL"),
+        /**
+         * DOP HARBOR镜像仓库的 EMAIL类型登录凭据
+         */
+        DOP_INNER_HARBOR_LOGIN_EMAIL("DOP_INNER_HARBOR_LOGIN_EMAIL"),
+        /**
+         * DOP 内部GITLAB Token
+         */
+        DOP_INNER_GITLAB_TOKEN("DOP_INNER_GITLAB_TOKEN");
         private String code;
 
         Type(String code) {
