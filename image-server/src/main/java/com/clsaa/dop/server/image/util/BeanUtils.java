@@ -1,6 +1,9 @@
 package com.clsaa.dop.server.image.util;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author 任贵杰
  * @version v1
@@ -28,6 +31,20 @@ public class BeanUtils {
         }
         org.springframework.beans.BeanUtils.copyProperties(source, result);
         return result;
+    }
+    /**
+     * List类之间的类型转化
+     */
+    public static<T, R> List<R> convertList(List<T> sourceList, Class<R> targetClass){
+        if (sourceList.size()==0||sourceList==null){
+            return null;
+        }
+        List<R> resultList = new ArrayList<>();
+        for (T t:sourceList){
+            R result = convertType(t,targetClass);
+            resultList.add(result);
+        }
+        return resultList;
     }
 
 }
