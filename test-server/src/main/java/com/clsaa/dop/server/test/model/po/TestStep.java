@@ -26,15 +26,19 @@ public class TestStep {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "case_id")
-    private Long caseId;
-
     @Column(name = "step_index")
     private int stepIndex;
 
     //todo 图片上传支持
     @Column(name = "step_desc")
     private String stepDesc;
+
+    @Column(name = "expect_result")
+    private String expectResult;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "case_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private ManualCase manualCase;
 
     // ------ common property ------------
     private LocalDateTime ctime;

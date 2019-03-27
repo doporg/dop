@@ -1,8 +1,10 @@
 /* eslint-disable react/no-unused-state, no-plusplus */
 import React, { Component } from 'react';
-import { Table, Switch, Icon, Button, Grid, Pagination } from '@icedesign/base';
+import {Table, Switch, Icon, Button, Grid, Pagination, Dialog} from '@icedesign/base';
 import IceContainer from '@icedesign/container';
-import CreateManualCaseDialog from "../CreateTestCases/CreateManualCaseDialog";
+import CreateManualCaseFrom from "../CreateTestCases/CreateManualCaseForm";
+import API from "../../../API";
+import Axios from "axios";
 
 const { Row, Col } = Grid;
 
@@ -18,8 +20,15 @@ export default class CustomTable extends Component {
     this.state = {
       formValue: {},
       current: 1,
-      createdCaseNeedRefresh: false
+      createdCaseNeedRefresh: false,
+      createManualDialogVisiable: false,
+      isSubmit: false,
+      total: 1,
+      currentData: [{"id": "1"}]
     };
+
+    this.handlePaginationChange = this.handlePaginationChange.bind(this);
+    this.refreshList(1);
   }
 
   formChange = (value) => {
@@ -29,31 +38,33 @@ export default class CustomTable extends Component {
     });
   };
 
-  getData = () => {
-    const result = [];
-    for (let i = 0; i < 10; i++) {
-      result.push({
-        id: i + 1,
-        name: `李晓红${i + 1}`,
-        university: '浙江大学',
-        college: '计算机',
-        class: i + 1,
-        phone: `1876666123${i}`,
-        role: '管理员',
-      });
-    }
-    return result;
-  };
-
   onChange = (...args) => {
     console.log(...args);
   };
 
   handlePaginationChange = (current) => {
-    this.setState({
-      current,
-    });
+    this.refreshList(current);
   };
+
+  refreshList(current) {
+    let url = API.test + '/manualCases/page';
+    let _this = this;
+    Axios.get(url, {
+      params: {
+        pageSize: 10,
+        pageNo: current
+      }
+    }).then(function (response) {
+      console.log(response);
+      _this.setState({
+        current: current,
+        total: response.data.totalCount,
+        currentData: response.data.pageList
+      });
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
 
   renderOper = () => {
     return (
@@ -72,22 +83,45 @@ export default class CustomTable extends Component {
     );
   };
 
-  refreshCaseList() {
+  onOpen = () =>{
     this.setState({
-      createdCaseNeedRefresh: true
-    });
-    console.log("createdCaseNeedRefresh");
-  }
+      createManualDialogVisiable: true
+    })
+  };
+
+  onClose = () =>{
+    this.setState({
+      createManualDialogVisiable: false,
+      isSubmit: false
+    })
+  };
+
+  onOk = ()=>{
+    this.setState({
+      isSubmit: true
+    })
+  };
 
   render() {
     return (
       <IceContainer title="用例列表">
         <Row wrap style={styles.headRow}>
           <Col l="12">
-            {/*<Button type="primary" style={styles.button}>*/}
-              {/*<Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加手工测试用例*/}
-            {/*</Button>*/}
-            <CreateManualCaseDialog/>
+            <Button type="primary" style={styles.button} onClick={this.onOpen.bind(this)} >
+              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加手工测试用例
+            </Button>
+            <Dialog
+                visible={this.state.createManualDialogVisiable}
+                onOk={this.onOk.bind(this)}
+                onCancel={this.onClose.bind(this)}
+                onClose={this.onClose.bind(this)}
+                title="创建手工测试用例"
+                isFullScreen
+            >
+              <CreateManualCaseFrom
+                  isSubmit={this.state.isSubmit}
+              />
+            </Dialog>
 
             <Button type="primary" style={{ ...styles.button, marginLeft: 10}}>
               <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加接口测试用例
@@ -107,11 +141,11 @@ export default class CustomTable extends Component {
         </Row>
 
         <Table
-          dataSource={this.getData()}
+          dataSource={this.state.currentData}
           rowSelection={{ onChange: this.onChange }}
         >
           <Table.Column title="用例编号" dataIndex="id" width={100} />
-          <Table.Column title="用例名称" dataIndex="name" width={100} />
+          <Table.Column title="用例名称" dataIndex="caseName" width={100} />
           <Table.Column title="类型" dataIndex="type" width={100} />
           <Table.Column title="状态" dataIndex="status" width={100} />
           <Table.Column title="执行结果" dataIndex="executeResult" width={100} />
@@ -123,6 +157,7 @@ export default class CustomTable extends Component {
           style={styles.pagination}
           current={this.state.current}
           onChange={this.handlePaginationChange}
+          total={this.state.total}
         />
       </IceContainer>
     );

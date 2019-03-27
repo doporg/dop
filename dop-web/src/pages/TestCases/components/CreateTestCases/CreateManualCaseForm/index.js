@@ -11,17 +11,33 @@ import {
 import API from "../../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
+import { FormBinderWrapper, FormBinder, FormError } from '@icedesign/form-binder';
+import {TestSteps} from "../TestStep";
+import Message from "@alifd/next/lib/message";
 
-const FormItem = Form.Item;
-const style = {
-    padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
-};
-
-const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
+const styles = {
+    formItem: {
+        marginBottom: '20px',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    formItemLabel: {
+        width: '70px',
+        mariginRight: '10px',
+        display: 'inline-block',
+        textAlign: 'right',
+    },
+    formItemError: {
+        marginLeft: '10px',
+    },
+    preview: {
+        border: '1px solid #eee',
+        marginTop: 20,
+        padding: 10
+    },
+    formCommonWidth: {
+        width: "550px"
+    }
 };
 
 /**
@@ -29,84 +45,139 @@ const formItemLayout = {
  *
  * */
 export default class CreateManualCaseFrom extends Component {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props) {
+        super(props);
+        this.state = {
+            value: {
+                caseName: '',
+                caseDesc: '',
+                preCondition: '',
+                applicationId: '',
+                comment: '',
+                status: '',
+                testSteps: [{}]
+            },
+            isDialogSubmit: this.props.isSubmit
+        };
         this.field = new Field(this);
     }
 
-    /**
-     *    处理来自父组件按钮的提交信息
-     *
-     * */
-    handleSubmit(props) {
-
-        // 校验表单数据
-        this.field.validate((errors, values) => {
-            console.log(errors, values);
-
-            // 没有异常则提交表单
-            if (errors == null) {
-                console.log("noerros");
-                let url = API.gateway + '/application-server/project'
-                Axios.post(url, {}, {
-                        params: {
-                            organizationId: "123",
-                            title: this.field.getValue('title')
-                            // private: this.field.getValue('title'),
-                            // projectDescription:this.field.getValue('description')}
-                        }
-                    }
-                )
-                    .then(function (response) {
-                        console.log(response);
-                        props.finished();
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-
+    validateFields = () => {
+        const { validateFields } = this.refs.form;
+        validateFields((errors, values) => {
+            console.log({ errors });
+            if (!errors) {
+                Message.success('注册成功')
             }
         });
+    };
 
-        //
-        // console.log("handleSubmit");
-    }
+    addItem = () => {
+        this.state.value.testSteps.push({});
+        this.setState({ value: this.state.value });
+    };
+
+    formChange = value => {
+        // 说明：
+        //  1. 表单是双向通行的，所有表单的响应数据都会同步更新 value
+        //  2. 这里 setState 只是为了实时展示当前表单数据的演示使用
+        this.setState({ value });
+    };
+
+    changeItem = () => {
+        let testSteps = this.state.value.testSteps;
+        testSteps[0].aaa = '有趣';
+        this.setState({
+            value: {
+                ...this.state.value,
+                testSteps: testSteps
+            }
+        });
+    };
+
+    removeItem = (index) => {
+        this.state.value.testSteps.splice(index, 1);
+        this.setState({
+            value: this.state.value
+        });
+    };
+
+    validateFormAndPost = () => {
+        let noError = true;
+        this.refs.form.validateAll((errors, values) => {
+            if (errors != null) {
+                noError = false;
+            }
+        });
+        if (noError) {
+            this.doPost(this.state.value);
+        }
+    };
+
+    doPost = (content) => {
+        console.log("I could post!");
+        console.log(content);
+        Message.success("创建手工测试用例成功");
+
+    };
 
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.isSubmit) {
-            this.handleSubmit(nextProps);
-            console.log((nextProps));
+            this.validateFormAndPost(nextProps);
         }
     }
 
     render() {
-        const {init} = this.field;
         return (
-            <div>
-                <Form
-                    labelAlign={"left"}
-                    style={style}
+            <div style={styles.container}>
+                <FormBinderWrapper
+                    value={this.state.value}
+                    ref="form"
                 >
-                    <FormItem {...formItemLayout}
-                              validateStatus={this.field.getError("title") ? "error" : ""}
-                              help={this.field.getError("title") ? "请输入名称" : ""}
-                              label="用例名称："
-                              required>
-                        <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                               placeholder="请输入用例名称"/>
-                    </FormItem>
-                    {/*<FormItem {...formItemLayout}*/}
-                              {/*validateStatus={this.field.getError("private") ? "error" : ""}*/}
-                              {/*help={this.field.getError("private") ? "请选择公开性" : ""}*/}
-                              {/*label="公开性："*/}
-                              {/*required>*/}
-                    {/*</FormItem>*/}
-                    <FormItem {...formItemLayout}
-                              label="项目描述：">
-                        <Input  {...init('description')}
-                                multiple placeholder="项目描述"/>
-                    </FormItem>
-                </Form>
+                    <div style={styles.content}>
+
+                        <div style={styles.formItem}>
+                            <span style={styles.formItemLabel}>用例名称：</span>
+                            <FormBinder name="caseName" required message="请输入正确的用例名称" >
+                                <Input placeholder="case name" style={styles.formCommonWidth}/>
+                            </FormBinder>
+                            <FormError style={styles.formItemError} name="caseName" />
+                        </div>
+
+                        <div style={styles.formItem}>
+                            <span style={styles.formItemLabel}>用例描述：</span>
+                            <FormBinder name="caseDesc" required message="请输入用例描述" >
+                                <Input placeholder="case description" style={styles.formCommonWidth}/>
+                            </FormBinder>
+                            <FormError style={styles.formItemError} name="caseDesc" />
+                        </div>
+
+                        <div style={styles.formItem}>
+                            <span style={styles.formItemLabel}>前置条件：</span>
+                            <FormBinder name="preCondition" required message="请输入前置条件" >
+                                <Input multiple placeholder="pre condition" style={styles.formCommonWidth}/>
+                            </FormBinder>
+                            <FormError style={styles.formItemError} name="caseDesc" />
+                        </div>
+
+                        <div style={styles.formItem}>
+                            <span style={styles.formItemLabel}>应用ID：</span>
+                            <FormBinder name="applicationId" required format="number" message="请绑定用例对应的应用id" >
+                                <Input placeholder="application id" style={styles.formCommonWidth}/>
+                            </FormBinder>
+                            <FormError style={styles.formItemError} name="application id" />
+                        </div>
+
+                        <TestSteps
+                            testSteps={this.state.value.testSteps}
+                            addItem={this.addItem}
+                            removeItem={this.removeItem}
+                            validateAllFormField={this.validateAllFormField}
+                        />
+
+                    </div>
+                </FormBinderWrapper>
+
             </div>
         )
     }

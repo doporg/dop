@@ -8,7 +8,8 @@ const API = {
     address: "http://www.dop.clsaa.com/#/",
     application: "http://open.dop.clsaa.com/application-server",
     permission: "http://open.dop.clsaa.com/permission-server",
-    code:"http://open.dop.clsaa.com/code-server"
+    code:"http://open.dop.clsaa.com/code-server",
+    test: "http://localhost:13700"
 };
 
 export default API;

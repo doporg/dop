@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author xihao
@@ -44,6 +45,11 @@ public class ManualCase {
 
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private List<TestStep> testSteps;
 
     // ------ common property ------------
     private LocalDateTime ctime;

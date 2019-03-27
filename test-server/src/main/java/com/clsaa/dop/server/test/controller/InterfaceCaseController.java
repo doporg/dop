@@ -52,13 +52,13 @@ public class InterfaceCaseController {
     @ApiOperation(value = "根据id查询接口测试用例信息")
     @GetMapping("/{id}")
     public InterfaceCaseDto getCase(@PathVariable("id") Long id) {
-        return interfaceCaseQueryService.selectByPk(id).orElse(null);
+        return interfaceCaseQueryService.selectByIds(id).orElse(null);
     }
 
     @GetMapping("/execute/{id}")
     public InterfaceCaseDto getExecuteResult(@PathVariable("id") Long id) {
         BizAssert.validParam(id >= 0, BizCodes.INVALID_PARAM.getCode(), "请求执行的测试用例id不合法");
-        InterfaceCaseDto interfaceCaseDto = interfaceCaseQueryService.selectByPk(id).orElse(null);
+        InterfaceCaseDto interfaceCaseDto = interfaceCaseQueryService.selectByIds(id).orElse(null);
         return execute(requireNonNull(interfaceCaseDto));
     }
 
