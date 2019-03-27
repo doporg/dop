@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {Card, Dialog} from '@icedesign/base';
+import {Card, Dialog, Loading} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
 import {
@@ -48,13 +48,16 @@ export default class ApplicationBasicInfo extends Component {
             basicEditMode: false,
             appId: props.appId,
             appBasicData: [],
-            userData: []
+            userData: [],
+            loading: true
         }
     }
 
     //加载应用基本信息
     componentDidMount() {
-
+        this.setState({
+            loading: true
+        })
         let _this = this;
         let url = API.gateway + '/application-server/app/' + _this.state.appId + "/urlInfo";
 
@@ -71,7 +74,8 @@ export default class ApplicationBasicInfo extends Component {
                         _this.setState({
                             appBasicData: appBasicData,
                             basicEditMode: false,
-                            userData: response.data
+                            userData: response.data,
+                            loading: false
                         })
 
                     })
@@ -131,6 +135,9 @@ export default class ApplicationBasicInfo extends Component {
         this.field.validate((errors, values) => {
 
             console.log(errors, values);
+            this.setState({
+                loading: true
+            })
 
             // 没有异常则提交表单
             if (errors == null) {
@@ -143,7 +150,7 @@ export default class ApplicationBasicInfo extends Component {
                     }
                 )
                     .then(function (response) {
-                        Toast.success("更新成功！")
+
 
                         //提交完成后刷新当前页面
                         let url = API.gateway + '/application-server/app/' + _this.state.appId + '/urlInfo';
@@ -152,9 +159,11 @@ export default class ApplicationBasicInfo extends Component {
                                 console.log(response)
                                 _this.setState({
                                     appBasicData: response.data,
-                                    basicEditMode: false
+                                    basicEditMode: false,
+                                    loading: false
                                 })
                             })
+                        Toast.success("更新成功！")
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -177,6 +186,9 @@ export default class ApplicationBasicInfo extends Component {
             if (errors == null) {
                 console.log("noerros");
                 let url = API.gateway + '/application-server/app/' + this.state.appId + "/urlInfo"
+                this.setState({
+                    loading: true
+                })
                 Axios.put(url, {}, {
                         params: {
                             warehouseUrl: this.field.getValue("warehouseUrl"),
@@ -188,7 +200,7 @@ export default class ApplicationBasicInfo extends Component {
                     }
                 )
                     .then(function (response) {
-                        Toast.success("更新成功！")
+
                         //提交完成后刷新当前页面
                         let url = API.gateway + '/application-server/app/' + _this.state.appId + "/urlInfo";
                         Axios.get(url)
@@ -196,9 +208,11 @@ export default class ApplicationBasicInfo extends Component {
                                 console.log(response)
                                 _this.setState({
                                     appBasicData: response.data,
-                                    urlEditMode: false
+                                    urlEditMode: false,
+                                    loading: false
                                 })
                             })
+                        Toast.success("更新成功！")
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -222,7 +236,10 @@ export default class ApplicationBasicInfo extends Component {
         const urlFormRender = () => {
             console.log((this.state.appBasicData))
             if (this.state.urlEditMode) {
-                return (<div>
+                return (
+
+
+                    <div>
 
                     <FormItem{...formItemLayout} label="Git仓库地址：">
                         <Input defaultValue={this.state.appBasicData.warehouseUrl} {...init('warehouseUrl')}
@@ -249,9 +266,13 @@ export default class ApplicationBasicInfo extends Component {
                                placeholder="测试域名"/>
                     </FormItem>
 
-                </div>)
+                    </div>
+                )
             } else {
-                return (<div>
+                return (
+
+
+                    <div>
 
                     <FormItem{...formItemLayout} label="Git仓库地址：">
                         <span>{this.state.appBasicData.warehouseUrl}</span>
@@ -272,13 +293,24 @@ export default class ApplicationBasicInfo extends Component {
                     <FormItem{...formItemLayout} label="测试域名：">
                         <span>{this.state.appBasicData.testDomain}</span>
                     </FormItem>
-                </div>)
+                    </div>
+                )
             }
         }
 
 
-        return <div
-            style={{margin: "0 auto", width: "70%", display: "flex", flexWrap: "wrap", justifyContent: "flex-start"}}>
+        return (
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+            >
+
+                <div style={{
+                    margin: "0 auto",
+                    width: "70%",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "flex-start"
+                }}
+                >
             <Card
                 style={{width: "40%", height: "40%"}}
                 title={this.state.userData.name}
@@ -291,16 +323,17 @@ export default class ApplicationBasicInfo extends Component {
             </Card>
 
 
-            <Form labelAlign={"left"}
+                    <Form labelAlign={"left"}
                   style={style}>
 
                 <div>基本信息
 
                     <Button type="primary"
-                            style={this.state.basicEditMode == true ? {visibility: "hidden"} : {}}
+                            style={this.state.basicEditMode == true ? {display: "None"} : {}}
                             onClick={this.basicEdit.bind(this)}>
                         修改
                     </Button>
+
                 </div>
 
                     <FormItem{...formItemLayout}
@@ -319,7 +352,7 @@ export default class ApplicationBasicInfo extends Component {
                         {opr()}
                     </FormItem>
 
-                    <div style={this.state.basicEditMode == false ? {visibility: "hidden"} : {}}>
+                        <div style={this.state.basicEditMode == false ? {display: "None"} : {}}>
                         <Button onClick={this.basicConfirm.bind(this)}
                                 type="primary"
                                 style={{marginRight: "5px"}}>
@@ -330,18 +363,17 @@ export default class ApplicationBasicInfo extends Component {
                     </div>
                 </Form>
 
-
             <Form labelAlign={"left"}
                   style={style1}>
                 <div>URL信息
                 <Button type="primary"
-                        style={this.state.urlEditMode == true ? {visibility: "hidden"} : {}}
+                        style={this.state.urlEditMode == true ? {display: "None"} : {}}
                         onClick={this.urlEdit.bind(this)}>
                     修改
                 </Button>
                 </div>
                 {urlFormRender()}
-                <div style={this.state.urlEditMode == false ? {visibility: "hidden"} : {}}>
+                <div style={this.state.urlEditMode == false ? {display: "None"} : {}}>
                     <Button onClick={this.urlConfirm.bind(this)}
                             type="primary"
                             style={{marginRight: "5px"}}>
@@ -353,6 +385,7 @@ export default class ApplicationBasicInfo extends Component {
 
 
         </div>
+            </Loading>)
     }
 }
 const styles = {

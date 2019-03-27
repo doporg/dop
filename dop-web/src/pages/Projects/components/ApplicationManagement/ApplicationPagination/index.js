@@ -1,5 +1,4 @@
-
-import {Pagination} from "@icedesign/base";
+import {Loading, Pagination} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API.js"
 import Axios from "axios";
@@ -33,7 +32,8 @@ export default class ApplicationPagination extends Component {
             //当前页面显示的应用所属的项目id
             projectId: props.projectId,
             // 搜索的Key
-            searchKey: props.searchKey
+            searchKey: props.searchKey,
+            loading: true
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -41,6 +41,9 @@ export default class ApplicationPagination extends Component {
 
     //刷新列表数据
     refreshList(currentPage, searchKey) {
+        this.setState({
+            loading: true
+        })
         let url = API.gateway + '/application-server/app'
         let _this = this;
         let tmpData = [];
@@ -103,7 +106,8 @@ export default class ApplicationPagination extends Component {
 
                     //赋值
                     _this.setState({
-                        currentData: tmpData
+                        currentData: tmpData,
+                        loading: false
                     });
                 }))
             })
@@ -150,9 +154,10 @@ export default class ApplicationPagination extends Component {
          */
         return (
             <div>
-                <ApplicationList currentData={this.state.currentData}
-                                 deletedCallRefresh={this.deletedCallRefresh.bind(this)}/>
-
+                <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
+                    <ApplicationList currentData={this.state.currentData}
+                                     deletedCallRefresh={this.deletedCallRefresh.bind(this)}/>
+                </Loading>
 
                 <Pagination style={styles.body}
                             current={this.state.current}

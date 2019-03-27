@@ -86,6 +86,15 @@ public class KubeYamlController {
         return BeanUtils.convertType(this.kubeYamlService.findYamlDataByEnvId(appEnvId), KubeYamlDataV1.class);
     }
 
+    @ApiOperation(value = "获取yaml信息", notes = "获取yaml信息")
+    @PutMapping(value = "/app/env/{appEnvId}/deploymentYaml")
+    public void updateDeploymentYaml(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "deploymentYaml", name = "deploymentYaml", required = true) @RequestParam(value = "deploymentYaml") String deploymentYaml) {
+        this.kubeYamlService.updateDeploymentYaml(muser, appEnvId, deploymentYaml);
+    }
+
 
     @ApiOperation(value = "判断yaml是否存在", notes = "判断yaml是否存在")
     @GetMapping(value = "/app/env/{appEnvId}/yamlStatus")

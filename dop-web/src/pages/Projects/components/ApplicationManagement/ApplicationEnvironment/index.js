@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, Button, Dialog, Feedback, Icon} from '@icedesign/base';
+import {Card, Button, Dialog, Feedback, Icon, Loading} from '@icedesign/base';
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import API from "../../../../API";
@@ -16,12 +16,16 @@ export default class ApplicationEnvironment extends Component {
         this.state = {
             appId: props.appId,
             appEnvData: [],
-            showEnvDetail: props.showEnvDetail
+            showEnvDetail: props.showEnvDetail,
+            loading: true
         }
 
     }
 
     getAppEnvData() {
+        this.setState({
+            loading: true
+        })
         let url = API.gateway + "/application-server/app/" + this.state.appId + "/allEnv"
         let _this = this;
         Axios.get(url)
@@ -29,7 +33,8 @@ export default class ApplicationEnvironment extends Component {
                 console.log(response)
                 _this.setState({
 
-                    appEnvData: response.data
+                    appEnvData: response.data,
+                    loading: false
                 })
             })
             .catch(function (response) {
@@ -54,10 +59,13 @@ export default class ApplicationEnvironment extends Component {
     onDelete(id) {
         let deleteUrl = API.gateway + "/application-server/app/env/" + id
         let _this = this;
+        this.setState({
+            loading: true
+        })
         Axios.delete(deleteUrl)
             .then(function (response) {
-                Toast.success("删除成功");
                 _this.getAppEnvData();
+                Toast.success("删除成功");
             })
             .catch(function (response) {
 
@@ -95,12 +103,13 @@ export default class ApplicationEnvironment extends Component {
     cardRender() {
 
         return (
+
             <Row wrap gutter="20">
                 {this.state.appEnvData.map((item, index) => {
                     console.log(item)
                     return (
-                        <Col l={8} key={index}>
-                            <Card>
+                        <Col style={{width: "100%"}} key={index}>
+                            <Card style={{width: "100%"}}>
                                 {this.titleRender(item.title, item.id)}
                                 <Button onClick={this.getYaml.bind(this, item.id)}>
                                     部署主干
@@ -116,6 +125,7 @@ export default class ApplicationEnvironment extends Component {
 
                 })}
             </Row>
+
         )
 
 
@@ -128,16 +138,19 @@ export default class ApplicationEnvironment extends Component {
     render() {
 
         return (
-            <div>
-                <CreateApplicationEnvironmentDialog type="primary"
-                                                    refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
-                                                    appId={this.state.appId}>
-                    新建环境
-                </CreateApplicationEnvironmentDialog>
-                {this.cardRender()}
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+            >
+                <div>
+                    <CreateApplicationEnvironmentDialog type="primary"
+                                                        refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
+                                                        appId={this.state.appId}>
+                        新建环境
+                    </CreateApplicationEnvironmentDialog>
+                    {this.cardRender()}
 
 
-            </div>
+                </div>
+            </Loading>
         )
     }
 
