@@ -72,3 +72,10 @@ ribbon:
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
 
+feign:
+  url: https://registry.dop.clsaa.com/api
+
+auth:
+  user: admin
+  password: Dop123456789
+
