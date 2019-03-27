@@ -1,12 +1,10 @@
 package com.clsaa.dop.server.code.service;
 
 
-import com.clsaa.dop.server.code.model.bo.BranchBo;
-import com.clsaa.dop.server.code.model.bo.ProjectBo;
-import com.clsaa.dop.server.code.model.bo.ProjectListBo;
-import com.clsaa.dop.server.code.model.bo.TagBo;
-import com.clsaa.dop.server.code.model.vo.ProjectVo;
-import com.clsaa.dop.server.code.util.BeanUtils;
+import com.clsaa.dop.server.code.model.bo.project.BranchBo;
+import com.clsaa.dop.server.code.model.bo.project.ProjectBo;
+import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
+import com.clsaa.dop.server.code.model.bo.project.TagBo;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -85,11 +83,11 @@ public class ProjectService {
         List<ProjectListBo> listBos;
 
         if(sort.equals("personal")) {
-            listBos=RequestUtil.getList("/projects?membership=true",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?membership=true&order_by=updated_at",username,ProjectListBo.class);
         }else if(sort.equals("starred")){
-            listBos=RequestUtil.getList("/projects?starred=true",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?starred=true&order_by=updated_at",username,ProjectListBo.class);
         }else {
-            listBos=RequestUtil.getList("/projects?visibility=public",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?visibility=public&order_by=updated_at",username,ProjectListBo.class);
         }
 
         return listBos;
@@ -116,12 +114,5 @@ public class ProjectService {
 
     }
 
-    public static void main(String[] args) {
-        ProjectService ps=new ProjectService();
-        ProjectBo projectBo=ps.findProject(3);
-        ProjectVo projectVo=BeanUtils.convertType(projectBo,ProjectVo.class);
-
-        System.out.println(projectVo);
-    }
 
 }

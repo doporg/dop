@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.bo;
+package com.clsaa.dop.server.code.model.bo.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenBo {
+public class BranchBo {
 
-    private String access_token;
-
+    private String name;
 
 }

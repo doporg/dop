@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.bo;
+package com.clsaa.dop.server.code.model.bo.project;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

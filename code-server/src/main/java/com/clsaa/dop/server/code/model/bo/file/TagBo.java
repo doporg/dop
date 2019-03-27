@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.dto;
+package com.clsaa.dop.server.code.model.bo.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
+public class TagBo {
     private String name;
-    private String description;
-    private String visibility;
-    private String initialize_with_readme;
 }
