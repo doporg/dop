@@ -5,6 +5,7 @@ import IceContainer from '@icedesign/container';
 import CreateManualCaseFrom from "../CreateTestCases/CreateManualCaseForm";
 import API from "../../../API";
 import Axios from "axios";
+import {Link} from "react-router-dom";
 
 const { Row, Col } = Grid;
 
@@ -123,8 +124,10 @@ export default class CustomTable extends Component {
               />
             </Dialog>
 
-            <Button type="primary" style={{ ...styles.button, marginLeft: 10}}>
-              <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加接口测试用例
+            <Button style={{ ...styles.button, marginLeft: 10}}>
+              <Link to="/test/createManualCase">
+                <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加接口测试用例
+              </Link>
             </Button>
           </Col>
           <Col l="12" style={styles.center}>
