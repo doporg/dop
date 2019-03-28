@@ -26,6 +26,7 @@ export default class Permission extends Component {
         this.field = new Field(this);
         this.state = {
             currentData : [],
+            permissionSelectList:[],
             visible:false,
             deleteVisible:false,
             ruleVisible:false,
@@ -177,6 +178,8 @@ export default class Permission extends Component {
                     name:values.name,
                     parentId: 0,
                 }
+
+                let permissionUrl=API.gateway +
              //先检测是否重复
                 Axios.get(byNameUrl,{params:(byNameParams)}
                 ).then((response) => {
@@ -322,13 +325,6 @@ export default class Permission extends Component {
                     </FormItem>
                     <FormItem label="父功能点ID：" {...formItemLayout} required>
                         <Select style={{ width: 200 }} {...init("parentId")}>
-                            <Option value="1">1</Option>
-                            <Option value="2">2</Option>
-
-                            <Option value="3">3</Option>
-                            <Option value="disabled" disabled>
-                            disabled
-                            </Option>
                         </Select>
                     </FormItem>
                     <FormItem wrapperCol={{ offset: 6 }}>
