@@ -4,6 +4,7 @@ package com.clsaa.dop.server.pipeline.service;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
+import com.clsaa.dop.server.pipeline.feign.PipelineFeign;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
@@ -37,13 +38,16 @@ import java.util.*;
  */
 @Service
 public class PipelineService {
-
+//    @Autowired
+//    private RestTemplate restTemplate;
     @Autowired
     private PipelineRepository pipelineRepository;
-    @Autowired
-    private RestTemplate restTemplate;
+
     @Autowired
     private ResultOutputService resultOutputService;
+
+    @Autowired
+    private PipelineFeign pipelineFeign;
 
     /**
      * 添加流水线信息
@@ -65,7 +69,7 @@ public class PipelineService {
         pipelineRepository.insert(pipeline);
         resultOutputService.create(pipeline);
 
-        String url = "http://localhost:13600/v1/jenkins";
+
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                 .id(id.toString())
                 .name(pipelineV1.getName())
@@ -76,8 +80,10 @@ public class PipelineService {
                 .cuser(pipelineV1.getCuser())
                 .isDeleted(false)
                 .build();
+//        String url = "http://localhost:13600/v1/jenkins";
+//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+        this.pipelineFeign.create(pipelineBoV1);
 
-        restTemplate.postForEntity(url, pipelineBoV1, String.class);
     }
 
     public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {
@@ -97,7 +103,7 @@ public class PipelineService {
         pipelineRepository.insert(pipeline);
         resultOutputService.create(pipeline);
 
-        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
+
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                 .id(id.toString())
                 .name(pipelineV2.getName())
@@ -109,8 +115,9 @@ public class PipelineService {
                 .cuser(pipelineV2.getCuser())
                 .isDeleted(false)
                 .build();
-
-        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+//        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
+//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+        this.pipelineFeign.jenkinsfile(pipelineBoV1);
     }
 
     /**

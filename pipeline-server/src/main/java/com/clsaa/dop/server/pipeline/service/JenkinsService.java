@@ -85,7 +85,6 @@ public class JenkinsService {
      * 根据流水线的名字的到运行结果
      */
     public String getBuildOutputText(String name) {
-        Map<String, String> result = new HashMap<String, String>();
         try {
             Map<String, Job> jobs = jenkins.getJobs();
             JobWithDetails job = jobs.get(name).details();
