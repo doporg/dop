@@ -105,7 +105,7 @@ public class UserService {
                 ImmutableMap<String, Object> registerParam = ImmutableMap.of(
                         "id", savedUser.getId(),
                         "email", user.getEmail(),
-                        "password", realPassword.getContent(),
+                        "password", passwordEncryptByPrivateKey,
                         "name", user.getName()
                 );
                 JSONObject jsonObject = new JSONObject(registerParam);
@@ -171,7 +171,7 @@ public class UserService {
         ImmutableMap<String, Object> updateParam = ImmutableMap.of(
                 "id", user.getId(),
                 "email", user.getEmail(),
-                "password", realPassword.getContent(),
+                "password", passwordEncryptByPrivateKey,
                 "name", user.getName()
         );
         JSONObject jsonObject = new JSONObject(updateParam);
