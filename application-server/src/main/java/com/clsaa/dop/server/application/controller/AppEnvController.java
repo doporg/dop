@@ -36,7 +36,7 @@ public class AppEnvController {
     @Autowired
     KubeCredentialService kubeCredentialService;
 
-    @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境变量")
+    @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境信息")
     @GetMapping(value = "/app/{appId}/allEnv")
     public List<AppEnvV1> findEnvironmentByAppId(
             @ApiParam(value = "appId", name = "应用ID", required = true) @PathVariable(value = "appId") Long appId) {
