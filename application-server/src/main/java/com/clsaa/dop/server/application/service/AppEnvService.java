@@ -2,23 +2,13 @@ package com.clsaa.dop.server.application.service;
 
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
-import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
-import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.AppEnv;
-import com.clsaa.dop.server.application.model.vo.ClusterUrlV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
-import io.kubernetes.client.apis.AppsV1Api;
-import io.kubernetes.client.models.*;
-import io.kubernetes.client.util.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.apis.CoreV1Api;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service(value = "AppEnvService")
@@ -65,6 +55,21 @@ public class AppEnvService {
         return BeanUtils.convertType(appEnv, AppEnvBoV1.class);
     }
 
+    /**
+     * 根据ID查询AppId
+     *
+     * @param id
+     * @return Long
+     */
+    public Long findAppIdById(Long id) {
+        AppEnv appEnv = this.appEnvRepository.findById(id).orElse(null);
+        return appEnv.getAppId();
+    }
+
+
+    //public String updateBuildTag(Long appEnvId){
+    //    this.kubeYamlService.updateBuildTag
+    //}
     /**
      * 创建环境
      *

@@ -13,31 +13,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-/**
- * 应用变量实体类
- *
- * @author ZhengBowen
- * @version v1
- * @summary 应用变量实体类
- * @since 2019-3-7
- */
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "update app_basic_url set is_deleted = true where id = ?")
+@SQLDelete(sql = "update build_tag_running_id_mapping set is_deleted = true where id = ?")
 @Where(clause = "is_deleted =false")
-public class AppUrlInfo {
+public class BuildTagRunningIdMapping {
     @Id
     @GeneratedValue
     private Long id;
-
-    /**
-     * 应用ID
-     */
-    @Column(nullable = false, name = "app_id")
-    private Long appId;
 
     /**
      * 创建者
@@ -70,42 +56,21 @@ public class AppUrlInfo {
     private boolean is_deleted;
 
     /**
-     * 仓库URL
+     * APPENVID
      */
-    @Column(nullable = false, name = "warehouse_url")
-    private String warehouseUrl;
-
-
-    /**
-     * 镜像地址
-     */
-    @Column(nullable = false, name = "image_url")
-    private String imageUrl;
+    @Column(nullable = false, name = "app_env_id")
+    private Long appEnvId;
 
     /**
-     * 开发数据库URL
+     * 版本号
      */
-    @Column(nullable = true, name = "production_db_url")
-    private String productionDbUrl;
+    @Column(nullable = false, name = "build_tag")
+    private String buildTag;
 
     /**
-     * 测试数据库URL
+     * 运行id
      */
-    @Column(nullable = true, name = "test_db_url")
-    private String testDbUrl;
-
-    /**
-     * 开发域名
-     */
-    @Column(nullable = true, name = "production_domain")
-    private String productionDomain;
-
-    /**
-     * 测试域名
-     */
-    @Column(nullable = true, name = "test_domain")
-    private String testDomain;
-    //@OneToOne(cascade = CascadeType.ALL,mappedBy = "AppUrlInfo")
-    //private App app;
+    @Column(nullable = false, name = "running_id")
+    private Long runningId;
 
 }

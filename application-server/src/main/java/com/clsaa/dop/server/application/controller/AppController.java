@@ -1,7 +1,8 @@
 package com.clsaa.dop.server.application.controller;
 
-import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
+import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
+import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
 import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.service.AppService;
@@ -13,8 +14,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
-
-import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -73,10 +72,10 @@ public class AppController {
                 .testDbUrl(appUrlInfoBoV1.getTestDbUrl())
                 .productionDomain(appUrlInfoBoV1.getProductionDomain())
                 .testDomain(appUrlInfoBoV1.getTestDomain())
+                .imageUrl(appUrlInfoBoV1.getImageUrl())
                 .build();
 
         return appBasicInfoV1;
-
     }
 
 
@@ -88,10 +87,12 @@ public class AppController {
                           @ApiParam(name = "title", value = "应用名称", required = true) @RequestParam(value = "title") String title,
                           @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", required = false) String description,
                           @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode") String productMode,
-                          @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl) {
-        this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl);
+                          @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl,
+                          @ApiParam(name = "imageUrl", value = "镜像仓库地址", defaultValue = "") @RequestParam(value = "imageUrl", required = false) String imageUrl) {
+        this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl, imageUrl);
         return;
     }
+
 
     @ApiOperation(value = "更新应用", notes = "更新应用")
     @PutMapping(value = "/app/{appId}")

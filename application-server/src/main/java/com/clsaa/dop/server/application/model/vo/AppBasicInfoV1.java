@@ -31,7 +31,10 @@ public class AppBasicInfoV1 {
      * 应用描述
      */
     private String description;
-
+    /**
+     * 镜像地址
+     */
+    private String imageUrl;
 
     /**
      * 仓库地址

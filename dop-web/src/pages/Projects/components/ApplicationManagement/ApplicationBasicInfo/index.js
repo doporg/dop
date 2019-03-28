@@ -1,16 +1,7 @@
-
 import React, {Component} from 'react';
-import {Card, Dialog, Loading} from '@icedesign/base';
+import {Button, Card, Dialog, Feedback, Field, Form, Input, Loading} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
-import {
-    Form,
-    Input,
-    Button,
-    Field,
-    Feedback
-} from "@icedesign/base";
-import ApplicationVariable from "../ApplicationVariable";
 
 
 const Toast = Feedback.toast;
@@ -192,6 +183,7 @@ export default class ApplicationBasicInfo extends Component {
                 Axios.put(url, {}, {
                         params: {
                             warehouseUrl: this.field.getValue("warehouseUrl"),
+                            imageUrl: this.field.getValue("imageUrl"),
                             productionDbUrl: this.field.getValue("productionDbUrl"),
                             testDbUrl: this.field.getValue("testDbUrl"),
                             productionDomain: this.field.getValue("productionDomain"),
@@ -246,6 +238,11 @@ export default class ApplicationBasicInfo extends Component {
                                placeholder="Git仓库地址"/>
                     </FormItem>
 
+                        <FormItem{...formItemLayout} label="镜像仓库地址：">
+                            <Input defaultValue={this.state.appBasicData.imageUrl} {...init('imageUrl')}
+                                   placeholder="镜像仓库地址"/>
+                        </FormItem>
+
                     <FormItem{...formItemLayout} label="开发数据库地址：">
                         <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl')}
                                placeholder="开发数据库地址"/>
@@ -277,6 +274,10 @@ export default class ApplicationBasicInfo extends Component {
                     <FormItem{...formItemLayout} label="Git仓库地址：">
                         <span>{this.state.appBasicData.warehouseUrl}</span>
                     </FormItem>
+
+                        <FormItem{...formItemLayout} label="镜像仓库地址：">
+                            <span>{this.state.appBasicData.imageUrl}</span>
+                        </FormItem>
 
                     <FormItem{...formItemLayout} label="开发数据库地址：">
                         <span>{this.state.appBasicData.productionDbUrl}</span>

@@ -104,11 +104,6 @@ public class KubeYamlData {
     @Enumerated(EnumType.STRING)
     private KubeYamlData.ReleaseStrategy releaseStrategy;
 
-    /**
-     * 镜像地址
-     */
-    @Column(name = "image_url")
-    private String imageUrl;
 
     /**
      * yaml文件相对路径

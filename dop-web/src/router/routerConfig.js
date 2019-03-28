@@ -3,16 +3,13 @@
 
 
 import BasicLayout from '../layouts/BasicLayout';
-import {Projects, Application, ApplicationDetail} from '../pages/Projects';
-import {ApplicationEnvironmentDetail} from '../pages/Projects';
+import {projectConfig} from '../pages/Projects'
 import {pipelineConfig} from '../pages/Pipeline';
 import NotFound from '../pages/NotFound';
 import {loginConfig} from '../pages/Login'
-import Ciadjust from '../pages/Ciadjust';
 import {permissionConfig} from "../pages/Permissions";
 import {roleConfig} from "../pages/Roles";
 import {dataRulesConfig} from "../pages/DataRules";
-import codeConfig from '../pages/Code'
 
 const baseConfig = [
     {
@@ -23,7 +20,6 @@ const baseConfig = [
 ];
 
 
-
-const routerConfig = [...roleConfig, ...dataRulesConfig, ...permissionConfig,  ...pipelineConfig, ...loginConfig, ...baseConfig];
+const routerConfig = [...projectConfig, ...roleConfig, ...dataRulesConfig, ...permissionConfig, ...pipelineConfig, ...loginConfig, ...baseConfig];
 
 export default routerConfig;

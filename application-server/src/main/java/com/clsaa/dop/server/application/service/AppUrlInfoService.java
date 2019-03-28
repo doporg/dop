@@ -25,9 +25,10 @@ public class AppUrlInfoService {
         return BeanUtils.convertType(appUrlInfoRepository.findByAppId(appId), AppUrlInfoBoV1.class);
     }
 
-    public void updateAppUrlInfoByAppId(Long id, Long muser, String warehouseUrl, String productionDbUrl, String testDbUrl, String productionDomain, String testDomain) {
+    public void updateAppUrlInfoByAppId(Long id, Long muser, String warehouseUrl, String imageUrl, String productionDbUrl, String testDbUrl, String productionDomain, String testDomain) {
         AppUrlInfo appUrlInfo = appUrlInfoRepository.findByAppId(id);
         appUrlInfo.setWarehouseUrl(warehouseUrl);
+        appUrlInfo.setImageUrl(imageUrl);
         appUrlInfo.setProductionDbUrl(productionDbUrl);
         appUrlInfo.setTestDbUrl(testDbUrl);
         appUrlInfo.setProductionDomain(productionDomain);

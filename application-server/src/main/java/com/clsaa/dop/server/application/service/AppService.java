@@ -126,7 +126,7 @@ public class AppService {
      * @param description 应用描述
      *
      */
-    public void createApp(Long cuser, Long projectId, String title, String description, String productMode, String gitUrl) {
+    public void createApp(Long cuser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
 
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
@@ -137,7 +137,6 @@ public class AppService {
                 .cuser(cuser)
                 .muser(cuser)
                 .ouser(cuser)
-
                 .is_deleted(false)
                 .ctime(ctime)
                 .mtime(mtime)
@@ -165,6 +164,7 @@ public class AppService {
                 .ctime(ctime)
                 .cuser(cuser)
                 .is_deleted(false)
+                .imageUrl(imageUrl)
                 .mtime(mtime)
                 .muser(cuser)
                 .warehouseUrl(gitUrl)
