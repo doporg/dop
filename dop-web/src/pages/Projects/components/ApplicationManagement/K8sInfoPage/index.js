@@ -1,17 +1,5 @@
-import {
-    Button,
-    Feedback,
-    Form,
-    Icon,
-    Input,
-    NumberPicker,
-    Select,
-    Field,
-    Dialog, Loading
-} from "@icedesign/base";
+import {Button, Dialog, Feedback, Field, Form, Icon, Input, Loading, NumberPicker, Select} from "@icedesign/base";
 import React, {Component} from 'react';
-
-import {Col, Row} from "@alifd/next/lib/grid";
 import API from "../../../../API";
 import Axios from "axios"
 
@@ -739,24 +727,24 @@ export default class K8sInfoPage extends Component {
                     </FormItem>
 
 
-                    <FormItem label="镜像地址"
-                              {...formItemLayout}
-                              validateStatus={this.field.getError("imageUrl") ? "error" : ""}
-                              help={this.field.getError("imageUrl") ? "镜像仓库地址" : ""}>
-                        <div style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.imageUrl}</div>
-                        <Input placeholder="镜像仓库地址"
-                               style={{display: this.state.editMode ? "" : "None"}}
+                    {/*<FormItem label="镜像地址"*/}
+                    {/*{...formItemLayout}*/}
+                    {/*validateStatus={this.field.getError("imageUrl") ? "error" : ""}*/}
+                    {/*help={this.field.getError("imageUrl") ? "镜像仓库地址" : ""}>*/}
+                    {/*<div style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.imageUrl}</div>*/}
+                    {/*<Input placeholder="镜像仓库地址"*/}
+                    {/*style={{display: this.state.editMode ? "" : "None"}}*/}
 
-                               {...init('imageUrl', {
-                                   initValue: this.state.yamlData.imageUrl,
-                                   rules: [{
-                                       required: true,
-                                       message: "该项不能为空"
-                                   }]
-                               })}>
-                        </Input>
+                    {/*{...init('imageUrl', {*/}
+                    {/*initValue: this.state.yamlData.imageUrl,*/}
+                    {/*rules: [{*/}
+                    {/*required: true,*/}
+                    {/*message: "该项不能为空"*/}
+                    {/*}]*/}
+                    {/*})}>*/}
+                    {/*</Input>*/}
 
-                    </FormItem>
+                    {/*</FormItem>*/}
                     <Combobox
                         fillProps="label"
                         onChange={this.switchYamlMode.bind(this)}

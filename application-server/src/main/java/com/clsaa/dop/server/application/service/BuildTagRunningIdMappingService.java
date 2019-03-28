@@ -29,6 +29,7 @@ public class BuildTagRunningIdMappingService {
                 .cuser(cuser)
                 .muser(cuser)
                 .is_deleted(false)
+                .appEnvId(appEnvId)
                 .runningId(runningId)
                 .buildTag(now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getHour() + now.getMinute() + String.valueOf(appEnvId))
                 .build();

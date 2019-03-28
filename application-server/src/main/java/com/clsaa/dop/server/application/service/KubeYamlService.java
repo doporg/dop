@@ -44,7 +44,7 @@ public class KubeYamlService {
             String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
             Long appId = this.appEnvService.findAppIdById(appEnvId);
             String imageUrl = appUrlInfoService.findAppUrlInfoByAppId(appId).getImageUrl();
-            yaml.replace("<image_url>", imageUrl + ":" + buildTag);
+            yaml = yaml.replace("<image_url>", imageUrl + ":" + buildTag);
             return yaml;
 
         } else {
@@ -58,7 +58,7 @@ public class KubeYamlService {
             String yaml = restTemplate.getForObject(finalPath, String.class);
             String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
 
-            yaml.replace("<image_url>", buildTag);
+            yaml = yaml.replace("<image_url>", buildTag);
             return yaml;
         }
     }
