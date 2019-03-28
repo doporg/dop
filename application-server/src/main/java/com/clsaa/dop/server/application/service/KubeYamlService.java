@@ -15,7 +15,7 @@ import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.Yaml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -32,22 +32,27 @@ public class KubeYamlService {
     KubeCredentialService kubeCredentialService;
 
 
-    public HashMap<String, String> createYamlFileForDeploy(Long appEnvId) {
+    public String createYamlFileForDeploy(Long appEnvId) {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
-            return new HashMap<String, String>() {{
-                put("yaml", kubeYamlDataBoV1.getDeploymentEditableYaml());
-                put("namespace", kubeYamlDataBoV1.getNameSpace());
-            }};
+            return (kubeYamlDataBoV1.getDeploymentEditableYaml());
 
         } else {
-            return new HashMap<String, String>() {{
-                put("path", kubeYamlDataBoV1.getYamlFilePath());
-            }};
+            String path = kubeYamlDataBoV1.getYamlFilePath();
+
+
+            String[] splitPath=path.split("blob/");
+            String  finalPath= "https://raw.githubusercontent.com/"+splitPath[0].split("github.com/")[1]+splitPath[1];
+
+            RestTemplate restTemplate=new RestTemplate();
+            String yaml =  restTemplate.getForObject(finalPath,String.class);
+            return yaml ;
+            }
         }
 
-    }
+
+
 
 
     /**
