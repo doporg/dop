@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.image.service;
 
-import com.clsaa.dop.server.image.feign.ProjectFeign;
+import com.clsaa.dop.server.image.feign.harborfegin.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.ProjectBO;
 import com.clsaa.dop.server.image.model.bo.ProjectMetadataBO;
 import com.clsaa.dop.server.image.model.dto.ProjectDto1;

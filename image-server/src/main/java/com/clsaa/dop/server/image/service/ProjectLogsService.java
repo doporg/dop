@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.image.service;
 
-import com.clsaa.dop.server.image.feign.ProjectFeign;
+import com.clsaa.dop.server.image.feign.harborfegin.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.AccessLogBO;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

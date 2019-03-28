@@ -31,17 +31,13 @@ public class ProjectController {
 
     @ApiOperation(value = "获取项目列表信息",notes = "根据权限的不同访问项目列表信息")
     @GetMapping("/v1/projects")
-    public List<ProjectVO> getProjects(@ApiParam(value = "The name of project.")
-                                           @Valid @RequestParam(value = "name", required = false) String name,
-                                       @ApiParam(value = "The project is public or private.")
-                                       @Valid @RequestParam(value = "public", required = false) Boolean _public,
-                                       @ApiParam(value = "The name of project owner.")
-                                           @Valid @RequestParam(value = "owner", required = false) String owner,
-                                       @ApiParam(value = "The page nubmer, default is 1.")
-                                           @Valid @RequestParam(value = "page", required = false) Integer page,
-                                       @ApiParam(value = "The size of per page, default is 10, maximum is 100.")
-                                           @Valid @RequestParam(value = "page_size", required = false) Integer pageSize){
-        return BeanUtils.convertList(projectService.getProjects(name,_public,owner,page,pageSize),ProjectVO.class);
+    public List<ProjectVO> getProjects(@ApiParam(value = "项目名称") @RequestParam(value = "name", required = false) String name,
+                                       @ApiParam(value = "项目的类型") @RequestParam(value = "public", required = false) Boolean _public,
+                                       @ApiParam(value = "项目创建人") @RequestParam(value = "owner", required = false) String owner,
+                                       @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
+                                       @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                       @ApiParam(value = "用户id") @RequestHeader(value = "user_id")Long userId){
+        return BeanUtils.convertList(projectService.getProjects(name,_public,owner,page,pageSize,userId),ProjectVO.class);
     }
 
     @ApiOperation(value = "获取某个项目的基本信息",notes = "需要给出项目的id进行查询，返回项目对象，不存在返回null")
