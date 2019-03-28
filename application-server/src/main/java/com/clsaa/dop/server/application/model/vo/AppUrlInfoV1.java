@@ -12,7 +12,10 @@ public class AppUrlInfoV1 {
      * 仓库地址
      */
     private String warehouseUrl;
-
+    /**
+     * 镜像地址
+     */
+    private String imageUrl;
 
     /**
      * 开发数据库地址

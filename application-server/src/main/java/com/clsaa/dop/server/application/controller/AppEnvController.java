@@ -2,9 +2,9 @@ package com.clsaa.dop.server.application.controller;
 
 
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
-import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
-import com.clsaa.dop.server.application.model.vo.*;
+import com.clsaa.dop.server.application.model.vo.AppEnvV1;
 import com.clsaa.dop.server.application.service.AppEnvService;
+import com.clsaa.dop.server.application.service.BuildTagRunningIdMappingService;
 import com.clsaa.dop.server.application.service.KubeCredentialService;
 import com.clsaa.dop.server.application.service.KubeYamlService;
 import com.clsaa.dop.server.application.util.BeanUtils;
@@ -35,6 +35,8 @@ public class AppEnvController {
     KubeYamlService kubeYamlService;
     @Autowired
     KubeCredentialService kubeCredentialService;
+    @Autowired
+    BuildTagRunningIdMappingService buildTagRunningIdMappingService;
 
     @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境信息")
     @GetMapping(value = "/app/{appId}/allEnv")
@@ -51,13 +53,32 @@ public class AppEnvController {
     }
 
 
+    @ApiOperation(value = "获取Build_tag", notes = "获取Build_tag")
+    @GetMapping(value = "/app/env/{appEnvId}/build_tag")
+    public String findBuildTagByAppEnvIdAndRunningId(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+            @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "runningId", name = "环境ID", required = true) @RequestParam(value = "runningId") Long runningId) {
+        return this.buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
+    }
+
+
+
+
     @ApiOperation(value = "删除应用环境", notes = "根据应用环境ID删除应用环境")
     @DeleteMapping(value = "/app/env/{appEnvId}")
     public void deleteEnvironmentById(
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         this.appEnvService.deleteEnvironmentById(appEnvId);
     }
-
+    //@ApiOperation(value = "更新Build_Tag", notes = "更新Build_Tag")
+    //@PutMapping(value = "/app/env/{appEnvId}/build_tag")
+    //public String updateBuildTag(
+    //        @PathVariable(value = "appEnvId") Long appEnvId
+    //){
+    //    return this.appEnvService.updateBuildTag(appEnvId);
+    //
+    //}
 
     @ApiOperation(value = "根据应用id创建应用环境", notes = "根据应用id创建应用环境")
     @PostMapping(value = "/app/{appId}/env")

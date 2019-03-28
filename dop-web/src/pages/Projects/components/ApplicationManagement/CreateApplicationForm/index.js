@@ -50,7 +50,8 @@ export default class ApplicationForm extends Component {
                             title: this.field.getValue('title'),
                             productMode: this.field.getValue('productMode'),
                             appDescription: this.field.getValue('description'),
-                            gitUrl: this.field.getValue('gitUrl')
+                            gitUrl: this.field.getValue('gitUrl'),
+                            imageUrl: this.field.getValue('imageUrl')
                         }
                     }
                 )
@@ -112,6 +113,12 @@ export default class ApplicationForm extends Component {
                               label="git仓库地址："
                               required>
                         <Input  {...init('gitUrl')} placeholder="git仓库地址"/>
+                    </FormItem>
+                    <FormItem {...formItemLayout}
+                              validateStatus={this.field.getError("imageUrl") ? "error" : ""}
+                              label="镜像仓库地址："
+                              required>
+                        <Input  {...init('imageUrl')} placeholder="镜像仓库地址"/>
                     </FormItem>
                     <FormItem {...formItemLayout} label="应用描述：">
                         <Input  {...init('description')} multiple placeholder="应用描述"/>

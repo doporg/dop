@@ -7,7 +7,6 @@ import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.apis.AppsV1Api;
-import io.kubernetes.client.apis.CoreApi;
 import io.kubernetes.client.apis.CoreV1Api;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
@@ -16,43 +15,53 @@ import io.kubernetes.client.util.Yaml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service(value = "AppYamlService")
+@Service(value = "KubeYamlService")
 public class KubeYamlService {
     @Autowired
     KubeYamlRepository kubeYamlRepository;
 
-
+    @Autowired
+    AppEnvService appEnvService;
     @Autowired
     KubeCredentialService kubeCredentialService;
+    @Autowired
+    BuildTagRunningIdMappingService buildTagRunningIdMappingService;
+    @Autowired
+    AppUrlInfoService appUrlInfoService;
 
-
-    public String createYamlFileForDeploy(Long appEnvId) {
+    public String createYamlFileForDeploy(Long cuser, Long appEnvId, Long runningId) {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
-            return (kubeYamlDataBoV1.getDeploymentEditableYaml());
+            String yaml = (kubeYamlDataBoV1.getDeploymentEditableYaml());
+            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
+            Long appId = this.appEnvService.findAppIdById(appEnvId);
+            String imageUrl = appUrlInfoService.findAppUrlInfoByAppId(appId).getImageUrl();
+            yaml.replace("<image_url>", imageUrl + ":" + buildTag);
+            return yaml;
 
         } else {
             String path = kubeYamlDataBoV1.getYamlFilePath();
 
 
-            String[] splitPath=path.split("blob/");
-            String  finalPath= "https://raw.githubusercontent.com/"+splitPath[0].split("github.com/")[1]+splitPath[1];
+            String[] splitPath = path.split("blob/");
+            String finalPath = "https://raw.githubusercontent.com/" + splitPath[0].split("github.com/")[1] + splitPath[1];
 
-            RestTemplate restTemplate=new RestTemplate();
-            String yaml =  restTemplate.getForObject(finalPath,String.class);
-            return yaml ;
-            }
+            RestTemplate restTemplate = new RestTemplate();
+            String yaml = restTemplate.getForObject(finalPath, String.class);
+            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
+
+            yaml.replace("<image_url>", buildTag);
+            return yaml;
         }
-
-
-
+    }
 
 
     /**
@@ -63,31 +72,28 @@ public class KubeYamlService {
      * @param nameSpace       命名空间
      * @param service         服务
      * @param deployment      部署
-     * @param container    容器
+     * @param container       容器
      * @param releaseStrategy 发布策略
      * @param releaseBatch    发布批次
      * @param replicas        副本数量
-     * @param imageUrl       镜像地址
      */
     public void CreateYamlData(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
-            , Long releaseBatch, String imageUrl, String yamlFilePath) throws Exception {
-
+            , Long releaseBatch, String yamlFilePath) throws Exception {
 
         KubeYamlData kubeYamlData = KubeYamlData.builder()
-                    .appEnvId(appEnvId)
-                    .ctime(LocalDateTime.now())
-                    .mtime(LocalDateTime.now())
-                    .cuser(cuser)
-                    .muser(cuser)
-                    .is_deleted(false)
-                    .nameSpace(nameSpace)
-                    .service(service)
-                    .deployment(deployment)
+                .appEnvId(appEnvId)
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .cuser(cuser)
+                .muser(cuser)
+                .is_deleted(false)
+                .nameSpace(nameSpace)
+                .service(service)
+                .deployment(deployment)
                 .containers(container)
-                    .replicas(replicas)
-                    .releaseBatch(releaseBatch)
+                .replicas(replicas)
+                .releaseBatch(releaseBatch)
                 .releaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy))
-                .imageUrl(imageUrl)
                 .build();
 
         if (yamlFilePath.equals("")) {
@@ -100,12 +106,11 @@ public class KubeYamlService {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container)) {
-                                containerList.get(i).setImage(imageUrl);
+                                containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         break;
                         //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
@@ -119,7 +124,7 @@ public class KubeYamlService {
                         .addToLabels("app", service)
                         .endMetadata()
                         .withNewSpec()
-                        .withReplicas(replicas)
+                        .withReplicas(new Integer(service))
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
@@ -130,7 +135,7 @@ public class KubeYamlService {
                         .withNewSpec()
                         .addNewContainer()
                         .withName(service)
-                        .withImage(imageUrl)
+                        .withImage("<image_url>")
                         .endContainer()
                         .endSpec()
                         .endTemplate()
@@ -163,10 +168,9 @@ public class KubeYamlService {
      * @param releaseStrategy 发布策略
      * @param releaseBatch    发布批次
      * @param replicas        副本数量
-     * @param imageUrl        镜像地址
      */
     public void updateYamlData(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
-            , Long releaseBatch, String imageUrl, String yamlFilePath) throws Exception {
+            , Long releaseBatch, String yamlFilePath) throws Exception {
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
         kubeYamlData.setMuser(cuser);
@@ -176,7 +180,7 @@ public class KubeYamlService {
         kubeYamlData.setContainers(container);
         kubeYamlData.setReplicas(replicas);
         kubeYamlData.setReleaseBatch(releaseBatch);
-        kubeYamlData.setImageUrl(imageUrl);
+        //kubeYamlData.setImageUrl(imageUrl);
 
         kubeYamlData.setReleaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy));
 
@@ -191,7 +195,7 @@ public class KubeYamlService {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container)) {
-                                containerList.get(i).setImage(imageUrl);
+                                containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
@@ -220,7 +224,7 @@ public class KubeYamlService {
                         .withNewSpec()
                         .addNewContainer()
                         .withName(service)
-                        .withImage(imageUrl)
+                        .withImage("<image_url>")
                         .endContainer()
                         .endSpec()
                         .endTemplate()
@@ -240,7 +244,7 @@ public class KubeYamlService {
         }
 
         this.kubeYamlRepository.saveAndFlush(kubeYamlData);
-    
+
     }
 
     /**
