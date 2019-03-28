@@ -8,6 +8,7 @@ import com.clsaa.dop.server.image.model.dto.ProjectMetadataDto1;
 import com.clsaa.dop.server.image.model.po.Project;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.po.ProjectReq;
+import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,11 @@ public class ProjectService {
      * @return {@link List<ProjectBO>} 项目信息列表
      */
     public List<ProjectBO> getProjects(String name,Boolean _public,String owner,Integer page,Integer pageSize){
-        List<Project> projects = projectFeign.projectsGet(name,_public,owner,page,pageSize);
+        //TODO auth first
+         String user ="admin";
+         String pass = "Dop123456789";
+         String auth = BasicAuthUtil.createAuth(user,pass);
+        List<Project> projects = projectFeign.projectsGet(name,_public,owner,page,pageSize,auth);
         if (projects.size()==0){
             return  null;
         }else {

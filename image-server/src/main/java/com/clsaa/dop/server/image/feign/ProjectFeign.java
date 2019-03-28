@@ -32,10 +32,11 @@ public interface ProjectFeign {
      */
     @GetMapping(value = "/projects")
     List<Project> projectsGet(@RequestParam(value = "name", required = false) String name,
-                                              @RequestParam(value = "public", required = false) Boolean publicStatus,
-                                              @RequestParam(value = "owner", required = false) String owner,
-                                              @RequestParam(value = "page", required = false) Integer page,
-                                              @RequestParam(value = "page_size", required = false) Integer pageSize);
+                              @RequestParam(value = "public", required = false) Boolean publicStatus,
+                              @RequestParam(value = "owner", required = false) String owner,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(value = "page_size", required = false) Integer pageSize,
+                              @RequestHeader(value = "Authorization") String auth);
 
     /**
      * 根据项目id返回 Project
