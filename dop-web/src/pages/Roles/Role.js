@@ -26,6 +26,7 @@ export default class Role extends Component {
         this.state = {
             currentData : [],
             permissionList:[],
+            roleSelectList:[],
             currentPermission:[],
             rowSelection: {
                 onChange: this.onSelectChange.bind(this),
@@ -194,19 +195,28 @@ export default class Role extends Component {
     //弹出创建角色窗
     onOpen = () => {
 
+        let roleUrl=API.gateway+"/permission-server/v1/roles/roles"
+        Axios.get(roleUrl).then(response=>{
 
-        let url=API.gateway+"/permission-server/v1/roles/permissions";
-        Axios.get(url).then(response=>{
+            let tmpList=[]
+            response.data.forEach(item=>{
+                tmpList.push({label:item.name,value:item.id
+            })
+            this.setState({roleSelectList:tmpList})
+            let url=API.gateway+"/permission-server/v1/roles/permissions";
+            Axios.get(url).then(response=>{
 
-            this.setState({permissionList:response.data})
-        }).catch(error=>{
-            console.log(error)
+                this.setState({permissionList:response.data})
+            }).catch(error=>{
+                console.log(error)
+            })
         })
 
         this.setState({
             visible: true
         });
-    };
+    })
+    }
     //关闭创建角色弹窗
     onClose = reason => {
         console.log(reason);
@@ -407,14 +417,8 @@ export default class Role extends Component {
                         </FormItem>
 
                         <FormItem label="父角色：" {...formItemLayout} required>
-                            <Select style={{ width: 200 }} {...init("parentId")}>
-                                <Option value="1">1</Option>
-                                <Option value="2">2</Option>
+                            <Select dataSource={this.state.roleSelectList} style={{width:200}}  {...init("parentId")}>
 
-                                <Option value="3">3</Option>
-                                <Option value="disabled" disabled>
-                                    disabled
-                                </Option>
                             </Select>
                         </FormItem>
 
