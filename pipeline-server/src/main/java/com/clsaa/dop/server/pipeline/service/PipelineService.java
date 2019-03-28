@@ -8,6 +8,8 @@ import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
+import com.clsaa.dop.server.pipeline.model.po.Stage;
+import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import org.bson.types.ObjectId;
@@ -23,6 +25,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -116,7 +119,7 @@ public class PipelineService {
     public List<PipelineBoV1> findAll() {
         List<Pipeline> pipelines = this.pipelineRepository.findAll();
         List<PipelineBoV1> pipelineBoV1s = new ArrayList<PipelineBoV1>();
-        for(int i = 0; i < pipelines.size(); i++){
+        for (int i = 0; i < pipelines.size(); i++) {
             PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                     .id(pipelines.get(i).getId().toString())
                     .name(pipelines.get(i).getName())
@@ -159,7 +162,7 @@ public class PipelineService {
      */
     public PipelineBoV1 findById(ObjectId id) {
         Optional<Pipeline> optionalPipeline = this.pipelineRepository.findById(id);
-        if(optionalPipeline.isPresent()){
+        if (optionalPipeline.isPresent()) {
             Pipeline pipeline = optionalPipeline.get();
             PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                     .id(pipeline.getId().toString())
@@ -174,7 +177,7 @@ public class PipelineService {
                     .isDeleted(pipeline.getIsDeleted())
                     .build();
             return pipelineBoV1;
-        }else{
+        } else {
             return null;
         }
     }
@@ -182,7 +185,7 @@ public class PipelineService {
     /**
      * 更新流水线信息
      */
-    public void update(PipelineBoV1 pipelineBoV1){
+    public void update(PipelineBoV1 pipelineBoV1) {
         Pipeline pipeline = Pipeline.builder()
                 .id(new ObjectId(pipelineBoV1.getId()))
                 .name(pipelineBoV1.getName())
@@ -203,11 +206,11 @@ public class PipelineService {
     /**
      * 根据用户id查找，返回该用户的流水线信息
      */
-    public List<PipelineV1Project> getPipelineById(Long cuser){
+    public List<PipelineV1Project> getPipelineById(Long cuser) {
         List<Pipeline> pipelines = this.pipelineRepository.findByCuser(cuser);
         List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
-        for(int i=0;i<pipelines.size();i++){
-            if(!pipelines.get(i).getIsDeleted()){
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
                 PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
                         .id(pipelines.get(i).getId().toString())
                         .name(pipelines.get(i).getName())
@@ -223,12 +226,12 @@ public class PipelineService {
     /**
      * 根据envid， 查询pipelineid
      */
-    public List<PipelineV1Project> getPipelineIdByEnvId(Long envid){
+    public List<PipelineV1Project> getPipelineIdByEnvId(Long envid) {
         System.out.println(envid);
         List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
         List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
-        for(int i=0;i<pipelines.size();i++){
-            if(!pipelines.get(i).getIsDeleted()){
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
                 PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
                         .id(pipelines.get(i).getId().toString())
                         .name(pipelines.get(i).getName())
@@ -240,4 +243,62 @@ public class PipelineService {
         }
         return pipelineV1Projects;
     }
+
+    public void setInfoByAppid(Long appid, String git) {
+        List<Pipeline> pipelines = this.pipelineRepository.findByAppId(appid);
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
+                List<Stage> stages = pipelines.get(i).getStages();
+                for (int j = 0; j < stages.size(); j++) {
+                    List<Step> steps = stages.get(j).getSteps();
+                    for (int z = 0; z < steps.size(); z++) {
+                        Step task = steps.get(z);
+                        String taskName = task.getTaskName();
+                        switch (taskName) {
+                            case ("拉取代码"):
+                                task.setGitUrl(git == null ? task.getGitUrl() : git);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void setInfoByEnvid(
+            Long envid,
+            String dockerUserName,
+            String dockerPassword,
+            String repository,
+            String repositoryVersion
+    ) {
+        List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
+                List<Stage> stages = pipelines.get(i).getStages();
+                for (int j = 0; j < stages.size(); j++) {
+                    List<Step> steps = stages.get(j).getSteps();
+                    for (int z = 0; z < steps.size(); z++) {
+                        Step task = steps.get(z);
+                        String taskName = task.getTaskName();
+                        switch (taskName) {
+                            case ("构建docker镜像"):
+                                task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
+                                task.setRepository(repository == null ? task.getRepository() : repository);
+                                task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
+                                break;
+                            case ("推送docker镜像"):
+                                task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
+                                task.setRepository(repository == null ? task.getRepository() : repository);
+                                task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
+                                task.setDockerPassword(dockerPassword == null ? task.getDockerPassword() : dockerPassword);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

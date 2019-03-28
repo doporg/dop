@@ -265,7 +265,9 @@ export default class EditPipelineInfo extends Component {
                                         <PipelineInfoStage
                                             stages={this.state.pipeline.stages}
                                             currentStage={this.state.currentStage}
+                                            appId={this.state.pipeline.appId}
                                             onChange={this.setStages.bind(this)}
+                                            onSelectEnv = {this.selectEnv.bind(this)}
                                         />
                                     )
                                 }

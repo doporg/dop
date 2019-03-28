@@ -1,15 +1,19 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 
-import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.Configuration;
-import io.kubernetes.client.apis.CoreV1Api;
-import io.kubernetes.client.models.V1beta2Deployment;
-import io.kubernetes.client.util.Config;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.yaml.snakeyaml.Yaml;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * k8s接口实现类
@@ -21,16 +25,20 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class K8sController {
 
-    @ApiOperation(value = "获取Authorization", notes = "获取Authorization, 供前端访问blueocean接口")
+    @ApiOperation(value = "")
     @GetMapping("/v1/k8s/test")
     public void test() {
-//        return this.blueOceanService.getAuthorization();
-        try{
-            ApiClient client = Config.defaultClient();
-            Configuration.setDefaultApiClient(client);
-
-        }catch (Exception e){
-
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "https://raw.githubusercontent.com/clsaa/dop/master/dop-web/k8s.yaml";
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        String result = responseEntity.getBody();
+        if(responseEntity.getStatusCodeValue() == 200 && result!= null){
+            String[] yamls = result.split("---");
+            Yaml yaml = new Yaml();
+            Map map = yaml.load(yamls[0]);
+            System.out.println(map.get("kind"));
+            Map test = (Map) map.get("metadata");
+            System.out.println(test.get("namespace"));
         }
     }
 }

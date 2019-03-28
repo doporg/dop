@@ -9,14 +9,20 @@ const {Combobox} = Select;
 export default class Pull extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            gitUrl: ""
+        }
     }
     componentWillMount(){
-        if(this.props.projectId){
-            let url = API.gateway + "/application-server/applicationDetail/" + this.props.projectId;
+        if(this.props.appId){
+            let url = API.application + "/app/" + this.props.appId + "/urlInfo";
             let self = this;
             Axios.get(url).then((response)=>{
                 if(response.status === 200){
-                    self.props.onChange(response.data.warehouse);
+                    self.setState({
+                        gitUrl: response.data.warehouseUrl
+                    });
+                    self.props.onChange(response.data.warehouseUrl);
                 }
             })
         }
@@ -41,7 +47,8 @@ export default class Pull extends Component{
                     <Input
                         onChange={this.buildMavenGit.bind(this)}
                         className="input"
-                        value={this.props.gitUrl}
+                        value={this.state.gitUrl}
+                        disabled
                     />
                 </div>
             </div>

@@ -10,4 +10,5 @@ import java.util.List;
 public interface PipelineRepository extends MongoRepository<Pipeline, ObjectId>{
     List<Pipeline> findByCuser(Long cuser);
     List<Pipeline> findByAppEnvId(Long envid);
+    List<Pipeline> findByAppId(Long appid);
 }

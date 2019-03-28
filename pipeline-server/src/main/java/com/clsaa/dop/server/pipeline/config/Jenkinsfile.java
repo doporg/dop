@@ -3,6 +3,8 @@ package com.clsaa.dop.server.pipeline.config;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 
@@ -15,12 +17,13 @@ import java.util.ArrayList;
  */
 
 public class Jenkinsfile {
-    private JsonObject pipeline;
+
     private String stages;
-    private String commond;
-    private String stageName;
+    private Long appEnvId;
+    private String git;
     public Jenkinsfile(){}
-    public Jenkinsfile(ArrayList<Stage> pipelineStage){
+    public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage){
+        this.appEnvId = appEnvId;
         this.stages = "";
         for(int i = 0; i < pipelineStage.size();i++){
             Stage stage = pipelineStage.get(i);
@@ -36,11 +39,13 @@ public class Jenkinsfile {
                 Step task = steps.get(j);
                 String taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
+                this.git = task.getGitUrl();
                 String dockerUserName = task.getDockerUserName();
                 String respository = task.getRepository();
                 String dockerPassword = task.getDockerPassword();
                 String respositoryVersion = task.getRepositoryVersion();
                 String shell = task.getShell();
+                String deploy = task.getDeploy();
                 switch (taskName){
                     case ("拉取代码"):
                         this.stages += "deleteDir() \n";
@@ -65,7 +70,7 @@ public class Jenkinsfile {
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
                     case ("部署"):
-                        this.stages += "sh \'" + shell + "\' \n";
+                        this.stages += "sh \'" + deploy + "\' \n";
                         break;
                 }
                 this.stages += "}\n";
@@ -81,5 +86,7 @@ public class Jenkinsfile {
                 "    }\n" +
                 "}");
     }
+
+
 
 }

@@ -18,6 +18,7 @@ export default class PipelineProject extends Component {
         this.state = {
             visible: false,
             pipelineId: this.props.match.params.id,
+            pipeline:{},
             runs: {
                 _links: {
                     self: {
@@ -26,20 +27,17 @@ export default class PipelineProject extends Component {
                 }
             },
             queue: [],
-            time: ""
+            time: "",
+            resultStatus: "run"
         }
     }
 
     componentDidMount() {
         let self = this;
-        // this.getRuns().then((data) => {
-        //     self.setState({
-        //         runs: data,
-        //     })
-        // })
         self.setState({
             visible: true
         });
+        self.getPipelineInfo();
         let time = setInterval(() => {
             this.getRuns().then((data) => {
                 self.setState({
@@ -52,7 +50,6 @@ export default class PipelineProject extends Component {
             time: time
         });
     }
-
 
     getRuns() {
         let url = API.pipeline + '/v1/jenkins/runs?id=' + this.state.pipelineId;
@@ -67,6 +64,7 @@ export default class PipelineProject extends Component {
                             duration: 3000
                         });
                         resolve(response.data[0]);
+                        self.clear();
                     } else {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
@@ -79,12 +77,34 @@ export default class PipelineProject extends Component {
         })
     }
 
+    getPipelineInfo(){
+        let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
+        let self = this;
+
+        Axios.get(url).then((response) => {
+            if (response.status === 200) {
+                self.setState({
+                    pipeline: response.data
+                })
+            }
+        })
+    }
+
     buildPipeline() {
-        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
+        // if(!this.state.pipeline.appEnvId){
+        //     toast.show({
+        //         type: "error",
+        //         content: "该流水线尚未绑定环境变量，请前往绑定",
+        //         duration: 3000
+        //     });
+        //     this.props.history.push("/application/environment/detail")
+        // }
         let self = this;
         self.setState({
-            visible: true
+            visible: true,
+            resultStatus: "build"
         });
+        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {
@@ -102,16 +122,22 @@ export default class PipelineProject extends Component {
             }
         })
     }
-
     clear() {
         clearInterval(this.state.time);
-        this.setResult()
+        if(this.state.resultStatus === "build"){
+            this.setResult()
+        }
     }
 
     setResult() {
         let url = API.pipeline + '/v1/resultOutput/notify/'+ this.state.pipelineId;
         Axios.post(url).then((response) => {
-            console.log(response);
+        }).catch(()=>{
+            toast.show({
+                type: "error",
+                content: "此次执行信息丢失",
+                duration: 3000
+            });
         })
     }
 

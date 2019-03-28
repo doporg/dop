@@ -18,7 +18,7 @@ export default class PipelineInfoStep extends Component {
         super(props);
         this.state = {
             stage: this.props.stage,
-            availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本"],
+            availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本", "部署"],
             steps: [],
             currentStep: null,
             chosenStep: {
@@ -55,7 +55,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
             case "构建maven":
@@ -66,7 +67,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
             case "构建node":
@@ -77,7 +79,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
             case "构建docker镜像":
@@ -88,7 +91,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
             case "推送docker镜像":
@@ -99,7 +103,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
             case "自定义脚本":
@@ -110,7 +115,20 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
+                };
+                break;
+            case "部署":
+                newTask = {
+                    taskName: "部署",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    repositoryVersion: "",
+                    shell: "",
+                    deploy:""
                 };
                 break;
             default:
@@ -121,7 +139,8 @@ export default class PipelineInfoStep extends Component {
                     dockerPassword: "",
                     repository: "",
                     repositoryVersion: "",
-                    shell: ""
+                    shell: "",
+                    deploy:""
                 };
                 break;
         }
@@ -154,7 +173,9 @@ export default class PipelineInfoStep extends Component {
             chosenStep
         })
     }
+    onSelectEnv(value){
 
+    }
     gitUrl(value) {
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
@@ -292,6 +313,7 @@ export default class PipelineInfoStep extends Component {
                                                                         <Pull
                                                                             onChange={this.gitUrl.bind(this)}
                                                                             gitUrl={this.state.chosenStep.gitUrl}
+                                                                            appId = {this.props.appId}
                                                                         />
                                                                     );
                                                                 case "构建maven":
@@ -305,6 +327,8 @@ export default class PipelineInfoStep extends Component {
                                                                 case "构建docker镜像":
                                                                     return (
                                                                         <DockerImage
+                                                                            appId = {this.props.appId}
+                                                                            onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
                                                                             onRepositoryChange={this.buildRepository.bind(this)}
                                                                             onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
@@ -316,6 +340,7 @@ export default class PipelineInfoStep extends Component {
                                                                 case "推送docker镜像":
                                                                     return (
                                                                         <PushDockerImage
+                                                                            appId = {this.props.appId}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
                                                                             onRepositoryChange={this.buildRepository.bind(this)}
                                                                             onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}

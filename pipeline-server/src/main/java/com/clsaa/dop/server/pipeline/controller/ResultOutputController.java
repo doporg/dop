@@ -8,6 +8,7 @@ import io.kubernetes.client.Configuration;
 import io.kubernetes.client.util.Config;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,6 +33,7 @@ public class ResultOutputController {
         this.resultOutputService.create(pipeline);
     }
 
+    @Async
     @ApiOperation(value = "通知变更result")
     @PostMapping("/v1/resultOutput/notify/{id}")
     public void notify(@PathVariable(value = "id") String id) {
