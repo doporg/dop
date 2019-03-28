@@ -22,18 +22,7 @@ const baseConfig = [
         component: NotFound,
     },
 ];
-const projectConfig = [
-    {
-        path: '/project',
-        layout: BasicLayout,
-        component: Projects,
-    },
-    {
-        path: '*',
-        layout: BasicLayout,
-        component: NotFound,
-    },
-];
+
 
 const pipelineConfig = [
     //pipeline
@@ -94,7 +83,6 @@ const ciadjustConfig = [
     }
 ];
 
-const routerConfig = [...projectConfig, ...pipelineConfig, ...loginConfig, ...ciadjustConfig, ...baseConfig];
 const codeConfig = [
 
     {
