@@ -31,7 +31,7 @@ public class KubeYamlController {
 
     @ApiOperation(value = "获取传输的yaml文件", notes = "获取传输的yaml文件")
     @GetMapping(value = "/app/env/{appEnvId}/yamlFile")
-    public HashMap<String, String> createYamlFileForDeploy(
+    public String createYamlFileForDeploy(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         try {
             return this.kubeYamlService.createYamlFileForDeploy(appEnvId);
@@ -84,6 +84,15 @@ public class KubeYamlController {
     @GetMapping(value = "/app/env/{appEnvId}/yaml")
     public KubeYamlDataV1 getYamlInfoByAppEnvId(@ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         return BeanUtils.convertType(this.kubeYamlService.findYamlDataByEnvId(appEnvId), KubeYamlDataV1.class);
+    }
+
+    @ApiOperation(value = "更新yaml文件", notes = "更新yaml文件")
+    @PutMapping(value = "/app/env/{appEnvId}/deploymentYaml")
+    public void updateDeploymentYaml(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "deploymentYaml", name = "deploymentYaml", required = true) @RequestParam(value = "deploymentYaml") String deploymentYaml) {
+        this.kubeYamlService.updateDeploymentYaml(muser, appEnvId, deploymentYaml);
     }
 
 

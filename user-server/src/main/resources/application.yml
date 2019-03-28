@@ -91,10 +91,12 @@ message:
     resetContent: "正在修改DOP密码，验证码：:code"
     from: softeng_dop@163.com
   mq:
-    RocketMQ:                                     #RocketMQ相关配置
-      namesrvAddr: rocketmq.dop.clsaa.com:9876    #name-server地址与端口,多个可用分号隔开
-      groupName:  DOP_MESSAGE_PRODUCER_GROUP      #生产者组名称
-      instanceName: DOP_MESSAGE                   #要发送到的MQ集群
-      maxMessageSize: 131072 # 1024*128           #最大消息长度
-      sendMessageTimeout: 10000                   #消息发送超时时间
-      emailTopic: EMAIL_QUEUE                     #主题名
+    RocketMQ:                                       #RocketMQ相关配置
+      namesrvAddr: rocketmq.dop.clsaa.com:9876      #name-server地址与端口,多个可用分号隔开
+      groupName:  DOP_MESSAGE_PRODUCER_GROUP        #生产者组名称
+      instanceName: DOP_MESSAGE                     #要发送到的MQ集群
+      maxMessageSize: 131072 # 1024*128             #最大消息长度
+      sendMessageTimeout: 10000                     #消息发送超时时间
+      emailTopic: EMAIL_QUEUE                       #email发送，主题名
+      registerAccountTopic: REGISTER_ACCOUNT_QUEUE  #注册用户广播，主题名
+      updateAccountTopic: UPDATE_ACCOUNT_QUEUE      #注册用户广播，主题名

@@ -96,6 +96,15 @@ public class AppService {
     /**
      * 删除应用
      *
+     * @param ouser ouser
+     */
+    public List<AppBoV1> findApplicationByOuser(Long ouser){
+        return this.appRepository.findAllByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppBoV1.class)).collect(Collectors.toList());
+    }
+
+    /**
+     * 删除应用
+     *
      * @param id appId
      */
     public void updateApp(Long id, String description) {

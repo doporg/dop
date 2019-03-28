@@ -5,7 +5,7 @@ import {
     Input,
     Form,
     Field,
-    Select
+    Select, Loading
 }
     from "@icedesign/base";
 
@@ -41,7 +41,8 @@ class ApplicationEnvironmentForm extends Component {
         super(props, context);
         this.field = new Field(this);
         this.state = {
-            appId: props.appId
+            appId: props.appId,
+            loading: false
         }
     }
 
@@ -53,6 +54,9 @@ class ApplicationEnvironmentForm extends Component {
 
         // 校验表单数据
         let _this = this;
+        this.setState({
+            loading: true
+        })
         this.field.validate((errors, values) => {
             console.log(errors, values);
             console.log(_this.field.getValue('environmentLevel'))
@@ -72,6 +76,9 @@ class ApplicationEnvironmentForm extends Component {
                 )
                     .then(function (response) {
                         console.log(response);
+                        _this.setState({
+                            loading: false
+                        })
                         props.finished();
                     })
                     .catch(function (error) {
@@ -94,47 +101,49 @@ class ApplicationEnvironmentForm extends Component {
     render() {
         const {init, getValue} = this.field;
         return (
-            <div>
-                <Form
-                    labelAlign={"left"}
-                    style={style}
-                >
-                    <FormItem
-                        {...formItemLayout}
-                        validateStatus={this.field.getError("title") ? "error" : ""}
-                        help={this.field.getError("title") ? "请输入Key" : ""}
-                        label="环境名称："
-                        required>
-                        <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                               placeholder="环境名称"/>
-                    </FormItem>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+            >
+                <div>
+                    <Form
+                        labelAlign={"left"}
+                        style={style}
+                    >
+                        <FormItem
+                            {...formItemLayout}
+                            validateStatus={this.field.getError("title") ? "error" : ""}
+                            help={this.field.getError("title") ? "请输入Key" : ""}
+                            label="环境名称："
+                            required>
+                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
+                                   placeholder="环境名称"/>
+                        </FormItem>
 
-                    <FormItem
-                        {...formItemLayout}
-                        validateStatus={this.field.getError("environmentLevel") ? "error" : ""}
-                        label="环境级别："
-                        required>
-                        <Select  {...init('environmentLevel', {rules: [{required: true, message: "该项不能为空"}]})}
-                                 placeholder="环境级别">
-                            <Option value="DAILY">日常环境</Option>
-                            <Option value="PRERELEASE">预发环境</Option>
-                            <Option value="RELEASE">正式环境</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
-                        label="部署方式："
-                        required>
-                        <Select  {...init('deploymentStrategy', {rules: [{required: true, message: "该项不能为空"}]})}
-                                 placeholder="部署方式">
-                            <Option value="KUBERNETES">Kubernetes部署</Option>
-                        </Select>
-                    </FormItem>
+                        <FormItem
+                            {...formItemLayout}
+                            validateStatus={this.field.getError("environmentLevel") ? "error" : ""}
+                            label="环境级别："
+                            required>
+                            <Select  {...init('environmentLevel', {rules: [{required: true, message: "该项不能为空"}]})}
+                                     placeholder="环境级别">
+                                <Option value="DAILY">日常环境</Option>
+                                <Option value="PRERELEASE">预发环境</Option>
+                                <Option value="RELEASE">正式环境</Option>
+                            </Select>
+                        </FormItem>
+                        <FormItem
+                            {...formItemLayout}
+                            validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
+                            label="部署方式："
+                            required>
+                            <Select  {...init('deploymentStrategy', {rules: [{required: true, message: "该项不能为空"}]})}
+                                     placeholder="部署方式">
+                                <Option value="KUBERNETES">Kubernetes部署</Option>
+                            </Select>
+                        </FormItem>
 
-                </Form>
-            </div>
-        )
+                    </Form>
+                </div>
+            </Loading>)
     }
 }
 
@@ -207,6 +216,7 @@ export default class CreateApplicationEnvironmentDialog extends Component {
 
     render() {
         return (
+
             <span>
                 <Button onClick={this.onOpen} type="primary">
           新建变量

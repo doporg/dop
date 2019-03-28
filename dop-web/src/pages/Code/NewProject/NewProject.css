@@ -1,6 +1,6 @@
-.container{
+.new-container{
     background-color: rgb(255, 255, 255);
-    height: 600px;
+    height: 500px;
     position: relative;
     padding-top: 1px;
 }

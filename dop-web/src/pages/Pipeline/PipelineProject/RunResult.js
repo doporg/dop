@@ -22,9 +22,11 @@ export default class RunResult extends Component {
     componentWillReceiveProps(nextProps) {
         let self = this;
         if (nextProps.runs) {
-            this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
-                self.step(stages[self.state.currentStage])
-            })
+            if(nextProps.runs._links.self.href !== ""){
+                this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
+                    self.step(stages[self.state.currentStage])
+                })
+            }
         }
     }
 
@@ -43,8 +45,6 @@ export default class RunResult extends Component {
 
     //获取stage
     stage(href) {
-        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/47/nodes/';
-        // let url = API.jenkins + href;
         let url = API.pipeline + "/v1/jenkins/result?path=" + href;
         let self = this;
         let stages = [];
@@ -134,6 +134,7 @@ export default class RunResult extends Component {
                                          authorization={self.props.authorization}
                                          title={step.displayDescription ? step.displayDescription : step.displayName}
                                          prop={step.displayDescription ? step.displayName : null}
+                                         currentStage={this.state.currentStage?this.state.currentStage:null}
                                     />
                                 )
                             }))

@@ -52,6 +52,18 @@ public class Step {
     private String repository;
 
     /**
+     * deployment
+     */
+    @SerializedName("deployment")
+    private String deployment;
+
+    /**
+     * 预留k8s token
+     */
+    @SerializedName("token")
+    private String token;
+
+    /**
      * shell
      */
     @SerializedName("shell")

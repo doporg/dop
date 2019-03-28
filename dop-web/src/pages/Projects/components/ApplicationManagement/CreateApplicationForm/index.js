@@ -23,7 +23,8 @@ export default class ApplicationForm extends Component {
         super(props, context);
         this.field = new Field(this);
         this.state = {
-            projectId: props.projectId
+            projectId: props.projectId,
+            loading: false
         }
     }
 
@@ -32,7 +33,10 @@ export default class ApplicationForm extends Component {
      *
      * */
     handleSubmit(props) {
-
+        this.setState({
+            loading: true
+        })
+        let _this = this
         // 校验表单数据
         this.field.validate((errors, values) => {
             console.log(errors, values);
@@ -52,6 +56,9 @@ export default class ApplicationForm extends Component {
                 )
                     .then(function (response) {
                         console.log(response);
+                        _this.setState({
+                            loading: false
+                        })
                         props.finished();
                     })
                     .catch(function (error) {

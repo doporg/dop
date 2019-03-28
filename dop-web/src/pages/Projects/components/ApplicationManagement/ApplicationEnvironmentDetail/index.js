@@ -4,7 +4,7 @@ import
     Button,
     Select,
     Feedback,
-    Field
+    Field, Loading
 } from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
@@ -35,7 +35,8 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.state = {
             appId: props.appId,
             appEnvId: props.appEnvId,
-            envData: []
+            envData: [],
+            loading: true
         }
     }
 
@@ -47,12 +48,14 @@ export default class ApplicationEnvironmentDetail extends Component {
                 if (response.data == "") {
                     this.setState({
                         envData: [],
-                        editMode: true
+                        editMode: true,
+                        loading: false
                     })
                 } else {
                     this.setState({
                         envData: response.data,
-                        editMode: false
+                        editMode: false,
+                        loading: false
                     })
                 }
             })
@@ -74,19 +77,32 @@ export default class ApplicationEnvironmentDetail extends Component {
     clusterInfoRender() {
         if (this.field.getValue('deploymentStrategy') === 'KUBERNETES' && this.state.appEnvId !== undefined) {
             return (<ClusterInfoForm
+
                 appEnvId={this.state.appEnvId}/>)
         }
     }
     render() {
         const {init, getValue} = this.field
         return (
-            <div>
-                <Form>
 
+            <div style={{
+                margin: "0 auto",
+                width: "70%",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                flexDirection: "column"
+            }}>
+
+
+                <Form>
+                    <Loading visible={this.state.loading} size='small' shape="dot-circle" color="#2077FF"
+                    >
                     <FormItem label="部署方式"
                               {...formItemLayout}
                               validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
                               help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}>
+
                         <Select placeholder="部署方式"
                                 onChange={this.onChange.bind(this)}
 
@@ -97,12 +113,15 @@ export default class ApplicationEnvironmentDetail extends Component {
                             <Option value="KUBERNETES">Kubernetes部署</Option>
                             <Option value="test">测试</Option>
                         </Select>
+
                     </FormItem>
 
-                    <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
 
+                    </Loading>
 
                 </Form>
+
+                <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 
             </div>

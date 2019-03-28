@@ -9,12 +9,13 @@ import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.apis.AppsV1Api;
 import io.kubernetes.client.apis.CoreApi;
 import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.Yaml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.client.RestTemplate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -31,21 +32,27 @@ public class KubeYamlService {
     KubeCredentialService kubeCredentialService;
 
 
-    public HashMap<String, String> createYamlFileForDeploy(Long appEnvId) {
+    public String createYamlFileForDeploy(Long appEnvId) {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
-            return new HashMap<String, String>() {{
-                put("yaml", kubeYamlDataBoV1.getDeploymentEditableYaml());
-            }};
+            return (kubeYamlDataBoV1.getDeploymentEditableYaml());
 
         } else {
-            return new HashMap<String, String>() {{
-                put("path", kubeYamlDataBoV1.getYamlFilePath());
-            }};
+            String path = kubeYamlDataBoV1.getYamlFilePath();
+
+
+            String[] splitPath=path.split("blob/");
+            String  finalPath= "https://raw.githubusercontent.com/"+splitPath[0].split("github.com/")[1]+splitPath[1];
+
+            RestTemplate restTemplate=new RestTemplate();
+            String yaml =  restTemplate.getForObject(finalPath,String.class);
+            return yaml ;
+            }
         }
 
-    }
+
+
 
 
     /**
@@ -248,6 +255,14 @@ public class KubeYamlService {
         return BeanUtils.convertType(this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null), KubeYamlDataBoV1.class);
     }
 
+    public void updateDeploymentYaml(Long muser, Long appEnvId, String deploymentYaml) {
+        KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
+        kubeYamlData.setMtime(LocalDateTime.now());
+        kubeYamlData.setMuser(muser);
+        kubeYamlData.setDeploymentEditableYaml(deploymentYaml);
+        this.kubeYamlRepository.saveAndFlush(kubeYamlData);
+    }
+
 
     /**
      * 根据id获取client
@@ -384,6 +399,7 @@ public class KubeYamlService {
                 new V1ServiceBuilder()
                         .withNewMetadata()
                         .withName(name)
+                        .withNamespace(namespace)
                         .addToLabels("app", name)
                         .endMetadata()
                         .withNewSpec()
@@ -398,6 +414,30 @@ public class KubeYamlService {
         //     appsV1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
         //appsV1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
         coreApi.createNamespacedService(namespace, service, false, null, null);
+
+        V1beta1Ingress ingress =
+                new V1beta1IngressBuilder()
+                        .withApiVersion("extensions/v1beta1")
+                        .withKind("Ingress")
+                        .withNewMetadata()
+                        .withName(name)
+                        .withNamespace(namespace)
+                        .endMetadata()
+                        .withNewSpec()
+                        .addNewRule()
+                        .withHost("*")
+                        .withNewHttp()
+                        .addNewPath()
+                        .withNewBackend()
+                        .withServiceName(name)
+                        .withServicePort(new IntOrString(port))
+                        .endBackend()
+                        .endPath()
+                        .endHttp()
+                        .endRule()
+                        .endSpec()
+                        .build();
+
 
     }
 

@@ -6,6 +6,7 @@ import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.service.AppService;
 import com.clsaa.dop.server.application.service.AppUrlInfoService;
+import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * <p>
  * 应用API接口实现类
@@ -40,6 +45,14 @@ public class AppController {
                                                         @ApiParam(name = "queryKey", value = "搜索关键字", defaultValue = "") @RequestParam(value = "queryKey", defaultValue = "") String queryKey) {
 
         return this.appService.findApplicationByProjectIdOrderByCtimeWithPage(pageNo, pageSize, projectId, queryKey);
+    }
+
+    @ApiOperation(value = "查询应用", notes = "根据拥有者ID查询应用项目")
+    @GetMapping(value = "/app?ouser=:ouser")
+    public List<AppV1> findApplicationByCuser(
+            @ApiParam(name = "ouser", value = "ouser", required = true) @RequestParam(value = "projectId") Long ouser) {
+
+        return this.appService.findApplicationByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppV1.class)).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "根据ID查询应用信息", notes = "根据ID查询应用项目")

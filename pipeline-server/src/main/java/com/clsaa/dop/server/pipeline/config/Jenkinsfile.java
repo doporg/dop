@@ -64,6 +64,8 @@ public class Jenkinsfile {
                         break;
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
+                    case ("部署"):
+                        this.stages += "sh \'" + shell + "\' \n";
                         break;
                 }
                 this.stages += "}\n";
