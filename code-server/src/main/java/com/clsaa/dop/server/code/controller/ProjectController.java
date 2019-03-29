@@ -2,6 +2,7 @@ package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
 import com.clsaa.dop.server.code.model.dto.project.ProjectDto;
+import com.clsaa.dop.server.code.model.vo.project.BranchVo;
 import com.clsaa.dop.server.code.model.vo.project.ProjectEditVo;
 import com.clsaa.dop.server.code.model.vo.project.ProjectListVo;
 import com.clsaa.dop.server.code.model.vo.project.ProjectVo;
@@ -70,9 +71,17 @@ public class ProjectController {
 
     @ApiOperation(value = "获得项目所有的分支名",notes = "根据项目id查询")
     @GetMapping("/projects/{id}/branches")
-    public List<String> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public List<BranchVo> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") int id,
                                           @ApiParam(value = "用户名")@RequestParam("username") String username){
-        return projectService.findAllBranchName(id,username);
+
+        List<String> strs=projectService.findAllBranchName(id,username);
+
+        List<BranchVo> branchVos=new ArrayList<>();
+        for(String str:strs){
+            branchVos.add(new BranchVo(str,str));
+        }
+
+        return branchVos;
     }
 
     @ApiOperation(value = "编辑项目信息",notes = "编辑项目信息包括名称、描述、默认分支和可见等级")
@@ -83,6 +92,7 @@ public class ProjectController {
                                 @ApiParam(value = "默认分支")@RequestParam("default_branch") String default_branch,
                                 @ApiParam(value = "可见等级")@RequestParam("visibility") String visibility,
                                 @ApiParam(value = "用户名")@RequestParam("username") String username){
+
         projectService.editProjectInfo(id,name,description,default_branch,visibility,username);
     }
 

@@ -30,6 +30,8 @@ class CodeAside extends Component {
     //   branch=this.props.match.params.branch;
     // }
 
+    const backLink="/code/projectlist";
+
     const projectLink="/code/"+username+"/"+projectid;
     const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+branch;
 
@@ -38,8 +40,8 @@ class CodeAside extends Component {
 
     return (
         <Menu mode="inline" selectedKeys={[pathname]} className="ice-menu-custom">
-            <MenuItem key="/">
-                <Link to="/" className="ice-menu-link">
+            <MenuItem key={backLink}>
+                <Link to={backLink} className="ice-menu-link">
                     <FoundationSymbol size="small" type="home2" >
                         <Icon size="small" type="home2" />
                     </FoundationSymbol>
