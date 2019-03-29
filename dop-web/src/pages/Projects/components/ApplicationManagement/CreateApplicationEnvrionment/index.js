@@ -1,13 +1,4 @@
-import {
-    Dialog,
-    Button,
-    Grid,
-    Input,
-    Form,
-    Field,
-    Select, Loading
-}
-    from "@icedesign/base";
+import {Button, Dialog, Field, Form, Grid, Input, Loading, Select} from "@icedesign/base";
 
 
 import React, {Component} from 'react';
@@ -219,7 +210,7 @@ export default class CreateApplicationEnvironmentDialog extends Component {
 
             <span>
                 <Button onClick={this.onOpen} type="primary">
-          新建变量
+          新建环境
         </Button>
         <Dialog
             visible={this.state.visible}

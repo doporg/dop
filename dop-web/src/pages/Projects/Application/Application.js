@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TopBar from "../components/ApplicationManagement/TopBar";
-import {Input} from "@icedesign/base";
+import {Breadcrumb, Input} from "@icedesign/base";
 import CreateApplicationDialog from "../components/ApplicationManagement/CreateApplicationDialog";
 import Pagination from "../components/ApplicationManagement/ApplicationPagination";
 
@@ -52,6 +52,11 @@ export default class Application extends Component {
         return (
             <div>
                 {/*创建函数的对话框和搜索框*/}
+                <Breadcrumb>
+                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                </Breadcrumb>
                 <TopBar
                     extraBefore={
                         <CreateApplicationDialog refreshApplicationList={this.refreshApplicationList.bind(this)}

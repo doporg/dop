@@ -1,15 +1,7 @@
-import
-{
-    Form,
-    Button,
-    Select,
-    Feedback,
-    Field, Loading
-} from "@icedesign/base";
+import {Breadcrumb, Button, Feedback, Field, Form, Loading, Select} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import {Col, Row} from "@alifd/next/lib/grid";
 import PipelineBindPage from "../PipelineBindPage"
 import ClusterInfoForm from "../ClusterInfoForm"
 
@@ -36,7 +28,9 @@ export default class ApplicationEnvironmentDetail extends Component {
             appId: props.appId,
             appEnvId: props.appEnvId,
             envData: [],
-            loading: true
+            loading: true,
+            projectId: props.projectId,
+            toggleEnvDetail: props.toggleEnvDetail
         }
     }
 
@@ -93,6 +87,13 @@ export default class ApplicationEnvironmentDetail extends Component {
                 justifyContent: "center",
                 flexDirection: "column"
             }}>
+                <Breadcrumb>
+                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                </Breadcrumb>
 
 
                 <Form>
@@ -123,6 +124,8 @@ export default class ApplicationEnvironmentDetail extends Component {
 
                 <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
+
+                <Button onClick={this.state.toggleEnvDetail.bind(this)} type="primary">返回环境列表</Button>
 
             </div>
         );

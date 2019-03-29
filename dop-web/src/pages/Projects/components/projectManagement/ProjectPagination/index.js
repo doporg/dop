@@ -1,4 +1,4 @@
-import {Pagination, Loading} from "@icedesign/base";
+import {Loading, Pagination} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API.js"
 import Axios from "axios";
@@ -83,24 +83,22 @@ export default class ProjectPagination extends Component {
                 console.log("getList", getList)
 
                 //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
-                let finalList = [];
+                let finalList = {};
 
                 //将所有URL请求发出
                 Axios.all(getList).then(Axios.spread(function (...resList) {
                     console.log("resList", resList);
                     for (let i = 0; i < resList.length; i++) {
                         //如果该值不为空则添加到哈希表中
-                        if (resList[i].data != "") {
-                            finalList[resList[i].data.id] = resList[i].data.name;
-                        } else {
-                            finalList[resList[i].data.id] = "";
+                        if (resList[i].data !== "") {
+                            finalList[resList[i].data.id.toString()] = resList[i].data.name;
                         }
                     }
                     console.log("finalList", finalList)
 
                     //将所有ID置换为NAME
                     for (let i = 0; i < tmpData.length; i++) {
-                        tmpData[i].cuser = finalList[tmpData[i].cuser];
+                        tmpData[i].cuser = finalList[tmpData[i].cuser.toString()];
                     }
                     console.log(tmpData);
                     //赋值

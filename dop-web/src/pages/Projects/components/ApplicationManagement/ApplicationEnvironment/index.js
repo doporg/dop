@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import {Card, Button, Dialog, Feedback, Icon, Loading} from '@icedesign/base';
-import {Link} from "react-router-dom";
+import {Breadcrumb, Button, Card, Dialog, Feedback, Icon, Loading} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
 import {Col, Row} from "@alifd/next/lib/grid";
 import CreateApplicationEnvironmentDialog from "../CreateApplicationEnvrionment";
-import CreateApplicationVariableDialog from "../ApplicationVariable";
 
 
 const Toast = Feedback.toast;
@@ -17,7 +15,8 @@ export default class ApplicationEnvironment extends Component {
             appId: props.appId,
             appEnvData: [],
             showEnvDetail: props.showEnvDetail,
-            loading: true
+            loading: true,
+            projectId: props.projectId
         }
 
     }
@@ -104,6 +103,7 @@ export default class ApplicationEnvironment extends Component {
 
         return (
 
+
             <Row wrap gutter="20">
                 {this.state.appEnvData.map((item, index) => {
                     console.log(item)
@@ -126,6 +126,7 @@ export default class ApplicationEnvironment extends Component {
                 })}
             </Row>
 
+
         )
 
 
@@ -141,6 +142,13 @@ export default class ApplicationEnvironment extends Component {
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
                 <div>
+                    <Breadcrumb>
+                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                    </Breadcrumb>
                     <CreateApplicationEnvironmentDialog type="primary"
                                                         refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
                                                         appId={this.state.appId}>

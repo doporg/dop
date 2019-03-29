@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {Table, Dialog} from '@icedesign/base';
-import {Grid} from '@icedesign/base';
-import {Icon} from '@icedesign/base';
+import {Dialog, Feedback, Grid, Icon, Table} from '@icedesign/base';
 import API from "../../../../API.js"
 import {Col} from "@alifd/next/lib/grid";
 import Axios from "axios";
 import {Link} from "react-router-dom";
 
-import {Feedback} from '@icedesign/base';
 const {Row} = Grid;
 const Toast = Feedback.toast;
 /**
@@ -23,9 +20,10 @@ export default class ApplicationList extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props.currentData)
+        console.log("applicationList", props)
         //接受来自分页器的参数即当前页数据
         this.state = {
+            projectId: props.projectId,
             isVisible: false,
             currentData: props.currentData,
             deletedCallRefresh: props.deletedCallRefresh,
@@ -72,8 +70,9 @@ export default class ApplicationList extends Component {
     }
 
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
-    idRender = function (id) {
-        return <Link to={"/applicationDetail?appId=" + id}
+    idRender(id) {
+        let _this = this
+        return <Link to={"/applicationDetail?appId=" + id + "&projectId=" + _this.state.projectId}
         >{id}</Link>
     }
 
@@ -96,7 +95,7 @@ export default class ApplicationList extends Component {
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender}
+                        <Table.Column cell={this.idRender.bind(this)}
                                       title="ID"
                                       dataIndex="id"/>
 
