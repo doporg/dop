@@ -53,7 +53,7 @@ export default class K8sInfoPage extends Component {
                 serviceData: ""
             })
         } else {
-            let _this = this
+            let _this = this;
             let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/allServices"
             Axios.get(namespaceUrl, {
                 params: {
@@ -113,7 +113,7 @@ export default class K8sInfoPage extends Component {
                     })
                 } else {
 
-                    if (response.data.yamlFilePath != "") {
+                    if (response.data.yamlFilePath !== "") {
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
@@ -129,7 +129,7 @@ export default class K8sInfoPage extends Component {
                         })
                     }
                     //
-                    // if(response.data.deploymentEditableYaml !="")
+                    // if(response.data.deploymentEditableYaml !=="")
                     // {
                     //     _this.setState({
                     //         editDeploymentYaml:true
@@ -157,9 +157,12 @@ export default class K8sInfoPage extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log("will", nextProps)
-        this.getYamlData()
-        this.getNameSpaceData()
+        if (nextProps.refreshK8sInfo) {
+            console.log("will", nextProps)
+            this.getYamlData()
+            this.getNameSpaceData()
+            nextProps.refreshFinished()
+        }
     }
 
     envDetailConfirm = () => {
@@ -428,7 +431,7 @@ export default class K8sInfoPage extends Component {
 
     yamlInfoRender() {
         const {init, getValue} = this.field
-        if (this.state.yamlData != []) {
+        if (this.state.yamlData !== []) {
             if (this.state.yamlMode == "profile") {
                 return (
                     <div>
@@ -638,7 +641,7 @@ export default class K8sInfoPage extends Component {
 
     yamlEditorRender() {
         const {init, getValue} = this.yamlEditorfield
-        if (this.state.yamlData != [] && this.state.yamlData.deploymentEditableYaml != "") {
+        if (this.state.yamlData !== [] && this.state.yamlData.deploymentEditableYaml !== "") {
             return <Form>
                 <FormItem label="Deployment Yaml"
 
@@ -685,7 +688,7 @@ export default class K8sInfoPage extends Component {
 
     k8sBasicRender() {
         const {init, getValue} = this.field
-        if (this.state.yamlData != []) {
+        if (this.state.yamlData !== []) {
             return (
                 <div>
                     <FormItem label="发布策略"

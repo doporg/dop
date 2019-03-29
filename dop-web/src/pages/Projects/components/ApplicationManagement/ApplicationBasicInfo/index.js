@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card, Dialog, Feedback, Field, Form, Input, Loading} from '@icedesign/base';
+import {Breadcrumb, Button, Card, Dialog, Feedback, Field, Form, Input, Loading} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
 
@@ -40,7 +40,8 @@ export default class ApplicationBasicInfo extends Component {
             appId: props.appId,
             appBasicData: [],
             userData: [],
-            loading: true
+            loading: true,
+            projectId: props.projectId
         }
     }
 
@@ -303,6 +304,13 @@ export default class ApplicationBasicInfo extends Component {
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
+                <Breadcrumb>
+                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                </Breadcrumb>
 
                 <div style={{
                     margin: "0 auto",

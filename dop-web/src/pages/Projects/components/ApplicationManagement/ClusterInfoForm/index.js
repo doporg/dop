@@ -1,13 +1,4 @@
-import
-{
-    Input,
-    Form,
-    Field,
-    Button,
-    Feedback,
-    Icon,
-    Dialog, Loading
-} from "@icedesign/base";
+import {Button, Dialog, Feedback, Field, Form, Icon, Input, Loading} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
@@ -28,9 +19,16 @@ export default class ClusterInfoForm extends Component {
             editMode: false,
             clusterData: "",
             appEnvId: props.appEnvId,
-            loading: true
+            loading: true,
+            refreshK8sInfo: false
 
         }
+    }
+
+    refreshFinished() {
+        this.setState({
+            refreshK8sInfo: false
+        })
     }
 
 
@@ -67,7 +65,8 @@ export default class ClusterInfoForm extends Component {
                     .then((response) => {
                             Toast.success("保存成功")
                         _this.setState({
-                            loading: false
+                            loading: false,
+                            refreshK8sInfo: true
                         })
                             _this.getClusterData()
                         }
@@ -109,6 +108,8 @@ export default class ClusterInfoForm extends Component {
     k8sInfoRender() {
         if (!(this.state.clusterData === undefined && this.state.clusterData === ""))
             return (<K8sInfoPage
+                refreshK8sInfo={this.state.refreshK8sInfo}
+                refreshFinished={this.refreshFinished.bind(this)}
                 targetCluster={this.state.clusterData}
                 appEnvId={this.state.appEnvId}
             />)
