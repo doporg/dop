@@ -52,7 +52,6 @@ public class ProjectController {
     public void addProject(@ApiParam(value = "项目名称",required = true) @RequestParam(value = "name") String projectName,
                            @ApiParam(value = "项目权限",required = true) @RequestParam(value = "status") String publicStatus,
                            @ApiParam(value = "用户id") @RequestHeader(value = "user_id")Long userId){
-        //TODO 将创建人联系起来
         ProjectMetadata metadata = new ProjectMetadata(publicStatus,"false","false","low","false");
         ProjectDto1 projectDto1 = new ProjectDto1(projectName,metadata);
         projectService.addProject(projectDto1,userId);
