@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.image.feign.harborfeign;
 
 import com.clsaa.dop.server.image.config.FeignConfig;
-import com.clsaa.dop.server.image.model.po.Repository;
+import com.clsaa.dop.server.image.model.po.*;
 import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +41,72 @@ public interface HarborRepoFeign {
     @DeleteMapping(value = "/repositories/{repo_name}")
     void repositoriesRepoNameDelete(@PathVariable("repo_name") String repoName);
 
-    @PutMapping()
+    /**
+     * 修改仓库信息
+     * @param repoName  仓库名称
+     * @param description 需要更新的仓库描述
+     */
+    @PutMapping(value = "/repositories/{repo_name}")
+    void repositoriesRepoNamePut(@PathVariable("repo_name") String repoName, @RequestBody RepositoryDescription description);
+
+    /**
+     * 获取仓库的labels
+     * @param repoName 仓库名称
+     * @return {@link List<Label>} Label的列表
+     */
+    @GetMapping(value = "/repositories/{repo_name}/labels")
+    List<Label> repositoriesRepoNameLabelsGet(@PathVariable("repo_name") String repoName);
+
+    /**
+     * 为仓库添加label
+     * @param repoName 仓库名称
+     * @param label 添加的label
+     */
+    @PostMapping(value = "/repositories/{repo_name}/labels")
+    void repositoriesRepoNameLabelsPost(@PathVariable("repo_name") String repoName,@RequestBody Label label);
+
+    /**
+     * 通过仓库名和label_id来删除label
+     * @param repoName
+     * @param labelId
+     */
+    @DeleteMapping(value = "/repositories/{repo_name}/labels/{label_id}")
+    void repositoriesRepoNameLabelsLabelIdDelete(@PathVariable("repo_name") String repoName,@PathVariable("label_id") Integer labelId);
+
+    /**
+     * 通过仓库名称获取 tags
+     * @param repoName 仓库名称
+     * @param labelIds 标签搜索条件
+     * @return {@link List<DetailedTag>} 对应的tag列表
+     */
+    @GetMapping(value = "/repositories/{repo_name}/tags")
+    List<DetailedTag> repositoriesRepoNameTagsGet(@PathVariable("repo_name") String repoName, @RequestParam(value = "label_ids", required = false) String labelIds);
+
+
+    /**
+     * 添加tag
+     * @param repoName 仓库名称
+     * @param retagReq 需要添加的tag
+     */
+    @PostMapping(value = "/repositories/{repo_name}/tags")
+    void repositoriesRepoNameTagsPost(@PathVariable("repo_name") String repoName,@RequestBody RetagReq retagReq);
+
+
+    /**
+     * 通过镜像仓库名称和tag名称获取tag
+     * @param repoName
+     * @param tag
+     * @return
+     */
+    @GetMapping(value = "/repositories/{repo_name}/tags/{tag}")
+    DetailedTag repositoriesRepoNameTagsTagGet(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tag);
+    /**
+     * 通过仓库名称和tag名称来删除tag
+     * @param repoName 仓库名称
+     * @param tagName tag名称
+     */
+    @DeleteMapping("/repositories/{repo_name}/tags/{tag}")
+    void repositoriesRepoNameTagsTagDelete(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tagName);
+
 
 }

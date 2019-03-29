@@ -24,7 +24,7 @@ public class User {
     private String password;
 
     @JsonProperty("realname")
-    private String realname;
+    private String realName;
 
     @JsonProperty("comment")
     private String comment;

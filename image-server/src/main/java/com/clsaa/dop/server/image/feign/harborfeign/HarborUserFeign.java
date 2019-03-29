@@ -17,7 +17,4 @@ public interface HarborUserFeign {
     @PostMapping(value = "/users")
     void usersPost(@RequestBody User user);
 
-    
-
-
 }
