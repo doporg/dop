@@ -4,12 +4,21 @@ package com.clsaa.dop.server.pipeline.service;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
+import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
+import com.clsaa.dop.server.pipeline.feign.PipelineFeign;
+import com.clsaa.dop.server.pipeline.feign.UserFeign;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
+import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
+import com.clsaa.dop.server.pipeline.model.dto.UserCredential;
+import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
+import com.clsaa.dop.server.pipeline.model.po.Stage;
+import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
+import io.swagger.annotations.ApiParam;
 import org.bson.types.ObjectId;
 import org.hibernate.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +30,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,13 +46,17 @@ import java.util.*;
  */
 @Service
 public class PipelineService {
-
     @Autowired
     private PipelineRepository pipelineRepository;
+
     @Autowired
-    private RestTemplate restTemplate;
+    private PipelineFeign pipelineFeign;
+
     @Autowired
-    private ResultOutputService resultOutputService;
+    private ApplicationFeign applicationFeign;
+
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 添加流水线信息
@@ -60,9 +76,7 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
-        resultOutputService.create(pipeline);
 
-        String url = "http://localhost:13600/v1/jenkins";
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                 .id(id.toString())
                 .name(pipelineV1.getName())
@@ -73,8 +87,10 @@ public class PipelineService {
                 .cuser(pipelineV1.getCuser())
                 .isDeleted(false)
                 .build();
+//        String url = "http://localhost:13600/v1/jenkins";
+//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+        this.pipelineFeign.create(pipelineBoV1);
 
-        restTemplate.postForEntity(url, pipelineBoV1, String.class);
     }
 
     public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {
@@ -92,9 +108,7 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
-        resultOutputService.create(pipeline);
 
-        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
         PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                 .id(id.toString())
                 .name(pipelineV2.getName())
@@ -106,8 +120,9 @@ public class PipelineService {
                 .cuser(pipelineV2.getCuser())
                 .isDeleted(false)
                 .build();
-
-        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+//        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
+//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
+        this.pipelineFeign.jenkinsfile(pipelineBoV1);
     }
 
     /**
@@ -116,7 +131,7 @@ public class PipelineService {
     public List<PipelineBoV1> findAll() {
         List<Pipeline> pipelines = this.pipelineRepository.findAll();
         List<PipelineBoV1> pipelineBoV1s = new ArrayList<PipelineBoV1>();
-        for(int i = 0; i < pipelines.size(); i++){
+        for (int i = 0; i < pipelines.size(); i++) {
             PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                     .id(pipelines.get(i).getId().toString())
                     .name(pipelines.get(i).getName())
@@ -151,7 +166,6 @@ public class PipelineService {
                 .isDeleted(true)
                 .build();
         this.pipelineRepository.save(pipeline);
-        this.resultOutputService.delete(id);
     }
 
     /**
@@ -159,7 +173,7 @@ public class PipelineService {
      */
     public PipelineBoV1 findById(ObjectId id) {
         Optional<Pipeline> optionalPipeline = this.pipelineRepository.findById(id);
-        if(optionalPipeline.isPresent()){
+        if (optionalPipeline.isPresent()) {
             Pipeline pipeline = optionalPipeline.get();
             PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
                     .id(pipeline.getId().toString())
@@ -174,7 +188,7 @@ public class PipelineService {
                     .isDeleted(pipeline.getIsDeleted())
                     .build();
             return pipelineBoV1;
-        }else{
+        } else {
             return null;
         }
     }
@@ -182,7 +196,7 @@ public class PipelineService {
     /**
      * 更新流水线信息
      */
-    public void update(PipelineBoV1 pipelineBoV1){
+    public void update(PipelineBoV1 pipelineBoV1) {
         Pipeline pipeline = Pipeline.builder()
                 .id(new ObjectId(pipelineBoV1.getId()))
                 .name(pipelineBoV1.getName())
@@ -203,11 +217,11 @@ public class PipelineService {
     /**
      * 根据用户id查找，返回该用户的流水线信息
      */
-    public List<PipelineV1Project> getPipelineById(Long cuser){
+    public List<PipelineV1Project> getPipelineById(Long cuser) {
         List<Pipeline> pipelines = this.pipelineRepository.findByCuser(cuser);
         List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
-        for(int i=0;i<pipelines.size();i++){
-            if(!pipelines.get(i).getIsDeleted()){
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
                 PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
                         .id(pipelines.get(i).getId().toString())
                         .name(pipelines.get(i).getName())
@@ -223,12 +237,12 @@ public class PipelineService {
     /**
      * 根据envid， 查询pipelineid
      */
-    public List<PipelineV1Project> getPipelineIdByEnvId(Long envid){
+    public List<PipelineV1Project> getPipelineIdByEnvId(Long envid) {
         System.out.println(envid);
         List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
         List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
-        for(int i=0;i<pipelines.size();i++){
-            if(!pipelines.get(i).getIsDeleted()){
+        for (int i = 0; i < pipelines.size(); i++) {
+            if (!pipelines.get(i).getIsDeleted()) {
                 PipelineV1Project pipelineV1Project = PipelineV1Project.builder()
                         .id(pipelines.get(i).getId().toString())
                         .name(pipelines.get(i).getName())
@@ -240,4 +254,64 @@ public class PipelineService {
         }
         return pipelineV1Projects;
     }
+
+    public PipelineBoV1 setInfo(String pipelineId, String resultOutputId) {
+        PipelineBoV1 pipelineBoV1 = this.findById(new ObjectId(pipelineId));
+
+        if (pipelineBoV1 != null && pipelineBoV1.getConfig().equals("无Jenkinsfile")) {
+            String gitUrl = null;
+            String dockerUserName = null;
+            String dockerPassword = null;
+            String repository = null;
+            String repositoryVersion = null;
+            String deploy = null;
+            //收集信息
+
+            UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(pipelineBoV1.getCuser(), UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
+            dockerUserName = userCredentialV1.getIdentifier();
+            dockerPassword = userCredentialV1.getCredential();
+
+            if(pipelineBoV1.getAppId() != null){
+                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
+                gitUrl = appBasicInfoV1.getWarehouseUrl();
+                repository = appBasicInfoV1.getImageUrl();
+            }
+
+            if(pipelineBoV1.getAppEnvId() != null){
+                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
+            }
+
+
+            List<Stage> stages = pipelineBoV1.getStages();
+            for (int i = 0; i < stages.size(); i++) {
+                List<Step> steps = stages.get(i).getSteps();
+                for (int j = 0; j < steps.size(); j++) {
+                    Step task = steps.get(j);
+                    String taskName = task.getTaskName();
+                    switch (taskName) {
+                        case ("拉取代码"):
+                            task.setGitUrl(gitUrl == null ? task.getGitUrl() : gitUrl);
+                            break;
+                        case ("构建docker镜像"):
+                            task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
+                            task.setRepository(repository == null ? task.getRepository() : repository);
+                            task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
+                            break;
+                        case ("推送docker镜像"):
+                            task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
+                            task.setRepository(repository == null ? task.getRepository() : repository);
+                            task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
+                            task.setDockerPassword(dockerPassword == null ? task.getDockerPassword() : dockerPassword);
+                            break;
+                        case ("部署"):
+                            task.setDeploy(deploy);
+                            break;
+                    }
+                }
+            }
+        }
+        return pipelineBoV1;
+
+    }
+
 }

@@ -52,16 +52,22 @@ public class Step {
     private String repository;
 
     /**
-     * deployment
+     * deploy
      */
-    @SerializedName("deployment")
-    private String deployment;
+    @SerializedName("deploy")
+    private String deploy;
 
     /**
      * 预留k8s token
      */
     @SerializedName("token")
     private String token;
+
+    /**
+     * 预留k8s ip:port
+     */
+    @SerializedName("ip")
+    private String ip;
 
     /**
      * shell

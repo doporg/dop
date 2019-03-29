@@ -101,6 +101,9 @@ export default class PipelineTable extends Component {
                 (value[4] < 10 ? '0' + value[4] : value[4])
         }
     }
+    renderCuser(){
+        return window.sessionStorage.getItem('user-name');
+    }
 
     /**
      *  表格 操作栏配置
@@ -151,6 +154,7 @@ export default class PipelineTable extends Component {
             title: '创建人',
             width: 8,
             dataIndex: 'cuser',
+            cell: this.renderCuser
         }, {
             title: '操作',
             width: 10,
