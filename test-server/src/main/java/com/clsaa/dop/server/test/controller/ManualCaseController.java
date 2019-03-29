@@ -33,6 +33,7 @@ public class ManualCaseController {
         return manualCaseCreateService.create(manualCaseParam).orElse(null);
     }
 
+    @ApiOperation(value = "分页获取手工测试用例数据")
     @GetMapping("/page")
     public Pagination<ManualCaseDto> queryCase(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize) {
         return manualCaseQueryService.selectByPage(pageNo, pageSize);
