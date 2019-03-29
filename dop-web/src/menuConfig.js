@@ -48,9 +48,9 @@ const asideMenuConfig = [
     },
     {
 
-        name: '功能点管理',     // 二级导航名称
-        path: '/permissions',  // 二级导航路径
-        icon: 'box' , // 二级导航权限配置
+        name: '功能点管理',
+        path: '/permissions',
+        icon: 'box' ,
     },
     {
         name: '角色管理',

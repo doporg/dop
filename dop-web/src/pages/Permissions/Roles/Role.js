@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Axios from 'axios';
-import API from '../API';
+import API from '../../API';
 import {Button, Dialog, Feedback, Field, Table} from "@icedesign/base";
 import Pagination from "@icedesign/base/lib/pagination";
 import Form from "@icedesign/base/lib/form";
