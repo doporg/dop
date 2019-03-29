@@ -14,7 +14,7 @@ import BalloonConfirm from "@icedesign/balloon-confirm";
 import Input from "@icedesign/base/lib/input";
 import Select from "@icedesign/base/lib/select";
 import {Nav ,Icon , Menu} from "@icedesign/base";
-
+import '../Styles.scss'
 
 
 const { Item: FormItem } = Form;
@@ -263,14 +263,20 @@ export default class Permission extends Component {
                     onCancel={this.onCancel}
                     title="您真的要删除吗？"
                 >
-                    <button>删除</button>
+                    <Button
+                        type="primary"
+                        shape="warning"
+                        size="medium"
+                        className="button">删除</Button>
                 </BalloonConfirm>
 
             );
         }
         return (
         <div>
-            <Button type="primary" onClick={this.onOpen} >创建功能点</Button>
+            <Button type="primary"
+                    className="topButton"
+                    onClick={this.onOpen} >创建功能点</Button>
             <Dialog
                 title="创建功能点"
                 visible={this.state.visible}
@@ -343,7 +349,8 @@ export default class Permission extends Component {
 
 
             <Table dataSource={this.state.currentData}
-                    isLoading={this.state.isLoading}>
+                   isLoading={this.state.isLoading}
+                   hasBorder={false}>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人" dataIndex="cuser"/>
@@ -354,9 +361,8 @@ export default class Permission extends Component {
             <Pagination total={this.state.totalCount}
                         current={this.state.pageNo}
                         onChange={this.onChange}
-                        pageSize={this.state.pageSize
-                }
-            className="page-demo" />
+                        pageSize={this.state.pageSize}
+            className="pagination" />
         </div>
 
         );

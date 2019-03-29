@@ -3,30 +3,31 @@ import BasicLayout from "../../layouts/BasicLayout";
 import DataRules from "./DataRules/DataRules";
 import Role from "./Roles/Role";
 import UserRoleMapping from "./Roles/UserRoleMapping/UserRoleMapping";
+import PermissionLayout from "../../layouts/PermissionLayout";
 
 const permissionConfig = [
     //permission
     {
-        path: '/permissions',
-        layout: BasicLayout,
+        path: '/permission/permissions',
+        layout: PermissionLayout,
         component: Permission,
     },
 
     {
-        path: '/dataRules',
-        layout: BasicLayout,
+        path: '/permission/dataRules',
+        layout: PermissionLayout,
         component: DataRules,
     },
 
     //role
     {
-        path: '/roles',
-        layout: BasicLayout,
+        path: '/permission/roles',
+        layout: PermissionLayout,
         component: Role,
     },
     {
-        path: '/roles/userwithrole',
-        layout: BasicLayout,
+        path: '/permission/roles/userwithrole',
+        layout: PermissionLayout,
         component: UserRoleMapping,
     },
 ];

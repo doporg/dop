@@ -277,7 +277,11 @@ export default class DataRules extends Component
                     onCancel={this.onCancel}
                     title="您真的要删除吗？"
                 >
-                    <button>删除</button>
+                    <Button
+                        type="primary"
+                        shape="warning"
+                        size="medium"
+                        className="button">删除</Button>
                 </BalloonConfirm>
             );
         }
@@ -285,15 +289,24 @@ export default class DataRules extends Component
         //添加用户数据
         const addUserData = (value, index, record) => {
             return (
-                <button onClick={this.addUserData.bind(this,record)}>添加</button>
+                <Button
+                    type="primary"
+                    shape="normal"
+                    size="medium"
+                    className="button"
+                    onClick={this.addUserData.bind(this,record)}>添加</Button>
             );
         }
         return (
         <div>
-            <Button type="primary" onClick={this.onRuleOpen} >创建数据规则</Button>
+            <Button type="primary"
+                    className="topButton"
+                    onClick={this.onRuleOpen} >创建数据规则</Button>
 
-            <Link to='/roles/userwithrole'>
-                <Button type="primary" >查看用户权限</Button>
+            <Link to='/permission/roles/userwithrole'>
+                <Button type="primary"
+                        className="topButton"
+                >查看用户权限</Button>
             </Link>
             <Dialog
                 title="创建数据规则"
@@ -337,6 +350,7 @@ export default class DataRules extends Component
 
                     <FormItem label="对应角色：" {...formItemLayout} required>
                         <Table
+                            hasBorder={false}
                             dataSource={this.state.roleList}
                             primaryKey="id"
                             isTree
@@ -401,6 +415,7 @@ export default class DataRules extends Component
             </Dialog>
 
             <Table
+                hasBorder={false}
                 isLoading={this.state.isLoading}
                 dataSource={this.state.currentData}>
                 <Table.Column title="规则ID" dataIndex="id" width="10%"/>
@@ -418,7 +433,7 @@ export default class DataRules extends Component
                         onChange={this.onChange}
                         pageSize={this.state.pageSize
                         }
-                        className="page-demo" />
+                        className="pagination" />
         </div>
         );
     }
