@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import {Dialog, Feedback, Field, Form, Loading, Table} from '@icedesign/base';
-import {Grid} from '@icedesign/base';
-import {Icon} from '@icedesign/base';
-import {Row, Col} from "@alifd/next/lib/grid";
+import {Breadcrumb, Dialog, Feedback, Field, Form, Icon, Loading, Table} from '@icedesign/base';
 import CreateApplicationVariableDialog from "../CreateApplicationVariable";
 import Input from "@icedesign/base/lib/input";
-import {List} from "@icedesign/base/lib/upload";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -26,7 +22,8 @@ export default class ApplicationVariable extends Component {
             appId: props.appId,
             varData: [],
             editMode: false,
-            loading: true
+            loading: true,
+            projectId: props.projectId
 
         }
     }
@@ -180,6 +177,13 @@ export default class ApplicationVariable extends Component {
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
                 <div style={{width: "48%", margin: "0 auto"}}>
+                    <Breadcrumb>
+                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                    </Breadcrumb>
                     <CreateApplicationVariableDialog
                         refreshApplicationVariableList={this.refreshApplicationVariableList.bind(this)}
                         appId={this.state.appId}/>

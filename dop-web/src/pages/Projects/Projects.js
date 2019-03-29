@@ -3,11 +3,12 @@
  * @author Bowen
  */
 
-import React, { Component } from 'react';
-import {Input} from '@icedesign/base';
+import React, {Component} from 'react';
+import {Breadcrumb, Input} from '@icedesign/base';
 import TopBar from './components/projectManagement/TopBar';
 import Pagination from './components/projectManagement/ProjectPagination'
 import CreateProjectDialog from './components/projectManagement/CreateProjectDialog'
+
 export default class Projects extends Component {
     static displayName = 'Projects';
 
@@ -45,6 +46,9 @@ export default class Projects extends Component {
     render() {
         return (
             <div>
+                <Breadcrumb>
+                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                </Breadcrumb>
                 <TopBar
                     extraBefore={
                         <Input

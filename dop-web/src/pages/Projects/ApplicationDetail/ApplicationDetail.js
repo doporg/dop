@@ -1,13 +1,11 @@
-
-
 import React, {Component} from 'react';
 import {Tab} from "@icedesign/base";
-import TopBar from "../../../components/TopBar";
 
 import ApplicationBasicInfo from "../components/ApplicationManagement/ApplicationBasicInfo"
 import ApplicationVariable from "../components/ApplicationManagement/ApplicationVariable"
 import ApplicationEnvironment from "../components/ApplicationManagement/ApplicationEnvironment"
 import ApplicationEnvironmentDetail from "../components/ApplicationManagement/ApplicationEnvironmentDetail";
+
 const TabPane = Tab.TabPane;
 const styles = {
     container: {
@@ -41,17 +39,18 @@ export default class ApplicationDetail extends Component {
         super(props);
         this.state = {
             //在应用列表点击应用ID跳转到该页面，通过正则表达式解析应用ID
+            projectId: props.location.search.match("projectId=[0-9]+")[0].split("=")[1],
             appId: props.location.search.match("appId=[0-9]+")[0].split("=")[1],
             showEnvDetail: false,
             envId: undefined
         }
     }
 
-    showEnvDetailFun(id) {
+    toggleEnvDetail(id) {
         console.log("id", id)
         this.setState({
-            showEnvDetail: true,
-            envId: id
+            showEnvDetail: !this.state.showEnvDetail,
+            envId: id == undefined ? "" : id
         })
     }
 
@@ -59,7 +58,10 @@ export default class ApplicationDetail extends Component {
         if (this.state.showEnvDetail) {
             return (<div></div>)
         } else {
-            return (<ApplicationEnvironment showEnvDetail={this.showEnvDetailFun.bind(this)} appId={this.state.appId}/>)
+            return (<ApplicationEnvironment
+                projectId={this.state.projectId}
+                showEnvDetail={this.toggleEnvDetail.bind(this)}
+                appId={this.state.appId}/>)
         }
 
     }
@@ -67,7 +69,11 @@ export default class ApplicationDetail extends Component {
     envDetailRender() {
         if (this.state.showEnvDetail) {
             return (
-                <ApplicationEnvironmentDetail appEnvId={this.state.envId} appId={this.state.appId}/>
+                <ApplicationEnvironmentDetail
+                    toggleEnvDetail={this.toggleEnvDetail.bind(this)}
+                    projectId={this.state.projectId}
+                    appEnvId={this.state.envId}
+                    appId={this.state.appId}/>
             )
         } else {
             return (<div></div>)
@@ -78,15 +84,18 @@ export default class ApplicationDetail extends Component {
     render() {
         return (
             <div>
+
                 <Tab contentStyle={{padding: 20}}
                      style={styles.container}
-                     lazyLoad={true}>
+                     lazyLoad={false}>
 
                     <TabPane tab={"基本信息"}
                              key={"basic"}
                              style={{textAlign: "center"}}
                     >
-                        <ApplicationBasicInfo appId={this.state.appId}/>
+                        <ApplicationBasicInfo
+                            projectId={this.state.projectId}
+                            appId={this.state.appId}/>
                     </TabPane>
 
                     <TabPane tab={"环境配置"}
@@ -99,7 +108,9 @@ export default class ApplicationDetail extends Component {
                              key={"var"}
                              style={{textAlign: "center"}}
                     >
-                        <ApplicationVariable appId={this.state.appId}/>
+                        <ApplicationVariable
+                            projectId={this.state.projectId}
+                            appId={this.state.appId}/>
 
                     </TabPane>
 

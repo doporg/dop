@@ -2,18 +2,11 @@ import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API.js"
 import {Link} from 'react-router-dom';
-import {Feedback, Field, Form, Loading, Select} from "@icedesign/base";
+import {Field, Loading} from "@icedesign/base";
 
 import {Col, Row} from "@alifd/next/lib/grid";
 
-const FormItem = Form.Item;
-const Option = Select.Option;
-const Toast = Feedback.toast;
-const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
-};
-const {Combobox} = Select;
+
 export default class PipelineBindPage extends Component {
     constructor(props) {
         super(props);
@@ -67,7 +60,7 @@ export default class PipelineBindPage extends Component {
 
     getPipelineData() {
         let _this = this
-        let getUrl = API.gateway + "/pipeline-server/v1/pipeline/appId/" + this.state.appEnvId
+        let getUrl = API.gateway + "/pipeline-server/v1/pipeline/envId/" + this.state.appEnvId
         this.setState({
             loading: true
         })
@@ -76,7 +69,9 @@ export default class PipelineBindPage extends Component {
                 console.log("pipelineId", response)
                 if (response.data == "") {
                     _this.setState({
-                        editMode: true
+                        editMode: true,
+                        currentPipeline: "",
+                        loading: false
                     })
                 } else {
 
@@ -86,27 +81,28 @@ export default class PipelineBindPage extends Component {
 
                             _this.setState({
                                 currentPipeline: response.data,
-                                editMode: false
+                                editMode: false,
+                                loading: false
                             })
                         })
 
                 }
             })
 
-        let pipelineListUrl = API.gateway + "/pipeline-server/v1/pipeline/cuser"
-        Axios.get(pipelineListUrl, {
-            params: {
-                cuser: 18
-                // window.sessionStorage.getItem('user-id')
-            }
-        })
-            .then((response) => {
-                console.log("pipelineData", response)
-                _this.setState({
-                    pipelineData: response.data,
-                    loading: false
-                })
-            })
+        // let pipelineListUrl = API.gateway + "/pipeline-server/v1/pipeline/cuser"
+        // Axios.get(pipelineListUrl, {
+        //     params: {
+        //         cuser: 18
+        //         // window.sessionStorage.getItem('user-id')
+        //     }
+        // })
+        //     .then((response) => {
+        //         console.log("pipelineData", response)
+        //         _this.setState({
+        //             pipelineData: response.data,
+        //             loading: false
+        //         })
+        //     })
 
 
 
@@ -208,8 +204,9 @@ export default class PipelineBindPage extends Component {
                         </div>
                     </Col>
                     <Col>
-                        <Link to={"pipeline/project/" + this.state.currentPipeline.id}>
-                            <div>{this.state.currentPipeline.name}</div>
+                        <Link
+                            to={this.state.currentPipeline == "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
+                            <div>{this.state.currentPipeline == "" ? "当前没有绑定流水线，请点击前往流水线页面进行绑定" : this.state.currentPipeline.name}</div>
                         </Link>
 
                     </Col>

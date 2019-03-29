@@ -83,7 +83,7 @@ export default class ApplicationPagination extends Component {
                 }
 
                 //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
-                let finalList = [];
+                let finalList = {};
 
                 //将所有URL请求发出
                 Axios.all(getList).then(Axios.spread(function (...resList) {
@@ -91,16 +91,14 @@ export default class ApplicationPagination extends Component {
 
                     for (let i = 0; i < resList.length; i++) {
                         //如果该值不为空则添加到哈希表中
-                        if (resList[i].data != "") {
-                            finalList[resList[i].data.id] = resList[i].data.name;
-                        } else {
-                            finalList[resList[i].data.id] = "";
+                        if (resList[i].data !== "") {
+                            finalList[resList[i].data.id.toString()] = resList[i].data.name;
                         }
                     }
 
                     //将所有ID置换为NAME
                     for (let i = 0; i < tmpData.length; i++) {
-                        tmpData[i].ouser = finalList[tmpData[i].ouser];
+                        tmpData[i].ouser = finalList[tmpData[i].ouser.toString()];
                     }
 
 
@@ -155,11 +153,15 @@ export default class ApplicationPagination extends Component {
         return (
             <div>
                 <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
-                    <ApplicationList currentData={this.state.currentData}
+                    <ApplicationList
+                        projectId={this.state.projectId}
+                        currentData={this.state.currentData}
                                      deletedCallRefresh={this.deletedCallRefresh.bind(this)}/>
                 </Loading>
 
-                <Pagination style={styles.body}
+                <Pagination
+                    projectId={this.state.projectId}
+                    style={styles.body}
                             current={this.state.current}
                             onChange={this.handleChange}
                             pageSize={this.state.pageSize}
