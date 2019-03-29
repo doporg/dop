@@ -16,7 +16,6 @@ import RequestHeader from "./RequestHeader";
 import RequestCheckPoint from "./RequestCheckPoint";
 import {Option} from "@icedesign/base/lib/select";
 import Select from "@icedesign/base/lib/select";
-import Message from "@alifd/next/lib/message";
 
 const { Row, Col } = Grid;
 
@@ -25,18 +24,19 @@ export default class RequestScriptForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            value: {
-                rawUrl: '',
-                httpMethod: 'GET',
-                requestHeaders: [{}],
-                requestBody: '',
-                requestCheckPoints: [{}],
-                retryTimes: '',
-                retryInterval: '',
-                resultParams: '',
-                operationType: 'REQUEST',
-                order: this.props.order
-            },
+            // value: {
+            //     rawUrl: '',
+            //     httpMethod: 'GET',
+            //     requestHeaders: [{}],
+            //     requestBody: '',
+            //     requestCheckPoints: [{}],
+            //     retryTimes: '',
+            //     retryInterval: '',
+            //     resultParams: '',
+            //     operationType: 'REQUEST',
+            //     order: this.props.order
+            // },
+            value: this.props.currentScript
         };
     }
 
@@ -50,15 +50,18 @@ export default class RequestScriptForm extends Component{
         if (noError) {
             this.doSubmit(this.state.value);
         }
+        // this.props.cancel();
     };
 
     doSubmit = (content) => {
-        console.log("Begin to do submit request ... !");
-        this.props.submitRequest(content);
+        // this.props.submitRequest(content);
     };
 
     addItem = () => {
-        this.state.value.requestHeaders.push({});
+        this.state.value.requestHeaders.push({
+            name: '',
+            value: ''
+        });
         this.setState({ value: this.state.value });
     };
 
@@ -70,7 +73,11 @@ export default class RequestScriptForm extends Component{
     };
 
     addCheckPoint = () => {
-        this.state.value.requestCheckPoints.push({});
+        this.state.value.requestCheckPoints.push({
+            property: '',
+            operation: '',
+            value: ''
+        });
         this.setState({ value: this.state.value });
     };
 
@@ -85,8 +92,8 @@ export default class RequestScriptForm extends Component{
         if (tab === '请求头') {
             return <RequestHeader
                 requestHeaders={this.state.value.requestHeaders}
-                addItem={this.addItem}
-                removeItem={this.removeItem}/>;
+                addItem={this.addItem.bind(this)}
+                removeItem={this.removeItem.bind(this)}/>;
         }
         if (tab === '请求体') {
             return <Row>
@@ -100,13 +107,13 @@ export default class RequestScriptForm extends Component{
         if (tab === '检查点') {
             return <RequestCheckPoint
                 requestCheckPoints={this.state.value.requestCheckPoints}
-                addItem={this.addCheckPoint}
-                removeItem={this.removeCheckPoint}/>;
+                addItem={this.addCheckPoint.bind(this)}
+                removeItem={this.removeCheckPoint.bind(this)}/>;
         }
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log("Operation props change!");
+        // console.log("[Request Script] Operation props change!");
         if (nextProps.isSubmit) {
             this.validateFormAndPost();
         }

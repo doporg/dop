@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
 import static java.util.stream.IntStream.range;
 
 /**
@@ -39,19 +40,12 @@ public class ManualCasePoMapper extends AbstractCommonServiceMapper<ManualCasePa
         List<TestStep> testSteps = testStepPoMapper.convert(manualCaseParam.getTestSteps());
         range(0, testSteps.size())
             .forEach(i -> setIndex(testSteps, i));
-        return super.convert(manualCaseParam).map(po -> {
-            LocalDateTime current = LocalDateTime.now();
-            po.setCtime(current);
-            po.setMtime(current);
-            //todo set user
-            po.setCuser(110L);
-            po.setMuser(110L);
-
-            testSteps.forEach(testStep -> testStep.setManualCase(po));
-
-            po.setTestSteps(testSteps);
-            return po;
-        });
+        return super.convert(manualCaseParam).map(dateAndUser())
+                .map(po -> {
+                        testSteps.forEach(testStep -> testStep.setManualCase(po));
+                        po.setTestSteps(testSteps);
+                        return po;
+                    });
     }
 
     private TestStep setIndex(List<TestStep> testSteps, int i) {

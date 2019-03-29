@@ -13,10 +13,11 @@ import {
   DatePicker,
   Switch,
   Radio,
-  Grid,
+  Grid, Feedback,
 } from '@icedesign/base';
 import Axios from "axios";
-import {Link} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
+import API from "../../../API";
 
 const { Row, Col } = Grid;
 
@@ -40,7 +41,9 @@ const SwitchForForm = (props) => {
   );
 };
 
-export default class CreateActivityForm extends Component {
+const Toast = Feedback.toast;
+
+class CreateActivityForm extends Component {
   static displayName = 'CreateActivityForm';
 
   static defaultProps = {};
@@ -80,14 +83,29 @@ export default class CreateActivityForm extends Component {
     });
   };
 
+  back = () => {
+    this.props.history.push('/testCases');
+  };
+
   submit = () => {
+    let _this = this;
     this.formRef.validateAll((error, value) => {
       console.log('error', error, 'value', value);
       if (error) {
-        // 处理表单报错
+        Toast.error(error);
+      }else {
+        let url = API.test + '/interfaceCases';
+        Axios.post(url, this.state.value)
+            .then(function (response) {
+              console.log(response);
+              Toast.success("添加接口测试用例成功！");
+              let route = '/test/createInterfaceScripts/' + response.data;
+              _this.props.history.push(route);
+            }).catch(function (error) {
+          console.log(error);
+          Toast.error(error);
+        });
       }
-      // 提交当前填写的数据
-
     });
   };
 
@@ -187,10 +205,14 @@ export default class CreateActivityForm extends Component {
                   {' '}
                 </Col>
                 <Col s="12" l="10">
-                  <Button onClick={this.submit}>
-                    <Link to='/test/createInterfaceScripts'>
-                      创建并编写脚本
-                    </Link>
+                  <Button style={{marginRight: '20px'}} onClick={this.back}>
+                    取消
+                  </Button>
+
+                  <Button onClick={this.submit} type='secondary'>
+                    创建并编写脚本
+                    {/* <Link to='/test/createInterfaceScripts'>
+                    </Link>*/}
                   </Button>
                   <Button style={styles.resetBtn} onClick={this.reset}>
                     重置
@@ -224,3 +246,5 @@ const styles = {
     marginLeft: '20px',
   },
 };
+
+export default withRouter(CreateActivityForm);

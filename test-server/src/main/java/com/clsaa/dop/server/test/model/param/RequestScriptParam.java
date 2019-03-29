@@ -43,6 +43,6 @@ public class RequestScriptParam {
     @NotNull
     private OperationType operationType;
 
-    @Min(0)
+//    @Min(0)
     private int order;
 }

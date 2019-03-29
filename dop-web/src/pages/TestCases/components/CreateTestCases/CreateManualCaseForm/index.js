@@ -5,7 +5,7 @@ import {
     Input,
     Form,
     Field,
-    Radio
+    Radio, Feedback
 }
     from "@icedesign/base";
 import API from "../../../../API";
@@ -13,7 +13,7 @@ import Axios from "axios";
 import React, {Component} from 'react';
 import { FormBinderWrapper, FormBinder, FormError } from '@icedesign/form-binder';
 import {TestSteps} from "../TestStep";
-import Message from "@alifd/next/lib/message";
+import IceContainer from '@icedesign/container';
 
 const styles = {
     formItem: {
@@ -40,6 +40,7 @@ const styles = {
     }
 };
 
+const Toast = Feedback.toast;
 /**
  *    弹窗中的表单
  *
@@ -54,7 +55,7 @@ export default class CreateManualCaseFrom extends Component {
                 preCondition: '',
                 applicationId: '',
                 comment: '',
-                status: '',
+                status: 'NEW',
                 testSteps: [{}]
             },
             isDialogSubmit: this.props.isSubmit
@@ -62,27 +63,12 @@ export default class CreateManualCaseFrom extends Component {
         this.field = new Field(this);
     }
 
-    validateFields = () => {
-        const { validateFields } = this.refs.form;
-        validateFields((errors, values) => {
-            console.log({ errors });
-            if (!errors) {
-                Message.success('注册成功')
-            }
-        });
-    };
 
     addItem = () => {
         this.state.value.testSteps.push({});
         this.setState({ value: this.state.value });
     };
 
-    formChange = value => {
-        // 说明：
-        //  1. 表单是双向通行的，所有表单的响应数据都会同步更新 value
-        //  2. 这里 setState 只是为了实时展示当前表单数据的演示使用
-        this.setState({ value });
-    };
 
     changeItem = () => {
         let testSteps = this.state.value.testSteps;
@@ -115,10 +101,21 @@ export default class CreateManualCaseFrom extends Component {
     };
 
     doPost = (content) => {
-        console.log("I could post!");
-        console.log(content);
-        Message.success("创建手工测试用例成功");
-
+        let url = API.test + '/manualCases';
+        let _this = this;
+        Axios.post(url, content)
+            .then(function (response) {
+                if (response.data) {
+                    Toast.success("添加手工测试用例成功！");
+                }
+                _this.props.close();
+                _this.props.refresh();
+                // let route = '/testCases';
+                // _this.props.history.push(route);
+            }).catch(function (error) {
+            console.log(error);
+            Toast.error(error);
+        });
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -129,7 +126,7 @@ export default class CreateManualCaseFrom extends Component {
 
     render() {
         return (
-            <div style={styles.container}>
+            <IceContainer title="创建手工测试用例">
                 <FormBinderWrapper
                     value={this.state.value}
                     ref="form"
@@ -177,8 +174,7 @@ export default class CreateManualCaseFrom extends Component {
 
                     </div>
                 </FormBinderWrapper>
-
-            </div>
+            </IceContainer>
         )
     }
 }

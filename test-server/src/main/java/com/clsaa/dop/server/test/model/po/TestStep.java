@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "test_step", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "step_index"})},
         indexes = {@Index(columnList = "case_id,step_index", unique = true)})
-public class TestStep {
+public class TestStep implements Po {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

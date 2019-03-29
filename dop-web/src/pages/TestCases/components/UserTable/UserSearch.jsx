@@ -100,16 +100,5 @@ export default class UserTable extends Component {
 }
 
 const styles = {
-  formRow: {
-    marginBottom: '18px',
-  },
-  formCol: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '20px',
-  },
-  label: {
-    lineHeight: '28px',
-    paddingRight: '10px',
-  },
+
 };

@@ -12,9 +12,9 @@ public interface CreateService<PARAM> {
 
     /**
      * @param param 需要创建的数据
-     * @return 创建成功的数据
+     * @return 创建成功的数据id
      */
-    Optional<PARAM> create(PARAM param);
+    Optional<Long> create(PARAM param);
 
-    List<PARAM> create(List<PARAM> params);
+    List<Long> create(List<PARAM> params);
 }

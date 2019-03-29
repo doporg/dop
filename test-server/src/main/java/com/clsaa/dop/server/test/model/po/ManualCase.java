@@ -21,7 +21,7 @@ import java.util.List;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_name", "application_id"})},
         indexes = {@Index(columnList = "case_name,application_id", unique = true),
                 @Index(columnList = "application_id,case_name", unique = false)})
-public class ManualCase {
+public class ManualCase implements Po {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

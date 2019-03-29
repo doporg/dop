@@ -45,13 +45,15 @@ export default class Operations extends Component{
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log("Stage props change!");
         if (nextProps.isSubmit) {
             this.setState({
                 isSubmit: true
             })
+        }else {
+            this.setState({
+                isSubmit: false
+            })
         }
-        // this.setState({isSubmit: true});
     }
 
     render() {
@@ -91,7 +93,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <RequestScriptForm isSubmit={this.state.isSubmit} submitRequest={this.props.submitRequest} order={index}/>
+                                                <RequestScriptForm currentScript={this.props.requestScripts[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 
@@ -120,7 +122,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <WaitOperation isSubmit={this.state.isSubmit} submitWait={this.props.submitWait} order={index}/>
+                                                <WaitOperation currentOperation={this.props.waitOperations[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 

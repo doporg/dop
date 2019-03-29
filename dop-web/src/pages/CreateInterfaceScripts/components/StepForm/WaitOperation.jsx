@@ -13,10 +13,7 @@ export default class WaitOperation extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            value: {
-                waitTime: '',
-                order: this.props.order
-            }
+            value: this.props.currentOperation
         }
     }
 
@@ -30,14 +27,16 @@ export default class WaitOperation extends Component{
         if (noError) {
             this.doSubmit(this.state.value);
         }
+        // this.props.cancel();
     };
 
     doSubmit = (content) => {
-        this.props.submitWait(content);
+
+        // this.props.submitWait(content);
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        console.log("Operation props change!");
+        // console.log("[Wait Operation] Operation props change!");
         if (nextProps.isSubmit) {
             this.validateFormAndPost();
         }

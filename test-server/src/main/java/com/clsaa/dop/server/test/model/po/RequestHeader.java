@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Table(name = "interface_request_header", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"request_id", "name"})},
         indexes = {@Index(columnList = "request_id,name", unique = true)})
-public class RequestHeader {
+public class RequestHeader implements Po {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

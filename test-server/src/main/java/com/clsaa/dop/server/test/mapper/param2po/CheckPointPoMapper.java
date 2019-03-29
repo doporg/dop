@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+
 /**
  * @author xihao
  * @version 1.0
@@ -28,14 +30,6 @@ public class CheckPointPoMapper extends AbstractCommonServiceMapper<RequestCheck
 
     @Override
     public Optional<RequestCheckPoint> convert(RequestCheckPointParam requestCheckPointParam) {
-        return super.convert(requestCheckPointParam).map(po -> {
-            LocalDateTime current = LocalDateTime.now();
-            po.setCtime(current);
-            po.setMtime(current);
-            //todo set user
-            po.setCuser(110L);
-            po.setMuser(110L);
-            return po;
-        });
+        return super.convert(requestCheckPointParam).map(dateAndUser());
     }
 }

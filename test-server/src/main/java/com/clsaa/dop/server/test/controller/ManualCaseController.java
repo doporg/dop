@@ -29,7 +29,7 @@ public class ManualCaseController {
 
     @ApiOperation(value = "新增手工测试用例", notes = "创建失败返回null")
     @PostMapping
-    public ManualCaseParam createCase(@RequestBody @Valid ManualCaseParam manualCaseParam) {
+    public Long createCase(@RequestBody @Valid ManualCaseParam manualCaseParam) {
         return manualCaseCreateService.create(manualCaseParam).orElse(null);
     }
 
