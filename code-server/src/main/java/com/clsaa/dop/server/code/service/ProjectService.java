@@ -1,10 +1,7 @@
 package com.clsaa.dop.server.code.service;
 
 
-import com.clsaa.dop.server.code.model.bo.project.BranchBo;
-import com.clsaa.dop.server.code.model.bo.project.ProjectBo;
-import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
-import com.clsaa.dop.server.code.model.bo.project.TagBo;
+import com.clsaa.dop.server.code.model.bo.project.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -113,6 +110,67 @@ public class ProjectService {
 
 
     }
+
+    /**
+     * 查找编辑项目需要的项目信息
+     * @param id 项目id
+     * @param username 用户名
+     * @return 项目信息
+     */
+    public ProjectEditBo findProjectEditInfo(int id,String username){
+
+        String path="/projects/"+id;
+        return RequestUtil.get(path,username,ProjectEditBo.class);
+
+    }
+
+    /**
+     * 编辑项目信息
+     * @param id 项目id
+     * @param name 项目名称
+     * @param description 项目描述
+     * @param default_branch 默认分支
+     * @param visibility 可见等级
+     * @param username 用户名
+     */
+    public void editProjectInfo(int id,String name,String description,String default_branch,String visibility,String username){
+
+        String path="/projects/"+id;
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("name",name));
+        params.add(new BasicNameValuePair("description",description));
+        params.add(new BasicNameValuePair("default_branch",default_branch));
+        params.add(new BasicNameValuePair("visibility",visibility));
+        RequestUtil.put(path,username,params);
+    }
+
+    /**
+     * 获得项目所有的分支名称
+     * @param id 项目id
+     * @param username 用户名
+     * @return 项目信息
+     */
+    public List<String> findAllBranchName(int id,String username){
+        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",username, BranchBo.class);
+        List<String> res=new ArrayList<>();
+        for(BranchBo branchBo:branchBos)
+            res.add(branchBo.getName());
+        return res;
+    }
+
+
+    /**
+     * 删除一个项目
+     * @param id 项目id
+     * @param username 用户名
+     */
+    public void deleteProject(int id,String username){
+        String path="/projects/"+id;
+        RequestUtil.delete(path,username);
+    }
+
+
+//    public void findProjectEditInfo(int id,String name,String description,String default_branch,String visibility)
 
 
 }
