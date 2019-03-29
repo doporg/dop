@@ -6,13 +6,15 @@
 import React, { Component } from 'react';
 
 import Axios from 'axios';
-import API from '../API';
+import API from '../../API';
 import {Table, Button, Dialog, Radio, Field, Feedback} from '@icedesign/base';
 import Pagination from "@icedesign/base/lib/pagination";
 import Form from "@icedesign/base/lib/form";
 import BalloonConfirm from "@icedesign/balloon-confirm";
 import Input from "@icedesign/base/lib/input";
-import Select, {Option} from "@icedesign/base/lib/select";
+import Select from "@icedesign/base/lib/select";
+import {Nav ,Icon , Menu} from "@icedesign/base";
+
 
 
 const { Item: FormItem } = Form;
@@ -233,6 +235,7 @@ export default class Permission extends Component {
 
     render() {
         const { init, getError, getState } = this.field;
+        const { Item } = Nav;
         const dialogStyle= {
             width: "50%" ,height:"7000"
         }
@@ -355,9 +358,6 @@ export default class Permission extends Component {
                 }
             className="page-demo" />
         </div>
-
-
-
 
         );
     }

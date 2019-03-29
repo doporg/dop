@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import {Input,Button, Field, Table, Dialog, Feedback,Form} from "@icedesign/base";
 import Pagination from "@icedesign/base/lib/pagination";
-import API from "../API";
+import API from "../../API";
 import Axios from "axios";
 import BalloonConfirm from "@icedesign/balloon-confirm";
 import {Link} from "react-router-dom";
