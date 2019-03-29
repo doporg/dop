@@ -2,7 +2,6 @@ package com.clsaa.dop.server.application.model.bo;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 
@@ -52,6 +51,10 @@ public class AppUrlInfoBoV1 {
      */
     private String warehouseUrl;
 
+    /**
+     * 镜像地址
+     */
+    private String imageUrl;
     /**
      * 开发数据库URL
      */

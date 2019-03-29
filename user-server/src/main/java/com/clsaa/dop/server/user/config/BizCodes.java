@@ -42,4 +42,8 @@ public interface BizCodes {
      * 用户名已注册
      */
     BizCode REPETITIVE_USER_NAME = new BizCode(13103, "注册失败，此用户名已注册");
+    /**
+     * 该凭证不允许被支持此操作
+     */
+    BizCode INVALID_OPERATION_FOR_CREDENTIAL = new BizCode(13103, "该凭证不允许被支持此操作");
 }

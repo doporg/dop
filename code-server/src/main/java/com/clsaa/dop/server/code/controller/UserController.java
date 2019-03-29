@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.code.controller;
 
-import com.clsaa.dop.server.code.model.dto.UserDto;
+import com.clsaa.dop.server.code.model.dto.user.UserDto;
 import com.clsaa.dop.server.code.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

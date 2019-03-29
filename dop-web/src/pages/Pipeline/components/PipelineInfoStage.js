@@ -84,7 +84,9 @@ export default class PipelineInfoStage extends Component {
             currentStage: this.state.stages.length - 1
         })
     }
-
+    selectEnv(value){
+        this.props.onSelectEnv(value)
+    }
     step(value) {
         let stages = this.state.stages;
         stages[this.state.currentStage] = value;
@@ -117,7 +119,9 @@ export default class PipelineInfoStage extends Component {
 
                 <PipelineInfoStep
                     stage={this.state.stages[this.state.currentStage]}
+                    appId = {this.props.appId}
                     onChange={this.step.bind(this)}
+                    onSelectEnv = {this.selectEnv.bind(this)}
                     currentStage={this.state.currentStage}
                 />
             </div>

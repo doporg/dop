@@ -28,11 +28,12 @@ export default class PipelineInfo extends Component {
                 cuser: window.sessionStorage.getItem('user-id'),
                 //监听设置
                 monitor: "",
-                config:"",
+                appId: null,
+                appEnvId: null,
+                config: "无Jenkinsfile",
                 stages: [],
-                jenkinsfile:{}
+                jenkinsfile: {}
             },
-            // monitor: ["自动触发", "手动触发"],
             monitor: ["自动触发"],
             jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
             haveJenkinsFile: null,
@@ -40,8 +41,33 @@ export default class PipelineInfo extends Component {
                 git: "",
                 path: ""
             },
-            currentStage: 0
+            currentStage: 0,
+            applications: []
         };
+    }
+
+    componentWillMount() {
+        this.getApplication()
+    }
+
+    getApplication() {
+        let url = API.application + "/app?ouser=" + window.sessionStorage.getItem('user-id');
+        let self = this;
+        let applications = self.state.applications
+        Axios.get(url).then((response) => {
+            if (response.status === 200) {
+                for (let i = 0; i < response.data.length(); i++) {
+                    let application = {
+                        label: response.data[i].title,
+                        value: response.data[i].id
+                    };
+                    applications.push(application)
+                }
+                self.setState({
+                    applications: response.data
+                })
+            }
+        })
     }
 
     /**
@@ -60,6 +86,15 @@ export default class PipelineInfo extends Component {
             pipeline
         });
     }
+
+    selectApplication(value) {
+        let pipeline = this.state.pipeline;
+        pipeline.appId = value;
+        this.setState({
+            pipeline
+        });
+    }
+
 
     selectJenkinsFile(value) {
         this.setState({
@@ -80,14 +115,19 @@ export default class PipelineInfo extends Component {
             currentStage: currentStage
         })
     }
-
+    selectEnv(value){
+        let pipeline = this.state.pipeline
+        pipeline.appEnvId = value;
+        this.setState({
+            pipeline: pipeline
+        })
+    }
     saveJenkinsfile() {
         let pipeline = this.state.pipeline;
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
         let self = this;
         pipeline.jenkinsfile = jenkinsFileInfo;
         let url = API.pipeline + "/v1/pipeline/jenkinsfile";
-        console.log(pipeline)
         Axios.post(url, pipeline).then((response) => {
             if (response.status === 200) {
                 toast.show({
@@ -97,7 +137,7 @@ export default class PipelineInfo extends Component {
                 });
                 self.props.history.push('/pipeline')
             }
-        }).catch(()=>{
+        }).catch(() => {
             toast.show({
                 type: "error",
                 content: "请检查您的路径",
@@ -113,9 +153,7 @@ export default class PipelineInfo extends Component {
             method: 'post',
             url: url,
             data: self.state.pipeline
-            // data: data
         }).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 toast.show({
                     type: "success",
@@ -159,6 +197,21 @@ export default class PipelineInfo extends Component {
                         </div>
 
                         <div className="form-item">
+                            <span className="form-item-label">应用设置: </span>
+                            <FormBinder name="appId" required message="请选择应用">
+                                <Combobox
+                                    onChange={this.selectApplication.bind(this)}
+                                    dataSource={this.state.applications}
+                                    placeholder="请选择应用"
+                                    fillProps="label"
+                                    className="combobox"
+                                >
+                                </Combobox>
+                            </FormBinder>
+                            <FormError className="form-item-error" name="appId"/>
+                        </div>
+
+                        <div className="form-item">
                             <span className="form-item-label">配置流水线: </span>
                             <FormBinder name="config" required message="配置设置">
                                 <Combobox
@@ -185,7 +238,9 @@ export default class PipelineInfo extends Component {
                                     <PipelineInfoStage
                                         stages={this.state.pipeline.stages}
                                         currentStage={this.state.currentStage}
+                                        appId={this.state.pipeline.appId}
                                         onChange={this.setStages.bind(this)}
+                                        onSelectEnv = {this.selectEnv.bind(this)}
                                     />
                                 )
                             }

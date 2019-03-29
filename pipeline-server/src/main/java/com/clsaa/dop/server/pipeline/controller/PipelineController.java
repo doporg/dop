@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.config.BizCodes;
+import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
@@ -32,6 +33,8 @@ import java.util.List;
 public class PipelineController {
     @Autowired
     private PipelineService pipelineService;
+    @Autowired
+    private PipelineRepository pipelineRepository;
 
     @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline")
@@ -76,7 +79,7 @@ public class PipelineController {
     @ApiOperation(value = "根据用户id查找，返回该用户的流水线信息")
     @GetMapping("/v1/pipeline/cuser")
     public List<PipelineV1Project> getPipelineById(Long cuser) {
-        return  this.pipelineService.getPipelineById(cuser);
+        return this.pipelineService.getPipelineById(cuser);
     }
 
     @ApiOperation(value = "根据流水线信息id, 设置appid和envid")
@@ -85,6 +88,14 @@ public class PipelineController {
         BizAssert.validParam(StringUtils.isNotBlank(pipelineId),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "参数id非法"));
 
+        List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
+        if (pipelines.size() != 0) {
+            for (int i = 0; i < pipelines.size(); i++) {
+                Pipeline pipeline = pipelines.get(i);
+                pipeline.setAppEnvId(null);
+                this.pipelineRepository.save(pipeline);
+            }
+        }
         PipelineBoV1 pipelineBoV1 = this.pipelineService.findById(new ObjectId(pipelineId));
         pipelineBoV1.setAppId(appid);
         pipelineBoV1.setAppEnvId(envid);
@@ -92,9 +103,9 @@ public class PipelineController {
     }
 
     @ApiOperation(value = "根据流水线env-id, 查询pipelineid")
-    @GetMapping("/v1/pipeline/appId/{appId}")
-    public String getPipelineIdByEnvId(@PathVariable(value = "appId") Long appId) {
-        return this.pipelineService.getPipelineIdByEnvId(appId);
+    @GetMapping("/v1/pipeline/envId/{envId}")
+    public List<PipelineV1Project> getPipelineIdByEnvId(@PathVariable(value = "envId") Long envId) {
+        return this.pipelineService.getPipelineIdByEnvId(envId);
     }
 
 }

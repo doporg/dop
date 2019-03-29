@@ -8,6 +8,8 @@ import com.clsaa.dop.server.user.model.bo.UserBoV1;
 import com.clsaa.dop.server.user.model.bo.UserCredentialBoV1;
 import com.clsaa.dop.server.user.model.po.User;
 import com.clsaa.dop.server.user.model.po.UserCredential;
+import com.clsaa.dop.server.user.mq.MessageQueueException;
+import com.clsaa.dop.server.user.mq.MessageSender;
 import com.clsaa.dop.server.user.util.BeanUtils;
 import com.clsaa.dop.server.user.util.Validator;
 import com.clsaa.dop.server.user.util.crypt.CryptoResult;
@@ -15,13 +17,17 @@ import com.clsaa.dop.server.user.util.crypt.RSA;
 import com.clsaa.dop.server.user.util.crypt.StrongPassword;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * <p>
@@ -41,6 +47,14 @@ public class UserService {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private UserCredentialService userCredentialService;
+    @NotBlank
+    @Value("${message.mq.RocketMQ.registerAccountTopic}")
+    private String registerAccountTopic;
+    @NotBlank
+    @Value("${message.mq.RocketMQ.updateAccountTopic}")
+    private String updateAccountTopic;
+    @Autowired
+    private MessageSender messageSender;
 
     /**
      * <p>
@@ -84,6 +98,19 @@ public class UserService {
                 String strongPassword = StrongPassword.encrypt(realPassword.getContent()).getContent();
                 this.userCredentialService.addUserCredential(savedUser.getId(),
                         email, strongPassword, UserCredential.Type.DOP_LOGIN_EMAIL);
+                //广播通知
+                String passwordEncryptByPrivateKey = RSA
+                        .encryptByPrivateKey(realPassword.getContent(),
+                                this.userProperties.getAccount().getSecret().getRSAPrivateKey()).getContent();
+                ImmutableMap<String, Object> registerParam = ImmutableMap.of(
+                        "id", savedUser.getId(),
+                        "email", user.getEmail(),
+                        "password", passwordEncryptByPrivateKey,
+                        "name", user.getName()
+                );
+                JSONObject jsonObject = new JSONObject(registerParam);
+                this.messageSender.send(this.registerAccountTopic,
+                        UUID.randomUUID().toString(), jsonObject.toJSONString());
             } catch (Exception e) {
                 BizAssert.justInvalidParam(BizCodes.REPETITIVE_USER_EMAIL);
             }
@@ -130,15 +157,39 @@ public class UserService {
         BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
         BizAssert.validParam(Validator.isPassword(realPassword.getContent()),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "密码格式错误"));
+        //查询对应用户
         User user = this.userRepository.findUserByEmail(email);
         BizAssert.validParam(user != null,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "未注册邮箱"));
         String strongPassword = StrongPassword.encrypt(realPassword.getContent()).getContent();
-        System.out.println("strong password : " + strongPassword);
         this.userCredentialService.updateUserCredentialByUserIdAndType(user.getId(), strongPassword, UserCredential.Type.DOP_LOGIN_EMAIL);
         this.redisTemplate.delete(AccountService.RESET_BY_EMAIL_KEY_PREFIX + email);
+        //广播通知
+        String passwordEncryptByPrivateKey = RSA
+                .encryptByPrivateKey(realPassword.getContent(),
+                        this.userProperties.getAccount().getSecret().getRSAPrivateKey()).getContent();
+        ImmutableMap<String, Object> updateParam = ImmutableMap.of(
+                "id", user.getId(),
+                "email", user.getEmail(),
+                "password", passwordEncryptByPrivateKey,
+                "name", user.getName()
+        );
+        JSONObject jsonObject = new JSONObject(updateParam);
+        try {
+            this.messageSender.send(this.updateAccountTopic,
+                    UUID.randomUUID().toString(), jsonObject.toJSONString());
+        } catch (MessageQueueException e) {
+            BizAssert.justInvalidParam(BizCodes.ERROR_UPDATE);
+        }
     }
 
+    /**
+     * 根据email和password查询用户信息
+     *
+     * @param email    email
+     * @param password RSA公钥加密过的password
+     * @return {@link UserBoV1}
+     */
     public UserBoV1 findUserByEmailAndPassword(String email, String password) {
         User user = this.userRepository.findUserByEmail(email);
         BizAssert.validParam(user != null,
@@ -151,10 +202,7 @@ public class UserService {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户凭据中的邮箱与用户邮箱不一致"));
         CryptoResult realPassword = RSA.decryptByPrivateKey(password, this.userProperties.getAccount().getSecret().getRSAPrivateKey());
         BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
-        System.out.println(realPassword.getContent());
-        System.out.println(userCredentialBoV1.getCredential());
         boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
-        System.out.println(verifyResult);
         BizAssert.pass(verifyResult, BizCodes.INVALID_PASSWORD);
         return BeanUtils.convertType(user, UserBoV1.class);
     }

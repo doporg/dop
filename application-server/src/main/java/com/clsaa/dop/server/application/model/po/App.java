@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -76,6 +75,7 @@ public class App implements Serializable {
     //拥有者
     @Column(nullable = false, name = "ouser")
     private Long ouser;
+
 
     //应用描述
     @Column(nullable = true, name = "description")

@@ -35,10 +35,6 @@ public class KubeYamlDataV1 {
      */
     private KubeYamlData.ReleaseStrategy releaseStrategy;
 
-    /**
-     * 镜像地址
-     */
-    private String imageUrl;
 
 
     /**

@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 /**
@@ -71,6 +74,13 @@ public class AppUrlInfo {
      */
     @Column(nullable = false, name = "warehouse_url")
     private String warehouseUrl;
+
+
+    /**
+     * 镜像地址
+     */
+    @Column(nullable = false, name = "image_url")
+    private String imageUrl;
 
     /**
      * 开发数据库URL

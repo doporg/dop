@@ -15,7 +15,7 @@ export default class CodeLayout extends Component {
             <Layout
                 fixable
                 style={{ minHeight: '100vh' }}
-                className={cx(`basic-layout-${theme} ice-design-layout`)}
+                className={cx(`basic-layout-${theme}-code ice-design-layout`)}
             >
                 <Header theme={theme} />
 

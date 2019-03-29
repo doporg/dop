@@ -31,10 +31,13 @@ public class KubeYamlController {
 
     @ApiOperation(value = "获取传输的yaml文件", notes = "获取传输的yaml文件")
     @GetMapping(value = "/app/env/{appEnvId}/yamlFile")
-    public HashMap<String, String> createYamlFileForDeploy(
-            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+    public String createYamlFileForDeploy(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+            //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") Long runningId) {
         try {
-            return this.kubeYamlService.createYamlFileForDeploy(appEnvId);
+            return this.kubeYamlService.createYamlFileForDeploy(cuser, appEnvId, runningId);
 
         } catch (Exception e) {
             System.out.print(e);
@@ -55,10 +58,10 @@ public class KubeYamlController {
             @ApiParam(name = "releaseStrategy", value = "发布策略", required = true) @RequestParam(value = "releaseStrategy") String releaseStrategy,
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
-            @ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
+            //@ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
             @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.kubeYamlService.CreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
-                , releaseBatch, imageUrl, yamlFilePath);
+                , releaseBatch, yamlFilePath);
     }
 
     @ApiOperation(value = "更新yaml信息", notes = "更新yaml信息")
@@ -74,16 +77,25 @@ public class KubeYamlController {
             @ApiParam(name = "releaseStrategy", value = "发布策略", required = true) @RequestParam(value = "releaseStrategy") String releaseStrategy,
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
-            @ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
-            @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
+            //@ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
+            @ApiParam(name = "yamlFilePath", value = "yaml文件地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.kubeYamlService.updateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
-                , releaseBatch, imageUrl, yamlFilePath);
+                , releaseBatch, yamlFilePath);
     }
 
     @ApiOperation(value = "获取yaml信息", notes = "获取yaml信息")
     @GetMapping(value = "/app/env/{appEnvId}/yaml")
     public KubeYamlDataV1 getYamlInfoByAppEnvId(@ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         return BeanUtils.convertType(this.kubeYamlService.findYamlDataByEnvId(appEnvId), KubeYamlDataV1.class);
+    }
+
+    @ApiOperation(value = "更新yaml文件", notes = "更新yaml文件")
+    @PutMapping(value = "/app/env/{appEnvId}/deploymentYaml")
+    public void updateDeploymentYaml(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
+            @ApiParam(value = "deploymentYaml", name = "deploymentYaml", required = true) @RequestParam(value = "deploymentYaml") String deploymentYaml) {
+        this.kubeYamlService.updateDeploymentYaml(muser, appEnvId, deploymentYaml);
     }
 
 

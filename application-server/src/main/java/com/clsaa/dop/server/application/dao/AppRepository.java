@@ -24,6 +24,13 @@ public interface AppRepository extends JpaRepository<App, Long> {
      */
     Page<App> findAllByProjectId(Long projectId, Pageable pageable);
 
+    /**
+     * 根据projectId查询Application
+     *
+     * @param ouser 拥有者Id
+     * @return {@link   List<App> } 项目持久层对象
+     */
+    List<App> findAllByOuser(Long ouser);
 
     /**
      * 根据projectId查询Application

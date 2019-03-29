@@ -2,7 +2,6 @@ package com.clsaa.dop.server.application.model.bo;
 
 import lombok.*;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -41,5 +40,6 @@ public class AppBoV1 implements Serializable {
      * 描述
      */
     private String description;
+
 
 }

@@ -9,6 +9,7 @@ const API = {
     application: "http://open.dop.clsaa.com/application-server",
     permission: "http://open.dop.clsaa.com/permission-server",
     code:"http://open.dop.clsaa.com/code-server",
+    user:"http://open.dop.clsaa.com/user-server",
     test: "http://localhost:13700"
 };
 

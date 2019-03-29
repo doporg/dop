@@ -1,4 +1,4 @@
-import {Field, Form, Input} from "@icedesign/base";
+import {Field, Form, Input, Loading} from "@icedesign/base";
 import API from "../../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
@@ -23,7 +23,8 @@ export default class ApplicationForm extends Component {
         super(props, context);
         this.field = new Field(this);
         this.state = {
-            projectId: props.projectId
+            projectId: props.projectId,
+            loading: false
         }
     }
 
@@ -32,7 +33,10 @@ export default class ApplicationForm extends Component {
      *
      * */
     handleSubmit(props) {
-
+        this.setState({
+            loading: true
+        })
+        let _this = this
         // 校验表单数据
         this.field.validate((errors, values) => {
             console.log(errors, values);
@@ -46,16 +50,23 @@ export default class ApplicationForm extends Component {
                             title: this.field.getValue('title'),
                             productMode: this.field.getValue('productMode'),
                             appDescription: this.field.getValue('description'),
-                            gitUrl: this.field.getValue('gitUrl')
+                            gitUrl: this.field.getValue('gitUrl'),
+                            imageUrl: this.field.getValue('imageUrl')
                         }
                     }
                 )
                     .then(function (response) {
                         console.log(response);
+                        _this.setState({
+                            loading: false
+                        })
                         props.finished();
                     })
                     .catch(function (error) {
                         console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }
@@ -76,41 +87,49 @@ export default class ApplicationForm extends Component {
     render() {
         const {init, getValue} = this.field;
         return (
-            <div>
-                <Form
-                    labelAlign={"left"}
-                    style={style}
-                >
-                    <FormItem {...formItemLayout}
-                              validateStatus={this.field.getError("title") ? "error" : ""}
-                              help={this.field.getError("title") ? "请输入名称" : ""}
-                              label="应用名称："
-                              required>
-                        <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                               placeholder="请输入项目名称"/>
-                    </FormItem>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
+                <div>
+                    <Form
+                        labelAlign={"left"}
+                        style={style}
+                    >
+                        <FormItem {...formItemLayout}
+                                  validateStatus={this.field.getError("title") ? "error" : ""}
+                                  help={this.field.getError("title") ? "请输入名称" : ""}
+                                  label="应用名称："
+                                  required>
+                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
+                                   placeholder="请输入项目名称"/>
+                        </FormItem>
 
-                    <FormItem {...formItemLayout}
-                              validateStatus={this.field.getError("productMode") ? "error" : ""}
-                              help={this.field.getError("productMode") ? "请选择开发模式" : ""}
-                              label="开发模式："
-                              required>
+                        <FormItem {...formItemLayout}
+                                  validateStatus={this.field.getError("productMode") ? "error" : ""}
+                                  help={this.field.getError("productMode") ? "请选择开发模式" : ""}
+                                  label="开发模式："
+                                  required>
 
-                        <ProductModeController {...init('productMode', {
-                            rules: [{required: true, initValue: "BRANCH"}]
-                        })}/>
-                    </FormItem>
-                    <FormItem {...formItemLayout}
-                              validateStatus={this.field.getError("gitUrl") ? "error" : ""}
-                              label="git仓库地址："
-                              required>
-                        <Input  {...init('gitUrl')} placeholder="git仓库地址"/>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="应用描述：">
-                        <Input  {...init('description')} multiple placeholder="应用描述"/>
-                    </FormItem>
-                </Form>
-            </div>
+                            <ProductModeController {...init('productMode', {
+                                rules: [{required: true, initValue: "BRANCH"}]
+                            })}/>
+                        </FormItem>
+                        <FormItem {...formItemLayout}
+                                  validateStatus={this.field.getError("gitUrl") ? "error" : ""}
+                                  label="git仓库地址："
+                                  required>
+                            <Input  {...init('gitUrl')} placeholder="git仓库地址"/>
+                        </FormItem>
+                        <FormItem {...formItemLayout}
+                                  validateStatus={this.field.getError("imageUrl") ? "error" : ""}
+                                  label="镜像仓库地址："
+                                  required>
+                            <Input  {...init('imageUrl')} placeholder="镜像仓库地址"/>
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="应用描述：">
+                            <Input  {...init('description')} multiple placeholder="应用描述"/>
+                        </FormItem>
+                    </Form>
+                </div>
+            </Loading>
         )
     }
 }

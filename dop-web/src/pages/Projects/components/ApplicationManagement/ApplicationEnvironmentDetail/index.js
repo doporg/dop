@@ -1,15 +1,7 @@
-import
-{
-    Form,
-    Button,
-    Select,
-    Feedback,
-    Field
-} from "@icedesign/base";
+import {Breadcrumb, Button, Feedback, Field, Form, Loading, Select} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import {Col, Row} from "@alifd/next/lib/grid";
 import PipelineBindPage from "../PipelineBindPage"
 import ClusterInfoForm from "../ClusterInfoForm"
 
@@ -35,7 +27,10 @@ export default class ApplicationEnvironmentDetail extends Component {
         this.state = {
             appId: props.appId,
             appEnvId: props.appEnvId,
-            envData: []
+            envData: [],
+            loading: true,
+            projectId: props.projectId,
+            toggleEnvDetail: props.toggleEnvDetail
         }
     }
 
@@ -47,12 +42,14 @@ export default class ApplicationEnvironmentDetail extends Component {
                 if (response.data == "") {
                     this.setState({
                         envData: [],
-                        editMode: true
+                        editMode: true,
+                        loading: false
                     })
                 } else {
                     this.setState({
                         envData: response.data,
-                        editMode: false
+                        editMode: false,
+                        loading: false
                     })
                 }
             })
@@ -74,19 +71,39 @@ export default class ApplicationEnvironmentDetail extends Component {
     clusterInfoRender() {
         if (this.field.getValue('deploymentStrategy') === 'KUBERNETES' && this.state.appEnvId !== undefined) {
             return (<ClusterInfoForm
+
                 appEnvId={this.state.appEnvId}/>)
         }
     }
     render() {
         const {init, getValue} = this.field
         return (
-            <div>
-                <Form>
 
+            <div style={{
+                margin: "0 auto",
+                width: "70%",
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                flexDirection: "column"
+            }}>
+                <Breadcrumb>
+                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                </Breadcrumb>
+
+
+                <Form>
+                    <Loading visible={this.state.loading} size='small' shape="dot-circle" color="#2077FF"
+                    >
                     <FormItem label="部署方式"
                               {...formItemLayout}
                               validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
                               help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}>
+
                         <Select placeholder="部署方式"
                                 onChange={this.onChange.bind(this)}
 
@@ -97,13 +114,18 @@ export default class ApplicationEnvironmentDetail extends Component {
                             <Option value="KUBERNETES">Kubernetes部署</Option>
                             <Option value="test">测试</Option>
                         </Select>
+
                     </FormItem>
 
-                    <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
 
+                    </Loading>
 
                 </Form>
+
+                <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
+
+                <Button onClick={this.state.toggleEnvDetail.bind(this)} type="primary">返回环境列表</Button>
 
             </div>
         );

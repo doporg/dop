@@ -34,7 +34,7 @@ export default class EditPipelineInfo extends Component {
                 stages: [],
                 jenkinsfile:{}
             },
-            monitor: ["自动触发", "手动触发"],
+            monitor: ["自动触发"],
             jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
             haveJenkinsFile: null,
             jenkinsFileInfo: {
@@ -56,7 +56,6 @@ export default class EditPipelineInfo extends Component {
             visible: true
         });
         Axios.get(url).then((response) => {
-            console.log(response)
             if (response.status === 200) {
                 if(response.data.stages === null){
                     response.data.stages = []
@@ -69,7 +68,8 @@ export default class EditPipelineInfo extends Component {
                 }
                 self.setState({
                     pipeline: response.data,
-                    visible: false
+                    visible: false,
+                    haveJenkinsFile: response.data.config
                 });
             }else{
                 toast.show({
@@ -127,8 +127,9 @@ export default class EditPipelineInfo extends Component {
             data: self.state.pipeline
         }).then((response) => {
             if (response.status === 200) {
-                self.deleteJenkins.bind(self).then(()=>{
-                    self.createJenkinsfile.bind(self)
+                console.log(11)
+                self.deleteJenkins().then(()=>{
+                    self.createJenkinsfile()
                 }).then(()=>{
                     toast.show({
                         type: "success",
@@ -194,8 +195,9 @@ export default class EditPipelineInfo extends Component {
 
     deleteJenkins(){
         let url = API.pipeline + '/v1/jenkins/' + this.state.pipelineId;
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve)=>{
             Axios.delete(url).then((response) => {
+                console.log(response)
                 if (response.status === 200) {
                     resolve()
                 }
@@ -263,7 +265,9 @@ export default class EditPipelineInfo extends Component {
                                         <PipelineInfoStage
                                             stages={this.state.pipeline.stages}
                                             currentStage={this.state.currentStage}
+                                            appId={this.state.pipeline.appId}
                                             onChange={this.setStages.bind(this)}
+                                            onSelectEnv = {this.selectEnv.bind(this)}
                                         />
                                     )
                                 }
@@ -275,6 +279,7 @@ export default class EditPipelineInfo extends Component {
 
 
                 <div className="footer">
+                    {console.log(this.state.haveJenkinsFile)}
                     <div className="footer-container">
                         <Button type="primary"
                                 className="button"

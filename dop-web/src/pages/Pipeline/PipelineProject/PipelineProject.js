@@ -9,6 +9,7 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import './PipelineProject.scss'
+
 const {toast} = Feedback;
 
 export default class PipelineProject extends Component {
@@ -17,26 +18,41 @@ export default class PipelineProject extends Component {
         this.state = {
             visible: false,
             pipelineId: this.props.match.params.id,
-            runs: {},
+            pipeline:{},
+            runs: {
+                _links: {
+                    self: {
+                        href: ""
+                    }
+                }
+            },
             queue: [],
-            time: ""
+            time: "",
+            resultStatus: "run"
         }
     }
 
     componentDidMount() {
         let self = this;
-        this.getRuns().then((data) => {
-            self.setState({
-                runs: data,
-                visible: false
+        self.setState({
+            visible: true
+        });
+        self.getPipelineInfo();
+        let time = setInterval(() => {
+            this.getRuns().then((data) => {
+                self.setState({
+                    runs: data,
+                    visible: false
+                })
             })
-        })
+        }, 5000);
+        self.setState({
+            time: time
+        });
     }
 
-
     getRuns() {
-        let url = API.pipeline + '/v1/jenkins/runs?id='+ this.state.pipelineId;
-        // let url = 'http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/simple-node-app/runs/';
+        let url = API.pipeline + '/v1/jenkins/runs?id=' + this.state.pipelineId;
         let self = this;
         return new Promise((resolve, reject) => {
             Axios.get(url).then((response) => {
@@ -48,6 +64,7 @@ export default class PipelineProject extends Component {
                             duration: 3000
                         });
                         resolve(response.data[0]);
+                        self.clear();
                     } else {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
@@ -60,15 +77,41 @@ export default class PipelineProject extends Component {
         })
     }
 
-    buildPipeline() {
-        let url = API.pipeline + '/v1/jenkins/build?id='+ this.state.pipelineId;
+    getPipelineInfo(){
+        let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
         let self = this;
+
+        Axios.get(url).then((response) => {
+            if (response.status === 200) {
+                self.setState({
+                    pipeline: response.data
+                })
+            }
+        })
+    }
+
+    buildPipeline() {
+        // if(!this.state.pipeline.appEnvId){
+        //     toast.show({
+        //         type: "error",
+        //         content: "该流水线尚未绑定环境变量，请前往绑定",
+        //         duration: 3000
+        //     });
+        //     this.props.history.push("/application/environment/detail")
+        // }
+        let self = this;
+        self.setState({
+            visible: true,
+            resultStatus: "build"
+        });
+        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {
                     this.getRuns().then((data) => {
                         self.setState({
-                            runs: data
+                            runs: data,
+                            visible: false
                         })
                     })
                 }, 5000);
@@ -76,18 +119,30 @@ export default class PipelineProject extends Component {
                     runs: response.data,
                     time: time
                 });
-
             }
         })
-
+    }
+    clear() {
+        clearInterval(this.state.time);
+        if(this.state.resultStatus === "build"){
+            this.setResult()
+        }
     }
 
-    clear(){
-        clearInterval(this.state.time)
+    setResult() {
+        let url = API.pipeline + '/v1/resultOutput/notify/'+ this.state.pipelineId;
+        Axios.post(url).then((response) => {
+        }).catch(()=>{
+            toast.show({
+                type: "error",
+                content: "此次执行信息丢失",
+                duration: 3000
+            });
+        })
     }
 
     removeByIdSQL(id) {
-        let url = API.pipeline + '/v1/delete/'+id;
+        let url = API.pipeline + '/v1/delete/' + id;
         let self = this;
         Axios.put(url).then((response) => {
             if (response.status === 200) {
@@ -101,9 +156,12 @@ export default class PipelineProject extends Component {
         })
     }
 
+    editPipeline() {
+        this.props.history.push("/pipeline/edit/" + this.state.pipelineId)
+    }
+
     deletePipeline() {
-        console.log(11)
-        let url = API.pipeline + '/v1/jenkins/'+this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/' + this.state.pipelineId;
         let self = this;
         self.setState({
             visible: true
@@ -133,12 +191,13 @@ export default class PipelineProject extends Component {
                             <Icon type="play"/>
                             运行流水线
                         </Button>
-                        <Button type="normal" className="button" disabled>
+                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
                             <Icon type="edit"/>
                             编辑流水线
                         </Button>
-                        <Button type="secondary" shape="warning" className="button" onClick={this.deletePipeline.bind(this)}>
-                            <Icon type="ashbin" />
+                        <Button type="secondary" shape="warning" className="button"
+                                onClick={this.deletePipeline.bind(this)}>
+                            <Icon type="ashbin"/>
                             删除流水线
                         </Button>
                     </div>
