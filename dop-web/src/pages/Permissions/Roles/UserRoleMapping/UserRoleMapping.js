@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Dialog, Feedback, Field, Table} from "@icedesign/base";
 import API from "../../../API";
 import Axios from "axios";
+import Button from "@icedesign/base/lib/button";
 
 /**
  *  用户关联角色管理
@@ -179,17 +180,22 @@ export default class UserRoleMapping extends Component {
         }
         const showRoles =(value, index, record)=>{
             return(
-                <button onClick={this.editUserOpen.bind(this,record.id)}>添加角色</button>
+                <Button
+                    type="primary"
+                    shape="normal"
+                    size="medium"
+                    className="button"
+                    onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
             )
         }
         const showPermissions =(value, index, record)=>{
             return(
-                <button onClick={this.showPermissions.bind(this,record.id)}>查看功能点</button>
+                <Button onClick={this.showPermissions.bind(this,record.id)}>查看功能点</Button>
             )
         }
         const showUserData =(value, index, record)=>{
             return(
-                <button onClick={this.showUserData.bind(this,record.id)}>查看数据</button>
+                <Button onClick={this.showUserData.bind(this,record.id)}>查看数据</Button>
             )
         }
         const footer=(
@@ -211,19 +217,34 @@ export default class UserRoleMapping extends Component {
         //删除角色按钮
         const deleteRoleMap=(value, index, record)=>{
             return (
-                <button onClick={this.removeRole.bind(this, record.id)}>删除</button>
+                <Button
+                    type="primary"
+                    shape="warning"
+                    size="medium"
+                    className="button"
+                    onClick={this.removeRole.bind(this, record.id)}>删除</Button>
             );
         }
         //添加角色按钮
         const addRoleMap=(value, index, record)=>{
             return (
-                <button onClick={this.addRole.bind(this, record.id)}>添加</button>
+                <Button
+                    type="primary"
+                    shape="normal"
+                    size="medium"
+                    className="button"
+                    onClick={this.addRole.bind(this, record.id)}>添加</Button>
             );
         }
 
         const deleteUserData=(value, index, record)=>{
             return (
-                <button onClick={this.deleteUserData.bind(this, record.id)}>删除</button>
+                <Button
+                    type="primary"
+                    shape="warning"
+                    size="medium"
+                    className="button"
+                    onClick={this.deleteUserData.bind(this, record.id)}>删除</Button>
             );
         }
 
@@ -240,6 +261,7 @@ export default class UserRoleMapping extends Component {
                 >
                             <h2>已关联角色</h2>
                             <Table
+                                hasBorder={false}
                                 dataSource={this.state.currentRoles}
                                 primaryKey="id">
                                 <Table.Column  title="名称" dataIndex="name" />
@@ -250,6 +272,7 @@ export default class UserRoleMapping extends Component {
 
                             <h2>所有角色</h2>
                             <Table
+                                hasBorder={false}
                                 dataSource={this.state.roleList}
                                 primaryKey="id">
                                 <Table.Column  title="名称" dataIndex="name" />
@@ -266,6 +289,7 @@ export default class UserRoleMapping extends Component {
                     footer={footer2}
                     shouldUpdatePosition={true}>
                     <Table
+                        hasBorder={false}
                         isLoading={this.state.permissionIsLoading}
                         dataSource={this.state.currentPermissions}>
                         <Table.Column  title="名称" dataIndex="name" />
@@ -283,6 +307,7 @@ export default class UserRoleMapping extends Component {
                     footer={footer3}
                     shouldUpdatePosition={true}>
                     <Table
+                        hasBorder={false}
                         dataSource={this.state.currentUserData}>
                         <Table.Column  title="ID" dataIndex="id" width="10%" />
                         <Table.Column  title="规则ID" dataIndex="ruleId" width="10%" />
@@ -294,6 +319,7 @@ export default class UserRoleMapping extends Component {
                 </Dialog>
 
                 <Table
+                    hasBorder={false}
                     isLoading={this.state.isLoading}
                     dataSource={this.state.currentData}>
                     <Table.Column title="用户名称" dataIndex="name"/>

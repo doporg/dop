@@ -48,19 +48,9 @@ const asideMenuConfig = [
     },
     {
 
-        name: '功能点管理',
-        path: '/permissions',
-        icon: 'box' ,
-    },
-    {
-        name: '角色管理',
-        path: '/roles',
-        icon: 'account',
-    },
-    {
-        name: '数据权限',
-        path: '/dataRules',
-        icon: 'filter',
+        name: '权限管理',
+        path: 'permission/permissions',
+        icon: 'account' ,
     },
 
     {

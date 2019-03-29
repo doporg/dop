@@ -350,7 +350,11 @@ export default class Role extends Component {
 
         const showPermission =(value, index, record)=>{
             return(
-                    <button onClick={this.editRoleOpen.bind(this,record.id)}>编辑角色</button>
+                    <Button
+                        shape="normal"
+                        size="medium"
+                        className="button"
+                        onClick={this.editRoleOpen.bind(this,record.id)}>编辑角色</Button>
             )
         }
 
@@ -362,7 +366,12 @@ export default class Role extends Component {
                     onCancel={this.onCancel}
                     title="您真的要删除吗？"
                 >
-                    <button>删除</button>
+                    <Button
+                        type="primary"
+                        shape="warning"
+                        size="medium"
+                        className="button"
+                    >删除</Button>
                 </BalloonConfirm>
 
             );
@@ -370,23 +379,34 @@ export default class Role extends Component {
         //删除角色功能点对应按钮
         const deletePermissionMap=(value, index, record)=>{
             return (
-                <button onClick={this.removePermission.bind(this, record.id)}>删除</button>
+                <Button
+                    type="primary"
+                    shape="warning"
+                    size="medium"
+                    onClick={this.removePermission.bind(this, record.id)}>删除</Button>
             );
         }
         //添加角色功能点对应按钮
         const addPermissionMap=(value, index, record)=>{
             return (
-                <button onClick={this.addPermission.bind(this, record.id)}>添加</button>
+                <Button
+                    type="primary"
+                    shape="normal"
+                    size="medium"
+                    onClick={this.addPermission.bind(this, record.id)}>添加</Button>
             );
         }
 
         return(
 
             <div>
-                <Button type="primary" onClick={this.onOpen} >创建新角色</Button>
+                <Button type="primary"
+                        className="topButton"
+                        onClick={this.onOpen} >创建新角色</Button>
 
-                <Link to='/roles/userwithrole'>
-                    <Button type="primary" >角色分配</Button>
+                <Link to='/permission/roles/userwithrole'>
+                    <Button type="primary"
+                            className="topButton">角色分配</Button>
                 </Link>
 
                 <Dialog
@@ -424,6 +444,7 @@ export default class Role extends Component {
 
                         <FormItem label="功能点：" {...formItemLayout} required>
                             <Table
+                                hasBorder={false}
                                 dataSource={this.state.permissionList}
                                 primaryKey="id"
                                 isTree
@@ -458,6 +479,7 @@ export default class Role extends Component {
                             <FormItem>
                                 <h2>已有功能点</h2>
                                     <Table
+                                        hasBorder={false}
                                         dataSource={this.state.currentPermission}
                                         primaryKey="id">
                                         <Table.Column width ='20%' title="名称" dataIndex="name" />
@@ -469,6 +491,7 @@ export default class Role extends Component {
                             <FormItem>
                                 <h2>所有功能点</h2>
                                         <Table
+                                            hasBorder={false}
                                             dataSource={this.state.permissionList}
                                             primaryKey="id">
                                                 <Table.Column width ='20%' title="名称" dataIndex="name" />
@@ -481,6 +504,7 @@ export default class Role extends Component {
                 </Dialog>
 
                 <Table
+                    hasBorder={false}
                     isLoading={this.state.isLoading}
                     dataSource={this.state.currentData}>
                     <Table.Column title="角色ID" dataIndex="id"/>
@@ -495,9 +519,8 @@ export default class Role extends Component {
                 <Pagination total={this.state.totalCount}
                             current={this.state.pageNo}
                             onChange={this.onChange}
-                            pageSize={this.state.pageSize
-                            }
-                            className="page-demo" />
+                            pageSize={this.state.pageSize}
+                            className="pagination"/>
             </div>
         )
     }
