@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.service;
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.dao.UserMapper;
 import com.clsaa.dop.server.code.model.bo.user.TokenBo;
+import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import org.apache.http.NameValuePair;
@@ -65,6 +66,32 @@ public class UserService {
         userMapper.addUser(new User(username,access_token));
 
     }
+
+
+    /**
+     * 根据用户名获得用户id，然后修改用户密码
+     * @param username 用户名
+     * @param password 密码
+     */
+    public void updateUserPassword(String username,String password){
+
+        String path="/users?username="+username;
+        int id=RequestUtil.getList(path,"root",UserIdBo.class).get(0).getId();
+
+        path="/users/"+id;
+        NameValuePair p1=new BasicNameValuePair("password",password);
+        NameValuePair p2=new BasicNameValuePair("skip_reconfirmation","true");
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(p1);
+        params.add(p2);
+        RequestUtil.put(path,"root",params);
+
+    }
+
+
+
+
+
 
 
 
