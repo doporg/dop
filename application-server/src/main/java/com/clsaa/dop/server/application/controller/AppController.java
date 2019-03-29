@@ -37,7 +37,7 @@ public class AppController {
 
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")
-    @GetMapping(value = "/app")
+    @GetMapping(value = "/pagedapp")
     public Pagination<AppV1> findApplicationByProjectId(@ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
                                                         @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
                                                         @ApiParam(name = "projectId", value = "项目ID", required = true) @RequestParam(value = "projectId") Long projectId,

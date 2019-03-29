@@ -44,7 +44,7 @@ export default class ApplicationPagination extends Component {
         this.setState({
             loading: true
         })
-        let url = API.gateway + '/application-server/app'
+        let url = API.gateway + '/application-server/pagedapp'
         let _this = this;
         let tmpData = [];
         Axios.get(url, {
