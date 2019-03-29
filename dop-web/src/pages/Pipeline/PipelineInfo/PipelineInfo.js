@@ -28,8 +28,8 @@ export default class PipelineInfo extends Component {
                 cuser: window.sessionStorage.getItem('user-id'),
                 //监听设置
                 monitor: "",
-                appId: "",
-                appEnvId: "",
+                appId: null,
+                appEnvId: null,
                 config: "无Jenkinsfile",
                 stages: [],
                 jenkinsfile: {}
@@ -42,10 +42,7 @@ export default class PipelineInfo extends Component {
                 path: ""
             },
             currentStage: 0,
-            applications: [{
-                value: "value",
-                label: "22"
-            }]
+            applications: []
         };
     }
 

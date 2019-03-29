@@ -29,8 +29,8 @@ public class ResultOutputController {
 
     @ApiOperation(value = "新建一个用户的流水线运行结果")
     @PostMapping("/v1/resultOutput")
-    public void create(Pipeline pipeline) {
-        this.resultOutputService.create(pipeline);
+    public void create(String id) {
+        this.resultOutputService.create(id);
     }
 
     @Async
@@ -39,18 +39,6 @@ public class ResultOutputController {
     public void notify(@PathVariable(value = "id") String id) {
         String output = this.jenkinsService.getBuildOutputText(id);
         this.resultOutputService.setResult(id, output);
-    }
-
-    @ApiOperation(value = "设置一个result")
-    @PostMapping("/v1/resultOutput/result")
-    public void setResult(String id, String output) {
-        this.resultOutputService.setResult(id, output);
-    }
-
-    @ApiOperation(value = "删除一条用户记录")
-    @PutMapping("/v1/resultOutput/{id}")
-    public void delete(@PathVariable(value = "id") String id) {
-        this.resultOutputService.delete(id);
     }
 }
 

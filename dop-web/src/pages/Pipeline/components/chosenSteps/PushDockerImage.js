@@ -80,7 +80,6 @@ export default class PushDockerImage extends Component {
             selectEnv: value
         });
         this.getRepository();
-        this.getRepositoryVersion()
         this.props.onSelectEnv(value)
     }
 
@@ -107,6 +106,7 @@ export default class PushDockerImage extends Component {
         let dockerUser = this.state.dockerUser;
         for (let i = 0; i < dockerUser.length; i++) {
             if (value === dockerUser.id) {
+                self.props.onUserNameChange(dockerUser.identifier)
                 self.props.onUserNameChange(dockerUser.identifier)
             }
         }

@@ -5,8 +5,10 @@ import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -21,20 +23,23 @@ public class Jenkinsfile {
     private String stages;
     private Long appEnvId;
     private String git;
-    public Jenkinsfile(){}
-    public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage){
+
+    public Jenkinsfile() {
+    }
+
+    public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage) {
         this.appEnvId = appEnvId;
         this.stages = "";
-        for(int i = 0; i < pipelineStage.size();i++){
+        for (int i = 0; i < pipelineStage.size(); i++) {
             Stage stage = pipelineStage.get(i);
 
             String name = stage.getName();
             this.stages += "stage(\'" + name + "\'){ \n";
             ArrayList<Step> steps = stage.getSteps();
-            if(steps.size() == 0){
+            if (steps.size() == 0) {
                 this.stages += "echo \'  没有运行的脚本 \' \n";
             }
-            for(int j = 0;j < steps.size(); j++){
+            for (int j = 0; j < steps.size(); j++) {
                 this.stages += "steps{\n";
                 Step task = steps.get(j);
                 String taskName = task.getTaskName();
@@ -46,7 +51,7 @@ public class Jenkinsfile {
                 String respositoryVersion = task.getRepositoryVersion();
                 String shell = task.getShell();
                 String deploy = task.getDeploy();
-                switch (taskName){
+                switch (taskName) {
                     case ("拉取代码"):
                         this.stages += "deleteDir() \n";
                         this.stages += "git \"" + gitUrl + "\" \n";
@@ -70,7 +75,28 @@ public class Jenkinsfile {
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
                     case ("部署"):
-                        this.stages += "sh \'" + deploy + "\' \n";
+                        String[] deploys = deploy.split("---");
+                        for (int z = 0; z < deploys.length; z++) {
+                            Yaml yaml = new Yaml();
+                            Map map = yaml.load(deploys[z]);
+                            Object apiVersion = map.get("apiVersion");
+                            Object kind = map.get("kind");
+                            Map metadata = (Map) map.get("metadata");
+                            Object namespace = metadata.get("namespace");
+                            if(kind.toString().equals("Deployment")){
+                                this.stages += "sh curl -X POST -H 'Content-Type:application/yaml' " +
+                                        "127.0.0.1:8001" +
+                                        "/apis/" + apiVersion +
+                                        "/namespaces/"+ namespace.toString() +"/" + kind.toString().toLowerCase() + "s "+
+                                        "--data \'" + deploy + "\' \n";
+                            }else{
+                                this.stages += "sh curl -X POST -H 'Content-Type:application/yaml' " +
+                                        "127.0.0.1:8001" +
+                                        "/api/" + apiVersion +
+                                        "/namespaces/"+ namespace.toString() +"/" + kind.toString().toLowerCase() + "s "+
+                                        "--data \'" + deploy + "\' \n";
+                            }
+                        }
                         break;
                 }
                 this.stages += "}\n";
@@ -78,15 +104,15 @@ public class Jenkinsfile {
             this.stages += "}\n";
         }
     }
-    public String getScript(){
+
+    public String getScript() {
         return ("pipeline {\n" +
                 "    agent any\n" +
                 "    stages {\n" +
-                        this.stages +
+                this.stages +
                 "    }\n" +
                 "}");
     }
-
 
 
 }

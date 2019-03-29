@@ -64,6 +64,12 @@ public class Step {
     private String token;
 
     /**
+     * 预留k8s ip:port
+     */
+    @SerializedName("ip")
+    private String ip;
+
+    /**
      * shell
      */
     @SerializedName("shell")

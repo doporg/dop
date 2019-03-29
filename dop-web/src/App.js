@@ -32,17 +32,20 @@ class App extends Component {
                             duration: 5000
                         });
                         window.location.replace("#/login");
+                        window.location.reload();
                         break;
                     }
                     case 500: {
                         if (error.response.data.message === 'pre:AccessTokenZuulFilter') {
                             window.sessionStorage.clear();
+                            RSA()
                             toast.show({
                                 type: "error",
                                 content: "Token失效, 请重新登陆",
                                 duration: 5000
                             });
                             window.location.replace("#/login");
+                            window.location.reload();
                         }
                         break;
                     }

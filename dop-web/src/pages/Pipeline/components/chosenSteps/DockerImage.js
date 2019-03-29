@@ -81,7 +81,6 @@ export default class DockerImage extends Component {
             selectEnv: value
         });
         this.getRepository();
-        this.getRepositoryVersion()
         this.props.onSelectEnv(value)
     }
 
@@ -108,7 +107,8 @@ export default class DockerImage extends Component {
         let dockerUser = this.state.dockerUser;
         for (let i = 0; i < dockerUser.length; i++) {
             if (value === dockerUser.id) {
-                self.props.onUserNameChange(dockerUser.identifier)
+                self.props.onUserNameChange(dockerUser.identifier);
+                self.props.onDockerPasswordChange(dockerUser.credential)
             }
         }
     }
@@ -116,28 +116,6 @@ export default class DockerImage extends Component {
     selectRepository(value) {
         this.props.onRepositoryChange(value)
     }
-
-    // getRepositoryVersion(){
-    //     let url = API.application + "/app/env" + this.state.selectEnv + "/build_tag";
-    //     let self = this;
-    //     let repositories = self.state.repositories;
-    //     Axios.get(url).then((response)=>{
-    //         if(response.status === 200){
-    //             let repository = {
-    //                 value: response.data.imageUrl,
-    //                 label: response.data.imageUrl
-    //             };
-    //             repositories.push(repository)
-    //             self.setState({
-    //                 repositories
-    //             })
-    //         }
-    //     })
-    // }
-    //
-    // buildRepositoryVersion(value) {
-    //     this.props.onRepositoryVersionChange(value)
-    // }
 
     render() {
         return (

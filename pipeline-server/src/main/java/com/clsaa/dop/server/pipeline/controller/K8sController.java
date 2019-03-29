@@ -36,9 +36,11 @@ public class K8sController {
             String[] yamls = result.split("---");
             Yaml yaml = new Yaml();
             Map map = yaml.load(yamls[0]);
-            System.out.println(map.get("kind"));
+            Object kind = map.get("kind");
             Map test = (Map) map.get("metadata");
-            System.out.println(test.get("namespace"));
+            Object namespace = test.get("namespace");
+            System.out.println(kind.toString());
+            System.out.println(namespace.toString());
         }
     }
 }

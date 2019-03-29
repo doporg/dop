@@ -8,11 +8,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -27,11 +27,26 @@ public class ResultOutput {
     private ObjectId id;
 
     /**
+     * 流水线id
+     */
+    @Field("pipelineId")
+    @SerializedName("pipelineId")
+    private String pipelineId;
+
+    /**
      * 运行结果
      */
     @Field("result")
     @SerializedName("result")
-    private ArrayList<Result> results;
+    private String result;
+
+    /**
+     * 运行状态
+     */
+    @Field("status")
+    @SerializedName("status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     /**
      * 创建时间
@@ -40,19 +55,6 @@ public class ResultOutput {
     @SerializedName("ctime")
     private LocalDateTime ctime;
 
-    /**
-     * 修改时间
-     */
-    @Field("mtime")
-    @SerializedName("mtime")
-    private LocalDateTime mtime;
-
-    /**
-     * 修改人
-     */
-    @Field("cuser")
-    @SerializedName("cuser")
-    private Long cuser;
 
     /**
      * 是否删除
@@ -61,4 +63,14 @@ public class ResultOutput {
     @SerializedName("isDeleted")
     private Boolean isDeleted;
 
+
+    public enum Status {
+
+        RUNNING("RUNNING"),
+        FINISHED("FINISHED");
+        private String code;
+
+        Status(String code) {
+        }
+    }
 }

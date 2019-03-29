@@ -2,19 +2,13 @@ package com.clsaa.dop.server.pipeline.service;
 
 
 import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.po.Pipeline;
-import com.clsaa.dop.server.pipeline.model.po.Result;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
-import org.apache.commons.collections.map.HashedMap;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,41 +18,34 @@ public class ResultOutputService {
     private ResultOutputRepository resultOutputRepository;
 
     /**
-     * 创建流水线时，同时创建一个该流水线运行的结果
+     * 运行时，创建一条运行时的快照, 返回此快照的runningid
      */
-    public void create(Pipeline pipeline) {
-        Result result = new Result(pipeline.getCtime(), "新建流水线");
-        ArrayList<Result> results = new ArrayList<>();
-        results.add(result);
+    public String create(String pipelineid) {
+        ObjectId id = new ObjectId();
         ResultOutput resultOutput = ResultOutput.builder()
-                .id(pipeline.getId())
-                .results(results)
-                .ctime(pipeline.getCtime())
-                .mtime(pipeline.getMtime())
-                .cuser(pipeline.getCuser())
-                .isDeleted(false)
-                .build();
+                .id(id)
+                .pipelineId(pipelineid)
+                .ctime(LocalDateTime.now())
+                .result("")
+                .status(ResultOutput.Status.RUNNING)
+                .isDeleted(false).build();
+
         this.resultOutputRepository.insert(resultOutput);
+        return id.toString();
     }
 
-    public void setResult(String id, String output) {
-        Optional<ResultOutput> optionalResultOutput = this.resultOutputRepository.findById(new ObjectId(id));
-        if (optionalResultOutput.isPresent()) {
-            ResultOutput resultOutput = optionalResultOutput.get();
-            ArrayList<Result> results = resultOutput.getResults();
-            Result result = new Result(LocalDateTime.now(), output);
-            results.add(result);
-            resultOutput.setResults(results);
-            resultOutputRepository.save(resultOutput);
+    public void setResult(String pipelineId, String output) {
+        List<ResultOutput> resultOutputs = this.resultOutputRepository.findByPipelineId(pipelineId);
+        ResultOutput running = null;
+        for (int i = 0; i < resultOutputs.size(); i++) {
+            ResultOutput resultOutput = resultOutputs.get(i);
+            if(resultOutput.getStatus() == ResultOutput.Status.RUNNING){
+                running = resultOutput;
+            }
         }
+        running.setStatus(ResultOutput.Status.FINISHED);
+        running.setResult(output);
+        this.resultOutputRepository.save(running);
     }
 
-    public void delete(String id) {
-        Optional<ResultOutput> optionalResultOutput = this.resultOutputRepository.findById(new ObjectId(id));
-        if (optionalResultOutput.isPresent()) {
-            ResultOutput resultOutput = optionalResultOutput.get();
-            resultOutput.setIsDeleted(true);
-            resultOutputRepository.save(resultOutput);
-        }
-    }
 }

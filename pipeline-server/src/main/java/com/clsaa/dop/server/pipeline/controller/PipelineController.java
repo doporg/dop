@@ -108,39 +108,4 @@ public class PipelineController {
         return this.pipelineService.getPipelineIdByEnvId(envId);
     }
 
-    @ApiOperation(value = "根据应用appid, 设置git地址")
-    @PostMapping("/v1/pipeline/{appid}/{git}")
-    public void setGitByAppid(@PathVariable(value = "appid") Long appid, @PathVariable(value = "git") String git) {
-        this.pipelineService.setInfoByAppid(appid, git);
-    }
-
-    @ApiOperation(value = "根据应用envid, 设置dockerName")
-    @PostMapping("/v1/pipeline/{envid}/{dockerName}")
-    public void setDockerNameByEnvid(@PathVariable(value = "envid") Long envid, @PathVariable(value = "dockerName") String dockerName) {
-        this.pipelineService.setInfoByEnvid(envid, dockerName, null, null, null);
-    }
-    @ApiOperation(value = "根据应用envid, 设置dockerPwd")
-    @PostMapping("/v1/pipeline/{envid}/{dockerPwd}")
-    public void setDockerPwdByEnvid(@PathVariable(value = "envid") Long envid, @PathVariable(value = "dockerPwd") String dockerPwd) {
-        this.pipelineService.setInfoByEnvid(envid, null, dockerPwd, null, null);
-    }
-
-    @ApiOperation(value = "根据应用envid, 设置repository")
-    @PostMapping("/v1/pipeline/{envid}/{repository}")
-    public void setRepositoryByEnvid(@PathVariable(value = "envid") Long envid, @PathVariable(value = "repository") String repository) {
-        this.pipelineService.setInfoByEnvid(envid, null, null, repository, null);
-    }
-
-    @ApiOperation(value = "根据应用envid, 设置repositoryVersion")
-    @PostMapping("/v1/pipeline/{envid}/{repositoryVersion}")
-    public void setRepositoryVersionByeEnvid(@PathVariable(value = "envid") Long envid, @PathVariable(value = "repositoryVersion") String repositoryVersion) {
-        this.pipelineService.setInfoByEnvid(envid, null, null, null, repositoryVersion);
-    }
-
-    @ApiOperation(value = "根据应用envid, 设置deploy")
-    @PostMapping("/v1/pipeline/{envid}/{deploy}")
-    public void setDeployByEnvid(@PathVariable(value = "envid") Long envid, @PathVariable(value = "deploy") String deploy) {
-        this.pipelineService.setInfoByEnvid(envid, null, null, null, null);
-    }
-
 }

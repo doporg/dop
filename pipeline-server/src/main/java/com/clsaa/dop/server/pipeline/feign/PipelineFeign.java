@@ -2,7 +2,6 @@ package com.clsaa.dop.server.pipeline.feign;
 
 import com.clsaa.dop.server.pipeline.config.FeignConfig;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
