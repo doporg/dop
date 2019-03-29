@@ -9,6 +9,8 @@ import Blob from "./Blob";
 import EditFile from './EditFile'
 import CommitList from './CommitList';
 import FilePathList from './FilePathList';
+import Commit from './Commit';
+import EditProject from './EditProject';
 
 const codeConfig = [
 
@@ -58,6 +60,16 @@ const codeConfig = [
         layout: CodeLayout,
         component: FilePathList
     },
+    {
+        path: '/code/:username/:projectid/commit/:commitid',
+        layout: CodeLayout,
+        component: Commit
+    },
+    {
+        path: '/code/:username/:projectid/edit',
+        layout: CodeLayout,
+        component: EditProject
+    }
 
 ];
 

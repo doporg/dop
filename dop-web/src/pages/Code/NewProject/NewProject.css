@@ -6,7 +6,7 @@
 }
 
 .div_title{
-    border-bottom: 1px solid #c1c1c1;
+    border-bottom: 1px solid #d1d1d1;
     height: 50px;
     font-size: 20px;
     font-weight: bolder;
@@ -37,7 +37,7 @@
     width: 85%;
     height: 40px;
     border-radius: 2px;
-    border: 1px solid #c1c1c1;
+    border: 1px solid #e2e2e2;
 
 }
 
@@ -45,7 +45,7 @@
     width: 85%;
     height: 80px;
     border-radius: 2px;
-    border: 1px solid #c1c1c1;
+    border: 1px solid #e2e2e2;
 }
 
 .btn_create{

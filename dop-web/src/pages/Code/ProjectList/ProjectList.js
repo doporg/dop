@@ -111,6 +111,10 @@ export default class ProjectList extends React.Component {
 
     }
 
+    newProjectLink(){
+        this.props.history.push("/code/projects/new");
+    }
+
 
     render() {
 
@@ -137,8 +141,8 @@ export default class ProjectList extends React.Component {
                     </ul>
                     <div className="search-form">
                         <input className="input_search" placeholder="根据项目名称过滤" onChange={this.handleInputChange.bind(this)}/>
-                        <button className="btn_add_project">
-                            <Link to="/code/projects/new"><span className="text_new">+新建项目</span></Link>
+                        <button onClick={this.newProjectLink.bind(this)} className="btn_add_project">
+                            <span className="text_new">+新建项目</span>
                         </button>
                     </div>
                     <div>

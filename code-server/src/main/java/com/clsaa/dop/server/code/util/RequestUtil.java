@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
@@ -41,32 +42,23 @@ public class RequestUtil {
     //    管理员的token
     private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
-//    public static void main(String[] args) throws UnsupportedEncodingException {
-//
-//        NameValuePair p1=new BasicNameValuePair("utf8","✓");
-//        NameValuePair p2=new BasicNameValuePair("access_token","1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02");
-//        NameValuePair p3=new BasicNameValuePair("personal_access_token[name]","tt2");
-//        NameValuePair p4=new BasicNameValuePair("personal_access_token[expires_at]","");
-//        NameValuePair p5=new BasicNameValuePair("personal_access_token[scopes][]","api");
-//        NameValuePair p6=new BasicNameValuePair("personal_access_token[scopes][]","read_user");
-//        NameValuePair p7=new BasicNameValuePair("personal_access_token[scopes][]","read_repository");
-//        NameValuePair p8=new BasicNameValuePair("personal_access_token[scopes][]","read_registry");
-//
-//        List<NameValuePair> params=new ArrayList<>();
-//        params.add(p1);
-//        params.add(p2);
-//        params.add(p3);
-//        params.add(p4);
-//        params.add(p5);
-//        params.add(p6);
-//        params.add(p7);
+
 //        params.add(p8);
 
     public static void main(String[] args) {
 
-        String url=api+"/projects/3/repository/commits?ref_name=master&per_page=50&page=2";
+        List<NameValuePair> params= new ArrayList<>();
+        params.add(new BasicNameValuePair("username","dopcode1"));
+        //name和username相同，因为dop系统注册不需要填name
+        params.add(new BasicNameValuePair("name","dopcode1"));
+        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
+        params.add(new BasicNameValuePair("password","Wsy@123456"));
+        params.add(new BasicNameValuePair("skip_confirmation","true"));
+        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
 
-        FormatUtil.printJson(httpGet(url));
+        httpPost(api+"/users",params);
+
+
     }
 
 

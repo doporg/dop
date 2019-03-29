@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.code.model.dto.user;
+package com.clsaa.dop.server.code.model.vo.project;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class BranchVo {
 
-    private String name;
-    private String email;
-    private String password;
+    private String value;
+    private String label;
 }

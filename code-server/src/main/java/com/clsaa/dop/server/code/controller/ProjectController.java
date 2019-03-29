@@ -2,6 +2,8 @@ package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.project.ProjectListBo;
 import com.clsaa.dop.server.code.model.dto.project.ProjectDto;
+import com.clsaa.dop.server.code.model.vo.project.BranchVo;
+import com.clsaa.dop.server.code.model.vo.project.ProjectEditVo;
 import com.clsaa.dop.server.code.model.vo.project.ProjectListVo;
 import com.clsaa.dop.server.code.model.vo.project.ProjectVo;
 import com.clsaa.dop.server.code.service.ProjectService;
@@ -58,6 +60,47 @@ public class ProjectController {
                 projectDto.getInitialize_with_readme(),
                 projectDto.getUsername()
         );
+    }
+
+    @ApiOperation(value = "查询编辑项目需要的信息",notes = "根据项目id查询")
+    @GetMapping("/projects/{id}/editinfo")
+    public ProjectEditVo findProjectEditInfo(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                             @ApiParam(value = "用户名")@RequestParam("username") String username){
+        return BeanUtils.convertType(projectService.findProjectEditInfo(id,username),ProjectEditVo.class);
+    }
+
+    @ApiOperation(value = "获得项目所有的分支名",notes = "根据项目id查询")
+    @GetMapping("/projects/{id}/branches")
+    public List<BranchVo> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                          @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+        List<String> strs=projectService.findAllBranchName(id,username);
+
+        List<BranchVo> branchVos=new ArrayList<>();
+        for(String str:strs){
+            branchVos.add(new BranchVo(str,str));
+        }
+
+        return branchVos;
+    }
+
+    @ApiOperation(value = "编辑项目信息",notes = "编辑项目信息包括名称、描述、默认分支和可见等级")
+    @PutMapping("/projects/{id}")
+    public void editProjectInfo(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                @ApiParam(value = "项目名称")@RequestParam("name") String name,
+                                @ApiParam(value = "项目描述")@RequestParam("description") String description,
+                                @ApiParam(value = "默认分支")@RequestParam("default_branch") String default_branch,
+                                @ApiParam(value = "可见等级")@RequestParam("visibility") String visibility,
+                                @ApiParam(value = "用户名")@RequestParam("username") String username){
+
+        projectService.editProjectInfo(id,name,description,default_branch,visibility,username);
+    }
+
+    @ApiOperation(value = "删除一个项目",notes = "根据项目id删除")
+    @DeleteMapping("/projects/{id}")
+    public void deleteProject(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                              @ApiParam(value = "用户名")@RequestParam("username") String username){
+        projectService.deleteProject(id,username);
     }
 
 

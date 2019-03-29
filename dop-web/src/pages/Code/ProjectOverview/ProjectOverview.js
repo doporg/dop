@@ -92,6 +92,11 @@ export default class ProjectOverview extends React.Component{
         // message.success('复制成功，如果失败，请在输入框内手动复制.');
     };
 
+    editProjectLink(){
+        let {username,projectid}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectid+"/edit");
+    }
+
 
     render(){
 
@@ -117,7 +122,7 @@ export default class ProjectOverview extends React.Component{
                         }
                     })()
                 }
-                <button className="btn btn_edit">
+                <button className="btn btn_edit" onClick={this.editProjectLink.bind(this)}>
                     <FoundationSymbol size="small" type="edit2" >
                     </FoundationSymbol>
                 </button>
