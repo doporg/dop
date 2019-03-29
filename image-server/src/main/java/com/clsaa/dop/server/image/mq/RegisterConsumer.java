@@ -2,7 +2,13 @@ package com.clsaa.dop.server.image.mq;
 
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.image.feign.UserFeign;
+import com.clsaa.dop.server.image.feign.harborfeign.HarborUserFeign;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
 import com.clsaa.dop.server.image.model.dto.UserDto1;
+import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
+import com.clsaa.dop.server.image.model.po.User;
+import com.clsaa.dop.server.image.util.PasswordUtil;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -12,6 +18,7 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -38,6 +45,12 @@ public class RegisterConsumer implements MessageListenerConcurrently {
     private String topic;
     @Value("${message.mq.RocketMQ.registerConsumerGroup}")
     private String registerConsumerGroup;
+
+    @Autowired
+    private UserFeign userFeign;
+
+    @Autowired
+    private HarborUserFeign harborUserFeign;
 
 
     private DefaultMQPushConsumer consumer = null;
@@ -77,7 +90,14 @@ public class RegisterConsumer implements MessageListenerConcurrently {
                 MessageExt msg = msgs.get(index);
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
                 UserDto1 userDto1 = JSON.parseObject(messageBody,UserDto1.class);
-                //TODO 注册harbor并将密码添加到用户数据库
+                String username = PasswordUtil.generatePassword();
+                String password = PasswordUtil.generatePassword();
+                userFeign.addUserCredential(userDto1.getId(), username,
+                        password, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+                //TODO 在harbor中注册账户
+                User user = new User(Integer.valueOf(0),username,userDto1.getEmail(),password,"","",false,"",0,false,"","","","");
+                harborUserFeign.usersPost(user);
+
             }
         } catch (Exception e) {
             e.printStackTrace();

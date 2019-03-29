@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.image.feign.harborfegin;
+package com.clsaa.dop.server.image.feign.harborfeign;
 
 import com.clsaa.dop.server.image.config.FeignConfig;
 import com.clsaa.dop.server.image.model.po.*;

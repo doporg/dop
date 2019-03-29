@@ -8,10 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +35,8 @@ public class ProjectLogsController {
                                             @ApiParam(value = "开始时间") @RequestParam(value = "begin_timestamp", required = false) String beginTimestamp,
                                             @ApiParam(value = "结束时间") @RequestParam(value = "end_timestamp", required = false) String endTimestamp,
                                             @ApiParam(value = "页号") @RequestParam(value = "page", required = false) Integer page,
-                                            @ApiParam(value = "页大小") @RequestParam(value = "page_size", required = false) Integer pageSize){
-        return BeanUtils.convertList(projectLogsService.getProjectLogs(projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize),AccessLogVO.class);
+                                            @ApiParam(value = "页大小") @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                            @ApiParam(value = "用户id") @RequestHeader(value = "user_id")Long userId){
+        return BeanUtils.convertList(projectLogsService.getProjectLogs(projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize,userId),AccessLogVO.class);
     }
 }

@@ -1,5 +1,10 @@
 package com.clsaa.dop.server.image.util;
 
+import com.clsaa.dop.server.image.feign.UserFeign;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
+import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Base64;
 
 /**
@@ -16,8 +21,12 @@ public class BasicAuthUtil {
      * @param password 用户密码
      * @return {@link String} basic auth
      */
-    public static String createAuth(String username,String password){
-        String userNamePassword = username +":"+password;
+    @Autowired
+    private static UserFeign userFeign;
+
+    public static String createAuth(Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String userNamePassword = userCredentialDto.getIdentifier() +":"+userCredentialDto.getCredential();
         String auth = "Basic "+Base64.getEncoder().encodeToString(userNamePassword.getBytes());
         return auth;
     }
