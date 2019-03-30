@@ -52,7 +52,7 @@ export default class Application extends Component {
         return (
             <div>
                 {/*创建函数的对话框和搜索框*/}
-                <Breadcrumb>
+                <Breadcrumb style={{marginBottom: "10px"}}>
                     <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                     <Breadcrumb.Item
                         link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>

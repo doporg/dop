@@ -4,6 +4,7 @@ import API from "../../../../API";
 import {Breadcrumb, Dialog, Feedback, Field, Form, Icon, Loading, Table} from '@icedesign/base';
 import CreateApplicationVariableDialog from "../CreateApplicationVariable";
 import Input from "@icedesign/base/lib/input";
+import TopBar from "./topbar";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -176,20 +177,27 @@ export default class ApplicationVariable extends Component {
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
-                <div style={{width: "48%", margin: "0 auto"}}>
-                    <Breadcrumb>
+                <TopBar
+
+                    style={{zIndex: "100"}}
+                    extraBefore={<Breadcrumb>
                         <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
                             link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
                         <Breadcrumb.Item
                             link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <CreateApplicationVariableDialog
+                    </Breadcrumb>}
+                    extraAfter={<CreateApplicationVariableDialog
+
                         refreshApplicationVariableList={this.refreshApplicationVariableList.bind(this)}
-                        appId={this.state.appId}/>
+                        appId={this.state.appId}/>}
+                />
+                <div style={{width: "48%", margin: "0 auto"}}>
+
+
                     <div>
 
-                        <Table style={{width: "100%"}}
+                        <Table style={{width: "100%", margin: "20px"}}
                                dataSource={this.state.varData}>
                             <Table.Column cell={keyRender}
                                           title="Key"

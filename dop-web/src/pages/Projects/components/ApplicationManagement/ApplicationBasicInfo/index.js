@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {Breadcrumb, Button, Card, Dialog, Feedback, Field, Form, Input, Loading} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
+import TopBar from "./topbar";
 
 
 const Toast = Feedback.toast;
 const FormItem = Form.Item;
 const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
+    labelCol: {span: 10},
+    wrapperCol: {span: 14}
 };
 const style = {
     padding: "2%",
@@ -219,7 +220,7 @@ export default class ApplicationBasicInfo extends Component {
         const {init, getValue} = this.field;
         const opr = () => {
             if (!this.state.basicEditMode) {
-                return <span>{this.state.appBasicData.description}</span>
+                return <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.description}</span>
             } else {
                 return <Input defaultValue={this.state.appBasicData.description} {...init('description')}
                               placeholder="应用描述"/>
@@ -273,27 +274,27 @@ export default class ApplicationBasicInfo extends Component {
                     <div>
 
                     <FormItem{...formItemLayout} label="Git仓库地址：">
-                        <span>{this.state.appBasicData.warehouseUrl}</span>
+                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.warehouseUrl}</span>
                     </FormItem>
 
                         <FormItem{...formItemLayout} label="镜像仓库地址：">
-                            <span>{this.state.appBasicData.imageUrl}</span>
+                            <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.imageUrl}</span>
                         </FormItem>
 
                     <FormItem{...formItemLayout} label="开发数据库地址：">
-                        <span>{this.state.appBasicData.productionDbUrl}</span>
+                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.productionDbUrl}</span>
                     </FormItem>
 
-                    <FormItem{...formItemLayout} label="测试数据库地址：">
-                        <span>{this.state.appBasicData.testDbUrl}</span>
+                        <FormItem{...formItemLayout} label="测试数据库地址：">
+                            <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.testDbUrl}</span>
                     </FormItem>
 
                     <FormItem{...formItemLayout} label="开发域名：">
-                        <span>{this.state.appBasicData.productionDomain}</span>
+                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.productionDomain}</span>
                     </FormItem>
 
                     <FormItem{...formItemLayout} label="测试域名：">
-                        <span>{this.state.appBasicData.testDomain}</span>
+                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.testDomain}</span>
                     </FormItem>
                     </div>
                 )
@@ -304,13 +305,7 @@ export default class ApplicationBasicInfo extends Component {
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
-                <Breadcrumb>
-                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                </Breadcrumb>
+
 
                 <div style={{
                     margin: "0 auto",
@@ -320,6 +315,15 @@ export default class ApplicationBasicInfo extends Component {
                     justifyContent: "flex-start"
                 }}
                 >
+                    <TopBar
+                        extraBefore={<Breadcrumb>
+                            <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                        </Breadcrumb>}
+                    />
             <Card
                 style={{width: "40%", height: "40%"}}
                 title={this.state.userData.name}
@@ -336,10 +340,13 @@ export default class ApplicationBasicInfo extends Component {
                   style={style}>
 
                 <div>基本信息
-
                     <Button type="primary"
-                            style={this.state.basicEditMode == true ? {display: "None"} : {}}
-                            onClick={this.basicEdit.bind(this)}>
+                            style={this.state.basicEditMode == true ? {display: "None"} : {
+                                float: "right",
+                                textAlign: "right"
+                            }}
+                            onClick={this.basicEdit.bind(this)}
+                            size="small">
                         修改
                     </Button>
 
@@ -348,12 +355,13 @@ export default class ApplicationBasicInfo extends Component {
                     <FormItem{...formItemLayout}
                              label="应用名称：">
                         <div  {...init('appTitle')}
-                              placeholder="应用名称">{this.state.appBasicData.title}</div>
+                              placeholder="应用名称"
+                              style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>
                     </FormItem>
 
                     <FormItem{...formItemLayout}
                              label="注册时间：">
-                        <div>{this.state.appBasicData.ctime}</div>
+                        <div style={{float: "left", margin: "7px"}}>{this.state.appBasicData.ctime}</div>
                     </FormItem>
 
                     <FormItem  {...formItemLayout}
@@ -376,7 +384,11 @@ export default class ApplicationBasicInfo extends Component {
                   style={style1}>
                 <div>URL信息
                 <Button type="primary"
-                        style={this.state.urlEditMode == true ? {display: "None"} : {}}
+                        size="small"
+                        style={this.state.urlEditMode == true ? {display: "None"} : {
+                            float: "right",
+                            textAlign: "right"
+                        }}
                         onClick={this.urlEdit.bind(this)}>
                     修改
                 </Button>

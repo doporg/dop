@@ -10,7 +10,7 @@ const TabPane = Tab.TabPane;
 const styles = {
     container: {
         position: 'fixed',
-        top: '62px',
+        top: '120px',
         left: '240px',
         right: '0px',
         display: 'block',
@@ -19,7 +19,7 @@ const styles = {
         textAlign: "center",
         // height: '70%',
         padding: '0 20px',
-        zIndex: '99',
+        zIndex: '97',
         background: '#fff',
         boxShadow: 'rgba(0, 0, 0, 0.2) 2px 0px 4px',
 
@@ -84,15 +84,30 @@ export default class ApplicationDetail extends Component {
     render() {
         return (
             <div>
+                {/*<TopBar*/}
+                {/*extraBefore={  <Breadcrumb>*/}
+                {/*<Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>*/}
+                {/*<Breadcrumb.Item*/}
+                {/*link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>*/}
+                {/*<Breadcrumb.Item*/}
+                {/*link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>*/}
+                {/*</Breadcrumb>}*/}
+                {/*// extraAfter={ <CreateApplicationVariableDialog*/}
+                {/*//*/}
+                {/*//     refreshApplicationVariableList={this.refreshApplicationVariableList.bind(this)}*/}
+                {/*//     appId={this.state.appId}/>}*/}
+                {/*/>*/}
 
                 <Tab contentStyle={{padding: 20}}
                      style={styles.container}
                      lazyLoad={false}>
 
+
                     <TabPane tab={"基本信息"}
                              key={"basic"}
                              style={{textAlign: "center"}}
                     >
+
                         <ApplicationBasicInfo
                             projectId={this.state.projectId}
                             appId={this.state.appId}/>

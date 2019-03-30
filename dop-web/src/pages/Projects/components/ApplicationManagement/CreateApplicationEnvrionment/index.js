@@ -209,7 +209,8 @@ export default class CreateApplicationEnvironmentDialog extends Component {
         return (
 
             <span>
-                <Button onClick={this.onOpen} type="primary">
+                <Button onClick={this.onOpen} type="primary"
+                        style={{margin: "20px"}}>
           新建环境
         </Button>
         <Dialog
