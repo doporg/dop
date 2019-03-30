@@ -20,7 +20,8 @@ export default class UserRoleMapping extends Component {
             /*此时按当前角色来查找用户，因为只有拥有此角色，用户才能进行相应的操作，才能规定范围*/
             currentData : [{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                             {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                             {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
+                             {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+                                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
                             ],
             currentUserId:0,
             currentRoles:[],

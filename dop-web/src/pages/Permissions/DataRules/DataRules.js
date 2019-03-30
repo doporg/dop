@@ -27,7 +27,9 @@ export default class DataRules extends Component
             currentRuleId:0,
             userList:[{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                 {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"}],
+                {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}],
+
             userSelectList:[],
             isLoading:true,
             ruleVisible:false,
@@ -150,7 +152,6 @@ export default class DataRules extends Component
 
     //弹出创建数据规则窗
     onRuleOpen = () => {
-
 
         let url=API.gateway+"/permission-server/v1/roles/roles";
         Axios.get(url).then(response=>{
