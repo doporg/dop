@@ -70,9 +70,10 @@ public class RoleController {
             @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
             @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
-            @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size)
+            @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size,
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        return this.roleService.getRoleV1Pagination(page,size);
+        return this.roleService.getRoleV1Pagination(page,size,loginUser);
     }
     @ApiOperation(value = "根据名称查询角色", notes = "根据名称查询角色")
     @GetMapping("/v1/roles/byName")
@@ -85,9 +86,10 @@ public class RoleController {
     @ApiOperation(value="根据ID删除角色",notes = "根据ID删除角色")
     @DeleteMapping("v1/roles/{id}")
     public void deleteById(@ApiParam(name = "id",value = "角色ID",required = true)
-                           @RequestParam(value = "id", required = true)Long id)
+                           @RequestParam(value = "id", required = true)Long id,
+                           @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        roleService.deleteById(id);
+        roleService.deleteById(id,loginUser);
     }
 
     @ApiOperation(value="查询所有功能点ID和名称",notes = "查询所有功能点ID和名称")
