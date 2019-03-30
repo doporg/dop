@@ -47,9 +47,9 @@ public class AppController {
     }
 
     @ApiOperation(value = "查询应用", notes = "根据拥有者ID查询应用项目")
-    @GetMapping(value = "/app?ouser=:ouser")
+    @GetMapping(value = "/app")
     public List<AppV1> findApplicationByCuser(
-            @ApiParam(name = "ouser", value = "ouser", required = true) @RequestParam(value = "projectId") Long ouser) {
+            @ApiParam(name = "ouser", value = "ouser", required = true) @RequestParam(value = "ouser") Long ouser) {
 
         return this.appService.findApplicationByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppV1.class)).collect(Collectors.toList());
     }
