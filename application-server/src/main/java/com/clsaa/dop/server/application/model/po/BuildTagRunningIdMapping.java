@@ -71,6 +71,6 @@ public class BuildTagRunningIdMapping {
      * 运行id
      */
     @Column(nullable = false, name = "running_id")
-    private Long runningId;
+    private String runningId;
 
 }

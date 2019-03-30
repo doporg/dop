@@ -12,7 +12,7 @@ public class BuildTagRunningIdMappingService {
     @Autowired
     BuildTagRunningIdMappingRepository buildTagRunningIdMappingRepository;
 
-    public String findBuildTagByRunningIdAndAppEnvId(Long cuser, Long runningId, Long appEnvId) {
+    public String findBuildTagByRunningIdAndAppEnvId(Long cuser, String runningId, Long appEnvId) {
         BuildTagRunningIdMapping buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findByRunningIdAndAppEnvId(runningId, appEnvId).orElse(null);
         if (buildTagRunningIdMapping == null) {
             return createMapping(cuser, appEnvId, runningId);
@@ -21,7 +21,7 @@ public class BuildTagRunningIdMappingService {
         }
     }
 
-    public String createMapping(Long cuser, Long appEnvId, Long runningId) {
+    public String createMapping(Long cuser, Long appEnvId, String runningId) {
         LocalDateTime now = LocalDateTime.now();
         BuildTagRunningIdMapping buildTagRunningIdMapping = BuildTagRunningIdMapping.builder()
                 .ctime(LocalDateTime.now())
