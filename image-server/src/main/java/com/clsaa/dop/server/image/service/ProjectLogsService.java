@@ -1,7 +1,8 @@
 package com.clsaa.dop.server.image.service;
 
-import com.clsaa.dop.server.image.feign.ProjectFeign;
+import com.clsaa.dop.server.image.feign.harborfeign.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.AccessLogBO;
+import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,9 @@ public class ProjectLogsService {
      * @return {@link List<AccessLogBO>}根据参数检索项目日志
      */
     public List<AccessLogBO> getProjectLogs(Long projectId,String userName,String repo,String tag,
-                                            String operation,String beginTime,String endTime,Integer page,Integer pageSize){
-        return BeanUtils.convertList(projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,endTime,page,pageSize),AccessLogBO.class);
+                                            String operation,String beginTime,String endTime,Integer page,Integer pageSize,Long userId){
+        String auth = BasicAuthUtil.createAuth(userId);
+        return BeanUtils.convertList(projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,endTime,page,pageSize,auth),AccessLogBO.class);
     }
 
 }
