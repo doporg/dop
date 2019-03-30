@@ -10,6 +10,7 @@ import Node from './chosenSteps/Node'
 import DockerImage from './chosenSteps/DockerImage'
 import PushDockerImage from './chosenSteps/PushDockerImage'
 import Shell from './chosenSteps/Shell'
+import Deployment from './chosenSteps/Deployment'
 
 const {Combobox} = Select;
 
@@ -21,6 +22,7 @@ export default class PipelineInfoStep extends Component {
             availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本", "部署"],
             steps: [],
             currentStep: null,
+            selectEnvId: null,
             chosenStep: {
                 taskName: ""
             }
@@ -174,7 +176,10 @@ export default class PipelineInfoStep extends Component {
         })
     }
     onSelectEnv(value){
-
+        this.setState({
+            selectEnvId: value
+        });
+        this.props.onSelectEnv(value)
     }
     gitUrl(value) {
         let findIndex = this.state.stage.steps.findIndex((item) => {
@@ -330,25 +335,24 @@ export default class PipelineInfoStep extends Component {
                                                                             appId = {this.props.appId}
                                                                             onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
+                                                                            onDockerPasswordChange={this.buildDockerPassword.bind(this)}
                                                                             onRepositoryChange={this.buildRepository.bind(this)}
-                                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
                                                                             dockerUserName={this.state.chosenStep.dockerUserName}
                                                                             repository={this.state.chosenStep.repository}
-                                                                            repositoryVersion={this.state.chosenStep.repositoryVersion}
+                                                                            selectEnvId={this.state.selectEnvId}
                                                                         />
                                                                     );
                                                                 case "推送docker镜像":
                                                                     return (
                                                                         <PushDockerImage
                                                                             appId = {this.props.appId}
+                                                                            onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
                                                                             onRepositoryChange={this.buildRepository.bind(this)}
-                                                                            onRepositoryVersionChange={this.buildRepositoryVersion.bind(this)}
                                                                             onDockerPasswordChange={this.buildDockerPassword.bind(this)}
                                                                             dockerUserName={this.state.chosenStep.dockerUserName}
                                                                             repository={this.state.chosenStep.repository}
-                                                                            repositoryVersion={this.state.chosenStep.repositoryVersion}
-                                                                            dockerPassword={this.state.chosenStep.dockerPassword}
+                                                                            selectEnvId={this.state.selectEnvId}
                                                                         />
                                                                     );
                                                                 case "自定义脚本":
@@ -357,6 +361,10 @@ export default class PipelineInfoStep extends Component {
                                                                             onShellChange={this.shell.bind(this)}
                                                                             shell={this.state.chosenStep.shell}
                                                                         />
+                                                                    );
+                                                                case "部署":
+                                                                    return (
+                                                                        <Deployment />
                                                                     );
                                                                 default:
                                                             }

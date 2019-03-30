@@ -50,7 +50,8 @@ public class PipelineService {
     private PipelineRepository pipelineRepository;
 
     @Autowired
-    private PipelineFeign pipelineFeign;
+    private JenkinsService jenkinsService;
+
 
     @Autowired
     private ApplicationFeign applicationFeign;
@@ -61,13 +62,15 @@ public class PipelineService {
     /**
      * 添加流水线信息
      */
-    public void addPipeline(PipelineVoV1 pipelineV1) {
+    public String addPipeline(PipelineVoV1 pipelineV1) {
         ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
                 .id(id)
                 .name(pipelineV1.getName())
                 .monitor(pipelineV1.getMonitor())
                 .config(pipelineV1.getConfig())
+                .appId(pipelineV1.getAppId())
+                .appEnvId(pipelineV1.getAppEnvId())
                 .stages(pipelineV1.getStages())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
@@ -76,20 +79,9 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
+        return id.toString();
 
-        PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
-                .id(id.toString())
-                .name(pipelineV1.getName())
-                .monitor(pipelineV1.getMonitor())
-                .stages(pipelineV1.getStages())
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .cuser(pipelineV1.getCuser())
-                .isDeleted(false)
-                .build();
-//        String url = "http://localhost:13600/v1/jenkins";
-//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
-        this.pipelineFeign.create(pipelineBoV1);
+//        this.jenkinsService.createJob(pipelineBoV1, "1.0");
 
     }
 
@@ -100,6 +92,7 @@ public class PipelineService {
                 .name(pipelineV2.getName())
                 .monitor(pipelineV2.getMonitor())
                 .config(pipelineV2.getConfig())
+                .appId(pipelineV2.getAppId())
                 .jenkinsfile(pipelineV2.getJenkinsfile())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
@@ -120,9 +113,8 @@ public class PipelineService {
                 .cuser(pipelineV2.getCuser())
                 .isDeleted(false)
                 .build();
-//        String url = "http://localhost:13600/v1/jenkins/jenkinsfile";
-//        restTemplate.postForEntity(url, pipelineBoV1, String.class);
-        this.pipelineFeign.jenkinsfile(pipelineBoV1);
+
+        this.jenkinsService.createByJenkinsfile(pipelineBoV1.getId(), pipelineBoV1.getJenkinsfile().getGit(), pipelineBoV1.getJenkinsfile().getPath());
     }
 
     /**
@@ -137,6 +129,8 @@ public class PipelineService {
                     .name(pipelines.get(i).getName())
                     .monitor(pipelines.get(i).getMonitor())
                     .config(pipelines.get(i).getConfig())
+                    .appId(pipelines.get(i).getAppId())
+                    .appEnvId(pipelines.get(i).getAppEnvId())
                     .jenkinsfile(pipelines.get(i).getJenkinsfile())
                     .stages(pipelines.get(i).getStages())
                     .ctime(pipelines.get(i).getCtime())
@@ -179,6 +173,8 @@ public class PipelineService {
                     .id(pipeline.getId().toString())
                     .name(pipeline.getName())
                     .monitor(pipeline.getMonitor())
+                    .appId(pipeline.getAppId())
+                    .appEnvId(pipeline.getAppEnvId())
                     .config(pipeline.getConfig())
                     .jenkinsfile(pipeline.getJenkinsfile())
                     .stages(pipeline.getStages())
@@ -257,7 +253,6 @@ public class PipelineService {
 
     public PipelineBoV1 setInfo(String pipelineId, String resultOutputId) {
         PipelineBoV1 pipelineBoV1 = this.findById(new ObjectId(pipelineId));
-
         if (pipelineBoV1 != null && pipelineBoV1.getConfig().equals("无Jenkinsfile")) {
             String gitUrl = null;
             String dockerUserName = null;
@@ -267,9 +262,12 @@ public class PipelineService {
             String deploy = null;
             //收集信息
 
+            System.out.println(pipelineBoV1.getCuser());
             UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(pipelineBoV1.getCuser(), UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
+
             dockerUserName = userCredentialV1.getIdentifier();
             dockerPassword = userCredentialV1.getCredential();
+
 
             if(pipelineBoV1.getAppId() != null){
                 AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
@@ -281,6 +279,7 @@ public class PipelineService {
                 repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
             }
 
+            System.out.println(repositoryVersion);
 
             List<Stage> stages = pipelineBoV1.getStages();
             for (int i = 0; i < stages.size(); i++) {

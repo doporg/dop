@@ -1,14 +1,14 @@
 package com.clsaa.dop.server.pipeline.model.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserCredentialV1 implements Serializable {
 
     private static final long serialVersionUID = 6906097418517275871L;

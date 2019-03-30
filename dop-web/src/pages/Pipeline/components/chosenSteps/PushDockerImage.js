@@ -12,11 +12,11 @@ export default class PushDockerImage extends Component {
         super(props);
         this.state = {
             environments: [],
-            selectEnv: null,
+            selectedEnv: null,
             dockerUser: [],
             repositories: [],
-            repositoryVersions: []
         }
+
     }
 
     componentWillMount() {
@@ -30,6 +30,9 @@ export default class PushDockerImage extends Component {
                 duration: 3000
             });
         }
+        if(this.props.selectEnvId){
+            this.getRepository();
+        }
 
     }
 
@@ -39,16 +42,20 @@ export default class PushDockerImage extends Component {
         let environments = self.state.environments;
         Axios.get(url).then((response) => {
             if (response.status === 200) {
-                console.log(response)
                 for (let i = 0; i < response.data.length; i++) {
                     let environment = {
                         label: response.data[i].title,
                         value: response.data[i].id
                     };
                     environments.push(environment)
+                    if(self.props.selectEnvId === response.data[i].id){
+                        self.setState({
+                            selectedEnv: response.data[i].title
+                        })
+                    }
                 }
                 self.setState({
-                    environments: response.data
+                    environments: environments
                 })
             }
         })
@@ -77,9 +84,11 @@ export default class PushDockerImage extends Component {
 
     selectEnv(value) {
         this.setState({
-            selectEnv: value
+            selectedEnv: value
         });
-        this.getRepository();
+        if(!this.props.selectEnvId){
+            this.getRepository();
+        }
         this.props.onSelectEnv(value)
     }
 
@@ -91,9 +100,10 @@ export default class PushDockerImage extends Component {
             if (response.status === 200) {
                 let repository = {
                     value: response.data.imageUrl,
-                    label: response.data.imageUrl
+                    label: response.data.imageUrl,
+                    key: self.state.repositories.length
                 };
-                repositories.push(repository)
+                repositories.push(repository);
                 self.setState({
                     repositories
                 })
@@ -105,9 +115,9 @@ export default class PushDockerImage extends Component {
         let self = this;
         let dockerUser = this.state.dockerUser;
         for (let i = 0; i < dockerUser.length; i++) {
-            if (value === dockerUser.id) {
-                self.props.onUserNameChange(dockerUser.identifier)
-                self.props.onUserNameChange(dockerUser.identifier)
+            if (value === dockerUser[i].id) {
+                self.props.onUserNameChange(dockerUser[i].identifier);
+                self.props.onDockerPasswordChange(dockerUser[i].credential)
             }
         }
     }
@@ -119,22 +129,22 @@ export default class PushDockerImage extends Component {
     render() {
         return (
             <div>
-                <h3 className="chosen-task-detail-title">推送docker镜像</h3>
+                <h3 className="chosen-task-detail-title">构建docker镜像</h3>
                 <div className="chosen-task-detail-body">
                      <span className="item">
                         <span className="must">*</span>
                         <span>环境设置: </span>
                     </span>
                     <Select
+                        key="push-env"
                         onChange={this.selectEnv.bind(this)}
-                        placeholder="请选择环境"
+                        placeholder={this.state.selectedEnv?this.state.selectedEnv:"请选择环境"}
                         disabled={!this.props.appId}
                         className="input"
-                    >
-                        {this.state.environments.map((environment, index) => {
-                            return <Option value={environment.id} key={index}>{environment.label}</Option>
-                        })}
-                    </Select>
+                        dataSource={this.state.environments}
+
+                    />
+
                     <br/>
 
                     <span className="item">
@@ -142,12 +152,14 @@ export default class PushDockerImage extends Component {
                         <span>DockerUserName: </span>
                     </span>
                     <Select
-                        placeholder="请选择docker用户"
+                        key="docker"
+                        placeholder={this.props.dockerUserName?this.props.dockerUserName:"请选择docker用户"}
                         onChange={this.selectDocker.bind(this)}
+                        fillProps="label"
                         className="input"
                     >
                         {this.state.dockerUser.map((user, index) => {
-                            return <Option value={user.id} key={index}>{user.label}</Option>
+                            return <Option value={user.id} key={"docker" + index}>{user.label}</Option>
                         })}
                     </Select>
                     <br/>
@@ -157,18 +169,15 @@ export default class PushDockerImage extends Component {
                         <span>Repository: </span>
                     </span>
                     <Select
-                        placeholder="请选择镜像名称"
+                        key="push-repos"
                         onChange={this.selectRepository.bind(this)}
+                        placeholder={this.props.repository?this.props.repository:"请选择镜像名称"}
+                        disabled={!this.state.selectedEnv}
                         className="input"
-                        disabled={!this.state.selectEnv}
-                    >
-                        {this.state.dockerUser.map((user, index) => {
-                            return <Option value={user.id} key={index}>{user.label}</Option>
-                        })}
-                    </Select>
+                        dataSource={this.state.repositories}
+                    />
                 </div>
             </div>
-
         )
     }
 }
