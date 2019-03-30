@@ -36,7 +36,7 @@ public class KubeYamlService {
     @Autowired
     AppUrlInfoService appUrlInfoService;
 
-    public String createYamlFileForDeploy(Long cuser, Long appEnvId, Long runningId) {
+    public String createYamlFileForDeploy(Long cuser, Long appEnvId, String runningId) {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {

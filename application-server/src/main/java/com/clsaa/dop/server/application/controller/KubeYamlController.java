@@ -35,7 +35,7 @@ public class KubeYamlController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
-            @ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") Long runningId) {
+            @ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") String runningId) {
         try {
             return this.kubeYamlService.createYamlFileForDeploy(cuser, appEnvId, runningId);
 

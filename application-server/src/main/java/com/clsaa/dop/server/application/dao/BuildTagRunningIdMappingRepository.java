@@ -13,5 +13,5 @@ public interface BuildTagRunningIdMappingRepository extends JpaRepository<BuildT
      * @param appEnvId  应用环境Id
      * @return {@link BuildTagRunningIdMapping} 版本号运行Id对应关系
      */
-    Optional<BuildTagRunningIdMapping> findByRunningIdAndAppEnvId(Long runningId, Long appEnvId);
+    Optional<BuildTagRunningIdMapping> findByRunningIdAndAppEnvId(String runningId, Long appEnvId);
 }
