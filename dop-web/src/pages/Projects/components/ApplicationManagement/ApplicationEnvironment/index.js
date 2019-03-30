@@ -4,6 +4,7 @@ import Axios from "axios";
 import API from "../../../../API";
 import {Col, Row} from "@alifd/next/lib/grid";
 import CreateApplicationEnvironmentDialog from "../CreateApplicationEnvrionment";
+import TopBar from "./topbar"
 
 
 const Toast = Feedback.toast;
@@ -75,7 +76,12 @@ export default class ApplicationEnvironment extends Component {
     titleRender(title, id) {
         return (
             <div>{title}
-                <Icon type="ashbin" onClick={this.popupConfirm.bind(this, id)}/>
+                <Icon type="ashbin" onClick={this.popupConfirm.bind(this, id)}
+                      style={{
+                          cursor: "pointer",
+                          color: "#FFA003",
+                          margin: "5px"
+                      }}/>
             </div>
         )
     }
@@ -109,12 +115,13 @@ export default class ApplicationEnvironment extends Component {
                     console.log(item)
                     return (
                         <Col style={{width: "100%"}} key={index}>
-                            <Card style={{width: "100%"}}>
+                            <Card style={{width: "100%", height: "70%"}}>
                                 {this.titleRender(item.title, item.id)}
-                                <Button onClick={this.getYaml.bind(this, item.id)}>
-                                    部署主干
-                                </Button>
-                                <Button onClick={this.showEnvDetailFun.bind(this, item.id)}>
+                                {/*<Button onClick={this.getYaml.bind(this, item.id)}>*/}
+                                {/*部署主干*/}
+                                {/*</Button>*/}
+                                <Button onClick={this.showEnvDetailFun.bind(this, item.id)}
+                                        style={{margin: "20px"}}>
                                     配置部署
                                 </Button>
 
@@ -139,21 +146,31 @@ export default class ApplicationEnvironment extends Component {
     render() {
 
         return (
+
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >
+
+
                 <div>
-                    <Breadcrumb>
-                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
-                        <Breadcrumb.Item
-                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
-                        <Breadcrumb.Item
-                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <CreateApplicationEnvironmentDialog type="primary"
-                                                        refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
-                                                        appId={this.state.appId}>
-                        新建环境
-                    </CreateApplicationEnvironmentDialog>
+                    <TopBar
+
+                        style={{zIndex: "100"}}
+                        extraBefore={<Breadcrumb>
+                            <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                        </Breadcrumb>}
+                        extraAfter={<CreateApplicationEnvironmentDialog type="primary"
+                                                                        style={{margin: "20px"}}
+                                                                        refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
+                                                                        appId={this.state.appId}>
+                            新建环境
+                        </CreateApplicationEnvironmentDialog>}
+                    />
+
+
                     {this.cardRender()}
 
 

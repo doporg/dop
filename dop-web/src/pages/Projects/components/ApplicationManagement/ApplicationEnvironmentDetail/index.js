@@ -4,6 +4,7 @@ import Axios from "axios";
 import API from "../../../../API";
 import PipelineBindPage from "../PipelineBindPage"
 import ClusterInfoForm from "../ClusterInfoForm"
+import TopBar from "./topbar";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -87,13 +88,19 @@ export default class ApplicationEnvironmentDetail extends Component {
                 justifyContent: "center",
                 flexDirection: "column"
             }}>
-                <Breadcrumb>
-                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                </Breadcrumb>
+
+                <TopBar
+                    extraBefore={<Breadcrumb>
+                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{"应用环境：" + this.state.appEnvId}</Breadcrumb.Item>
+                    </Breadcrumb>}
+                />
+
+
 
 
                 <Form>

@@ -1,13 +1,4 @@
-import {
-    Dialog,
-    Button,
-    Grid,
-    Input,
-    Form,
-    Field,
-    Radio
-}
-    from "@icedesign/base";
+import {Button, Dialog, Field, Form, Grid, Input, Radio} from "@icedesign/base";
 
 import React, {Component} from 'react';
 import Axios from "axios";
@@ -189,7 +180,10 @@ export default class CreateApplicationVariableDialog extends Component {
     render() {
         return (
             <span>
-                <Button onClick={this.onOpen} type="primary">
+                <Button onClick={this.onOpen}
+                        type="primary"
+                        style={{margin: "20px"}}
+                >
           新建变量
         </Button>
         <Dialog
