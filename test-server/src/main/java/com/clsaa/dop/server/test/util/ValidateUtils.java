@@ -16,21 +16,21 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
  */
 public class ValidateUtils {
 
-    private static LocalValidatorFactoryBean validatorFactoryBean;
+    private static LocalValidatorFactoryBean validator;
 
     public static <T> void validate(T t) {
         ensureValidatorNotNull();
-        Set<ConstraintViolation<T>> results = validatorFactoryBean.validate(t);
+        Set<ConstraintViolation<T>> results = validator.validate(t);
         StringBuilder messageBuilder = new StringBuilder();
         if (isNotEmpty(results)) {
-            results.forEach(error -> messageBuilder.append(error.getPropertyPath()).append('[').append(error.getMessage()).append(']'));
+            results.forEach(error -> messageBuilder.append(error.getPropertyPath()).append('[').append(error.getMessage()).append(']').append('\n'));
             BizAssert.justInvalidParam(BizCodes.INVALID_PARAM.getCode(), messageBuilder.toString());
         }
     }
 
     private static void ensureValidatorNotNull() {
-        if (validatorFactoryBean == null) {
-            validatorFactoryBean = Services.of(LocalValidatorFactoryBean.class);
+        if (validator == null) {
+            validator = Services.of(LocalValidatorFactoryBean.class);
         }
     }
 }
