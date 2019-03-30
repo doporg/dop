@@ -177,8 +177,10 @@ public class PermissionService {
     }
 
     //判断用户是否拥有特定功能点
-    public boolean checkUserPermission(Long permissionId,Long userId)
+    public boolean checkUserPermission(String permissionName,Long userId)
     {
+        Long permissionId=permissionRepository.findByName(permissionName).getId();
+        System.out.println(permissionId);
         List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
         for (UserRoleMapping userRoleMapping : userRoleMappingList) {
             if (rolePermissionMappingService.findByRoleIdAndPermissionId(userRoleMapping.getRoleId(), permissionId) != null) {
