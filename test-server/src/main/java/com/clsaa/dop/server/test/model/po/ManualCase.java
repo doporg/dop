@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author xihao
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_name", "application_id"})},
         indexes = {@Index(columnList = "case_name,application_id", unique = true),
                 @Index(columnList = "application_id,case_name", unique = false)})
-public class ManualCase {
+public class ManualCase implements Po {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +45,11 @@ public class ManualCase {
 
     @Enumerated(EnumType.STRING)
     private CaseStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "case_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private List<TestStep> testSteps;
 
     // ------ common property ------------
     private LocalDateTime ctime;

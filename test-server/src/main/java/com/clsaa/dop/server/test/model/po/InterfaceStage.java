@@ -26,7 +26,7 @@ import java.util.List;
 @Table(name = "interface_stage", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "stage"})},
         indexes = {@Index(columnList = "case_id,stage", unique = true)})
-public class InterfaceStage {
+public class InterfaceStage implements Po {
     // ----------- main property ---------
     @Enumerated(value = EnumType.STRING)
     private Stage stage;

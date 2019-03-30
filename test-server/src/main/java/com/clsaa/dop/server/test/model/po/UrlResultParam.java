@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "url_result_param", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"request_id", "name"})},
         indexes = {@Index(columnList = "request_id,name", unique = true)})
-public class UrlResultParam {
+public class UrlResultParam implements Po {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

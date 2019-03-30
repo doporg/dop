@@ -33,7 +33,7 @@ const asideMenuConfig = [
     },
     {
         name: '测试管理',
-        path: '/test',
+        path: '/testCases',
         icon: 'repair',
     },
     {

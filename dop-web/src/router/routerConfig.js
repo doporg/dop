@@ -9,6 +9,7 @@ import NotFound from '../pages/NotFound';
 import {loginConfig} from '../pages/Login'
 import {permissionConfig} from "../pages/Permissions";
 import codeConfig from "../pages/Code";
+import {testConfig} from "../pages/TestCases";
 
 const baseConfig = [
     {
@@ -19,6 +20,6 @@ const baseConfig = [
 ];
 
 
-const routerConfig = [...codeConfig, ...projectConfig,  ...permissionConfig, ...pipelineConfig, ...loginConfig, ...baseConfig];
+const routerConfig = [...testConfig, ...codeConfig, ...projectConfig,  ...permissionConfig, ...pipelineConfig, ...loginConfig, ...baseConfig];
 
 export default routerConfig;

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "wait_operation", schema = "db_dop_test")
-public class WaitOperation {
+public class WaitOperation implements Po{
 
     @Enumerated(value = EnumType.STRING)
     private OperationType operationType;

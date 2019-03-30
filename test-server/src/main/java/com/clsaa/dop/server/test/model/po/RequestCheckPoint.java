@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "interface_request_check_point", schema = "db_dop_test")
-public class RequestCheckPoint {
+public class RequestCheckPoint implements Po{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

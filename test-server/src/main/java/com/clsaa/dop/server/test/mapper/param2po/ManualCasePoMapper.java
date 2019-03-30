@@ -3,10 +3,16 @@ package com.clsaa.dop.server.test.mapper.param2po;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.param.ManualCaseParam;
 import com.clsaa.dop.server.test.model.po.ManualCase;
+import com.clsaa.dop.server.test.model.po.TestStep;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+
+import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+import static java.util.stream.IntStream.range;
 
 /**
  * @author xihao
@@ -15,6 +21,9 @@ import java.util.Optional;
  */
 @Component
 public class ManualCasePoMapper extends AbstractCommonServiceMapper<ManualCaseParam, ManualCase> {
+
+    @Autowired
+    private TestStepPoMapper testStepPoMapper;
 
     @Override
     public Class<ManualCaseParam> getSourceClass() {
@@ -28,14 +37,20 @@ public class ManualCasePoMapper extends AbstractCommonServiceMapper<ManualCasePa
 
     @Override
     public Optional<ManualCase> convert(ManualCaseParam manualCaseParam) {
-        return super.convert(manualCaseParam).map(po -> {
-            LocalDateTime current = LocalDateTime.now();
-            po.setCtime(current);
-            po.setMtime(current);
-            //todo set user
-            po.setCuser(110L);
-            po.setMuser(110L);
-            return po;
-        });
+        List<TestStep> testSteps = testStepPoMapper.convert(manualCaseParam.getTestSteps());
+        range(0, testSteps.size())
+            .forEach(i -> setIndex(testSteps, i));
+        return super.convert(manualCaseParam).map(dateAndUser())
+                .map(po -> {
+                        testSteps.forEach(testStep -> testStep.setManualCase(po));
+                        po.setTestSteps(testSteps);
+                        return po;
+                    });
+    }
+
+    private TestStep setIndex(List<TestStep> testSteps, int i) {
+        TestStep testStep = testSteps.get(i);
+        testStep.setStepIndex(i);
+        return testStep;
     }
 }

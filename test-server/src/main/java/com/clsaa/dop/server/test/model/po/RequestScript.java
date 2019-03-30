@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "request_script", schema = "db_dop_test")
-public class RequestScript {
+public class RequestScript implements Po {
 
     // ----------- main property ---------
     @Column(name = "raw_url")

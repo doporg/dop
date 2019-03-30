@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+
 /**
  * @author xihao
  * @version 1.0
@@ -42,6 +44,11 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
 
     @Override
     public Optional<RequestScript> convert(RequestScriptParam requestScriptParam) {
+        if (requestScriptParam.getOrder() == -1) {
+            // 无效的请求脚本 【前端参数有order=-1的无效数据】
+            return Optional.empty();
+        }
+
         List<RequestHeader> requestHeaders = requestHeaderPoMapper.convert(requestScriptParam.getRequestHeaders());
         List<RequestCheckPoint> checkPoints = checkPointPoMapper.convert(requestScriptParam.getRequestCheckPoints());
         List<UrlResultParam> resultParams = resultParamPoMapper.convert(requestScriptParam.getResultParams());
@@ -58,14 +65,6 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
 
                         return requestScript;
                     })
-                .map(po -> {
-                        LocalDateTime current = LocalDateTime.now();
-                        po.setCtime(current);
-                        po.setMtime(current);
-                        //todo set user
-                        po.setCuser(110L);
-                        po.setMuser(110L);
-                        return po;
-                    });
+                .map(dateAndUser());
     }
 }

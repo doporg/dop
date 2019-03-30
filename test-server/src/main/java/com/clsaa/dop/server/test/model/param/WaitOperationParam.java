@@ -23,6 +23,5 @@ public class WaitOperationParam {
     @Min(1)
     private int waitTime;
 
-    @Min(0)
     private int order;
 }

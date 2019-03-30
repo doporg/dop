@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "case_result", schema = "db_dop_test",
         indexes = {@Index(columnList = "case_id,rtime", unique = false)})
-public class CaseResult {
+public class CaseResult implements Po{
 
     public enum Status{
         SUCCESS("成功"),

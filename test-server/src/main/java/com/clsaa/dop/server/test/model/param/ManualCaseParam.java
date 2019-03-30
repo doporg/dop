@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author xihao
@@ -31,4 +32,7 @@ public class ManualCaseParam {
 
     @NotNull
     private CaseStatus status;
+
+    @NotNull
+    private List<TestStepParam> testSteps;
 }

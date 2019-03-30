@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+
 /**
  * @author xihao
  * @version 1.0
@@ -28,15 +30,11 @@ public class WaitOperationPoMapper extends AbstractCommonServiceMapper<WaitOpera
 
     @Override
     public Optional<WaitOperation> convert(WaitOperationParam waitOperationParam) {
-        return super.convert(waitOperationParam).map(waitOperation -> {
-            LocalDateTime current = LocalDateTime.now();
-            waitOperation.setCtime(current);
-            waitOperation.setMtime(current);
-            //todo set user
-            waitOperation.setCuser(110L);
-            waitOperation.setMuser(110L);
-            return waitOperation;
-        });
+        if (waitOperationParam.getOrder() == -1) {
+            // 无效的请求脚本 【前端参数有order=-1的无效数据】
+            return Optional.empty();
+        }
+        return super.convert(waitOperationParam).map(dateAndUser());
     }
 
 }
