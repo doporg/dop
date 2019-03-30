@@ -9,6 +9,7 @@ import com.clsaa.dop.server.permission.model.po.UserRule;
 import com.clsaa.dop.server.permission.model.vo.UserDataV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
+import org.bouncycastle.math.ec.ScaleYPointMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,9 +81,17 @@ public class UserDataService {
         //查找有该功能点的所有角色
         List<RoleBoV1> roleBoV1List2=roleService.findByPermissionId(permissionId);
         //查找用户用来实现该功能点的所有角色
-        if(!roleBoV1List1.retainAll(roleBoV1List2))return false;
+        List<RoleBoV1> roleBoV1List=new ArrayList<>();
+        for(RoleBoV1 roleBoV1:roleBoV1List1)
+        {
+            for(RoleBoV1 roleBoV11:roleBoV1List2)
+            {
+                if(roleBoV1.getName().equals(roleBoV11.getName()))
+                {roleBoV1List.add(roleBoV1);}
+            }
+        }
         Long ruleId=0l;
-        for (RoleBoV1 roleBoV1 : roleBoV1List1) {
+        for (RoleBoV1 roleBoV1 : roleBoV1List) {
             if (userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()) != null) {
                 ruleId = userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()).getId();
             }
@@ -99,18 +108,31 @@ public class UserDataService {
         Long permissionId=permissionService.findByName(permissionName).getId();
         //查找用户所有角色
         List<RoleBoV1> roleBoV1List1=roleService.findByUserId(userId);
+
         //查找有该功能点的所有角色
         List<RoleBoV1> roleBoV1List2=roleService.findByPermissionId(permissionId);
+
         //查找用户用来实现该功能点的所有角色
-        if(!roleBoV1List1.retainAll(roleBoV1List2))return null;
+        List<RoleBoV1> roleBoV1List=new ArrayList<>();
+        for(RoleBoV1 roleBoV1:roleBoV1List1)
+        {
+            for(RoleBoV1 roleBoV11:roleBoV1List2)
+            {
+                if(roleBoV1.getName().equals(roleBoV11.getName()))
+                {roleBoV1List.add(roleBoV1);}
+            }
+        }
+        if(roleBoV1List.isEmpty())return null;
+        for(RoleBoV1 roleBoV1 :roleBoV1List)
+        {System.out.println(roleBoV1.getName());}
         Long ruleId=0l;
-        for (RoleBoV1 roleBoV1 : roleBoV1List1) {
+        for (RoleBoV1 roleBoV1 : roleBoV1List) {
             if (userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()) != null) {
                 ruleId = userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()).getId();
             }
         }
         if(ruleId==0l)return null;
-
+        System.out.println(ruleId);
         List<Long> IdList=new ArrayList<>();
         List<UserData> userDataList=userDataDAO.findByRuleId(ruleId);
         for(UserData userData:userDataList){
