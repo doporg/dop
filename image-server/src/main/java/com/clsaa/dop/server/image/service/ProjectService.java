@@ -1,13 +1,8 @@
 package com.clsaa.dop.server.image.service;
 
-import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.ProjectBO;
-import com.clsaa.dop.server.image.model.bo.ProjectMetadataBO;
 import com.clsaa.dop.server.image.model.dto.ProjectDto1;
-import com.clsaa.dop.server.image.model.dto.ProjectMetadataDto1;
-import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
-import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.Project;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.po.ProjectReq;
@@ -29,21 +24,19 @@ import java.util.List;
 public class ProjectService {
     @Autowired
     private ProjectFeign projectFeign;
-    @Autowired
-    private UserFeign userFeign;
 
     /**
      * 返回对应条件的项目列表
      * @param name 项目名称
-     * @param _public 类型
+     * @param publicStatus 类型
      * @param owner 创建人
      * @param page 页号
      * @param pageSize 页大小
      * @return {@link List<ProjectBO>} 项目信息列表
      */
-    public List<ProjectBO> getProjects(String name,Boolean _public,String owner,Integer page,Integer pageSize,Long userId){
+    public List<ProjectBO> getProjects(String name,Boolean publicStatus,String owner,Integer page,Integer pageSize,Long userId){
         String auth = BasicAuthUtil.createAuth(userId);
-        List<Project> projects = projectFeign.projectsGet(name,_public,owner,page,pageSize,auth);
+        List<Project> projects = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
         if (projects.size()==0){
             return  null;
         }else {
@@ -95,20 +88,20 @@ public class ProjectService {
     /**
      * 通过项目id检索项目信息
      * @param projectId 项目id
-     * @return {@link ProjectMetadataBO} 项目基本信息
+     * @return {@link ProjectMetadata} 项目基本信息
      */
-    public ProjectMetadataBO getProjectMetadata(Long projectId,Long userId){
+    public ProjectMetadata getProjectMetadata(Long projectId,Long userId){
         String auth = BasicAuthUtil.createAuth(userId);
-       return BeanUtils.convertType(projectFeign.projectsProjectIdMetadatasGet(projectId,auth),ProjectMetadataBO.class);
+       return projectFeign.projectsProjectIdMetadatasGet(projectId,auth);
     }
 
     /**
      * 为项目添加基本信息
-     * @param projectMetadataDto1 项目的基本信息
+     * @param projectMetadata 项目的基本信息
      */
-    public void addProjectMetadata(Long projectId, ProjectMetadataDto1 projectMetadataDto1,Long userId){
+    public void addProjectMetadata(Long projectId, ProjectMetadata projectMetadata,Long userId){
         String auth = BasicAuthUtil.createAuth(userId);
-        projectFeign.projectsProjectIdMetadatasPost(projectId,BeanUtils.convertType(projectMetadataDto1, ProjectMetadata.class),auth);
+        projectFeign.projectsProjectIdMetadatasPost(projectId,projectMetadata,auth);
     }
     /**
      * 通过项目id和metadata名称删除对应属性

@@ -32,14 +32,15 @@ public interface HarborRepoFeign {
                                      @RequestParam(value = "sort", required = false) String sort,
                                      @RequestParam(value = "label_id", required = false) Integer labelId,
                                      @RequestParam(value = "page", required = false) Integer page,
-                                     @RequestParam(value = "page_size", required = false) Integer pageSize);
+                                     @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                     @RequestHeader(value = "Authorization") String auth);
 
     /**
      * 通过仓库名删除镜像仓库
      * @param repoName 仓库名称
      */
     @DeleteMapping(value = "/repositories/{repo_name}")
-    void repositoriesRepoNameDelete(@PathVariable("repo_name") String repoName);
+    void repositoriesRepoNameDelete(@PathVariable("repo_name") String repoName,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 修改仓库信息
@@ -47,7 +48,7 @@ public interface HarborRepoFeign {
      * @param description 需要更新的仓库描述
      */
     @PutMapping(value = "/repositories/{repo_name}")
-    void repositoriesRepoNamePut(@PathVariable("repo_name") String repoName, @RequestBody RepositoryDescription description);
+    void repositoriesRepoNamePut(@PathVariable("repo_name") String repoName, @RequestBody RepositoryDescription description,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 获取仓库的labels
@@ -55,7 +56,7 @@ public interface HarborRepoFeign {
      * @return {@link List<Label>} Label的列表
      */
     @GetMapping(value = "/repositories/{repo_name}/labels")
-    List<Label> repositoriesRepoNameLabelsGet(@PathVariable("repo_name") String repoName);
+    List<Label> repositoriesRepoNameLabelsGet(@PathVariable("repo_name") String repoName,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 为仓库添加label
@@ -63,7 +64,7 @@ public interface HarborRepoFeign {
      * @param label 添加的label
      */
     @PostMapping(value = "/repositories/{repo_name}/labels")
-    void repositoriesRepoNameLabelsPost(@PathVariable("repo_name") String repoName,@RequestBody Label label);
+    void repositoriesRepoNameLabelsPost(@PathVariable("repo_name") String repoName,@RequestBody Label label,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 通过仓库名和label_id来删除label
@@ -71,7 +72,7 @@ public interface HarborRepoFeign {
      * @param labelId
      */
     @DeleteMapping(value = "/repositories/{repo_name}/labels/{label_id}")
-    void repositoriesRepoNameLabelsLabelIdDelete(@PathVariable("repo_name") String repoName,@PathVariable("label_id") Integer labelId);
+    void repositoriesRepoNameLabelsLabelIdDelete(@PathVariable("repo_name") String repoName,@PathVariable("label_id") Integer labelId,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 通过仓库名称获取 tags
@@ -80,7 +81,7 @@ public interface HarborRepoFeign {
      * @return {@link List<DetailedTag>} 对应的tag列表
      */
     @GetMapping(value = "/repositories/{repo_name}/tags")
-    List<DetailedTag> repositoriesRepoNameTagsGet(@PathVariable("repo_name") String repoName, @RequestParam(value = "label_ids", required = false) String labelIds);
+    List<DetailedTag> repositoriesRepoNameTagsGet(@PathVariable("repo_name") String repoName, @RequestParam(value = "label_ids", required = false) String labelIds,@RequestHeader(value = "Authorization") String auth);
 
 
     /**
@@ -89,7 +90,7 @@ public interface HarborRepoFeign {
      * @param retagReq 需要添加的tag
      */
     @PostMapping(value = "/repositories/{repo_name}/tags")
-    void repositoriesRepoNameTagsPost(@PathVariable("repo_name") String repoName,@RequestBody RetagReq retagReq);
+    void repositoriesRepoNameTagsPost(@PathVariable("repo_name") String repoName,@RequestBody RetagReq retagReq,@RequestHeader(value = "Authorization") String auth);
 
 
     /**
@@ -99,14 +100,14 @@ public interface HarborRepoFeign {
      * @return
      */
     @GetMapping(value = "/repositories/{repo_name}/tags/{tag}")
-    DetailedTag repositoriesRepoNameTagsTagGet(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tag);
+    DetailedTag repositoriesRepoNameTagsTagGet(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tag,@RequestHeader(value = "Authorization") String auth);
     /**
      * 通过仓库名称和tag名称来删除tag
      * @param repoName 仓库名称
      * @param tagName tag名称
      */
     @DeleteMapping("/repositories/{repo_name}/tags/{tag}")
-    void repositoriesRepoNameTagsTagDelete(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tagName);
+    void repositoriesRepoNameTagsTagDelete(@PathVariable("repo_name") String repoName,@PathVariable("tag") String tagName,@RequestHeader(value = "Authorization") String auth);
 
 
 }
