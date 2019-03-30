@@ -30,6 +30,7 @@ public class Jenkinsfile {
     public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage) {
         this.appEnvId = appEnvId;
         this.stages = "";
+
         for (int i = 0; i < pipelineStage.size(); i++) {
             Stage stage = pipelineStage.get(i);
 

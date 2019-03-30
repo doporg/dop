@@ -53,6 +53,7 @@ public class JenkinsService {
     public String createJob(PipelineBoV1 pipelineBoV1, String version) {
         Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getAppEnvId(), pipelineBoV1.getStages());
         String name = pipelineBoV1.getId();
+
         try {
             if (jenkins.getJob(name) == null) {
                 jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());

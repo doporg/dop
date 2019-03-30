@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.pipeline.model.vo;
 
+import com.clsaa.dop.server.pipeline.model.po.Jenkinsfile;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
@@ -9,8 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.ArrayList;
 
 /**
- *
  * 流水线信息视图层对象
+ *
  * @author 张富利
  * @since 2019-03-09
  */
@@ -34,10 +35,32 @@ public class PipelineVoV1 {
     private String monitor;
 
     /**
-     *  配置方式
-     * */
+     * 配置方式
+     */
     @SerializedName("config")
     private String config;
+
+    /**
+     * Jenkinsfile
+     */
+    @Field("jenkinsfile")
+    @SerializedName("jenkinsfile")
+    private Jenkinsfile jenkinsfile;
+
+    /**
+     * 流水线所属项目的id
+     */
+    @Field("appId")
+    @SerializedName("appId")
+    private Long appId;
+
+    /**
+     * 流水线所属环境的id
+     */
+    @Field("appEnvId")
+    @SerializedName("appEnvId")
+    private Long appEnvId;
+
 
     /**
      * 流水线阶段

@@ -56,7 +56,7 @@ export default class PipelineInfo extends Component {
         let applications = self.state.applications
         Axios.get(url).then((response) => {
             if (response.status === 200) {
-                for (let i = 0; i < response.data.length(); i++) {
+                for (let i = 0; i < response.data.length; i++) {
                     let application = {
                         label: response.data[i].title,
                         value: response.data[i].id
@@ -64,7 +64,7 @@ export default class PipelineInfo extends Component {
                     applications.push(application)
                 }
                 self.setState({
-                    applications: response.data
+                    applications: applications
                 })
             }
         })
@@ -115,11 +115,11 @@ export default class PipelineInfo extends Component {
             currentStage: currentStage
         })
     }
-    selectEnv(value){
-        let pipeline = this.state.pipeline
+    onSelectEnv(value){
+        let pipeline = this.state.pipeline;
         pipeline.appEnvId = value;
         this.setState({
-            pipeline: pipeline
+            pipeline
         })
     }
     saveJenkinsfile() {
@@ -145,7 +145,16 @@ export default class PipelineInfo extends Component {
             });
         })
     }
-
+    buildPipeline(pipelineId) {
+        let self = this;
+        let url = API.pipeline + '/v1/jenkins/build?id=' + pipelineId;
+        Axios.post(url).then((response) => {
+            if (response.status === 200) {
+                console.log(response.data);
+                // self.props.history.push('/pipeline')
+            }
+        })
+    }
     save() {
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
@@ -160,7 +169,7 @@ export default class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
-                self.props.history.push('/pipeline')
+                self.buildPipeline(response.data);
             }
         })
     }
@@ -240,7 +249,7 @@ export default class PipelineInfo extends Component {
                                         currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
                                         onChange={this.setStages.bind(this)}
-                                        onSelectEnv = {this.selectEnv.bind(this)}
+                                        onSelectEnv = {this.onSelectEnv.bind(this)}
                                     />
                                 )
                             }

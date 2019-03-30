@@ -14,7 +14,8 @@ export default class Pull extends Component{
         }
     }
     componentWillMount(){
-        if(this.props.appId){
+        console.log(this.props.appId)
+        if(this.props.appId != null && this.props.appId != undefined){
             let url = API.application + "/app/" + this.props.appId + "/urlInfo";
             let self = this;
             Axios.get(url).then((response)=>{
@@ -48,7 +49,6 @@ export default class Pull extends Component{
                         onChange={this.buildMavenGit.bind(this)}
                         className="input"
                         value={this.state.gitUrl}
-                        disabled
                     />
                 </div>
             </div>

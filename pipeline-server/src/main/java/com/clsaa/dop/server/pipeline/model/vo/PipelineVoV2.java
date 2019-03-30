@@ -40,6 +40,14 @@ public class PipelineVoV2 {
     private Jenkinsfile jenkinsfile;
 
     /**
+     * 流水线所属项目的id
+     */
+    @Field("appId")
+    @SerializedName("appId")
+    private Long appId;
+
+
+    /**
      * 流水线阶段
      */
     @SerializedName("stages")
