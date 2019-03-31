@@ -1,12 +1,11 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
+import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.model.context.ExecuteContext;
-import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
-import com.clsaa.dop.server.test.util.UserUtils;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -18,7 +17,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.output.WriterOutputStream;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,10 +101,10 @@ public class RequestScriptDto implements Operation {
                     .body(requestBody);
 
             URL url = new URL(rawUrl);
-            // http call
+            //http call and log response
             ValidatableResponse response = httpCall(requestSpecification, url, httpMethod)
                                             .then()
-                                            .log().everything(true); //log response;
+                                            .log().everything(true);
             executionLog = executeContext.logResponseInfo(executionLog, writer);
 
             // auto test
@@ -142,9 +140,9 @@ public class RequestScriptDto implements Operation {
     private Matcher getMatcher(RequestCheckPointDto checkPoint) {
         switch (checkPoint.getOperation()) {
             case EQUALS:
-                return Matchers.equalTo(checkPoint.getValue());
+                return ToStringMatcher.hasToString(checkPoint.getValue());
             case NOTEQUALS:
-                return Matchers.not(checkPoint.getValue());
+                return ToStringMatcher.notToString(checkPoint.getValue());
             default:
                 throw new UnsupportedOperationException(String.format("不支持的校验操作: %s", checkPoint.getOperation()));
         }
