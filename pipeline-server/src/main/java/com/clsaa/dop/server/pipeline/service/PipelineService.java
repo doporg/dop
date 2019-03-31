@@ -81,8 +81,6 @@ public class PipelineService {
         pipelineRepository.insert(pipeline);
         return id.toString();
 
-//        this.jenkinsService.createJob(pipelineBoV1, "1.0");
-
     }
 
     public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {
@@ -93,6 +91,7 @@ public class PipelineService {
                 .monitor(pipelineV2.getMonitor())
                 .config(pipelineV2.getConfig())
                 .appId(pipelineV2.getAppId())
+                .appEnvId(pipelineV2.getAppEnvId())
                 .jenkinsfile(pipelineV2.getJenkinsfile())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
@@ -270,6 +269,7 @@ public class PipelineService {
 
 
             if(pipelineBoV1.getAppId() != null){
+
                 AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
@@ -279,7 +279,9 @@ public class PipelineService {
                 repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
             }
 
-            System.out.println(repositoryVersion);
+            if(repositoryVersion != null){
+                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
+            }
 
             List<Stage> stages = pipelineBoV1.getStages();
             for (int i = 0; i < stages.size(); i++) {
