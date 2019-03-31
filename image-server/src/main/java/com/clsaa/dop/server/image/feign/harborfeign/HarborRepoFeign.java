@@ -2,8 +2,8 @@ package com.clsaa.dop.server.image.feign.harborfeign;
 
 import com.clsaa.dop.server.image.config.FeignConfig;
 import com.clsaa.dop.server.image.model.po.*;
-import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.List;
  * @author xzt
  * @since 2019-3-29
  */
+@Component
 @FeignClient(url = "${feign.url}",value = "repo",configuration = FeignConfig.class)
 public interface HarborRepoFeign {
 

@@ -21,6 +21,6 @@ const baseConfig = [
 ];
 
 
-const routerConfig = [...testConfig, ...codeConfig, ...projectConfig,  ...permissionConfig, ...pipelineConfig, ...loginConfig, ...baseConfig,...imageConfig];
+const routerConfig = [...imageConfig,...testConfig, ...codeConfig, ...projectConfig,  ...permissionConfig, ...pipelineConfig, ...loginConfig, ...baseConfig];
 
 export default routerConfig;

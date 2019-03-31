@@ -1,13 +1,17 @@
 package com.clsaa.dop.server.image.service;
 
+import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.ProjectBO;
 import com.clsaa.dop.server.image.model.dto.ProjectDto1;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
+import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.Project;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.po.ProjectReq;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +28,8 @@ import java.util.List;
 public class ProjectService {
     @Autowired
     private ProjectFeign projectFeign;
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 返回对应条件的项目列表
@@ -35,7 +41,8 @@ public class ProjectService {
      * @return {@link List<ProjectBO>} 项目信息列表
      */
     public List<ProjectBO> getProjects(String name,Boolean publicStatus,String owner,Integer page,Integer pageSize,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         List<Project> projects = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
         if (projects.size()==0){
             return  null;
@@ -50,7 +57,8 @@ public class ProjectService {
      * @return {@link ProjectBO} 项目信息
      */
     public ProjectBO getProjectById(Long id,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         Project project = projectFeign.projectsProjectIdGet(id,auth);
         return BeanUtils.convertType(project,ProjectBO.class);
     }
@@ -60,7 +68,8 @@ public class ProjectService {
      * @param project 项目信息
      */
     public void addProject(ProjectDto1 project,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         ProjectReq project1 = BeanUtils.convertType(project,ProjectReq.class);
         projectFeign.projectsPost(project1,auth);
     }
@@ -71,7 +80,8 @@ public class ProjectService {
      * @param projectDto1 项目内容
      */
     public void putProject(Long projectId,ProjectDto1 projectDto1,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         ProjectReq projectReq = BeanUtils.convertType(projectDto1,ProjectReq.class);
         projectFeign.projectsProjectIdPut(projectId,projectReq,auth);
     }
@@ -81,7 +91,8 @@ public class ProjectService {
      * @param projectId
      */
     public void deleteProject(Long projectId,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         projectFeign.projectsProjectIdDelete(projectId,auth);
     }
 
@@ -91,7 +102,8 @@ public class ProjectService {
      * @return {@link ProjectMetadata} 项目基本信息
      */
     public ProjectMetadata getProjectMetadata(Long projectId,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
        return projectFeign.projectsProjectIdMetadatasGet(projectId,auth);
     }
 
@@ -100,7 +112,8 @@ public class ProjectService {
      * @param projectMetadata 项目的基本信息
      */
     public void addProjectMetadata(Long projectId, ProjectMetadata projectMetadata,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         projectFeign.projectsProjectIdMetadatasPost(projectId,projectMetadata,auth);
     }
     /**
@@ -109,7 +122,8 @@ public class ProjectService {
      * @param mataName 项目名称
      */
     public void deleteProjectMetadata(Long projectId, String mataName,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         projectFeign.projectsProjectIdMetadatasMetaNameDelete(projectId,mataName,auth);
     }
 }

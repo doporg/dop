@@ -1,21 +1,18 @@
-import Project from "./Project/Projects";
-import Repos from "./Repo/Repos";
-import BasicLayout from "../../layouts/BasicLayout";
+import Repos from './ReposManagement/Repos';
+import BasicLayout from '../../layouts/BasicLayout';
+import Image from './Image';
 
-
-const imageConfig = [
+const imageConfig =[
     {
-        path: "/Projects",
-        layout: BasicLayout,
-        component: Project,
-        isLogin: true
-    },
-    {
-        path: "/Projects/:projectId/Repos",
+        path: '/image/projects/:projectId/repos',
         layout: BasicLayout,
         component: Repos,
-        isLogin: true
+    },
+    {
+        path: '/image/projects',
+        layout: BasicLayout,
+        component: Image,
     }
 ];
 
-export {imageConfig};
+export {Repos,imageConfig,Image}

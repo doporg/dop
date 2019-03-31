@@ -90,7 +90,7 @@ public class RegisterConsumer implements MessageListenerConcurrently {
                 MessageExt msg = msgs.get(index);
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
                 UserDto1 userDto1 = JSON.parseObject(messageBody,UserDto1.class);
-                String username = PasswordUtil.generatePassword();
+                String username = userDto1.getEmail();
                 String password = PasswordUtil.generatePassword();
                 userFeign.addUserCredential(userDto1.getId(), username,
                         password, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);

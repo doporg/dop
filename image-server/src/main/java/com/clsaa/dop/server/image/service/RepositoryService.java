@@ -1,7 +1,10 @@
 package com.clsaa.dop.server.image.service;
 
+import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.HarborRepoFeign;
 import com.clsaa.dop.server.image.model.bo.RepositoryBO;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
+import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,8 @@ public class RepositoryService {
     @Autowired
     private HarborRepoFeign harborRepoFeign;
 
+    @Autowired
+    private UserFeign userFeign;
     /**
      * 获取对应的仓库信息
      * @param projectId 项目id
@@ -32,7 +37,8 @@ public class RepositoryService {
      * @return {@link List<RepositoryBO>} 镜像仓库的列表
      */
     public List<RepositoryBO> getRepositories(Integer projectId, String q, String sort, Integer labelId, Integer page, Integer pageSize, Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         return BeanUtils.convertList(harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth),RepositoryBO.class);
     }
 
