@@ -1,4 +1,4 @@
-import {Button, Dialog, Field, Form, Grid, Input, Radio} from "@icedesign/base";
+import {Button, Dialog, Field, Form, Grid, Input, Loading, Radio} from "@icedesign/base";
 
 import React, {Component} from 'react';
 import Axios from "axios";
@@ -10,8 +10,9 @@ const {Group: RadioGroup} = Radio;
 
 const style = {
     padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
+    background: "#FFF",
+    margin: "20px",
+    width: "100%"
 };
 
 const formItemLayout = {
@@ -31,7 +32,8 @@ class ApplicationVariableForm extends Component {
         super(props, context);
         this.field = new Field(this);
         this.state = {
-            appId: props.appId
+            appId: props.appId,
+            loading: false
         }
     }
 
@@ -43,6 +45,9 @@ class ApplicationVariableForm extends Component {
 
         // 校验表单数据
         let _this = this;
+        this.setState({
+            loading: true
+        })
         this.field.validate((errors, values) => {
             console.log(errors, values);
 
@@ -57,6 +62,9 @@ class ApplicationVariableForm extends Component {
                 )
                     .then(function (response) {
                         console.log(response);
+                        _this.setState({
+                            loading: false
+                        })
                         props.finished();
                     })
                     .catch(function (error) {
@@ -81,31 +89,34 @@ class ApplicationVariableForm extends Component {
     render() {
         const {init, getValue} = this.field;
         return (
-            <div>
-                <Form
-                    labelAlign={"left"}
-                    style={style}
-                >
-                    <FormItem
-                        {...formItemLayout}
-                        validateStatus={this.field.getError("key") ? "error" : ""}
-                        help={this.field.getError("key") ? "请输入Key" : ""}
-                        label="Key："
-                        required>
-                        <Input {...init('key', {rules: [{required: true, message: "该项不能为空"}]})}
-                               placeholder="Key值"/>
-                    </FormItem>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF" style={{width: "90%"}}
+            >
+                <div>
+                    <Form
+                        labelAlign={"left"}
+                        style={style}
+                    >
+                        <FormItem
+                            {...formItemLayout}
+                            validateStatus={this.field.getError("key") ? "error" : ""}
+                            help={this.field.getError("key") ? "请输入Key" : ""}
+                            label="Key："
+                            required>
+                            <Input {...init('key', {rules: [{required: true, message: "该项不能为空"}]})}
+                                   placeholder="Key值"/>
+                        </FormItem>
 
-                    <FormItem
-                        {...formItemLayout}
-                        validateStatus={this.field.getError("value") ? "error" : ""}
-                        label="Value："
-                        required>
-                        <Input  {...init('value', {rules: [{required: true, message: "该项不能为空"}]})}
-                                placeholder="value值"/>
-                    </FormItem>
-                </Form>
-            </div>
+                        <FormItem
+                            {...formItemLayout}
+                            validateStatus={this.field.getError("value") ? "error" : ""}
+                            label="Value："
+                            required>
+                            <Input  {...init('value', {rules: [{required: true, message: "该项不能为空"}]})}
+                                    placeholder="value值"/>
+                        </FormItem>
+                    </Form>
+                </div>
+            </Loading>
         )
     }
 }
