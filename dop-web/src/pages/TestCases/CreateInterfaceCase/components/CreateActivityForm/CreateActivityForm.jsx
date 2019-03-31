@@ -17,7 +17,7 @@ import {
 } from '@icedesign/base';
 import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
-import API from "../../../API";
+import API from "../../../../API";
 
 const { Row, Col } = Grid;
 
