@@ -96,7 +96,9 @@ public class KubeYamlService {
                 .releaseBatch(releaseBatch)
                 .releaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy))
                 .build();
-
+        CoreV1Api coreV1Api = getCoreApi(appEnvId);
+        List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+        IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
         if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = getAppsApi(appEnvId);
             List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
@@ -131,6 +133,12 @@ public class KubeYamlService {
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
+                        .withNewStrategy()
+                        .withNewRollingUpdate()
+                        .withMaxSurge(new IntOrString(1))
+                        .withMaxUnavailable(new IntOrString(1))
+                        .endRollingUpdate()
+                        .endStrategy()
                         .withNewTemplate()
                         .withNewMetadata()
                         .addToLabels("app", service)
@@ -139,11 +147,37 @@ public class KubeYamlService {
                         .addNewContainer()
                         .withName(service)
                         .withImage("<image_url>")
+                        .addNewPort()
+                        .withContainerPort(targetPort.getIntValue())
+                        .endPort()
+                        .withImagePullPolicy("Always")
+                        .addNewVolumeMount()
+                        .withMountPath(" /etc/localtime")
+                        .withName("host-time")
+                        .withMountPath("/etc/timezone")
+                        .withName("host-timezone")
+                        .endVolumeMount()
                         .endContainer()
+                        .withDnsPolicy("ClusterFirst")
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/localtime")
+                        .endHostPath()
+                        .withName("host-time")
+                        .endVolume()
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/timezone")
+                        .endHostPath()
+                        .withName("host-timezone")
+                        .endVolume()
                         .endSpec()
                         .endTemplate()
                         .endSpec()
                         .build();
+
                 kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
 
                 //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
@@ -187,6 +221,9 @@ public class KubeYamlService {
 
         kubeYamlData.setReleaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy));
 
+        CoreV1Api coreV1Api = getCoreApi(appEnvId);
+        List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+        IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
 
         if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = getAppsApi(appEnvId);
@@ -203,7 +240,7 @@ public class KubeYamlService {
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment.getApiVersion() + v1Deployment.getKind() + v1Deployment.getMetadata() + v1Deployment.getSpec()));
                         //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         break;
                     }
@@ -222,6 +259,12 @@ public class KubeYamlService {
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
+                        .withNewStrategy()
+                        .withNewRollingUpdate()
+                        .withMaxSurge(new IntOrString(1))
+                        .withMaxUnavailable(new IntOrString(1))
+                        .endRollingUpdate()
+                        .endStrategy()
                         .withNewTemplate()
                         .withNewMetadata()
                         .addToLabels("app", service)
@@ -230,7 +273,32 @@ public class KubeYamlService {
                         .addNewContainer()
                         .withName(service)
                         .withImage("<image_url>")
+                        .addNewPort()
+                        .withContainerPort(targetPort.getIntValue())
+                        .endPort()
+                        .withImagePullPolicy("Always")
+                        .addNewVolumeMount()
+                        .withMountPath(" /etc/localtime")
+                        .withName("host-time")
+                        .withMountPath("/etc/timezone")
+                        .withName("host-timezone")
+                        .endVolumeMount()
                         .endContainer()
+                        .withDnsPolicy("ClusterFirst")
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/localtime")
+                        .endHostPath()
+                        .withName("host-time")
+                        .endVolume()
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/timezone")
+                        .endHostPath()
+                        .withName("host-timezone")
+                        .endVolume()
                         .endSpec()
                         .endTemplate()
                         .endSpec()
@@ -426,8 +494,7 @@ public class KubeYamlService {
                         .endMetadata()
                         .withNewSpec()
                         .addNewPort()
-                        .withProtocol("TCP")
-                        .withPort(port)
+                        .withTargetPort(new IntOrString(port))
                         .endPort()
                         .addToSelector("app", name)
                         .endSpec()
@@ -461,9 +528,8 @@ public class KubeYamlService {
                         .build();
 
         NetworkingV1Api networkingV1Api = getNetworkingApi(id);
+        //V1NetworkPolicy v1NetworkPolicy=new V1NetworkPolicy(ingress);
         //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
-
-
 
 
     }
