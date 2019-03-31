@@ -88,6 +88,7 @@ public class Jenkinsfile {
                             Map metadata = (Map) map.get("metadata");
                             Object namespace = metadata.get("namespace");
                             if(kind.toString().equals("Deployment")){
+                                // apiVersion: apps/v1beta1
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
                                         "-k -H \'Bearer "+ token + "\' "+
