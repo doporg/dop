@@ -154,12 +154,15 @@ public class RoleService {
     @Transactional
     public void deleteById(Long id ,Long userId)
     {
-       if(userDataService.check("删除角色",userId,"roleId",id))
-       {
-           rolePermissionMappingService.deleteByRoleId(id);
-           userRuleService.deleteByRoleId(id);
-           roleRepository.deleteById(id);
-       }
+        if(permissionService.checkUserPermission("删除角色",userId))
+        {
+            if(userDataService.check("删除角色",userId,"roleId",id))
+            {
+                rolePermissionMappingService.deleteByRoleId(id);
+                userRuleService.deleteByRoleId(id);
+                roleRepository.deleteById(id);
+            }
+        }
     }
 
     //查询所有权限的ID和名称
