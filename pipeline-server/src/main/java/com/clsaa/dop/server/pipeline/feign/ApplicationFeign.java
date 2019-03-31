@@ -4,6 +4,7 @@ package com.clsaa.dop.server.pipeline.feign;
 import com.clsaa.dop.server.pipeline.config.FeignConfig;
 import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
 import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
+import com.clsaa.dop.server.pipeline.model.dto.KubeCredentialWithTokenV1;
 import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -41,5 +42,12 @@ public interface ApplicationFeign {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") String runningId);
+
+    /**
+     * 查询集群url和Token
+     * */
+    @GetMapping(value = "/app/env/{appEnvId}/clusterWithToken")
+    KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId);
 
 }

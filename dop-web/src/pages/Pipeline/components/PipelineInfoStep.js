@@ -58,7 +58,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "构建maven":
@@ -70,7 +72,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "构建node":
@@ -82,7 +86,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "构建docker镜像":
@@ -94,7 +100,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "推送docker镜像":
@@ -106,7 +114,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "自定义脚本":
@@ -118,7 +128,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             case "部署":
@@ -130,7 +142,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
             default:
@@ -142,7 +156,9 @@ export default class PipelineInfoStep extends Component {
                     repository: "",
                     repositoryVersion: "",
                     shell: "",
-                    deploy:""
+                    deploy:"",
+                    ip: "",
+                    token: ""
                 };
                 break;
         }
@@ -217,17 +233,6 @@ export default class PipelineInfoStep extends Component {
         this.props.onChange(this.state.stage)
     }
 
-    buildRepositoryVersion(value) {
-        let findIndex = this.state.stage.steps.findIndex((item) => {
-            return item.taskName === this.state.chosenStep.taskName
-        });
-        let stage = this.state.stage;
-        stage.steps[findIndex].repositoryVersion = value;
-        this.setState({
-            stage
-        });
-        this.props.onChange(this.state.stage)
-    }
 
     buildDockerPassword(value) {
         let findIndex = this.state.stage.steps.findIndex((item) => {

@@ -152,6 +152,12 @@ export default class PipelineInfo extends Component {
             if (response.status === 200) {
                 self.props.history.push('/pipeline/project/' + pipelineId)
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "请检查您环境信息的完整性",
+                duration: 3000
+            });
         })
     }
     save() {

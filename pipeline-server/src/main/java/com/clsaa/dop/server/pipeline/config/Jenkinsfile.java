@@ -1,10 +1,8 @@
 package com.clsaa.dop.server.pipeline.config;
 
+
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
-import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
@@ -52,6 +50,8 @@ public class Jenkinsfile {
                 String respositoryVersion = task.getRepositoryVersion();
                 String shell = task.getShell();
                 String deploy = task.getDeploy();
+                String ip = task.getIp();
+                String token = task.getToken();
                 switch (taskName) {
                     case ("拉取代码"):
                         this.stages += "deleteDir() \n";
@@ -79,15 +79,20 @@ public class Jenkinsfile {
                         String[] deploys = deploy.split("---\n");
                         for (int z = 0; z < deploys.length; z++) {
                             Yaml yaml = new Yaml();
+                            if(deploys[z] == ""){
+                                break;
+                            }
                             Map map = yaml.load(deploys[z]);
                             Object apiVersion = map.get("apiVersion");
                             Object kind = map.get("kind");
                             Map metadata = (Map) map.get("metadata");
                             Object namespace = metadata.get("namespace");
                             if(kind.toString().equals("Deployment")){
+                                // apiVersion: apps/v1beta1
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
-                                        "http://127.0.0.1:8001" +
+                                        "-k -H \'Bearer "+ token + "\' "+
+                                        ip +
                                         "/apis/" + apiVersion +
                                         "/namespaces/"+ namespace.toString() +
                                         "/" + kind.toString().toLowerCase() + "s "+
@@ -98,7 +103,8 @@ public class Jenkinsfile {
                             }else{
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
-                                        "http://127.0.0.1:8001" +
+                                        "-k -H \'Bearer "+ token + "\' "+
+                                        ip +
                                         "/api/" + apiVersion +
                                         "/namespaces/"+ namespace.toString() +
                                         "/" + kind.toString().toLowerCase() + "s "+
