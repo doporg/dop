@@ -1,4 +1,16 @@
-import {Button, Dialog, Feedback, Field, Form, Icon, Input, Loading, NumberPicker, Select} from "@icedesign/base";
+import {
+    Button,
+    Dialog,
+    Feedback,
+    Field,
+    Form,
+    Icon,
+    Input,
+    Loading,
+    NumberPicker,
+    Select,
+    Switch
+} from "@icedesign/base";
 import React, {Component} from 'react';
 import API from "../../../../API";
 import Axios from "axios"
@@ -205,6 +217,7 @@ export default class K8sInfoPage extends Component {
     }
 
     toggleCreateService() {
+        console.log("toggleCreateService")
         this.setState({
             createService: !this.state.createService
         })
@@ -435,12 +448,17 @@ export default class K8sInfoPage extends Component {
             if (this.state.yamlMode == "profile") {
                 return (
                     <div>
-                        <FormItem label="命名空间"
+                        <FormItem label="命名空间:"
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("nameSpace") ? "error" : ""}
                                   help={this.field.getError("nameSpace") ? "请选择命名空间" : ""}>
                             <div
-                                style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.nameSpace}</div>
+                                style={{
+                                    display: this.state.editMode ? "None" : "",
+                                    textAlign: "left",
+                                    marginLeft: "10%",
+                                    marginTop: "5px"
+                                }}>{this.state.yamlData.nameSpace}</div>
                             <Combobox
                                 style={{display: this.state.editMode ? "" : "None"}}
                                 placeholder="命名空间"
@@ -458,12 +476,28 @@ export default class K8sInfoPage extends Component {
                             </Combobox>
                         </FormItem>
 
-                        <FormItem label="服务"
+                        <FormItem style={{display: this.state.editMode ? "" : "None"}}
+                                  label="是否新建服务:"
+                                  {...formItemLayout}>
+                            <Switch
+                                checkedChildren="是"
+                                unCheckedChildren="否"
+                                onChange={this.toggleCreateService.bind(this)}
+                                defaultChecked={this.state.createService}>
+                            </Switch>
+                        </FormItem>
+
+                        <FormItem label="服务:"
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("service") ? "error" : ""}
                                   help={this.field.getError("service") ? "服务" : ""}>
                             <div
-                                style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.service}</div>
+                                style={{
+                                    display: this.state.editMode ? "None" : "",
+                                    textAlign: "left",
+                                    marginLeft: "10%",
+                                    marginTop: "5px"
+                                }}>{this.state.yamlData.service}</div>
                             <Combobox
                                 style={{display: this.state.editMode ? "" : "None"}}
                                 placeholder="服务"
@@ -482,24 +516,22 @@ export default class K8sInfoPage extends Component {
                                 })}
                             </Combobox>
 
-                            <div
-                                style={{display: this.state.editMode ? "" : "None"}}
-                                onClick={this.toggleCreateService.bind(this)}>{this.state.createService ? "创建服务" : "选择服务"}</div>
                         </FormItem>
                         <FormItem style={{display: this.state.editMode && this.state.createService ? "" : "None"}}
-                                  label="端口"
+                                  label="端口:"
                                   {...formItemLayout}
                                   validateStatus={this.editField.getError("port") ? "error" : ""}
                                   help={this.editField.getError("port") ? "请输入正确的端口" : ""}
                         >
                             <Input placeholder="开放端口"
                                    defaultValue={0}
+                                   style={{width: "40%"}}
                                    {...this.editField.init("port", {rules: [{required: true, message: "该项不能为空"}]})}/>
 
                         </FormItem>
 
                         <FormItem style={{display: this.state.editMode && this.state.createService ? "" : "None"}}
-                                  label="副本数量"
+                                  label="副本数量:"
                                   {...formItemLayout}
                                   validateStatus={this.editField.getError("replicas") ? "error" : ""}
                                   help={this.editField.getError("replicas") ? "副本数量" : ""}>
@@ -526,7 +558,12 @@ export default class K8sInfoPage extends Component {
 
                         >
                             <div
-                                style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.deployment}</div>
+                                style={{
+                                    display: this.state.editMode ? "None" : "",
+                                    textAlign: "left",
+                                    marginLeft: "10%",
+                                    marginTop: "5px"
+                                }}>{this.state.yamlData.deployment}</div>
                             <Combobox
                                 style={{display: this.state.editMode ? "" : "None"}}
                                 placeholder="部署"
@@ -556,7 +593,12 @@ export default class K8sInfoPage extends Component {
 
                         >
                             <div
-                                style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.container}</div>
+                                style={{
+                                    display: this.state.editMode ? "None" : "",
+                                    textAlign: "left",
+                                    marginLeft: "10%",
+                                    marginTop: "5px"
+                                }}>{this.state.yamlData.container}</div>
                             <Combobox
                                 style={{display: this.state.editMode ? "" : "None"}}
                                 placeholder="容器"
@@ -587,9 +629,14 @@ export default class K8sInfoPage extends Component {
                               help={this.yamlPathField.getError("yamlFilePath") ? "请输入文件路径" : ""}
                     >
                         <div
-                            style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.yamlFilePath}</div>
+                            style={{
+                                display: this.state.editMode ? "None" : "",
+                                textAlign: "left",
+                                marginLeft: "10%",
+                                marginTop: "5px"
+                            }}>{this.state.yamlData.yamlFilePath}</div>
                         <Input placeholder="Yaml文件路径"
-                               style={{display: this.state.editMode ? "" : "None"}}
+                               style={{display: this.state.editMode ? "" : "None", width: "60%"}}
                                {...this.yamlPathField.init("yamlFilePath", {
                                    initValue: this.state.yamlData.yamlFilePath,
                                    rules: [{
@@ -644,15 +691,16 @@ export default class K8sInfoPage extends Component {
         if (this.state.yamlData !== [] && this.state.yamlData.deploymentEditableYaml !== "") {
             return <Form>
                 <FormItem label="Deployment Yaml"
-
+                          style={{width: "100%", height: "100%"}}
                           {...formItemLayout}
                           validateStatus={this.field.getError("deploymentYaml") ? "error" : ""}
                           help={this.field.getError("deploymentYaml") ? "该项不能为空" : ""}>
-                    <div>
                         <Input
                             size="large"
+                            rows="20"
+                            style={{width: "90%"}}
                             multiple placeholder="Deployment Yaml"
-                            disabled={!this.state.editDeploymentYaml}
+                            readOnly={!this.state.editDeploymentYaml}
                             {...init('deploymentYaml', {
                                 initValue: this.state.yamlData.deploymentEditableYaml,
                                 rules: [{
@@ -663,10 +711,10 @@ export default class K8sInfoPage extends Component {
                         </Input>
 
                         <Icon
-                            style={{display: this.state.editDeploymentYaml ? "None" : ""}}
+                            style={{display: this.state.editDeploymentYaml ? "None" : "", float: "right"}}
                             type='edit'
                             onClick={this.toggleYamlEditor.bind(this)}/>
-                    </div>
+
                 </FormItem>
                 <Button
                     style={{display: this.state.editDeploymentYaml ? "" : "None", marginRight: "5px"}}
@@ -691,14 +739,19 @@ export default class K8sInfoPage extends Component {
         if (this.state.yamlData !== []) {
             return (
                 <div>
-                    <FormItem label="发布策略"
+                    <FormItem label="发布策略:"
                               {...formItemLayout}
                               validateStatus={this.field.getError("releaseStrategy") ? "error" : ""}
                               help={this.field.getError("releaseStrategy") ? "发布策略" : ""}>
                         <div
-                            style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.releaseStrategy}
+                            style={{
+                                display: this.state.editMode ? "None" : "",
+                                textAlign: "left",
+                                marginLeft: "10%",
+                                marginTop: "5px"
+                            }}>{this.state.yamlData.releaseStrategy}
                             <Icon
-                                style={{display: this.state.editMode ? "None" : ""}}
+                                style={{display: this.state.editMode ? "None" : "", float: "right"}}
                                 type='edit' onClick={this.toggleEditMode.bind(this)}/></div>
                         <Select placeholder="发布策略"
                                 style={{display: this.state.editMode ? "" : "None"}}
@@ -715,12 +768,17 @@ export default class K8sInfoPage extends Component {
                     </FormItem>
 
                     <FormItem style={{display: this.field.getValue('releaseBatch') === 'BATCH' ? "" : "None"}}
-                              label="发布批次"
+                              label="发布批次:"
                               {...formItemLayout}
                               validateStatus={this.field.getError("releaseBatch") ? "error" : ""}
                               help={this.field.getError("releaseBatch") ? "发布策略" : ""}>
                         <div
-                            style={{display: this.state.editMode ? "None" : ""}}>{this.state.yamlData.releaseBatch}</div>
+                            style={{
+                                display: this.state.editMode ? "None" : "",
+                                textAlign: "left",
+                                marginLeft: "10%",
+                                marginTop: "5px"
+                            }}>{this.state.yamlData.releaseBatch}</div>
                         <NumberPicker
                             style={{display: this.state.editMode ? "" : "None"}}
                             min={1}
@@ -748,19 +806,25 @@ export default class K8sInfoPage extends Component {
                     {/*</Input>*/}
 
                     {/*</FormItem>*/}
-                    <Combobox
-                        fillProps="label"
-                        onChange={this.switchYamlMode.bind(this)}
-                        style={{display: this.state.editMode ? "" : "None"}}
-                        defaultValue={this.state.yamlMode}>
-                        <Option value="profile">
-                            使用配置
-                        </Option>
-                        <Option value="path">
-                            使用Yaml文件相对路径
-                        </Option>
 
-                    </Combobox>
+                    <FormItem style={{display: this.state.editMode ? "" : "None"}}
+                              label="YAML文件来源:"
+                              {...formItemLayout}>
+                        <Combobox
+                            fillProps="label"
+                            onChange={this.switchYamlMode.bind(this)}
+
+                            defaultValue={this.state.yamlMode}>
+                            <Option value="profile">
+                                使用配置
+                            </Option>
+                            <Option value="path">
+                                使用Yaml文件相对路径
+                            </Option>
+
+                        </Combobox>
+                    </FormItem>
+
                 </div>
             )
         }
@@ -771,7 +835,8 @@ export default class K8sInfoPage extends Component {
 
         return (
             <div style={{width: "100%"}}>
-                <Loading visible={this.state.loading} size='small' shape="dot-circle" color="#2077FF">
+                <Loading visible={this.state.loading} style={{width: "70%"}} size='small' shape="dot-circle"
+                         color="#2077FF">
                     <Form style={{width: "100%"}}>
 
                         {this.k8sBasicRender()}

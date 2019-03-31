@@ -1,9 +1,8 @@
-import {Button, Dialog, Feedback, Field, Form, Icon, Input, Loading} from "@icedesign/base";
+import {Button, Card, Dialog, Feedback, Field, Form, Icon, Input, Loading} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
 import K8sInfoPage from '../K8sInfoPage'
-import {Col, Row} from "@alifd/next/lib/grid";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -120,68 +119,75 @@ export default class ClusterInfoForm extends Component {
         const {init, getError} = this.field
         return (
 
-
-            <Col>
-                <Loading visible={this.state.loading} size='small' shape="dot-circle" color="#2077FF">
-                    <Row>
-                        <Form style={{width: "100%"}}>
-                            <FormItem label="目标集群URL"
-                                      {...formItemLayout}
-                                      validateStatus={getError("targetClusterUrl") ? "error" : ""}
-                                      help={getError("targetClusterUrl") ? "请输入目标集群" : ""}>
-                                <Input
-                                    style={{display: this.state.editMode ? "" : "None"}}
-                                    placeholder="目标集群"
-                                    {...init('targetClusterUrl', {
-                                        initValue: this.state.clusterData,
-                                        rules: [{
-                                            required: true,
-                                            message: "该项不能为空"
-                                        }]
-                                    })}>
-                                </Input>
-                                <div style={{display: this.state.editMode ? "None" : ""}}>
-                                    {this.state.clusterData == "" ? "" : this.state.clusterData}
-                                    <Icon type='edit' visible={!this.state.editMode ? "true" : "false"}
-                                          onClick={this.toggleEditMode.bind(this)}/>
-                                </div>
-                            </FormItem>
+            <Card
+                style={{width: "70%", padding: "2%", margin: "1%"}}
+                title={"Kubernetes环境信息"}
+                bodyHeight="40%"
+            >
 
 
-                            <FormItem label="Token"
-                                      style={{display: this.state.editMode ? "" : "None"}}
-                                      {...formItemLayout}
-                                      validateStatus={getError("targetClusterToken") ? "error" : ""}
-                                      help={getError("targetClusterToken") ? "请输入Token" : ""}>
-                                <Input multiple placeholder="AccessToken"
-                                       {...init('targetClusterToken', {
-                                           rules: [{
-                                               required: true,
-                                               message: "该项不能为空"
-                                           }]
-                                       })}>
-                                </Input>
-                            </FormItem>
-
-                            <Button onClick={this.clusterInfoConfirm.bind(this)}
-                                    type="primary"
-                                    style={{marginRight: "5px", display: this.state.editMode ? "" : "None"}}>
-                                提交
-                            </Button>
-
-                            < Button
+                <Form style={{width: "100%"}}>
+                    <Loading visible={this.state.loading} style={{width: "70%", marginBottom: "3%"}} size='small'
+                             shape="dot-circle" color="#2077FF">
+                        <FormItem label="目标集群URL:"
+                                  {...formItemLayout}
+                                  validateStatus={getError("targetClusterUrl") ? "error" : ""}
+                                  help={getError("targetClusterUrl") ? "请输入目标集群" : ""}
+                        >
+                            <Input
                                 style={{display: this.state.editMode ? "" : "None"}}
-                                onClick={this.toggleEditMode.bind(this)}> 取消 </Button>
-                        </Form>
-                    </Row>
-                </Loading>
-                <Row>
-                    {
-                        this.k8sInfoRender()
-                    }
-                </Row>
-            </Col>
+                                placeholder="目标集群"
+                                {...init('targetClusterUrl', {
+                                    initValue: this.state.clusterData,
+                                    rules: [{
+                                        required: true,
+                                        message: "该项不能为空"
+                                    }]
+                                })}>
+                            </Input>
+                            <div style={{display: this.state.editMode ? "None" : "", margin: "5px"}}>
+                                {this.state.clusterData == "" ? "" : this.state.clusterData}
+                                <Icon style={{float: "right"}} type='edit'
+                                      visible={!this.state.editMode ? "true" : "false"}
+                                      onClick={this.toggleEditMode.bind(this)}/>
+                            </div>
+                        </FormItem>
 
+
+                        <FormItem label="Token:"
+                                  style={{display: this.state.editMode ? "" : "None"}}
+                                  {...formItemLayout}
+                                  validateStatus={getError("targetClusterToken") ? "error" : ""}
+                                  help={getError("targetClusterToken") ? "请输入Token" : ""}>
+                            <Input multiple placeholder="AccessToken"
+                                   {...init('targetClusterToken', {
+                                       rules: [{
+                                           required: true,
+                                           message: "该项不能为空"
+                                       }]
+                                   })}>
+                            </Input>
+                        </FormItem>
+
+                        <Button onClick={this.clusterInfoConfirm.bind(this)}
+                                type="primary"
+                                style={{marginRight: "5px", display: this.state.editMode ? "" : "None"}}>
+                            提交
+                        </Button>
+
+                        < Button
+                            style={{display: this.state.editMode ? "" : "None"}}
+                            onClick={this.toggleEditMode.bind(this)}> 取消 </Button>
+                    </Loading>
+
+                </Form>
+
+
+                {
+                    this.k8sInfoRender()
+                }
+
+            </Card>
 
         )
     }

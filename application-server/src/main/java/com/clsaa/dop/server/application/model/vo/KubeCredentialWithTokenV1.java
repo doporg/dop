@@ -5,11 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClusterUrlV1 {
+public class KubeCredentialWithTokenV1 {
     /**
      * 目标集群Url
      */
 
     private String targetClusterUrl;
 
+    private String targetClusterToken;
 }

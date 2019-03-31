@@ -41,6 +41,9 @@ public class AppEnvService {
      */
     public void createAppEnv(AppEnv appEnv) {
         this.appEnvRepository.saveAndFlush(appEnv);
+        if (AppEnv.DeploymentStrategy.KUBERNETES == appEnv.getDeploymentStrategy()) {
+            this.kubeCredentialService.createCredentialByAppEnvId(appEnv.getCuser(), appEnv.getId());
+        }
     }
 
 

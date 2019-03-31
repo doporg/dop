@@ -12,14 +12,13 @@ const formItemLayout = {
     wrapperCol: {span: 14}
 };
 const style = {
-    padding: "2%",
-    background: "#F7F8FA",
-    marginLeft: "2%",
-    width: "58%"
+    background: "#FFF",
+    width: "100%",
+    height: "100%"
 };
 const style1 = {
     padding: "2%",
-    background: "#F7F8FA",
+    background: "#FFF",
     marginTop: "2%",
     width: "100%"
 };
@@ -304,29 +303,31 @@ export default class ApplicationBasicInfo extends Component {
 
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+
             >
 
-
+                <TopBar
+                    extraBefore={<Breadcrumb>
+                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                    </Breadcrumb>}
+                />
                 <div style={{
-                    margin: "0 auto",
-                    width: "70%",
+                    width: "100%",
+                    height: "100%",
                     display: "flex",
                     flexWrap: "wrap",
                     justifyContent: "flex-start"
                 }}
                 >
-                    <TopBar
-                        extraBefore={<Breadcrumb>
-                            <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
-                            <Breadcrumb.Item
-                                link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
-                            <Breadcrumb.Item
-                                link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                        </Breadcrumb>}
-                    />
+
             <Card
-                style={{width: "40%", height: "40%"}}
+                style={{width: "38%", margin: "1%"}}
                 title={this.state.userData.name}
+                bodyHeight="35%"
                 subTitle="应用拥有人"
                 extra={<a href="#">转交应用&gt;</a>}
             >
@@ -335,74 +336,96 @@ export default class ApplicationBasicInfo extends Component {
                     style={styles.avatar}/>
             </Card>
 
-
-                    <Form labelAlign={"left"}
-                  style={style}>
-
-                <div>基本信息
-                    <Button type="primary"
-                            style={this.state.basicEditMode == true ? {display: "None"} : {
+                    <Card
+                        style={{width: "58%", height: "35%", margin: "1%"}}
+                        title={"基本信息"}
+                        bodyHeight="35%"
+                        subTitle={
+                            <div style={{
                                 float: "right",
                                 textAlign: "right"
-                            }}
-                            onClick={this.basicEdit.bind(this)}
-                            size="small">
-                        修改
-                    </Button>
+                            }}><Button type="primary"
+                                       style={this.state.basicEditMode == true ? {display: "None"} : {}}
+                                       onClick={this.basicEdit.bind(this)}
+                                       size="small">
+                                修改
+                            </Button>
+                                <Button onClick={this.basicConfirm.bind(this)}
+                                        type="primary"
+                                        size="small"
+                                        style={{
+                                            marginRight: "5px",
+                                            display: this.state.basicEditMode == false ? "None" : ""
+                                        }}>
+                                    保存
+                                </Button>
 
-                </div>
+                                < Button
+                                    size="small"
+                                    style={{display: this.state.basicEditMode == false ? "None" : ""}}
+                                    onClick={this.basicEditCancel.bind(this)}> 取消 </Button>
+                            </div>}
+                    >
+                        <Form labelAlign={"left"}
+                              style={style}>
 
-                    <FormItem{...formItemLayout}
-                             label="应用名称：">
-                        <div  {...init('appTitle')}
-                              placeholder="应用名称"
-                              style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>
-                    </FormItem>
 
-                    <FormItem{...formItemLayout}
-                             label="注册时间：">
-                        <div style={{float: "left", margin: "7px"}}>{this.state.appBasicData.ctime}</div>
-                    </FormItem>
+                            <FormItem{...formItemLayout}
+                                     label="应用名称：">
+                                <div  {...init('appTitle')}
+                                      placeholder="应用名称"
+                                      style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>
+                            </FormItem>
 
-                    <FormItem  {...formItemLayout}
-                               label="应用描述：">
-                        {opr()}
-                    </FormItem>
+                            <FormItem{...formItemLayout}
+                                     label="注册时间：">
+                                <div style={{float: "left", margin: "7px"}}>{this.state.appBasicData.ctime}</div>
+                            </FormItem>
 
-                        <div style={this.state.basicEditMode == false ? {display: "None"} : {}}>
-                        <Button onClick={this.basicConfirm.bind(this)}
-                                type="primary"
-                                style={{marginRight: "5px"}}>
-                            保存
-                        </Button>
+                            <FormItem  {...formItemLayout}
+                                       label="应用描述：">
+                                {opr()}
+                            </FormItem>
 
-                        < Button onClick={this.basicEditCancel.bind(this)}> 取消 </Button>
-                    </div>
-                </Form>
+                        </Form>
+                    </Card>
 
-            <Form labelAlign={"left"}
-                  style={style1}>
-                <div>URL信息
-                <Button type="primary"
-                        size="small"
-                        style={this.state.urlEditMode == true ? {display: "None"} : {
-                            float: "right",
-                            textAlign: "right"
-                        }}
-                        onClick={this.urlEdit.bind(this)}>
-                    修改
-                </Button>
-                </div>
-                {urlFormRender()}
-                <div style={this.state.urlEditMode == false ? {display: "None"} : {}}>
-                    <Button onClick={this.urlConfirm.bind(this)}
-                            type="primary"
-                            style={{marginRight: "5px"}}>
-                        保存
-                    </Button>
-                    <Button onClick={this.urlEditCancel.bind(this)}>取消</Button>
-                </div>
+
+                    <Card
+                        style={{width: "98%", padding: "2%", margin: "1%"}}
+                        title={"URL信息"}
+                        bodyHeight="35%"
+                        subTitle={
+                            <div style={{
+                                float: "right",
+                                textAlign: "right"
+                            }}>
+                                <Button type="primary"
+                                        size="small"
+                                        style={this.state.urlEditMode == true ? {display: "None"} : {}}
+                                        onClick={this.urlEdit.bind(this)}>
+                                    修改
+                                </Button>
+                                <Button onClick={this.urlConfirm.bind(this)}
+                                        type="primary"
+                                        size="small"
+                                        style={{
+                                            marginRight: "5px",
+                                            display: this.state.urlEditMode == true ? "" : "None"
+                                        }}>
+                                    保存
+                                </Button>
+                                <Button
+                                    size="small"
+                                    style={{display: this.state.urlEditMode == true ? "" : "None"}}
+                                    onClick={this.urlEditCancel.bind(this)}>取消</Button>
+                            </div>}
+                    >
+                        <Form labelAlign={"left"}
+                              style={style1}>
+                            {urlFormRender()}
             </Form>
+                    </Card>
 
 
         </div>
