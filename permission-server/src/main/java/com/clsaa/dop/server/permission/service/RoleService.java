@@ -92,6 +92,10 @@ public class RoleService {
                         .deleted(false)
                         .build();
                 roleRepository.saveAndFlush(role);
+                userDataService.addData(
+                        userRuleService.findUniqueRule("in","roleId",
+                                roleRepository.findByName("权限管理员").getId()).getId(),
+                        cuser,role.getId(),cuser,muser);
                 return role.getId();
             }
             return null;
@@ -117,20 +121,14 @@ public class RoleService {
     public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
-        int count = (int) this.roleRepository.count();
+//        int count = (int) this.roleRepository.count();
+        int count=0;
 
         Pagination<RoleV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-        pagination.setTotalCount(count);
-
-        if (count == 0) {
-            pagination.setPageList(Collections.emptyList());
-            return pagination;
-        }
-
-
         Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
+
         List<Role> roleList = this.roleRepository.findAll(pageRequest).getContent();
         List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
         List<Role> roleList1=new ArrayList<>();
@@ -139,9 +137,17 @@ public class RoleService {
             for(Long id :idList)
             {
                 if(role.getId().equals(id))
-                {roleList1.add(role);}
+                {roleList1.add(role);count++;}
             }
         }
+
+        pagination.setTotalCount(count);
+        if (count == 0) {
+            pagination.setPageList(Collections.emptyList());
+            return pagination;
+        }
+
+
         pagination.setPageList(roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
         return pagination;
     }
