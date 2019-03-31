@@ -96,10 +96,11 @@ public class KubeYamlService {
                 .releaseBatch(releaseBatch)
                 .releaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy))
                 .build();
-        CoreV1Api coreV1Api = getCoreApi(appEnvId);
-        List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
-        IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
+
         if (yamlFilePath.equals("")) {
+            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
             AppsV1Api appsApi = getAppsApi(appEnvId);
             List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
@@ -221,11 +222,12 @@ public class KubeYamlService {
 
         kubeYamlData.setReleaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy));
 
-        CoreV1Api coreV1Api = getCoreApi(appEnvId);
-        List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
-        IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
+
 
         if (yamlFilePath.equals("")) {
+            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
             AppsV1Api appsApi = getAppsApi(appEnvId);
             List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
@@ -240,7 +242,7 @@ public class KubeYamlService {
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment.getApiVersion() + v1Deployment.getKind() + v1Deployment.getMetadata() + v1Deployment.getSpec()));
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         break;
                     }
@@ -494,7 +496,9 @@ public class KubeYamlService {
                         .endMetadata()
                         .withNewSpec()
                         .addNewPort()
+                        .withPort(port)
                         .withTargetPort(new IntOrString(port))
+                        .withProtocol("TCP")
                         .endPort()
                         .addToSelector("app", name)
                         .endSpec()

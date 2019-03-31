@@ -58,7 +58,7 @@ export default class K8sInfoPage extends Component {
             })
     }
 
-    getServiceData() {
+    getServiceData(namespace) {
 
         if (this.field.getValue("nameSpace") === "") {
             this.setState({
@@ -69,7 +69,7 @@ export default class K8sInfoPage extends Component {
             let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/allServices"
             Axios.get(namespaceUrl, {
                 params: {
-                    namespace: _this.field.getValue("nameSpace"),
+                    namespace: namespace,
                 }
             })
                 .then((response) => {
@@ -132,14 +132,22 @@ export default class K8sInfoPage extends Component {
                             yamlMode: 'path',
                             loading: false
                         })
+
+
                     } else {
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
                             yamlMode: 'profile',
-                            loading: false
+
                         })
+                        _this.getNameSpaceData()
+                        _this.getServiceData(this.state.yamlData.nameSpace)
+                        _this.yamlEditorfield.setValue("deploymentYaml", response.data.deploymentEditableYaml)
+                        _this.setState({loading: false})
                     }
+
+                    _this.field.setValue("yamlMode", this.state.yamlMode)
                     //
                     // if(response.data.deploymentEditableYaml !=="")
                     // {
@@ -163,7 +171,7 @@ export default class K8sInfoPage extends Component {
 
 
         this.getYamlData()
-        this.getNameSpaceData()
+
 
 
     }
@@ -172,7 +180,8 @@ export default class K8sInfoPage extends Component {
         if (nextProps.refreshK8sInfo) {
             console.log("will", nextProps)
             this.getYamlData()
-            this.getNameSpaceData()
+            // this.getNameSpaceData()
+            // this.getServiceData(this.state.yamlData.nameSpace)
             nextProps.refreshFinished()
         }
     }
@@ -187,7 +196,7 @@ export default class K8sInfoPage extends Component {
 
     onNamespaceInputUpdate(e, value) {
         this.field.setValue("nameSpace", value.value)
-        this.getServiceData()
+        this.getServiceData(value.value)
 
     }
 
@@ -226,22 +235,18 @@ export default class K8sInfoPage extends Component {
     switchYamlMode(e, values) {
         console.log(values)
         let value = values.value
-        if (value == 'yaml') {
-            this.setState({
-                yamlMode: "yaml"
-            })
-        }
-        if (value == 'path') {
+        // if (value == 'yaml') {
+        //     this.setState({
+        //         yamlMode: "yaml"
+        //     })
+        // }
 
         this.setState({
-            yamlMode: "path"
-        })
-        }
-        if (value == 'profile') {
-            this.setState({
-                yamlMode: "profile"
+            yamlMode: value
             })
-        }
+
+
+        this.field.setValue("yamlMode", value)
     }
 
     checkDeploymentData() {
@@ -666,17 +671,15 @@ export default class K8sInfoPage extends Component {
         _this.setState({
             loading: true
         })
-        let url = API.gateway + "/app/env/" + this.state.appEnvId + "/deploymentYaml"
-        Axios.put(url, {}, {
-            params: {
-                deploymentYaml: this.yamlEditorfield.getValue("deploymentYaml")
-            }
-        }).then((response) => {
+        let url = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/deploymentYaml"
+        Axios.put(url, {deploymentEditableYaml: _this.yamlEditorfield.getValue("deploymentYaml")}
+        ).then((response) => {
             Toast.success("更新成功")
             _this.setState({
                 loading: false
             })
         })
+        this.toggleYamlEditor()
 
     }
 
@@ -813,7 +816,7 @@ export default class K8sInfoPage extends Component {
                         <Combobox
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
-
+                            {...init('yamlMode')}
                             defaultValue={this.state.yamlMode}>
                             <Option value="profile">
                                 使用配置
