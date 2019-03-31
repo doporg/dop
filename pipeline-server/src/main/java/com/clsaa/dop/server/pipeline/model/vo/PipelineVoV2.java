@@ -46,6 +46,12 @@ public class PipelineVoV2 {
     @SerializedName("appId")
     private Long appId;
 
+    /**
+     * 流水线所属环境的id
+     */
+    @Field("appEnvId")
+    @SerializedName("appEnvId")
+    private Long appEnvId;
 
     /**
      * 流水线阶段

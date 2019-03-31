@@ -103,7 +103,13 @@ export default class EditPipelineInfo extends Component {
             haveJenkinsFile: value
         })
     }
-
+    onSelectEnv(value){
+        let pipeline = this.state.pipeline;
+        pipeline.appEnvId = value;
+        this.setState({
+            pipeline
+        })
+    }
     jenkinsFileData(jenkinsFileInfo) {
         this.setState({
             jenkinsFileInfo
@@ -267,7 +273,7 @@ export default class EditPipelineInfo extends Component {
                                             currentStage={this.state.currentStage}
                                             appId={this.state.pipeline.appId}
                                             onChange={this.setStages.bind(this)}
-                                            onSelectEnv = {this.selectEnv.bind(this)}
+                                            onSelectEnv = {this.onSelectEnv.bind(this)}
                                         />
                                     )
                                 }

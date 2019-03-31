@@ -31,7 +31,7 @@ export default class Jenkinsfile extends Component{
                         <FormBinder name="path" required message="请输入Jenkinsfile路径">
                             <Input
                                 placeholder="请输入Jenkinsfile路径"
-                                value={this.props.jenkinsfile.path}
+                                value={this.props.jenkinsfile.path?this.props.jenkinsfile.path:"./"}
                             />
                         </FormBinder>
                         <FormError className="form-item-error" name="path"/>

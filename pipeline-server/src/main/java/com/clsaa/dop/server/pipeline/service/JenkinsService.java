@@ -58,9 +58,11 @@ public class JenkinsService {
             if (jenkins.getJob(name) == null) {
                 jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
             } else {
-                jenkins.updateJob(name, new JobConfig("2.0", jenkinsfile.getScript()).getXml());
+                jenkins.deleteJob(name);
+                jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
             }
         } catch (Exception e) {
+            System.out.println(e.toString());
             return e.toString();
         }
         return "CreateJobSuccess";
@@ -74,7 +76,8 @@ public class JenkinsService {
             if (jenkins.getJob(name) == null) {
                 jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
             } else {
-                jenkins.updateJob(name, new JobConfig("1.0", git, path).getXml());
+                jenkins.deleteJob(name);
+                jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
             }
 
         } catch (Exception e) {

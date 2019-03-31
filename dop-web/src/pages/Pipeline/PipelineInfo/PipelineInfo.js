@@ -150,12 +150,12 @@ export default class PipelineInfo extends Component {
         let url = API.pipeline + '/v1/jenkins/build?id=' + pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
-                console.log(response.data);
-                // self.props.history.push('/pipeline')
+                self.props.history.push('/pipeline/project/' + pipelineId)
             }
         })
     }
     save() {
+        console.log(this.state.pipeline)
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
         Axios({
