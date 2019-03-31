@@ -1,20 +1,27 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
+import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
+import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import io.restassured.RestAssured;
+import io.restassured.config.LogConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.io.output.WriterOutputStream;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.PrintStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,13 +82,32 @@ public class RequestScriptDto implements Operation {
     private boolean deleted;
 
     @Override
-    public void run() {
+    public void run(ExecuteContext executeContext) {
         try {
+            OperationExecuteLog operationExecuteLog = initOperationLog(executeContext);
             Map<String, String> headers = requestHeaders.stream()
                     .collect(Collectors.toMap(RequestHeaderDto::getName, RequestHeaderDto::getValue));
-            RequestSpecification requestSpecification = RestAssured.given().headers(headers).body(requestBody);
+            StringBuilder executionLog = executeContext.logRequestInfo(headers, requestBody, httpMethod, rawUrl);
+
+            //string writer to store response info
+            StringWriter writer = new StringWriter();
+            PrintStream captor = new PrintStream(new WriterOutputStream(writer), true);
+            RestAssuredConfig config = RestAssured.config()
+                    .logConfig(new LogConfig(captor, true));
+
+            RequestSpecification requestSpecification = RestAssured.given()
+                    .config(config)
+                    .headers(headers)
+                    .body(requestBody);
+
             URL url = new URL(rawUrl);
-            ValidatableResponse response = httpCall(requestSpecification, url, httpMethod).then();
+            //http call and log response
+            ValidatableResponse response = httpCall(requestSpecification, url, httpMethod)
+                                            .then()
+                                            .log().everything(true);
+            executionLog = executeContext.logResponseInfo(executionLog, writer);
+
+            // auto test
             for (RequestCheckPointDto checkPoint : requestCheckPoints) {
                 Matcher matcher = getMatcher(checkPoint);
                 try {
@@ -91,6 +117,10 @@ public class RequestScriptDto implements Operation {
                     checkPoint.fail(error.getMessage());
                 }
             }
+
+            // collect log info
+            operationExecuteLog.setExecuteInfo(executionLog.toString());
+            executeContext.addOperationLog(endOperationLog(operationExecuteLog));
         } catch (Exception e) {
             log.error(e.getMessage());
             setResultFail();
@@ -110,9 +140,9 @@ public class RequestScriptDto implements Operation {
     private Matcher getMatcher(RequestCheckPointDto checkPoint) {
         switch (checkPoint.getOperation()) {
             case EQUALS:
-                return Matchers.equalTo(checkPoint.getValue());
+                return ToStringMatcher.hasToString(checkPoint.getValue());
             case NOTEQUALS:
-                return Matchers.not(checkPoint.getValue());
+                return ToStringMatcher.notToString(checkPoint.getValue());
             default:
                 throw new UnsupportedOperationException(String.format("不支持的校验操作: %s", checkPoint.getOperation()));
         }

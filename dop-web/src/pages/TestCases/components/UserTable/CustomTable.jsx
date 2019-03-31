@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state, no-plusplus */
 import React, { Component } from 'react';
-import {Table, Switch, Icon, Button, Grid, Pagination, Dialog, Select, Input} from '@icedesign/base';
+import {Table, Switch, Icon, Button, Grid, Pagination, Dialog, Select, Input, Feedback} from '@icedesign/base';
 import IceContainer from '@icedesign/container';
 import CreateManualCaseFrom from "../CreateTestCases/CreateManualCaseForm";
 import API from "../../../API";
@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import {FormBinder, FormBinderWrapper} from "@icedesign/form-binder";
 
 const { Row, Col } = Grid;
+const Toast = Feedback.toast;
 
 export default class CustomTable extends Component {
   static displayName = 'CustomTable';
@@ -107,6 +108,22 @@ export default class CustomTable extends Component {
     }
   };
 
+  renderSwitch = (value,index,record) => {
+    let caseId = record.id;
+    return <Switch onChange={(checked) => {
+      let type = this.state.searchValue.type;
+      if (type === 'manual') {
+        Toast.error("手工用例暂不支持执行！");
+        return;
+      }
+      if (checked) {
+        Toast.success("测试用例开始执行，执行结果请在用例执行历史记录中查看!");
+        this.execute(caseId);
+      }
+    }
+    }/>;
+  };
+
   onOpen = () =>{
     this.setState({
       createManualDialogVisiable: true
@@ -124,6 +141,17 @@ export default class CustomTable extends Component {
     this.setState({
       isSubmit: true
     })
+  };
+
+  execute = (id) => {
+    // only interface script is executable
+    let url = API.test + '/interfaceCases/execute/' + id;
+    let _this = this;
+    Axios.get(url).then(function (response) {
+      console.log(response);
+    }).catch(function (error) {
+      console.log(error);
+    });
   };
 
   render() {
@@ -191,8 +219,8 @@ export default class CustomTable extends Component {
           <IceContainer title="用例列表">
             <Row wrap style={styles.headRow}>
               <Col l="12">
-                <Button type="primary" style={styles.button} onClick={this.onOpen.bind(this)} >
-                  <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加手工测试用例
+                <Button style={styles.button} onClick={this.onOpen.bind(this)} >
+                  <Icon type="add" size="xs" style={{ marginRight: '4px' }} />手工测试用例
                 </Button>
                 <Dialog
                     visible={this.state.createManualDialogVisiable}
@@ -211,7 +239,7 @@ export default class CustomTable extends Component {
 
                 <Button style={{ ...styles.button, marginLeft: 10}}>
                   <Link to="/test/createInterfaceCase">
-                    <Icon type="add" size="xs" style={{ marginRight: '4px' }} />添加接口测试用例
+                    <Icon type="add" size="xs" style={{ marginRight: '4px' }} />接口测试用例
                   </Link>
                 </Button>
               </Col>
@@ -238,7 +266,7 @@ export default class CustomTable extends Component {
               <Table.Column title="状态" dataIndex="status" width={100} />
               <Table.Column title="执行结果" dataIndex="executeResult" width={100} />
               <Table.Column title="创建者" dataIndex="cuser" width={100} />
-              <Table.Column title="执行/终止" width={100} cell={() => <Switch />} />
+              <Table.Column title="执行/终止" width={100} cell={this.renderSwitch} />
               <Table.Column title="操作" width={100} cell={this.renderOper} />
             </Table>
             <Pagination
@@ -269,6 +297,7 @@ const styles = {
   },
   button: {
     borderRadius: '4px',
+    color: '#5485F7'
   },
   pagination: {
     marginTop: '20px',
