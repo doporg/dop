@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API.js"
 import {Link} from 'react-router-dom';
-import {Field, Loading} from "@icedesign/base";
+import {Field, Form, Loading} from "@icedesign/base";
 
-import {Col, Row} from "@alifd/next/lib/grid";
-
-
+const formItemLayout = {
+    labelCol: {span: 8},
+    wrapperCol: {span: 16}
+};
+const FormItem = Form.Item
 export default class PipelineBindPage extends Component {
     constructor(props) {
         super(props);
@@ -198,33 +200,36 @@ export default class PipelineBindPage extends Component {
         //     )
         // } else {
             return (
-                <Row>
-                    <Col>
-                        <div>流水线
-                        </div>
-                    </Col>
-                    <Col>
-                        <Link
-                            to={this.state.currentPipeline == "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
-                            <div>{this.state.currentPipeline == "" ? "当前没有绑定流水线，请点击前往流水线页面进行绑定" : this.state.currentPipeline.name}</div>
-                        </Link>
 
-                    </Col>
-                    {/*<Col>*/}
-                    {/*<Icon type='edit' onClick={this.toggleEditMode.bind(this)}>*/}
-                    {/*</Icon>*/}
-                    {/*</Col>*/}
+                <Form style={{width: "100%", textAlign: "center", alignItems: "center"}}>
+                    <Loading style={{width: "30%"}} visible={this.state.loading} size='small' shape="dot-circle"
+                             color="#2077FF"
+                    >
+                        <FormItem   {...formItemLayout}
+                                    label="流水线">
+                            <Link
+                                to={this.state.currentPipeline == "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
+                                <div style={{
+                                    textAlign: "center",
+                                    padding: "5px"
+                                }}>{this.state.currentPipeline == "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
+                            </Link>
+                        </FormItem>
 
-                </Row>
+
+                    </Loading>
+
+                </Form>
+
             )
         // }
     }
 
     render() {
         return (
-            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
-                {this.pipelineRender()}
-            </Loading>
+
+            this.pipelineRender()
+
         )
     }
 }

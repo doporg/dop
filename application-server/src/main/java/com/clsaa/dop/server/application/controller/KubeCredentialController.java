@@ -4,6 +4,7 @@ package com.clsaa.dop.server.application.controller;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.ClusterInfoV1;
 import com.clsaa.dop.server.application.model.vo.ClusterUrlV1;
+import com.clsaa.dop.server.application.model.vo.KubeCredentialWithTokenV1;
 import com.clsaa.dop.server.application.service.KubeCredentialService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +47,18 @@ public class KubeCredentialController {
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         try {
             return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(appEnvId), ClusterUrlV1.class);
+        } catch (Exception e) {
+            System.out.print(e);
+            return null;
+        }
+    }
+
+    @ApiOperation(value = "查询集群url和Token", notes = "查询集群url和Token")
+    @GetMapping(value = "/app/env/{appEnvId}/clusterWithToken")
+    public KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
+            @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        try {
+            return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(appEnvId), KubeCredentialWithTokenV1.class);
         } catch (Exception e) {
             System.out.print(e);
             return null;

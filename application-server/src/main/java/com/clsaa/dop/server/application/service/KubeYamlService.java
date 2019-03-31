@@ -8,6 +8,7 @@ import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.apis.AppsV1Api;
 import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.apis.NetworkingV1Api;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
@@ -98,14 +99,14 @@ public class KubeYamlService {
 
         if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
                     V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
+                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
-                            if (containerList.get(i).getName().equals(container)) {
+                            if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
@@ -119,12 +120,14 @@ public class KubeYamlService {
 
             } else {
                 V1Deployment v1Deployment = new V1DeploymentBuilder()
+                        .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
+                        .withNamespace(nameSpace)
                         .addToLabels("app", service)
                         .endMetadata()
                         .withNewSpec()
-                        .withReplicas(new Integer(service))
+                        .withReplicas(replicas)
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
@@ -187,29 +190,31 @@ public class KubeYamlService {
 
         if (yamlFilePath.equals("")) {
             AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
                     V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
+                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
-                            if (containerList.get(i).getName().equals(container)) {
+                            if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
                         kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         break;
                     }
                 }
 
             } else {
                 V1Deployment v1Deployment = new V1DeploymentBuilder()
+                        .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
+                        .withNamespace(nameSpace)
                         .addToLabels("app", service)
                         .endMetadata()
                         .withNewSpec()
@@ -284,6 +289,19 @@ public class KubeYamlService {
         return client;
 
     }
+
+
+    /**
+     * 根据id获取api
+     *
+     * @param id 应用环境id
+     * @renturn NetworkingV1Api
+     */
+    public NetworkingV1Api getNetworkingApi(Long id) {
+
+        return new NetworkingV1Api(getClient(id));
+    }
+
 
     /**
      * 根据id获取api
@@ -441,6 +459,11 @@ public class KubeYamlService {
                         .endRule()
                         .endSpec()
                         .build();
+
+        NetworkingV1Api networkingV1Api = getNetworkingApi(id);
+        //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
+
+
 
 
     }
