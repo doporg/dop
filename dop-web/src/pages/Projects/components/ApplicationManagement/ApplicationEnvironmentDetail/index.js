@@ -79,15 +79,7 @@ export default class ApplicationEnvironmentDetail extends Component {
     render() {
         const {init, getValue} = this.field
         return (
-
-            <div style={{
-                margin: "0 auto",
-                width: "70%",
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                flexDirection: "column"
-            }}>
+            <div>
 
                 <TopBar
                     extraBefore={<Breadcrumb>
@@ -99,17 +91,28 @@ export default class ApplicationEnvironmentDetail extends Component {
                         <Breadcrumb.Item>{"应用环境：" + this.state.appEnvId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
+                <div style={{
+                    // overflow:"scroll",
+                    margin: "0 auto",
+                    width: "70%",
+                    height: "50%",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    alignItems: "center"
+                }}>
 
 
-
-
-                <Form>
-                    <Loading visible={this.state.loading} size='small' shape="dot-circle" color="#2077FF"
+                    <Form style={{width: "100%", textAlign: "center", alignItems: "center"}}>
+                        <Loading visible={this.state.loading} style={{width: "30%"}} size='small' shape="dot-circle"
+                                 color="#2077FF"
                     >
                     <FormItem label="部署方式"
                               {...formItemLayout}
                               validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
-                              help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}>
+                              help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}
+                    >
 
                         <Select placeholder="部署方式"
                                 onChange={this.onChange.bind(this)}
@@ -134,6 +137,7 @@ export default class ApplicationEnvironmentDetail extends Component {
 
                 <Button onClick={this.state.toggleEnvDetail.bind(this)} type="primary">返回环境列表</Button>
 
+                </div>
             </div>
         );
     }

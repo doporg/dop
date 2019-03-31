@@ -2,6 +2,8 @@ package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
 import com.clsaa.dop.server.test.enums.OperationType;
+import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,14 +67,20 @@ public class WaitOperationDto implements Operation {
     }
 
     @Override
-    public void run() {
+    public void run(ExecuteContext executeContext) {
+        OperationExecuteLog executeLog = initOperationLog(executeContext);
+        String executeMessage;
         try {
             TimeUnit.MILLISECONDS.sleep(waitTime);
             result = SUCCESS_RESULT;
+            executeMessage = "Pause " + waitTime + "ms Successfully!";
         } catch (InterruptedException e) {
-            log.error("[Stage Operation] Thread is interrupted while waiting", e);
+            executeMessage = "[Stage Operation] Thread is interrupted while waiting";
+            log.error(executeMessage, e);
             result = FAIL_RESULT;
         }
+        executeLog.setExecuteInfo(executeMessage);
+        executeContext.addOperationLog(endOperationLog(executeLog));
     }
 
     @Override

@@ -1,13 +1,20 @@
 import BasicLayout from "../../layouts/BasicLayout";
 import TestCases from "./TestCases";
-import CreateInterfaceCase from "../CreateInterfaceCase";
-import CreateInterfaceScripts from "../CreateInterfaceScripts";
+import CreateInterfaceCase from "./CreateInterfaceCase";
+import CreateInterfaceScripts from "./CreateInterfaceScripts";
 import {Feedback} from "@icedesign/base";
 import CreateManualCaseFrom from "./components/CreateTestCases/CreateManualCaseForm";
+import AuthorityTable from "./ExecuteLogs/components/AuthorityTable";
 
 const Toast = Feedback.toast;
 
 const testConfig = [
+  {
+    path: "/test/showExecuteLogs/:caseId",
+    layout: BasicLayout,
+    component: AuthorityTable,
+    isLogin: true
+  },
   {
     path: "/test/createInterfaceScripts/:caseId",
     layout: BasicLayout,

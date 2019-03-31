@@ -11,8 +11,9 @@ const {Row, Col} = Grid;
 const Option = Select.Option;
 const style = {
     padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
+    background: "#FFF",
+    margin: "20px",
+    width: "100%"
 };
 
 const formItemLayout = {
@@ -92,7 +93,7 @@ class ApplicationEnvironmentForm extends Component {
     render() {
         const {init, getValue} = this.field;
         return (
-            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF" style={{width: "90%"}}
             >
                 <div>
                     <Form

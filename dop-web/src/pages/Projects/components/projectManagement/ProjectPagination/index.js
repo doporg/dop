@@ -152,7 +152,7 @@ export default class ProjectPagination extends Component {
                 </Loading>
                 <Pagination style={styles.body}
                             current={this.state.current}
-                            onChange={this.handleChange}
+                            onChange={this.handleChange.bind(this)}
                             pageSize={this.state.pageSize}
                             total={this.state.totalCount}/>
             </div>

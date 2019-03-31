@@ -49,7 +49,7 @@ const asideMenuConfig = [
     {
 
         name: '权限管理',
-        path: 'permission/permissions',
+        path: '/permission/permissions',
         icon: 'account' ,
     },
 

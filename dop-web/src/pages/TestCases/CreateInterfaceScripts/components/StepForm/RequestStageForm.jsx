@@ -65,7 +65,8 @@ export default class RequestStageForm extends Component{
         });
         this.state.value.waitOperations.push({
             waitTime: 1000000,
-            order: -1
+            order: -1,
+            operationType: 'WAIT'
         });
         this.setState({isSubmit: false, value: this.state.value});
     };
@@ -115,7 +116,8 @@ export default class RequestStageForm extends Component{
         });
         this.state.value.waitOperations.push({
             waitTime: '',
-            order: index
+            order: index,
+            operationType: 'WAIT'
         });
         this.setState({isSubmit: false, value: this.state.value});
     };

@@ -17,7 +17,7 @@ import {
 } from '@icedesign/base';
 import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
-import API from "../../../API";
+import API from "../../../../API";
 
 const { Row, Col } = Grid;
 
@@ -103,7 +103,7 @@ class CreateActivityForm extends Component {
               _this.props.history.push(route);
             }).catch(function (error) {
           console.log(error);
-          Toast.error(error);
+          Toast.error("创建用例失败!\n请确保相同应用下的测试用例名称是唯一的");
         });
       }
     });

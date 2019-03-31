@@ -8,6 +8,7 @@ import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.apis.AppsV1Api;
 import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.apis.NetworkingV1Api;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
@@ -36,7 +37,7 @@ public class KubeYamlService {
     @Autowired
     AppUrlInfoService appUrlInfoService;
 
-    public String createYamlFileForDeploy(Long cuser, Long appEnvId, Long runningId) {
+    public String createYamlFileForDeploy(Long cuser, Long appEnvId, String runningId) {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
@@ -97,15 +98,18 @@ public class KubeYamlService {
                 .build();
 
         if (yamlFilePath.equals("")) {
+            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
             AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
                     V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
+                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
-                            if (containerList.get(i).getName().equals(container)) {
+                            if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
@@ -119,15 +123,23 @@ public class KubeYamlService {
 
             } else {
                 V1Deployment v1Deployment = new V1DeploymentBuilder()
+                        .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
+                        .withNamespace(nameSpace)
                         .addToLabels("app", service)
                         .endMetadata()
                         .withNewSpec()
-                        .withReplicas(new Integer(service))
+                        .withReplicas(replicas)
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
+                        .withNewStrategy()
+                        .withNewRollingUpdate()
+                        .withMaxSurge(new IntOrString(1))
+                        .withMaxUnavailable(new IntOrString(1))
+                        .endRollingUpdate()
+                        .endStrategy()
                         .withNewTemplate()
                         .withNewMetadata()
                         .addToLabels("app", service)
@@ -136,11 +148,37 @@ public class KubeYamlService {
                         .addNewContainer()
                         .withName(service)
                         .withImage("<image_url>")
+                        .addNewPort()
+                        .withContainerPort(targetPort.getIntValue())
+                        .endPort()
+                        .withImagePullPolicy("Always")
+                        .addNewVolumeMount()
+                        .withMountPath(" /etc/localtime")
+                        .withName("host-time")
+                        .withMountPath("/etc/timezone")
+                        .withName("host-timezone")
+                        .endVolumeMount()
                         .endContainer()
+                        .withDnsPolicy("ClusterFirst")
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/localtime")
+                        .endHostPath()
+                        .withName("host-time")
+                        .endVolume()
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/timezone")
+                        .endHostPath()
+                        .withName("host-timezone")
+                        .endVolume()
                         .endSpec()
                         .endTemplate()
                         .endSpec()
                         .build();
+
                 kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
 
                 //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
@@ -185,31 +223,37 @@ public class KubeYamlService {
         kubeYamlData.setReleaseStrategy(KubeYamlData.ReleaseStrategy.valueOf(releaseStrategy));
 
 
+
         if (yamlFilePath.equals("")) {
+            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
             AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "apps=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
                     V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment)) {
+                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
                         List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
-                            if (containerList.get(i).getName().equals(container)) {
+                            if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
                         v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
                         kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
                         break;
                     }
                 }
 
             } else {
                 V1Deployment v1Deployment = new V1DeploymentBuilder()
+                        .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
+                        .withNamespace(nameSpace)
                         .addToLabels("app", service)
                         .endMetadata()
                         .withNewSpec()
@@ -217,6 +261,12 @@ public class KubeYamlService {
                         .withNewSelector()
                         .addToMatchLabels("app", service)
                         .endSelector()
+                        .withNewStrategy()
+                        .withNewRollingUpdate()
+                        .withMaxSurge(new IntOrString(1))
+                        .withMaxUnavailable(new IntOrString(1))
+                        .endRollingUpdate()
+                        .endStrategy()
                         .withNewTemplate()
                         .withNewMetadata()
                         .addToLabels("app", service)
@@ -225,7 +275,32 @@ public class KubeYamlService {
                         .addNewContainer()
                         .withName(service)
                         .withImage("<image_url>")
+                        .addNewPort()
+                        .withContainerPort(targetPort.getIntValue())
+                        .endPort()
+                        .withImagePullPolicy("Always")
+                        .addNewVolumeMount()
+                        .withMountPath(" /etc/localtime")
+                        .withName("host-time")
+                        .withMountPath("/etc/timezone")
+                        .withName("host-timezone")
+                        .endVolumeMount()
                         .endContainer()
+                        .withDnsPolicy("ClusterFirst")
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/localtime")
+                        .endHostPath()
+                        .withName("host-time")
+                        .endVolume()
+                        .addNewVolume()
+                        .withNewHostPath()
+                        .withType("")
+                        .withPath("/etc/timezone")
+                        .endHostPath()
+                        .withName("host-timezone")
+                        .endVolume()
                         .endSpec()
                         .endTemplate()
                         .endSpec()
@@ -284,6 +359,19 @@ public class KubeYamlService {
         return client;
 
     }
+
+
+    /**
+     * 根据id获取api
+     *
+     * @param id 应用环境id
+     * @renturn NetworkingV1Api
+     */
+    public NetworkingV1Api getNetworkingApi(Long id) {
+
+        return new NetworkingV1Api(getClient(id));
+    }
+
 
     /**
      * 根据id获取api
@@ -408,8 +496,9 @@ public class KubeYamlService {
                         .endMetadata()
                         .withNewSpec()
                         .addNewPort()
-                        .withProtocol("TCP")
                         .withPort(port)
+                        .withTargetPort(new IntOrString(port))
+                        .withProtocol("TCP")
                         .endPort()
                         .addToSelector("app", name)
                         .endSpec()
@@ -441,6 +530,10 @@ public class KubeYamlService {
                         .endRule()
                         .endSpec()
                         .build();
+
+        NetworkingV1Api networkingV1Api = getNetworkingApi(id);
+        //V1NetworkPolicy v1NetworkPolicy=new V1NetworkPolicy(ingress);
+        //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
 
 
     }

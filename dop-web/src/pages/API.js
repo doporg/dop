@@ -1,7 +1,7 @@
 // 配置所有接口的API文件
 
 const API = {
-    gateway: "http://open.dop.clsaa.com",
+    gateway: "http://localhost:8888",
     pipeline: "http://open.dop.clsaa.com/pipeline-server",
     jenkins: "http://jenkins.dop.clsaa.com",
     jenkinsRest: "http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/",
@@ -11,7 +11,7 @@ const API = {
     code:"http://open.dop.clsaa.com/code-server",
     user:"http://open.dop.clsaa.com/user-server",
     image:"http://open.dop.clsaa.com/image-server",
-    test: "http://localhost:13700"
+    test: "http://open.dop.clsaa.com/test-server"
 };
 
 export default API;

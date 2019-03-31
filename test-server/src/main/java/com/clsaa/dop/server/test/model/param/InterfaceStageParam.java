@@ -23,10 +23,7 @@ public class InterfaceStageParam {
     @NotNull
     private Stage stage;
 
-    //todo custom validator
-    @Valid
-    private List<RequestScriptParam> requestScripts;
+    private List<@Valid RequestScriptParam> requestScripts;
 
-    @Valid
-    private List<WaitOperationParam> waitOperations;
+    private List<@Valid WaitOperationParam> waitOperations;
 }

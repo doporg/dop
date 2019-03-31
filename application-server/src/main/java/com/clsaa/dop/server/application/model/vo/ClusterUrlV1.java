@@ -11,4 +11,5 @@ public class ClusterUrlV1 {
      */
 
     private String targetClusterUrl;
+
 }

@@ -7,7 +7,7 @@ import {
 } from '@icedesign/base';
 
 import RequestStageForm from "./RequestStageForm";
-import API from "../../../API";
+import API from "../../../../API";
 import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
 
@@ -43,7 +43,9 @@ class StepForm extends Component {
   };
 
   postToServer = (stage) => {
-    this.state.stages.push(stage);
+    if (this.state.stages.length < 3) {
+      this.state.stages.push(stage);
+    }
     let url = API.test + '/interfaceCases/stages';
     let _this = this;
     let stages = this.state.stages;
@@ -53,7 +55,6 @@ class StepForm extends Component {
       }
     })
       .then(function (response) {
-        console.log(response);
         Toast.success("添加测试脚本成功！");
         _this.props.history.push('/testCases');
       }).catch(function (error) {
