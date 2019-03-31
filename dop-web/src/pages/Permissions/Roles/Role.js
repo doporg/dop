@@ -152,8 +152,11 @@ export default class Role extends Component {
                     Axios.post(createRoleUrl, {},{params:(RoleParam)}
                     )
                         .then((response)=>{
-                            console.log("创建角色成功")
-                            console.log(response.data)
+                            if((response.data)!='')
+                            {Feedback.toast.success('创建成功，此条数据ID为'+response.data)}
+                            else
+                            {Feedback.toast.error('创建失败，您没有权限')}
+                            console.log(typeof (response.data))
                             this.componentDidMount()
                             //插入关联关系
                             let createMapUrl=API.gateway+"/permission-server/v1/roles/permissionmap"
