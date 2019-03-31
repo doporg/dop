@@ -10,6 +10,7 @@ const API = {
     permission: "http://open.dop.clsaa.com/permission-server",
     code:"http://open.dop.clsaa.com/code-server",
     user:"http://open.dop.clsaa.com/user-server",
+    image:"http://open.dop.clsaa.com/image-server",
     test: "http://localhost:13700"
 };
 
