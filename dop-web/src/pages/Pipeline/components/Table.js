@@ -20,6 +20,9 @@ export default class PipelineTable extends Component {
 
     componentWillMount() {
         this.getPipeline();
+        this.setState({
+            visible: true
+        })
     }
 
     getPipeline() {
@@ -34,7 +37,8 @@ export default class PipelineTable extends Component {
                 }
             }
             self.setState({
-                dataSource
+                dataSource: dataSource,
+                visible: false
             });
         })
     }
