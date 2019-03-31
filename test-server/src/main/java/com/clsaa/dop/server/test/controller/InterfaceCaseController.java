@@ -3,9 +3,11 @@ package com.clsaa.dop.server.test.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.clsaa.dop.server.test.config.BizCodes;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
+import com.clsaa.dop.server.test.model.dto.InterfaceExecuteLogDto;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
 import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
+import com.clsaa.dop.server.test.service.InterfaceCaseLogQueryService;
 import com.clsaa.dop.server.test.service.InterfaceCaseQueryService;
 import com.clsaa.dop.server.test.service.InterfaceStageCreateService;
 import com.clsaa.dop.server.test.util.ValidateUtils;
@@ -41,6 +43,9 @@ public class InterfaceCaseController {
     @Autowired
     private InterfaceStageCreateService interfaceStageCreateService;
 
+    @Autowired
+    private InterfaceCaseLogQueryService logQueryService;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping
     public Long createCase(@RequestBody @Valid InterfaceCaseParam interfaceCase) {
@@ -73,6 +78,14 @@ public class InterfaceCaseController {
     @GetMapping("/page")
     public Pagination<InterfaceCaseDto> queryCase(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize) {
         return interfaceCaseQueryService.selectByPage(pageNo, pageSize);
+    }
+
+    @ApiOperation(value = "分页获取接口测试用例执行日志")
+    @GetMapping("/logs/page/{caseId}")
+    public Pagination<InterfaceExecuteLogDto> queryLogs(@PathVariable("caseId") Long caseId,
+                                                        @RequestParam("pageNo") int pageNo,
+                                                        @RequestParam("pageSize") int pageSize) {
+        return logQueryService.getExecuteLogs(caseId, pageNo, pageSize);
     }
 
     private void validate(List<InterfaceStageParam> stageParams) {

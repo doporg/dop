@@ -93,6 +93,7 @@ public class ExecuteContext {
     public StringBuilder logResponseInfo(StringBuilder origin, StringWriter writer) {
         char nextLine = '\n';
         origin.append(nextLine)
+                .append(nextLine)
                 .append("Response: ")
                 .append(nextLine)
                 .append(writer.toString().trim());

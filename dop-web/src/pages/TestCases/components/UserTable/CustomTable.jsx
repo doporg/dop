@@ -7,11 +7,13 @@ import API from "../../../API";
 import Axios from "axios";
 import {Link} from "react-router-dom";
 import {FormBinder, FormBinderWrapper} from "@icedesign/form-binder";
+import {withRouter} from "react-router-dom";
+import Balloon from "@alifd/next/lib/balloon";
 
 const { Row, Col } = Grid;
 const Toast = Feedback.toast;
 
-export default class CustomTable extends Component {
+class CustomTable extends Component {
   static displayName = 'CustomTable';
 
   static propTypes = {};
@@ -82,20 +84,30 @@ export default class CustomTable extends Component {
     });
   }
 
-  renderOper = () => {
+  renderOper = (value, index, record) => {
+    let MoveTarget = <Icon
+        type="search"
+        size="small"
+        style={{...styles.icon, ...styles.deleteIcon}}
+        onClick={() => {
+          this.props.history.push('/test/showExecuteLogs/' + record.id);
+        }}
+    />;
+
+    let edit = <Icon
+        type="edit"
+        size="small"
+        style={{...styles.icon, ...styles.editIcon}}
+    />;
     return (
-      <div style={styles.oper}>
-        <Icon
-          type="edit"
-          size="small"
-          style={{ ...styles.icon, ...styles.editIcon }}
-        />
-        <Icon
-          type="ashbin"
-          size="small"
-          style={{ ...styles.icon, ...styles.deleteIcon }}
-        />
-      </div>
+        <div style={styles.oper}>
+          <Balloon.Tooltip trigger={edit} triggerType="hover" align='l'>
+            修改测试用例
+          </Balloon.Tooltip>
+          <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='r'>
+            查看执行日志
+          </Balloon.Tooltip>
+        </div>
     );
   };
 
@@ -316,3 +328,5 @@ const styles = {
     paddingRight: '10px',
   },
 };
+
+export default withRouter(CustomTable)
