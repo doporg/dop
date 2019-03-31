@@ -2,7 +2,6 @@ package com.clsaa.dop.server.test.service.common;
 
 import com.clsaa.dop.server.test.mapper.ServiceMapper;
 import com.clsaa.rest.result.Pagination;
-import com.google.common.collect.Lists;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +9,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 /**
  * @author xihao
@@ -54,18 +51,23 @@ public class CommonQueryServiceImpl<PO,DTO,ID> implements QueryService<DTO, ID> 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         Page<PO> pos = jpaRepository.findAll(pageable);
-        List<DTO> result = pos.get().map(serviceMapper::convert).map(Optional::get).collect(Collectors.toList());
-
-        Pagination<DTO> pagination = new Pagination<>();
-        pagination.setPageNo(pageNo);
-        pagination.setPageSize(pageSize);
-        pagination.setTotalCount((int) pos.getTotalElements());
-        pagination.setPageList(result);
-        return pagination;
+        return toPagination(pageNo, pageSize).apply(pos);
     }
 
     @Override
     public Long count() {
         return jpaRepository.count();
+    }
+
+    protected Function<Page<PO>, Pagination<DTO>> toPagination(int pageNo, int pageSize) {
+        return pos -> {
+            List<DTO> result = pos.get().map(serviceMapper::convert).map(Optional::get).collect(Collectors.toList());
+            Pagination<DTO> pagination = new Pagination<>();
+            pagination.setPageNo(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalCount((int) pos.getTotalElements());
+            pagination.setPageList(result);
+            return pagination;
+        };
     }
 }

@@ -73,7 +73,7 @@ public class WaitOperationDto implements Operation {
         try {
             TimeUnit.MILLISECONDS.sleep(waitTime);
             result = SUCCESS_RESULT;
-            executeMessage = "Pause Success!";
+            executeMessage = "Pause " + waitTime + "ms Successfully!";
         } catch (InterruptedException e) {
             executeMessage = "[Stage Operation] Thread is interrupted while waiting";
             log.error(executeMessage, e);
