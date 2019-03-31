@@ -117,7 +117,8 @@ export default class K8sInfoPage extends Component {
         Axios.get(url)
             .then((response) => {
                 console.log("yaml", response);
-                if (response.data === "") {
+                console.log(response.data.yamlFilePath != "")
+                if (response.data == "") {
                     _this.setState({
                         editMode: true,
                         yamlData: [],
@@ -125,7 +126,8 @@ export default class K8sInfoPage extends Component {
                     })
                 } else {
 
-                    if (response.data.yamlFilePath !== "") {
+                    if (response.data.yamlFilePath != "") {
+
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
@@ -147,7 +149,7 @@ export default class K8sInfoPage extends Component {
                         _this.setState({loading: false})
                     }
 
-                    _this.field.setValue("yamlMode", this.state.yamlMode)
+                    // _this.field.setValue("yamlMode", this.state.yamlMode)
                     //
                     // if(response.data.deploymentEditableYaml !=="")
                     // {
@@ -235,18 +237,16 @@ export default class K8sInfoPage extends Component {
     switchYamlMode(e, values) {
         console.log(values)
         let value = values.value
-        // if (value == 'yaml') {
-        //     this.setState({
-        //         yamlMode: "yaml"
-        //     })
-        // }
+        if (value == 'profile') {
+            this.getNameSpaceData()
+        }
 
         this.setState({
             yamlMode: value
             })
 
 
-        this.field.setValue("yamlMode", value)
+
     }
 
     checkDeploymentData() {
@@ -739,7 +739,9 @@ export default class K8sInfoPage extends Component {
 
     k8sBasicRender() {
         const {init, getValue} = this.field
-        if (this.state.yamlData !== []) {
+        console.log("yamlData", this.state.yamlData, this.state.yamlData != [])
+        if (this.state.yamlData.length != 0) {
+            console.log(this.state.yamlData.yamlFilePath == "")
             return (
                 <div>
                     <FormItem label="发布策略:"
@@ -813,11 +815,10 @@ export default class K8sInfoPage extends Component {
                     <FormItem style={{display: this.state.editMode ? "" : "None"}}
                               label="YAML文件来源:"
                               {...formItemLayout}>
-                        <Combobox
+                        <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
-                            {...init('yamlMode')}
-                            defaultValue={this.state.yamlMode}>
+                            defaultValue={this.state.yamlData.yamlFilePath == "" ? "profile" : "path"}>
                             <Option value="profile">
                                 使用配置
                             </Option>
@@ -825,7 +826,7 @@ export default class K8sInfoPage extends Component {
                                 使用Yaml文件相对路径
                             </Option>
 
-                        </Combobox>
+                        </Select>
                     </FormItem>
 
                 </div>
