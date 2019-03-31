@@ -58,7 +58,7 @@ export default class K8sInfoPage extends Component {
             })
     }
 
-    getServiceData() {
+    getServiceData(namespace) {
 
         if (this.field.getValue("nameSpace") === "") {
             this.setState({
@@ -69,7 +69,7 @@ export default class K8sInfoPage extends Component {
             let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/allServices"
             Axios.get(namespaceUrl, {
                 params: {
-                    namespace: _this.field.getValue("nameSpace"),
+                    namespace: namespace,
                 }
             })
                 .then((response) => {
@@ -117,7 +117,8 @@ export default class K8sInfoPage extends Component {
         Axios.get(url)
             .then((response) => {
                 console.log("yaml", response);
-                if (response.data === "") {
+                console.log(response.data.yamlFilePath != "")
+                if (response.data == "") {
                     _this.setState({
                         editMode: true,
                         yamlData: [],
@@ -125,21 +126,30 @@ export default class K8sInfoPage extends Component {
                     })
                 } else {
 
-                    if (response.data.yamlFilePath !== "") {
+                    if (response.data.yamlFilePath != "") {
+
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
                             yamlMode: 'path',
                             loading: false
                         })
+
+
                     } else {
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
                             yamlMode: 'profile',
-                            loading: false
+
                         })
+                        _this.getNameSpaceData()
+                        _this.getServiceData(this.state.yamlData.nameSpace)
+                        _this.yamlEditorfield.setValue("deploymentYaml", response.data.deploymentEditableYaml)
+                        _this.setState({loading: false})
                     }
+
+                    // _this.field.setValue("yamlMode", this.state.yamlMode)
                     //
                     // if(response.data.deploymentEditableYaml !=="")
                     // {
@@ -163,7 +173,7 @@ export default class K8sInfoPage extends Component {
 
 
         this.getYamlData()
-        this.getNameSpaceData()
+
 
 
     }
@@ -172,7 +182,8 @@ export default class K8sInfoPage extends Component {
         if (nextProps.refreshK8sInfo) {
             console.log("will", nextProps)
             this.getYamlData()
-            this.getNameSpaceData()
+            // this.getNameSpaceData()
+            // this.getServiceData(this.state.yamlData.nameSpace)
             nextProps.refreshFinished()
         }
     }
@@ -187,7 +198,7 @@ export default class K8sInfoPage extends Component {
 
     onNamespaceInputUpdate(e, value) {
         this.field.setValue("nameSpace", value.value)
-        this.getServiceData()
+        this.getServiceData(value.value)
 
     }
 
@@ -226,22 +237,16 @@ export default class K8sInfoPage extends Component {
     switchYamlMode(e, values) {
         console.log(values)
         let value = values.value
-        if (value == 'yaml') {
-            this.setState({
-                yamlMode: "yaml"
-            })
+        if (value == 'profile') {
+            this.getNameSpaceData()
         }
-        if (value == 'path') {
 
         this.setState({
-            yamlMode: "path"
-        })
-        }
-        if (value == 'profile') {
-            this.setState({
-                yamlMode: "profile"
+            yamlMode: value
             })
-        }
+
+
+
     }
 
     checkDeploymentData() {
@@ -666,17 +671,15 @@ export default class K8sInfoPage extends Component {
         _this.setState({
             loading: true
         })
-        let url = API.gateway + "/app/env/" + this.state.appEnvId + "/deploymentYaml"
-        Axios.put(url, {}, {
-            params: {
-                deploymentYaml: this.yamlEditorfield.getValue("deploymentYaml")
-            }
-        }).then((response) => {
+        let url = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/deploymentYaml"
+        Axios.put(url, {deploymentEditableYaml: _this.yamlEditorfield.getValue("deploymentYaml")}
+        ).then((response) => {
             Toast.success("更新成功")
             _this.setState({
                 loading: false
             })
         })
+        this.toggleYamlEditor()
 
     }
 
@@ -736,7 +739,9 @@ export default class K8sInfoPage extends Component {
 
     k8sBasicRender() {
         const {init, getValue} = this.field
-        if (this.state.yamlData !== []) {
+        console.log("yamlData", this.state.yamlData, this.state.yamlData != [])
+        if (this.state.yamlData.length != 0) {
+            console.log(this.state.yamlData.yamlFilePath == "")
             return (
                 <div>
                     <FormItem label="发布策略:"
@@ -810,11 +815,10 @@ export default class K8sInfoPage extends Component {
                     <FormItem style={{display: this.state.editMode ? "" : "None"}}
                               label="YAML文件来源:"
                               {...formItemLayout}>
-                        <Combobox
+                        <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
-
-                            defaultValue={this.state.yamlMode}>
+                            defaultValue={this.state.yamlData.yamlFilePath == "" ? "profile" : "path"}>
                             <Option value="profile">
                                 使用配置
                             </Option>
@@ -822,7 +826,7 @@ export default class K8sInfoPage extends Component {
                                 使用Yaml文件相对路径
                             </Option>
 
-                        </Combobox>
+                        </Select>
                     </FormItem>
 
                 </div>

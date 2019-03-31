@@ -145,7 +145,12 @@ export default class ClusterInfoForm extends Component {
                                     }]
                                 })}>
                             </Input>
-                            <div style={{display: this.state.editMode ? "None" : "", margin: "5px"}}>
+                            <div style={{
+                                display: this.state.editMode ? "None" : "", margin: "5px",
+                                textAlign: "left",
+                                marginLeft: "10%",
+                                marginTop: "5px"
+                            }}>
                                 {this.state.clusterData == "" ? "" : this.state.clusterData}
                                 <Icon style={{float: "right"}} type='edit'
                                       visible={!this.state.editMode ? "true" : "false"}
