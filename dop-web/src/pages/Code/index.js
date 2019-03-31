@@ -11,6 +11,7 @@ import CommitList from './CommitList';
 import FilePathList from './FilePathList';
 import Commit from './Commit';
 import EditProject from './EditProject';
+import SSH from './SSH';
 
 const codeConfig = [
 
@@ -69,7 +70,12 @@ const codeConfig = [
         path: '/code/:username/:projectid/edit',
         layout: CodeLayout,
         component: EditProject
-    }
+    },
+    {
+        path: '/code/ssh',
+        layout: CodeLayout,
+        component: SSH
+    },
 
 ];
 

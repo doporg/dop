@@ -37,6 +37,8 @@ class CodeAside extends Component {
 
     const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch+"/"+encodeURIComponent("/");
 
+    const sshLink="/code/ssh";
+
 
     return (
         <Menu mode="inline" selectedKeys={[pathname]} className="ice-menu-custom">
@@ -73,6 +75,15 @@ class CodeAside extends Component {
                     </FoundationSymbol>
                     {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
                     <span className="ice-menu-item-text">{"提交"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={sshLink}>
+                <Link to={sshLink} className="ice-menu-link">
+                    <FoundationSymbol size="small" type="key" >
+                        <Icon size="small" type="key" />
+                    </FoundationSymbol>
+                    {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
+                    <span className="ice-menu-item-text">{"SSH 公钥"}</span>
                 </Link>
             </MenuItem>
         </Menu>
