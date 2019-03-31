@@ -13,11 +13,8 @@ export default class PipelineTest extends Component {
         };
     }
     componentWillMount(){
-        // let url = API.gateway + '/application-server/app/env/477/yamlFile';
-        // // let url = "https://raw.githubusercontent.com/clsaa/dop/master/dop-web/k8s.yaml"
-        // Axios.get(url).then((response)=>{
-        //     console.log(response.data.yaml)
-        // })
+        let url1 = API.gateway + '/application-server/app/env/477/clusterWithToken';
+        // let url = "https://raw.githubusercontent.com/clsaa/dop/master/dop-web/k8s.yaml"
     }
     render() {
         return (
