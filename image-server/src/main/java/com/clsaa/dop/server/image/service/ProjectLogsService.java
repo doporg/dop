@@ -1,7 +1,10 @@
 package com.clsaa.dop.server.image.service;
 
+import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.AccessLogBO;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
+import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class ProjectLogsService {
 
     @Autowired
     private ProjectFeign projectFeign;
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 通过参数来对项目的日志进行检索
@@ -37,7 +42,8 @@ public class ProjectLogsService {
      */
     public List<AccessLogBO> getProjectLogs(Long projectId,String userName,String repo,String tag,
                                             String operation,String beginTime,String endTime,Integer page,Integer pageSize,Long userId){
-        String auth = BasicAuthUtil.createAuth(userId);
+            UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(credentialDto);
         return BeanUtils.convertList(projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,endTime,page,pageSize,auth),AccessLogBO.class);
     }
 

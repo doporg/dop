@@ -57,7 +57,13 @@ const asideMenuConfig = [
         name: '代码管理',
         path: '/code/projectlist',
         icon: 'code',
+    },
+    {
+        name: '镜像管理',
+        path: '/image/projects',
+        icon: 'image',
     }
+
 
 ];
 
