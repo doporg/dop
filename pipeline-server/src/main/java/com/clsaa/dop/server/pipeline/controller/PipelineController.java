@@ -38,8 +38,8 @@ public class PipelineController {
 
     @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline")
-    public void addUserV1(@RequestBody PipelineVoV1 pipelineV1) {
-        this.pipelineService.addPipeline(pipelineV1);
+    public String addUserV1(@RequestBody PipelineVoV1 pipelineV1) {
+        return this.pipelineService.addPipeline(pipelineV1);
     }
 
     @ApiOperation(value = "通过jenkinsfile添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")

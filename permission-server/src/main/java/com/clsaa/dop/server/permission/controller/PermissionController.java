@@ -120,14 +120,13 @@ public class PermissionController {
                 .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
     @ApiOperation(value = "验证用户是否拥有特定功能点", notes = "验证用户是否拥有特定功能点")
-    @GetMapping("/v1/users/permissionmaps/{id}")
+    @GetMapping("/v1/users/permissionmaps")
     //验证登录用户是否拥有特定功能点
-    public boolean checkUserPermission( @ApiParam(name = "permissionId",value = "功能点ID",required = true)
-                                            @RequestParam(value = "permissionId", required = true) Long permissionId,
+    public boolean checkUserPermission( @ApiParam(name = "permissionName",value = "功能点名称",required = true)
+                                            @RequestParam(value = "permissionName", required = true) String permissionName,
                                         @RequestParam("userId") Long loginUser)
     {
-        return permissionService.checkUserPermission(permissionId,loginUser);
+        return permissionService.checkUserPermission(permissionName,loginUser);
     }
-
 
 }

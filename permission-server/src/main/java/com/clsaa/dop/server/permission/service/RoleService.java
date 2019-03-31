@@ -53,8 +53,11 @@ public class RoleService {
     //关联关系service
     private UserRoleMappingService userRoleMappingService;
     @Autowired
-    //关联关系service
+    //用户数据规则
     private UserRuleService userRuleService;
+    @Autowired
+    //用户数据
+    private UserDataService userDataService;
 
     /* *
      *
@@ -75,19 +78,24 @@ public class RoleService {
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Long createRole(Long parentId,String name, Long cuser,Long muser)
     {
-        Role existRole=this.roleRepository.findByName(name);
-        BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
-        Role role= Role.builder()
-                .parentId(parentId)
-                .name(name)
-                .cuser(cuser)
-                .muser(muser)
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .deleted(false)
-                .build();
-        roleRepository.saveAndFlush(role);
-        return role.getId();
+            if(permissionService.checkUserPermission("创建角色",cuser))
+            {
+                Role existRole=this.roleRepository.findByName(name);
+                BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
+                Role role= Role.builder()
+                        .parentId(parentId)
+                        .name(name)
+                        .cuser(cuser)
+                        .muser(muser)
+                        .ctime(LocalDateTime.now())
+                        .mtime(LocalDateTime.now())
+                        .deleted(false)
+                        .build();
+                roleRepository.saveAndFlush(role);
+                return role.getId();
+            }
+            return null;
+
     }
 
     //根据ID查询角色
@@ -106,7 +114,7 @@ public class RoleService {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //分页查询所有角色
-    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize)
+    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
         int count = (int) this.roleRepository.count();
@@ -121,10 +129,20 @@ public class RoleService {
             return pagination;
         }
 
+
         Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
         List<Role> roleList = this.roleRepository.findAll(pageRequest).getContent();
-        pagination.setPageList(roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
-
+        List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
+        List<Role> roleList1=new ArrayList<>();
+        for(Role role :roleList)
+        {
+            for(Long id :idList)
+            {
+                if(role.getId().equals(id))
+                {roleList1.add(role);}
+            }
+        }
+        pagination.setPageList(roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
         return pagination;
     }
     //根据name查询角色
@@ -134,12 +152,17 @@ public class RoleService {
     }
     //根据ID删除角色,并删除关联关系和数据规则
     @Transactional
-    public void deleteById(Long id)
-
+    public void deleteById(Long id ,Long userId)
     {
-        rolePermissionMappingService.deleteByRoleId(id);
-        userRuleService.deleteByRoleId(id);
-        roleRepository.deleteById(id);
+        if(permissionService.checkUserPermission("删除角色",userId))
+        {
+            if(userDataService.check("删除角色",userId,"roleId",id))
+            {
+                rolePermissionMappingService.deleteByRoleId(id);
+                userRuleService.deleteByRoleId(id);
+                roleRepository.deleteById(id);
+            }
+        }
     }
 
     //查询所有权限的ID和名称

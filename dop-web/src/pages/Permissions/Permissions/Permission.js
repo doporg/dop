@@ -351,6 +351,7 @@ export default class Permission extends Component {
             <Table dataSource={this.state.currentData}
                    isLoading={this.state.isLoading}
                    hasBorder={false}>
+                <Table.Column title="功能点ID" dataIndex="id" width="10%"/>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
                 <Table.Column title="创建人" dataIndex="cuser"/>

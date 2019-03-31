@@ -59,7 +59,7 @@ public class AppEnvController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
             //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
-            @ApiParam(value = "runningId", name = "运行ID", required = true) @RequestParam(value = "runningId") Long runningId) {
+            @ApiParam(value = "runningId", name = "运行ID", required = true) @RequestParam(value = "runningId") String runningId) {
         return this.buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
     }
 

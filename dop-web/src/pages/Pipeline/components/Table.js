@@ -20,6 +20,9 @@ export default class PipelineTable extends Component {
 
     componentWillMount() {
         this.getPipeline();
+        this.setState({
+            visible: true
+        })
     }
 
     getPipeline() {
@@ -34,7 +37,8 @@ export default class PipelineTable extends Component {
                 }
             }
             self.setState({
-                dataSource
+                dataSource: dataSource,
+                visible: false
             });
         })
     }
@@ -91,16 +95,6 @@ export default class PipelineTable extends Component {
         return index + 1;
     };
 
-    /**
-     *  表格 创建时间
-     * */
-    renderCreateTime(value) {
-        if (value) {
-            return value[0] + "-" + value[1] + "-" + value[2] + "  " +
-                (value[3] < 10 ? '0' + value[3] : value[3]) + ":" +
-                (value[4] < 10 ? '0' + value[4] : value[4])
-        }
-    }
     renderCuser(){
         return window.sessionStorage.getItem('user-name');
     }
@@ -148,8 +142,7 @@ export default class PipelineTable extends Component {
         }, {
             title: '创建时间',
             width: 10,
-            dataIndex: 'ctime',
-            cell: this.renderCreateTime
+            dataIndex: 'ctime'
         }, {
             title: '创建人',
             width: 8,

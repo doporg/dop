@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Table(name = "t_user_data",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
-@SQLDelete(sql = "update t_user_data set is_deleted = true ,rule_id = uuid()+rule_id where id = ?")
+@SQLDelete(sql = "update t_user_data set is_deleted = true ,user_id = uuid_short() where id = ?")
 @Where(clause = "is_deleted =false")
 public class UserData implements Serializable {
     private static final long serialVersionUID = 552000265L;

@@ -30,6 +30,7 @@ public class Jenkinsfile {
     public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage) {
         this.appEnvId = appEnvId;
         this.stages = "";
+
         for (int i = 0; i < pipelineStage.size(); i++) {
             Stage stage = pipelineStage.get(i);
 
@@ -75,7 +76,7 @@ public class Jenkinsfile {
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
                     case ("部署"):
-                        String[] deploys = deploy.split("---");
+                        String[] deploys = deploy.split("---\n");
                         for (int z = 0; z < deploys.length; z++) {
                             Yaml yaml = new Yaml();
                             Map map = yaml.load(deploys[z]);
@@ -84,17 +85,27 @@ public class Jenkinsfile {
                             Map metadata = (Map) map.get("metadata");
                             Object namespace = metadata.get("namespace");
                             if(kind.toString().equals("Deployment")){
-                                this.stages += "sh curl -X POST -H 'Content-Type:application/yaml' " +
-                                        "127.0.0.1:8001" +
+                                this.stages += "sh \'\'\'\n" +
+                                        "curl -X POST -H \'Content-Type:application/yaml\' " +
+                                        "http://127.0.0.1:8001" +
                                         "/apis/" + apiVersion +
-                                        "/namespaces/"+ namespace.toString() +"/" + kind.toString().toLowerCase() + "s "+
-                                        "--data \'" + deploy + "\' \n";
+                                        "/namespaces/"+ namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s "+
+                                        "-d \'\n"+
+                                        deploys[z].trim() + "\n" +
+                                        "\'\n" +
+                                        " \'\'\'" + "\n";
                             }else{
-                                this.stages += "sh curl -X POST -H 'Content-Type:application/yaml' " +
-                                        "127.0.0.1:8001" +
+                                this.stages += "sh \'\'\'\n" +
+                                        "curl -X POST -H \'Content-Type:application/yaml\' " +
+                                        "http://127.0.0.1:8001" +
                                         "/api/" + apiVersion +
-                                        "/namespaces/"+ namespace.toString() +"/" + kind.toString().toLowerCase() + "s "+
-                                        "--data \'" + deploy + "\' \n";
+                                        "/namespaces/"+ namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s "+
+                                        "-d \'\n" +
+                                        deploys[z].trim() + "\n" +
+                                        "\'\n" +
+                                        " \'\'\'" + "\n";
                             }
                         }
                         break;
@@ -109,9 +120,9 @@ public class Jenkinsfile {
         return ("pipeline {\n" +
                 "    agent any\n" +
                 "    stages {\n" +
-                this.stages +
+                this.stages + "\n"+
                 "    }\n" +
-                "}");
+                "}\n");
     }
 
 
