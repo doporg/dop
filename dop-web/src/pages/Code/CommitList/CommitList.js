@@ -19,11 +19,11 @@ export default class CommitList extends React.Component{
 
     constructor(props){
         super(props);
-        const {projectid,branch,username}=this.props.match.params;
+        const {projectid,ref,username}=this.props.match.params;
         this.state={
             username:username,
             projectid: projectid,
-            ref:branch,
+            ref:ref,
             refOptions: [],
             commitList:[],
             showList:[],

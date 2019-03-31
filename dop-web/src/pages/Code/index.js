@@ -32,11 +32,6 @@ const codeConfig = [
 
     },
     {
-        path: '/code/:username/:projectid/commits/:branch',
-        layout: CodeLayout,
-        component: Code
-    },
-    {
         path: '/code/:username/:projectid/tree/:ref/:path',
         layout: CodeLayout,
         component: Tree
@@ -52,7 +47,7 @@ const codeConfig = [
         component: EditFile
     },
     {
-        path: '/code/:username/:projectid/commitlist/:branch',
+        path: '/code/:username/:projectid/commitlist/:ref',
         layout: CodeLayout,
         component: CommitList
     },
@@ -72,7 +67,7 @@ const codeConfig = [
         component: EditProject
     },
     {
-        path: '/code/ssh',
+        path: '/code/:username/:projectid/ssh',
         layout: CodeLayout,
         component: SSH
     },

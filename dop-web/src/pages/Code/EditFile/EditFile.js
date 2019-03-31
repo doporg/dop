@@ -39,6 +39,9 @@ export default class EditFile extends React.Component{
 
     codeHeight(){
         let lineCount=this.state.lineCount;
+        if(lineCount<28){
+            lineCount=28;
+        }
         return {height:lineCount*20};
     }
 
@@ -119,7 +122,7 @@ export default class EditFile extends React.Component{
                         }
 
                     </div>
-                    <textarea value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
+                    <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
                     </textarea>
 
                 </div>

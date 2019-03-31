@@ -25,19 +25,19 @@ class CodeAside extends Component {
     const { pathname } = location;
     const { username,projectid } = this.props.match.params;
     //需要改成请求获得项目的默认分支名
-    let branch = "master";
-    // if(this.props.match.params.hasOwnProperty('branch')){
-    //   branch=this.props.match.params.branch;
-    // }
+    let ref = "master";
+    if(this.props.match.params.hasOwnProperty('ref')){
+      ref=this.props.match.params.ref;
+    }
 
     const backLink="/code/projectlist";
 
     const projectLink="/code/"+username+"/"+projectid;
-    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+branch;
+    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+ref;
 
-    const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch+"/"+encodeURIComponent("/");
+    const fileLink="/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
 
-    const sshLink="/code/ssh";
+    const sshLink="/code/"+username+"/"+projectid+"/ssh";
 
 
     return (

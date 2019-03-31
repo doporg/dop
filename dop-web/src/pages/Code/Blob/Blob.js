@@ -60,6 +60,9 @@ export default class Blob extends React.Component{
 
     codeHeight(){
         let lineCount=this.state.lineCount;
+        if(lineCount<24){
+            lineCount=24;
+        }
         return {height:lineCount*20};
     }
 
@@ -334,7 +337,7 @@ export default class Blob extends React.Component{
                     }
 
                 </div>
-                <textarea value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} readOnly>
+                <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} readOnly>
                 </textarea>
 
                 <Dialog
