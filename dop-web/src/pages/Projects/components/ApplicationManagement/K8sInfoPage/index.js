@@ -121,9 +121,10 @@ export default class K8sInfoPage extends Component {
                 if (response.data == "") {
                     _this.setState({
                         editMode: true,
-                        yamlData: [],
-                        loading: false
+                        yamlData: []
                     })
+                    _this.getNameSpaceData()
+                    _this.setState({loading: false})
                 } else {
 
                     if (response.data.yamlFilePath != "") {
@@ -740,7 +741,7 @@ export default class K8sInfoPage extends Component {
     k8sBasicRender() {
         const {init, getValue} = this.field
         console.log("yamlData", this.state.yamlData, this.state.yamlData != [])
-        if (this.state.yamlData.length != 0) {
+        if (!this.state.yamlData.loading) {
             console.log(this.state.yamlData.yamlFilePath == "")
             return (
                 <div>
@@ -818,7 +819,7 @@ export default class K8sInfoPage extends Component {
                         <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
-                            defaultValue={this.state.yamlData.yamlFilePath == "" ? "profile" : "path"}>
+                            defaultValue={(this.state.yamlData.length == 0 || this.state.yamlFilePath == "") ? "profile" : "path"}>
                             <Option value="profile">
                                 使用配置
                             </Option>
