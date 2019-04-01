@@ -93,6 +93,8 @@ public class ProjectController {
                                 @ApiParam(value = "可见等级")@RequestParam("visibility") String visibility,
                                 @ApiParam(value = "用户名")@RequestParam("username") String username){
 
+//        System.out.println(id+" "+name+" "+description+" "+default_branch+" "+visibility+" "+username);
+
         projectService.editProjectInfo(id,name,description,default_branch,visibility,username);
     }
 
@@ -101,6 +103,13 @@ public class ProjectController {
     public void deleteProject(@ApiParam(value = "项目id")@PathVariable("id") int id,
                               @ApiParam(value = "用户名")@RequestParam("username") String username){
         projectService.deleteProject(id,username);
+    }
+
+    @ApiOperation(value = "获得项目的默认分支名",nickname = "根据项目id")
+    @GetMapping("/projects/{id}/defaultbranch")
+    public String findProjectDefaultBranch(@ApiParam(value = "项目id")@PathVariable("id") int id,
+                                         @ApiParam(value = "用户名")@RequestParam("username") String username){
+        return projectService.findProjectDefaultBranch(id,username);
     }
 
 

@@ -43,6 +43,7 @@ export default class ProjectOverview extends React.Component{
                 http_url_to_repo: "",
                 id: projectid,
                 name: "",
+                default_branch:"",
                 ssh_url_to_repo: "",
                 star_count: 0,
                 tag_count: 0,
@@ -67,14 +68,15 @@ export default class ProjectOverview extends React.Component{
         let url =  API.code+ "/projects/"+this.state.projectid;
         let self = this;
         Axios.get(url).then((response) => {
-            self.setState({url:response.data.http_url_to_repo,projectInfo:response.data});
+            self.setState({url:response.data.http_url_to_repo,projectInfo:response.data},()=>{
+                //先取得default_branch
+                let default_branch = self.state.projectInfo.default_branch;
+                url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&username="+sessionStorage.getItem("user-name");
+                Axios.get(url).then((response)=>{
+                    self.setState({readmeInfo:response.data})
+                })
+            });
         });
-
-
-        url=API.code+"/projects/"+this.state.projectid+"/repository/blob?file_path=README.md&ref=master&username="+sessionStorage.getItem("user-name");
-        Axios.get(url).then((response)=>{
-            self.setState({readmeInfo:response.data})
-        })
 
 
 

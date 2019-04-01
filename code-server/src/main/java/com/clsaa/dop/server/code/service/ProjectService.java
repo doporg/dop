@@ -170,6 +170,19 @@ public class ProjectService {
     }
 
 
+    /**
+     * 获得项目的默认分支名
+     * @param id 项目id
+     * @param username 用户名
+     * @return 项目的默认分支名
+     */
+    public String findProjectDefaultBranch(int id,String username){
+
+        DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,username,DefaultBranchBo.class);
+        return defaultBranchBo.getDefault_branch();
+    }
+
+
 //    public void findProjectEditInfo(int id,String name,String description,String default_branch,String visibility)
 
 

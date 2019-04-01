@@ -5,6 +5,8 @@ import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
 import { codeAsideMenuConfig as asideMenuConfig } from './codeMenuConfig';
 import { Icon } from '@icedesign/base';
+import Axios from 'axios';
+import API from "../../pages/API";
 
 import './index.scss';
 
@@ -15,20 +17,38 @@ class CodeAside extends Component {
 
   static defaultProps = {};
 
+
   constructor(props) {
-    super(props);
-    this.state={};
+      super(props);
+      const {projectid,username}=this.props.match.params;
+      this.state={
+          projectid:projectid,
+          username:username,
+          ref:"",
+      };
   }
+
+  componentWillMount(){
+      if(this.props.match.params.hasOwnProperty('ref')){
+          this.setState({
+              ref:this.props.match.params.ref
+          });
+      }else {
+          Axios.get(API.code+"/projects/"+this.state.projectid+"/defaultbranch?username="+sessionStorage.getItem("user-name")).then(response=>{
+              this.setState({
+                  ref:response.data
+              })
+          })
+      }
+  }
+
+
 
   render() {
     const { location } = this.props;
     const { pathname } = location;
-    const { username,projectid } = this.props.match.params;
-    //需要改成请求获得项目的默认分支名
-    let ref = "master";
-    if(this.props.match.params.hasOwnProperty('ref')){
-      ref=this.props.match.params.ref;
-    }
+    const { username,projectid,ref } = this.state;
+
 
     const backLink="/code/projectlist";
 

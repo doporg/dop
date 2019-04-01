@@ -58,7 +58,7 @@ public class RequestUtil {
 //
 //        httpPost(api+"/users",params);
 
-        String url=api+"/projects/3/repository/files/1111/raw?ref=master";
+        String url=api+"/projects/3";
         FormatUtil.printJson(httpGet(url));
 
 
