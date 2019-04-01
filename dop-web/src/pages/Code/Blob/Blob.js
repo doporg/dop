@@ -60,13 +60,16 @@ export default class Blob extends React.Component{
 
     codeHeight(){
         let lineCount=this.state.lineCount;
+        if(lineCount<24){
+            lineCount=24;
+        }
         return {height:lineCount*20};
     }
 
     componentWillMount(){
         let {projectid,path,ref}=this.state;
 
-        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             let refOptions=response.data;
@@ -91,7 +94,7 @@ export default class Blob extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             // console.log(response.data);
             self.setState({
@@ -109,7 +112,7 @@ export default class Blob extends React.Component{
 
         path=decodeURIComponent(path);
 
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             // console.log(response.data);
@@ -125,7 +128,7 @@ export default class Blob extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             let refOptions=response.data;
 
@@ -226,7 +229,7 @@ export default class Blob extends React.Component{
     deleteFile(){
 
         let {projectid,path,ref,commit_message,username} = this.state;
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&branch="+ref+"&commit_message="+commit_message+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&branch="+ref+"&commit_message="+commit_message+"&userId="+sessionStorage.getItem("user-id");
         console.log(url);
         Axios.delete(url).then(response=>{
 
@@ -334,7 +337,7 @@ export default class Blob extends React.Component{
                     }
 
                 </div>
-                <textarea value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} readOnly>
+                <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} readOnly>
                 </textarea>
 
                 <Dialog

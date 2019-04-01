@@ -56,14 +56,14 @@ public class ProjectService {
     /**
      * 以username的身份star一个project,若已经star，则unstar
      * @param id 项目id
-     * @param username 用户
+     * @param userId 用户id
      */
-    public void starProject(int id,String username){
+    public void starProject(int id,Long userId){
 
         List<NameValuePair> params=new ArrayList<>();
-        int code=RequestUtil.post("/projects/"+id+"/star",username,params);
+        int code=RequestUtil.post("/projects/"+id+"/star",userId,params);
         if(code==304){
-            RequestUtil.post("/projects/"+id+"/unstar",username,params);
+            RequestUtil.post("/projects/"+id+"/unstar",userId,params);
         }
 
     }
@@ -72,19 +72,19 @@ public class ProjectService {
 
     /**
      * 查找用户参与的项目
-     * @param username 用户名
+     * @param userId 用户id
      * @return 项目列表
      */
-    public List<ProjectListBo> findProjectList(String sort,String username){
+    public List<ProjectListBo> findProjectList(String sort,Long userId){
 
         List<ProjectListBo> listBos;
 
         if(sort.equals("personal")) {
-            listBos=RequestUtil.getList("/projects?membership=true&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?membership=true&order_by=updated_at",userId,ProjectListBo.class);
         }else if(sort.equals("starred")){
-            listBos=RequestUtil.getList("/projects?starred=true&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?starred=true&order_by=updated_at",userId,ProjectListBo.class);
         }else {
-            listBos=RequestUtil.getList("/projects?visibility=public&order_by=updated_at",username,ProjectListBo.class);
+            listBos=RequestUtil.getList("/projects?visibility=public&order_by=updated_at",userId,ProjectListBo.class);
         }
 
         return listBos;
@@ -96,9 +96,9 @@ public class ProjectService {
      * @param description 项目描述
      * @param visibility 可见等级
      * @param initialize_with_readme 是否新建readme文件
-     * @param username 项目owner用户名
+     * @param userId 项目owner用户id
      */
-    public void addProject(String name,String description,String visibility,String initialize_with_readme,String username){
+    public void addProject(String name,String description,String visibility,String initialize_with_readme,Long userId){
 
         List<NameValuePair> params=new ArrayList<>();
         params.add(new BasicNameValuePair("name",name));
@@ -106,7 +106,7 @@ public class ProjectService {
         params.add(new BasicNameValuePair("visibility",visibility));
         params.add(new BasicNameValuePair("initialize_with_readme",initialize_with_readme));
 
-        RequestUtil.post("/projects",username,params);
+        RequestUtil.post("/projects",userId,params);
 
 
     }
@@ -114,13 +114,13 @@ public class ProjectService {
     /**
      * 查找编辑项目需要的项目信息
      * @param id 项目id
-     * @param username 用户名
+     * @param userId 用户id
      * @return 项目信息
      */
-    public ProjectEditBo findProjectEditInfo(int id,String username){
+    public ProjectEditBo findProjectEditInfo(int id,Long userId){
 
         String path="/projects/"+id;
-        return RequestUtil.get(path,username,ProjectEditBo.class);
+        return RequestUtil.get(path,userId,ProjectEditBo.class);
 
     }
 
@@ -131,9 +131,9 @@ public class ProjectService {
      * @param description 项目描述
      * @param default_branch 默认分支
      * @param visibility 可见等级
-     * @param username 用户名
+     * @param userId 用户id
      */
-    public void editProjectInfo(int id,String name,String description,String default_branch,String visibility,String username){
+    public void editProjectInfo(int id,String name,String description,String default_branch,String visibility,Long userId){
 
         String path="/projects/"+id;
         List<NameValuePair> params=new ArrayList<>();
@@ -141,17 +141,17 @@ public class ProjectService {
         params.add(new BasicNameValuePair("description",description));
         params.add(new BasicNameValuePair("default_branch",default_branch));
         params.add(new BasicNameValuePair("visibility",visibility));
-        RequestUtil.put(path,username,params);
+        RequestUtil.put(path,userId,params);
     }
 
     /**
      * 获得项目所有的分支名称
      * @param id 项目id
-     * @param username 用户名
+     * @param userId 用户id
      * @return 项目信息
      */
-    public List<String> findAllBranchName(int id,String username){
-        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",username, BranchBo.class);
+    public List<String> findAllBranchName(int id,Long userId){
+        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId, BranchBo.class);
         List<String> res=new ArrayList<>();
         for(BranchBo branchBo:branchBos)
             res.add(branchBo.getName());
@@ -162,11 +162,24 @@ public class ProjectService {
     /**
      * 删除一个项目
      * @param id 项目id
-     * @param username 用户名
+     * @param userId 用户id
      */
-    public void deleteProject(int id,String username){
+    public void deleteProject(int id,Long userId){
         String path="/projects/"+id;
-        RequestUtil.delete(path,username);
+        RequestUtil.delete(path,userId);
+    }
+
+
+    /**
+     * 获得项目的默认分支名
+     * @param id 项目id
+     * @param userId 用户id
+     * @return 项目的默认分支名
+     */
+    public String findProjectDefaultBranch(int id,Long userId){
+
+        DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,userId,DefaultBranchBo.class);
+        return defaultBranchBo.getDefault_branch();
     }
 
 

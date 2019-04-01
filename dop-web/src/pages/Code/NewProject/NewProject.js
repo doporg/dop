@@ -41,7 +41,7 @@ export default class NewProject extends React.Component {
         data.description=this.state.description;
         data.visibility=this.state.visibility;
         data.initialize_with_readme=this.state.initialize_with_readme;
-        data.username=sessionStorage.getItem("user-name");
+        data.userId=sessionStorage.getItem("user-id");
         Axios({
             method: "POST",
             url: API.code + "/projects",

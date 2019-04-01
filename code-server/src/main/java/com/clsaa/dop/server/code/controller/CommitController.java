@@ -28,13 +28,13 @@ public class CommitController {
     public List<CommitVo> findCommitList(@ApiParam(value = "项目id") @PathVariable("id") int id,
                                          @ApiParam(value = "路径") @RequestParam("path")String path,
                                          @ApiParam(value = "分支名或tag名")@RequestParam("ref_name")String ref_name,
-                                         @ApiParam(value = "用户名") @RequestParam("username") String username){
+                                         @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
         List<CommitBo> commitBos;
         List<CommitVo> commitVos=new ArrayList<>();
 
         try {
-            commitBos = commitService.findCommitList(id,path,ref_name,username);
+            commitBos = commitService.findCommitList(id,path,ref_name,userId);
             for(CommitBo commitBo:commitBos){
                 commitVos.add(BeanUtils.convertType(commitBo,CommitVo.class));
             }

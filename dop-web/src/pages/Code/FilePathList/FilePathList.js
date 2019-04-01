@@ -30,7 +30,7 @@ export default class FilePathList extends React.Component{
 
         let{projectid,ref}=this.state;
 
-        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             let refOptions=response.data;
@@ -55,7 +55,7 @@ export default class FilePathList extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/filepathlist?ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/filepathlist?ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             self.setState({
                 pathList:response.data,
@@ -88,7 +88,7 @@ export default class FilePathList extends React.Component{
 
         let{projectid}=this.state;
 
-        let url=API.code+"/projects/"+projectid+"/repository/filepathlist?ref="+value+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/filepathlist?ref="+value+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             self.setState({

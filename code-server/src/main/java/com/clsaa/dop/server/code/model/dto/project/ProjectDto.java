@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectDto {
-    private String username;
+    private Long userId;
     private String name;
     private String description;
     private String visibility;

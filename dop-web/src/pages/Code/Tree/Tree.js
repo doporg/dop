@@ -42,7 +42,7 @@ export default class Tree extends React.Component{
 
     loadData(username,projectid,path,ref){
 
-        let url=API.code + "/projects/"+projectid+"/repository/tree?path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code + "/projects/"+projectid+"/repository/tree?path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response => {
             self.setState({
@@ -54,7 +54,7 @@ export default class Tree extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
 
             let refOptions=response.data;

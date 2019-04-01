@@ -2,6 +2,8 @@ package com.clsaa.dop.server.code.service;
 
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.dao.UserMapper;
+import com.clsaa.dop.server.code.feign.UserCredentialType;
+import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.user.TokenBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.model.po.User;
@@ -23,6 +25,8 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 查询用户的gitlab的access_token
@@ -40,7 +44,7 @@ public class UserService {
      * @param password 密码
      * @param email 邮箱
      */
-    public void addUser(String username,String password,String email){
+    public void addUser(Long id,String username,String password,String email){
 
         //首先创建gitlab 用户
 
@@ -52,7 +56,7 @@ public class UserService {
         params.add(new BasicNameValuePair("password",password));
         params.add(new BasicNameValuePair("skip_confirmation","true"));
 
-        RequestUtil.post("/users","root",params);
+        RequestUtil.post("/users",params);
 
         //获得用户的access_token
         params=new ArrayList<>();
@@ -64,6 +68,8 @@ public class UserService {
 
         //将access_token插入数据库
         userMapper.addUser(new User(username,access_token));
+        //创建gitlab_token用户凭证
+        userFeign.addUserCredential(id,email,access_token,UserCredentialType.DOP_INNER_GITLAB_TOKEN);
 
     }
 
@@ -76,7 +82,7 @@ public class UserService {
     public void updateUserPassword(String username,String password){
 
         String path="/users?username="+username;
-        int id=RequestUtil.getList(path,"root",UserIdBo.class).get(0).getId();
+        int id=RequestUtil.getList(path,UserIdBo.class).get(0).getId();
 
         path="/users/"+id;
         NameValuePair p1=new BasicNameValuePair("password",password);
@@ -84,7 +90,7 @@ public class UserService {
         List<NameValuePair> params=new ArrayList<>();
         params.add(p1);
         params.add(p2);
-        RequestUtil.put(path,"root",params);
+        RequestUtil.put(path,params);
 
     }
 

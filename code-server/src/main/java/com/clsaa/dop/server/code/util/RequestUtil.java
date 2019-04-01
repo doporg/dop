@@ -1,6 +1,9 @@
 package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.code.controller.UserController;
+import com.clsaa.dop.server.code.feign.UserCredentialType;
+import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
@@ -29,12 +32,17 @@ import java.util.List;
 public class RequestUtil {
 
 
-    private static UserService userService;
+//    private static UserService userService;
+//
+//    @Autowired
+//    public void setUserService(UserService userService) {
+//        RequestUtil.userService = userService;
+//    }
+
+    private static UserFeign userFeign;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        RequestUtil.userService = userService;
-    }
+    public void setUserFeign(UserFeign userFeign){RequestUtil.userFeign=userFeign;}
 
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
@@ -42,21 +50,27 @@ public class RequestUtil {
     //    管理员的token
     private static final String rootPrivateToken = "y5MJTK9yisBKfNF1t-gd";
 
+    private static final String rootAccessToken = "ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899";
+
 
 //        params.add(p8);
 
     public static void main(String[] args) {
 
-        List<NameValuePair> params= new ArrayList<>();
-        params.add(new BasicNameValuePair("username","dopcode1"));
-        //name和username相同，因为dop系统注册不需要填name
-        params.add(new BasicNameValuePair("name","dopcode1"));
-        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
-        params.add(new BasicNameValuePair("password","Wsy@123456"));
-        params.add(new BasicNameValuePair("skip_confirmation","true"));
-        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
+//        List<NameValuePair> params= new ArrayList<>();
+//        params.add(new BasicNameValuePair("username","dopcode1"));
+//        //name和username相同，因为dop系统注册不需要填name
+//        params.add(new BasicNameValuePair("name","dopcode1"));
+//        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
+//        params.add(new BasicNameValuePair("password","Wsy@123456"));
+//        params.add(new BasicNameValuePair("skip_confirmation","true"));
+//        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
+//
+//        httpPost(api+"/users",params);
 
-        httpPost(api+"/users",params);
+        String url=api+"/projects/3";
+        FormatUtil.printJson(httpGet(url));
+
 
 
     }
@@ -74,14 +88,15 @@ public class RequestUtil {
      * 发送get请求到gitlab，返回一个对象列表
      *
      * @param path     请求路径
-     * @param username 用户名
+     * @param userId   用户id
      * @param clazz    类
      * @param <T>      结果转化的类型
      * @return 列表
      */
-    public static <T> List<T> getList(String path, String username, Class<T> clazz) {
+    public static <T> List<T> getList(String path, Long userId, Class<T> clazz) {
 
-        String access_token = userService.findUserAccessToken(username);
+//        String access_token = userService.findUserAccessToken(username);
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
@@ -132,9 +147,10 @@ public class RequestUtil {
     /**
      * 发送get请求到gitlab，返回一个对象，其他同getList方式
      */
-    public static <T> T get(String path, String username, Class<T> clazz) {
+    public static <T> T get(String path, Long userId, Class<T> clazz) {
 
-        String access_token = userService.findUserAccessToken(username);
+//        String access_token = userService.findUserAccessToken(username);
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
@@ -147,9 +163,10 @@ public class RequestUtil {
     /**
      * 发送get请求到gitlab，返回字符串类型
      */
-    public static String getString(String path,String username){
+    public static String getString(String path,Long userId){
 
-        String access_token = userService.findUserAccessToken(username);
+//        String access_token = userService.findUserAccessToken(username);
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
@@ -176,13 +193,32 @@ public class RequestUtil {
      * 发送post请求到gitlab
      *
      * @param path     路径
-     * @param username 用户名
+     * @param userId   用户id
      * @param params   参数键值对
      * @return 返回状态码
      */
-    public static int post(String path, String username, List<NameValuePair> params) {
+    public static int post(String path, Long userId, List<NameValuePair> params) {
+
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+
         String url = api + path;
-        NameValuePair p = new BasicNameValuePair("access_token", userService.findUserAccessToken(username));
+        NameValuePair p = new BasicNameValuePair("access_token", access_token);
+        params.add(p);
+        return httpPost(url, params);
+    }
+
+    /**
+     * 发送post请求到gitlab
+     * root身份
+     *
+     * @param path     路径
+     * @param params   参数键值对
+     * @return 返回状态码
+     */
+    public static int post(String path, List<NameValuePair> params) {
+
+        String url = api + path;
+        NameValuePair p = new BasicNameValuePair("access_token", rootAccessToken);
         params.add(p);
         return httpPost(url, params);
     }
@@ -192,13 +228,33 @@ public class RequestUtil {
      * 发送put请求到gitlab
      *
      * @param path     路径
-     * @param username 用户名
+     * @param userId   用户id
      * @param params   参数键值对
      * @return 返回状态码
      */
-    public static int put(String path,String username, List<NameValuePair> params){
+    public static int put(String path,Long userId, List<NameValuePair> params){
+
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+
         String url = api + path;
-        NameValuePair p = new BasicNameValuePair("access_token", userService.findUserAccessToken(username));
+        NameValuePair p = new BasicNameValuePair("access_token", access_token);
+        params.add(p);
+        return httpPut(url,params);
+
+    }
+
+
+    /**
+     * 发送put请求到gitlab
+     *
+     * @param path     路径
+     * @param params   参数键值对
+     * @return 返回状态码
+     */
+    public static int put(String path,List<NameValuePair> params){
+
+        String url = api + path;
+        NameValuePair p = new BasicNameValuePair("access_token", rootAccessToken);
         params.add(p);
         return httpPut(url,params);
 
@@ -207,9 +263,10 @@ public class RequestUtil {
     /**
      * 发送delete请求到gitlab
      */
-    public static int delete(String path,String username){
+    public static int delete(String path,Long userId){
 
-        String access_token = userService.findUserAccessToken(username);
+//        String access_token = userService.findUserAccessToken(username);
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";

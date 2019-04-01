@@ -19,12 +19,12 @@ public class CommitService {
     /**
      * 查看项目所有提交的列表
      * @param id 项目id
-     * @param username 用户名
+     * @param userId 用户id
      * @param ref_name tag名或分支名
      * @param path 路径(需要urlencode)
      * @return 提交列表
      */
-    public List<CommitBo> findCommitList(int id,String path,String ref_name,String username) throws UnsupportedEncodingException {
+    public List<CommitBo> findCommitList(int id,String path,String ref_name,Long userId) throws UnsupportedEncodingException {
 
         String url="/projects/"+id+"/repository/commits?ref_name="+ref_name;
         //若不为根目录
@@ -32,8 +32,8 @@ public class CommitService {
             url+="&path="+URLEncoder.encode(path,"GBK");
         }
 
-        List<CommitBo> commitBos=RequestUtil.getList(url, username, CommitBo.class);
-        
+        List<CommitBo> commitBos=RequestUtil.getList(url, userId, CommitBo.class);
+
 
         for(CommitBo commitBo:commitBos){
             List<String> strs=TimeUtil.natureTime(commitBo.getAuthored_date());
