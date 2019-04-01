@@ -30,7 +30,7 @@ export default class EditProject extends React.Component{
 
     componentWillMount(){
 
-        let url=API.code+"/projects/"+this.state.projectid+"/editinfo?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+this.state.projectid+"/editinfo?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             self.setState({
@@ -38,7 +38,7 @@ export default class EditProject extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+this.state.projectid+"/branches?username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+this.state.projectid+"/branches?userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             self.setState({
                 branches:response.data
@@ -55,7 +55,7 @@ export default class EditProject extends React.Component{
             method: "PUT",
             url: API.code+ "/projects/"+editInfo.id,
             params: {
-                username:sessionStorage.getItem("user-name"),
+                userId:sessionStorage.getItem("user-id"),
                 name:editInfo.name,
                 description:editInfo.description,
                 default_branch:editInfo.default_branch,
@@ -80,7 +80,7 @@ export default class EditProject extends React.Component{
     deleteProject(){
 
         let projectid=this.state.editInfo.id;
-        let url=API.code+"/projects/"+projectid+"?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"?userId="+sessionStorage.getItem("user-id");
         Axios.delete(url).then(response=>{
             this.props.history.push("/code/projectlist");
         })

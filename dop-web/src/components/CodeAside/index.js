@@ -34,7 +34,7 @@ class CodeAside extends Component {
               ref:this.props.match.params.ref
           });
       }else {
-          Axios.get(API.code+"/projects/"+this.state.projectid+"/defaultbranch?username="+sessionStorage.getItem("user-name")).then(response=>{
+          Axios.get(API.code+"/projects/"+this.state.projectid+"/defaultbranch?userId="+sessionStorage.getItem("user-id")).then(response=>{
               this.setState({
                   ref:response.data
               })

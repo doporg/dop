@@ -50,7 +50,7 @@ export default class EditFile extends React.Component{
         let {projectid,path,ref}=this.state;
 
         let self=this;
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             // console.log(response.data);
             self.setState({
@@ -76,7 +76,7 @@ export default class EditFile extends React.Component{
             method: "PUT",
             url: API.code+ "/projects/"+projectid+"/repository/blob",
             data: {
-                username:sessionStorage.getItem("user-name"),
+                userId:sessionStorage.getItem("user-id"),
                 file_path:path,
                 branch:ref,
                 content:this.state.blobInfo.file_content,

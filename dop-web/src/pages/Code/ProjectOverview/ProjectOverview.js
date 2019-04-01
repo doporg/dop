@@ -71,7 +71,7 @@ export default class ProjectOverview extends React.Component{
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data},()=>{
                 //先取得default_branch
                 let default_branch = self.state.projectInfo.default_branch;
-                url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&username="+sessionStorage.getItem("user-name");
+                url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&userId="+sessionStorage.getItem("user-id");
                 Axios.get(url).then((response)=>{
                     self.setState({readmeInfo:response.data})
                 })
@@ -88,7 +88,7 @@ export default class ProjectOverview extends React.Component{
             method: "POST",
             url: API.code+ "/projects/"+this.state.projectid+"/star",
             params: {
-                username:sessionStorage.getItem("user-name"),
+                userId:sessionStorage.getItem("user-id"),
             },
             headers: {
                 'Content-type': 'application/x-www-form-urlencoded',

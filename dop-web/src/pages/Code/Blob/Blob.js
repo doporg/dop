@@ -69,7 +69,7 @@ export default class Blob extends React.Component{
     componentWillMount(){
         let {projectid,path,ref}=this.state;
 
-        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             let refOptions=response.data;
@@ -94,7 +94,7 @@ export default class Blob extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             // console.log(response.data);
             self.setState({
@@ -112,7 +112,7 @@ export default class Blob extends React.Component{
 
         path=decodeURIComponent(path);
 
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             // console.log(response.data);
@@ -128,7 +128,7 @@ export default class Blob extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             let refOptions=response.data;
 
@@ -229,7 +229,7 @@ export default class Blob extends React.Component{
     deleteFile(){
 
         let {projectid,path,ref,commit_message,username} = this.state;
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&branch="+ref+"&commit_message="+commit_message+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&branch="+ref+"&commit_message="+commit_message+"&userId="+sessionStorage.getItem("user-id");
         console.log(url);
         Axios.delete(url).then(response=>{
 
