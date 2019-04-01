@@ -269,26 +269,56 @@ export default class K8sInfoPage extends Component {
             this.yamlPathField.validate((errors, values) => {
                 console.log(errors)
                 if (errors == null) {
-                    let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml';
-                    Axios.put(url, {}, {
-                            params: {
-                                deploymentStrategy: "KUBERNETES",
-                                releaseStrategy: this.field.getValue('releaseStrategy'),
-                                imageUrl: this.field.getValue('imageUrl'),
-                                releaseBatch: this.field.getValue('releaseBatch'),
-                                yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
+
+                    let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
+                    Axios.get(existUrl)
+                        .then((response) => {
+                            console.log("responsssss", response)
+                            if (response.data) {
+                                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml';
+                                Axios.put(url, {}, {
+                                        params: {
+                                            deploymentStrategy: "KUBERNETES",
+                                            releaseStrategy: this.field.getValue('releaseStrategy'),
+                                            // imageUrl: this.field.getValue('imageUrl'),
+                                            // releaseBatch: this.field.getValue('releaseBatch'),
+                                            yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
+                                        }
+                                    }
+                                ).then((response) => {
+                                    Toast.success("更新成功！")
+                                    _this.setState({
+                                        loading: false
+                                    })
+                                    //提交完成后刷新当前页面
+                                    _this.getYamlData()
+                                })
+                            } else {
+                                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml';
+                                Axios.post(url, {}, {
+                                        params: {
+                                            deploymentStrategy: "KUBERNETES",
+                                            releaseStrategy: this.field.getValue('releaseStrategy'),
+                                            // imageUrl: this.field.getValue('imageUrl'),
+                                            // releaseBatch: this.field.getValue('releaseBatch'),
+                                            yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
+                                        }
+                                    }
+                                ).then((response) => {
+                                    Toast.success("更新成功！")
+                                    _this.setState({
+                                        loading: false
+                                    })
+                                    //提交完成后刷新当前页面
+                                    _this.getYamlData()
+                                })
                             }
-                        }
-                    ).then((response) => {
-                        Toast.success("更新成功！")
-                        _this.setState({
-                            loading: false
                         })
-                        //提交完成后刷新当前页面
-                        _this.getYamlData()
-                    })
+
                 }
             })
+
+
 
         } else {
             if (this.state.createService) {
@@ -322,7 +352,7 @@ export default class K8sInfoPage extends Component {
                                                         service: this.field.getValue('service'),
                                                         releaseStrategy: this.field.getValue('releaseStrategy'),
                                                         replicas: this.editField.getValue('replicas'),
-                                                        imageUrl: this.field.getValue('imageUrl'),
+                                                        // imageUrl: this.field.getValue('imageUrl'),
                                                         releaseBatch: this.field.getValue('releaseBatch')
                                                     }
                                                 }
@@ -347,7 +377,7 @@ export default class K8sInfoPage extends Component {
                                                         service: this.field.getValue('service'),
                                                         releaseStrategy: this.field.getValue('releaseStrategy'),
                                                         replicas: this.editField.getValue('replicas'),
-                                                        imageUrl: this.field.getValue('imageUrl'),
+                                                        // imageUrl: this.field.getValue('imageUrl'),
                                                         releaseBatch: this.field.getValue('releaseBatch')
                                                     }
                                                 }
@@ -400,7 +430,7 @@ export default class K8sInfoPage extends Component {
                                         deployment: this.field.getValue('deployment'),
                                         containers: this.field.getValue('container'),
                                         releaseStrategy: this.field.getValue('releaseStrategy'),
-                                        imageUrl: this.field.getValue('imageUrl'),
+                                        // imageUrl: this.field.getValue('imageUrl'),
                                         releaseBatch: this.field.getValue('releaseBatch')
                                     }
                                 }
@@ -425,7 +455,7 @@ export default class K8sInfoPage extends Component {
                                         deployment: this.field.getValue('deployment'),
                                         containers: this.field.getValue('container'),
                                         releaseStrategy: this.field.getValue('releaseStrategy'),
-                                        imageUrl: this.field.getValue('imageUrl'),
+                                        // imageUrl: this.field.getValue('imageUrl'),
                                         releaseBatch: this.field.getValue('releaseBatch')
                                     }
                                 }

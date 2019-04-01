@@ -6,9 +6,9 @@ import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.apis.AppsV1Api;
+import io.kubernetes.client.apis.AppsV1beta1Api;
 import io.kubernetes.client.apis.CoreV1Api;
-import io.kubernetes.client.apis.NetworkingV1Api;
+import io.kubernetes.client.apis.ExtensionsV1beta1Api;
 import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
@@ -98,31 +98,32 @@ public class KubeYamlService {
                 .build();
 
         if (yamlFilePath.equals("")) {
-            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            CoreV1Api coreV1Api = getCoreV1Api(appEnvId);
             List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
-            AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            AppsV1beta1Api appsV1beta1Api = getAppsV1beta1Api(appEnvId);
+            List<AppsV1beta1Deployment> deploymentList = appsV1beta1Api.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
-                    V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
-                        List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
+                    AppsV1beta1Deployment AppsV1beta1Deployment = deploymentList.get(i);
+                    if (AppsV1beta1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
+                        List<V1Container> containerList = AppsV1beta1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
-                        v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        AppsV1beta1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
                         break;
-                        //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+                        //appsV1beta1Api.createNamespacedDeployment(nameSpace, AppsV1beta1Deployment, false, null, null);
                     }
                 }
 
             } else {
-                V1Deployment v1Deployment = new V1DeploymentBuilder()
+                AppsV1beta1Deployment AppsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
+                        .withApiVersion("extensions/v1beta1")
                         .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
@@ -179,9 +180,9 @@ public class KubeYamlService {
                         .endSpec()
                         .build();
 
-                kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
 
-                //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+                //appsV1beta1Api.createNamespacedDeployment(nameSpace, AppsV1beta1Deployment, false, null, null);
             }
             kubeYamlData.setYamlFilePath("");
 
@@ -225,31 +226,32 @@ public class KubeYamlService {
 
 
         if (yamlFilePath.equals("")) {
-            CoreV1Api coreV1Api = getCoreApi(appEnvId);
+            CoreV1Api coreV1Api = getCoreV1Api(appEnvId);
             List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
-            AppsV1Api appsApi = getAppsApi(appEnvId);
-            List<V1Deployment> deploymentList = appsApi.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            AppsV1beta1Api appsV1beta1Api = getAppsV1beta1Api(appEnvId);
+            List<AppsV1beta1Deployment> deploymentList = appsV1beta1Api.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             if (deploymentList.size() != 0) {
                 for (int i = 0; i < deploymentList.size(); i++) {
-                    V1Deployment v1Deployment = deploymentList.get(i);
-                    if (v1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
-                        List<V1Container> containerList = v1Deployment.getSpec().getTemplate().getSpec().getContainers();
+                    AppsV1beta1Deployment AppsV1beta1Deployment = deploymentList.get(i);
+                    if (AppsV1beta1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
+                        List<V1Container> containerList = AppsV1beta1Deployment.getSpec().getTemplate().getSpec().getContainers();
                         for (int j = 0; i < containerList.size(); j++) {
                             if (containerList.get(i).getName().equals(container) || container.equals((""))) {
                                 containerList.get(i).setImage("<image_url>");
                                 break;
                             }
                         }
-                        v1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
-                        //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                        AppsV1beta1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
+                        //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
                         break;
                     }
                 }
 
             } else {
-                V1Deployment v1Deployment = new V1DeploymentBuilder()
+                AppsV1beta1Deployment AppsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
+                        .withApiVersion("extensions/v1beta1")
                         .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
@@ -307,9 +309,9 @@ public class KubeYamlService {
                         .build();
 
 
-                kubeYamlData.setDeploymentEditableYaml(Yaml.dump(v1Deployment));
+                kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
 
-                //appsApi.createNamespacedDeployment(nameSpace, v1Deployment, false, null, null);
+                //appsV1beta1Api.createNamespacedDeployment(nameSpace, AppsV1beta1Deployment, false, null, null);
             }
             kubeYamlData.setYamlFilePath("");
 
@@ -367,9 +369,9 @@ public class KubeYamlService {
      * @param id 应用环境id
      * @renturn NetworkingV1Api
      */
-    public NetworkingV1Api getNetworkingApi(Long id) {
+    public ExtensionsV1beta1Api getExtensionsV1beta1Api(Long id) {
 
-        return new NetworkingV1Api(getClient(id));
+        return new ExtensionsV1beta1Api(getClient(id));
     }
 
 
@@ -379,7 +381,7 @@ public class KubeYamlService {
      * @param id 应用环境id
      * @renturn CoreV1Api
      */
-    public CoreV1Api getCoreApi(Long id) {
+    public CoreV1Api getCoreV1Api(Long id) {
 
         return new CoreV1Api(getClient(id));
     }
@@ -389,11 +391,11 @@ public class KubeYamlService {
      * 根据id获取api
      *
      * @param id 应用环境id
-     * @renturn AppsV1Api
+     * @renturn AppsV1beta1Api
      */
-    public AppsV1Api getAppsApi(Long id) {
+    public AppsV1beta1Api getAppsV1beta1Api(Long id) {
         getClient(id);
-        return new AppsV1Api(getClient(id));
+        return new AppsV1beta1Api(getClient(id));
     }
 
     /**
@@ -405,10 +407,10 @@ public class KubeYamlService {
      * @param port      容器
      */
     public void createServiceByNameSpace(Long id, String namespace, String name, Integer port) throws Exception {
-        CoreV1Api coreApi = getCoreApi(id);
+        CoreV1Api coreV1Api = getCoreV1Api(id);
 
-        AppsV1Api appsV1Api = getAppsApi(id);
-        //V1Deployment deployment = new V1DeploymentBuilder()
+        AppsV1beta1Api AppsV1beta1Api = getAppsV1beta1Api(id);
+        //AppsV1beta1Deployment deployment = new AppsV1beta1DeploymentBuilder()
         //        .withNewMetadata()
         //        .withName("test-deployment2")
         //        .addToLabels("app", name)
@@ -436,7 +438,7 @@ public class KubeYamlService {
         //        .endSpec()
         //        .build();
         //
-        //V1Deployment deployment2 = new V1DeploymentBuilder()
+        //AppsV1beta1Deployment deployment2 = new AppsV1beta1DeploymentBuilder()
         //        .withNewMetadata()
         //        .withName("test-deployment")
         //        .addToLabels("app", name)
@@ -489,6 +491,8 @@ public class KubeYamlService {
 
         V1Service service =
                 new V1ServiceBuilder()
+                        .withApiVersion("v1")
+                        .withKind("Service")
                         .withNewMetadata()
                         .withName(name)
                         .withNamespace(namespace)
@@ -504,9 +508,9 @@ public class KubeYamlService {
                         .endSpec()
                         .build();
         //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
-        //     appsV1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
-        //appsV1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
-        coreApi.createNamespacedService(namespace, service, false, null, null);
+        //     AppsV1beta1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
+        //AppsV1beta1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
+        coreV1Api.createNamespacedService(namespace, service, false, null, null);
 
         V1beta1Ingress ingress =
                 new V1beta1IngressBuilder()
@@ -518,7 +522,7 @@ public class KubeYamlService {
                         .endMetadata()
                         .withNewSpec()
                         .addNewRule()
-                        .withHost("*")
+                        .withHost("www.dpp.clsaa.com")
                         .withNewHttp()
                         .addNewPath()
                         .withNewBackend()
@@ -531,7 +535,8 @@ public class KubeYamlService {
                         .endSpec()
                         .build();
 
-        NetworkingV1Api networkingV1Api = getNetworkingApi(id);
+        ExtensionsV1beta1Api extensionsV1beta1Api = getExtensionsV1beta1Api(id);
+        extensionsV1beta1Api.createNamespacedIngress(namespace, ingress, false, null, null);
         //V1NetworkPolicy v1NetworkPolicy=new V1NetworkPolicy(ingress);
         //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
 
@@ -545,7 +550,7 @@ public class KubeYamlService {
      * @renturn{@link List<String>}
      */
     public List<String> findNameSpaces(Long id) throws Exception {
-        CoreV1Api api = getCoreApi(id);
+        CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespace(true, null, null, null, null, null, null, null, false)
                 .getItems()
@@ -563,7 +568,7 @@ public class KubeYamlService {
      * @renturn{@link List<String>}
      */
     public List<String> getServiceByNameSpace(Long id, String namespace) throws Exception {
-        CoreV1Api api = getCoreApi(id);
+        CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespacedService(namespace, false, null, null, null, null, Integer.MAX_VALUE, null, null, false)
                 .getItems()
@@ -582,22 +587,22 @@ public class KubeYamlService {
      */
     public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long id, String namespace, String service) throws Exception {
 
-        AppsV1Api api = getAppsApi(id);
+        AppsV1beta1Api api = getAppsV1beta1Api(id);
 
 
-        V1DeploymentList deploymentList = api.listNamespacedDeployment(namespace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false);
+        AppsV1beta1DeploymentList deploymentList = api.listNamespacedDeployment(namespace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false);
 
-        List<V1Deployment> v1DeploymentList = deploymentList.getItems();
+        List<AppsV1beta1Deployment> AppsV1beta1DeploymentList = deploymentList.getItems();
 
-        List<String> nameList = v1DeploymentList.stream().map(v1Deployment -> v1Deployment.getMetadata().getName()).collect(Collectors.toList());
+        List<String> nameList = AppsV1beta1DeploymentList.stream().map(AppsV1beta1Deployment -> AppsV1beta1Deployment.getMetadata().getName()).collect(Collectors.toList());
         Map<String, List<String>> containerList = new HashMap<>();
         List<List<String>> lists = deploymentList.getItems().stream().map(
-                v1Deployment -> v1Deployment.getSpec().getTemplate().getSpec().getContainers().stream().map(
+                AppsV1beta1Deployment -> AppsV1beta1Deployment.getSpec().getTemplate().getSpec().getContainers().stream().map(
                         v1Container -> v1Container.getName()).collect(Collectors.toList()
                 )).collect(Collectors.toList());
 
         for (int i = 0; i < nameList.size(); i++) {
-            containerList.put(nameList.get(i), v1DeploymentList.get(i).getSpec().getTemplate().getSpec().getContainers().stream().map(
+            containerList.put(nameList.get(i), AppsV1beta1DeploymentList.get(i).getSpec().getTemplate().getSpec().getContainers().stream().map(
                     v1Container -> v1Container.getName()).collect(Collectors.toList()
             ));
         }
