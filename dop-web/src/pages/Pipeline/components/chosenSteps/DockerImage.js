@@ -88,6 +88,7 @@ export default class DockerImage extends Component {
         this.setState({
             selectedEnv: value
         });
+        console.log(value)
         if(!this.props.selectEnvId){
             this.getRepository();
         }
