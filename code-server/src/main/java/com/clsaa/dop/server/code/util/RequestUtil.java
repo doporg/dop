@@ -47,16 +47,20 @@ public class RequestUtil {
 
     public static void main(String[] args) {
 
-        List<NameValuePair> params= new ArrayList<>();
-        params.add(new BasicNameValuePair("username","dopcode1"));
-        //name和username相同，因为dop系统注册不需要填name
-        params.add(new BasicNameValuePair("name","dopcode1"));
-        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
-        params.add(new BasicNameValuePair("password","Wsy@123456"));
-        params.add(new BasicNameValuePair("skip_confirmation","true"));
-        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
+//        List<NameValuePair> params= new ArrayList<>();
+//        params.add(new BasicNameValuePair("username","dopcode1"));
+//        //name和username相同，因为dop系统注册不需要填name
+//        params.add(new BasicNameValuePair("name","dopcode1"));
+//        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
+//        params.add(new BasicNameValuePair("password","Wsy@123456"));
+//        params.add(new BasicNameValuePair("skip_confirmation","true"));
+//        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
+//
+//        httpPost(api+"/users",params);
 
-        httpPost(api+"/users",params);
+        String url=api+"/projects/3/repository/files/1111/raw?ref=master";
+        FormatUtil.printJson(httpGet(url));
+
 
 
     }

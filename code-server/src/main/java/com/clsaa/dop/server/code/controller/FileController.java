@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.controller;
 import com.clsaa.dop.server.code.model.bo.file.BranchAndTagBo;
 import com.clsaa.dop.server.code.model.bo.file.ChildrenBo;
 import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
+import com.clsaa.dop.server.code.model.dto.file.FileUpdateDto;
 import com.clsaa.dop.server.code.model.vo.file.BlobVo;
 import com.clsaa.dop.server.code.model.vo.file.BranchAndTagVo;
 import com.clsaa.dop.server.code.model.vo.file.ChildrenVo;
@@ -103,17 +104,16 @@ public class FileController {
 
     @ApiOperation(value = "更新文件内容",notes = "更新文件内容，并作为一次提交")
     @PutMapping("/projects/{id}/repository/blob")
-    public void updateFile(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                           @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
-                           @ApiParam(value = "分支")@RequestParam("branch") String branch,
-                           @ApiParam(value = "更新文件内容")@RequestParam("content") String content,
-                           @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
-                           @ApiParam(value = "用户名")@RequestParam("username") String username){
-
-
+    public void updateFile(@ApiParam(value = "项目id") @PathVariable("id")int id,@ApiParam(value = "文件更新内容") @RequestBody FileUpdateDto fileUpdateDto){
 
         try {
-            fileService.updateFile(id,file_path,branch,content,commit_message,username);
+            fileService.updateFile(
+                    id,
+                    fileUpdateDto.getFile_path(),
+                    fileUpdateDto.getBranch(),
+                    fileUpdateDto.getContent(),
+                    fileUpdateDto.getCommit_message(),
+                    fileUpdateDto.getUsername());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

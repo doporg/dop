@@ -75,7 +75,7 @@ export default class EditFile extends React.Component{
         Axios({
             method: "PUT",
             url: API.code+ "/projects/"+projectid+"/repository/blob",
-            params: {
+            data: {
                 username:sessionStorage.getItem("user-name"),
                 file_path:path,
                 branch:ref,
@@ -83,7 +83,7 @@ export default class EditFile extends React.Component{
                 commit_message:commit_message
             },
             headers: {
-                'Content-type': 'application/x-www-form-urlencoded',
+                'Content-type':'application/json',
             },
         }).then(response => {
             let {username,path,projectid,ref}=this.state;
