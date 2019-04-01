@@ -83,7 +83,7 @@ public class RegisterAccountConsumer implements MessageListenerConcurrently {
                 System.out.println(messageBody);
                 UserDto userDto=JSON.parseObject(messageBody,UserDto.class);
                 CryptoResult cryptoResult=RSA.decryptByPublicKey(userDto.getPassword(),userFeign.getAccountRSAPublicKey());
-                userService.addUser(userDto.getName(),cryptoResult.getContent(),userDto.getEmail());
+                userService.addUser(userDto.getId(),userDto.getName(),cryptoResult.getContent(),userDto.getEmail());
 
             }
         } catch (Exception e) {

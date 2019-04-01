@@ -2,6 +2,8 @@ package com.clsaa.dop.server.code.service;
 
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.dao.UserMapper;
+import com.clsaa.dop.server.code.feign.UserCredentialType;
+import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.user.TokenBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.model.po.User;
@@ -23,6 +25,8 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 查询用户的gitlab的access_token
@@ -40,7 +44,7 @@ public class UserService {
      * @param password 密码
      * @param email 邮箱
      */
-    public void addUser(String username,String password,String email){
+    public void addUser(Long id,String username,String password,String email){
 
         //首先创建gitlab 用户
 
@@ -64,6 +68,8 @@ public class UserService {
 
         //将access_token插入数据库
         userMapper.addUser(new User(username,access_token));
+        //创建gitlab_token用户凭证
+        userFeign.addUserCredential(id,email,access_token,UserCredentialType.DOP_INNER_GITLAB_TOKEN);
 
     }
 

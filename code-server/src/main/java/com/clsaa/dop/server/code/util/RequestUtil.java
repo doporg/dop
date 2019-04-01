@@ -1,6 +1,8 @@
 package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.code.controller.UserController;
+import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
@@ -35,6 +37,11 @@ public class RequestUtil {
     public void setUserService(UserService userService) {
         RequestUtil.userService = userService;
     }
+
+//    private static UserFeign userFeign;
+//
+//    @Autowired
+//    public void setUserFeign(UserFeign userFeign){RequestUtil.userFeign=userFeign;}
 
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
