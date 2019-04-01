@@ -36,7 +36,7 @@ export default class Image extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image">所有命名空间</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">所有命名空间</Breadcrumb.Item>
                 </Breadcrumb>
                 <TopBar
                     extraBefore={

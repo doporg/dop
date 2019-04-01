@@ -1,26 +1,26 @@
 import React, {Component} from 'react';
 import API from "../../../API"
 import Axios from "axios";
-import NamespaceList from "../NamespaceList";
+import RepoList from '../RepoList'
 
 
-export default class NamespacePagination extends Component {
+export default class Repos extends Component {
     constructor(props) {
-        super();
-
+        super(props);
         this.state = {
             currentData: [],
             //总页数
             totalPage: 1,
             queryKey: props.searchKey,
-            loading: true
+            loading: true,
+            id: props.location.pathname.match("[0-9]+")[0]
         };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     refreshList() {
-        let url = API.image + '/v1/projects';
+        let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
         let _this = this;
         Axios.get(url, {
             headers: {
@@ -28,7 +28,7 @@ export default class NamespacePagination extends Component {
             }
         })
             .then(function (response) {
-                console.log("镜像信息");
+                console.log("镜像仓库信息");
                 console.log(response.data);
                 _this.setState({
                     currentData: response.data,
@@ -56,7 +56,7 @@ export default class NamespacePagination extends Component {
     render() {
         return (
             <div>
-                <NamespaceList currentData={this.state.currentData}/>
+                <RepoList currentData={this.state.currentData}/>
             </div>
         )
     }

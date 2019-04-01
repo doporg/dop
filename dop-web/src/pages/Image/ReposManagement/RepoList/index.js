@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react';
 import {Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
@@ -7,20 +6,23 @@ import {Link} from 'react-router-dom';
 
 const {Row} = Grid;
 
-export default class NamespaceList extends Component {
+export default class RepoList extends Component {
 
-    static displayName = 'NamespaceList';
+    static displayName = 'RepoList';
 
 
     constructor(props) {
         super(props);
+
+        console.log(props.currentData)
+        //接受来自分页器的参数即当前页数据
         this.state = {
-            currentData: [],
+            currentData: []
         };
 
     }
 
-
+    //接收父组件的参数
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({
             currentData: nextProps.currentData
@@ -29,7 +31,7 @@ export default class NamespaceList extends Component {
 
     //链接 跳转到对应的命名空间
     idRender = function (id) {
-        return <Link to={"/image/projects/"+id+"/repos"}
+        return <Link to={"/image/projects/"}
         >{id}</Link>
     }
     render() {
@@ -41,14 +43,14 @@ export default class NamespaceList extends Component {
                                       title="命名空间ID"
                                       dataIndex="projectId"/>
 
-                        <Table.Column title="命名空间名称"
+                        <Table.Column title="镜像仓库名称"
                                       dataIndex="name"/>
 
-                        <Table.Column title="命名空间是否公开"
-                                      dataIndex="metadata.public"/>
+                        <Table.Column title="标签数"
+                                      dataIndex="tagsCount"/>
 
-                        <Table.Column title="镜像仓库数量"
-                                      dataIndex="repoCount"/>
+                        <Table.Column title="下载数"
+                                      dataIndex="pullCount"/>
                     </Table>
                 </Col>
             </Row>
