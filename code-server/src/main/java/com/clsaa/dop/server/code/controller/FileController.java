@@ -36,12 +36,12 @@ public class FileController {
     public List<TreeNodeVo> findTree(@ApiParam(value = "项目id") @PathVariable("id") int id,
                                      @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
                                      @ApiParam(value = "路径") @RequestParam("path")String path,
-                                     @ApiParam(value = "用户名")@RequestParam("username") String username){
+                                     @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
         try {
-            List<TreeNodeBo> treeNodeBos = fileService.findTree(id,ref,path,username);
+            List<TreeNodeBo> treeNodeBos = fileService.findTree(id,ref,path,userId);
             for(TreeNodeBo treeNodeBo:treeNodeBos){
                 treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
             }
@@ -56,9 +56,9 @@ public class FileController {
     @ApiOperation(value = "查找项目的分支名和tag名",notes = "根据项目id查找项目的分支名和tag名")
     @GetMapping("/projects/{id}/repository/branchandtag")
     public List<BranchAndTagVo> findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                                           @ApiParam(value = "用户名")@RequestParam("username") String username){
+                                                 @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
-        List<BranchAndTagBo> bos=fileService.findBranchAndTag(id,username);
+        List<BranchAndTagBo> bos=fileService.findBranchAndTag(id,userId);
         List<BranchAndTagVo> vos=new ArrayList<>();
 
         List<ChildrenVo> branches=new ArrayList<>();
@@ -87,13 +87,13 @@ public class FileController {
     public BlobVo findFileContent(@ApiParam(value = "项目id")@PathVariable("id") int id,
                                   @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
                                   @ApiParam(value = "branch,tag or commit")@RequestParam("ref") String ref,
-                                  @ApiParam(value = "用户名")@RequestParam("username") String username){
+                                  @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
 
         BlobVo bolbVo=null;
 
         try {
-            bolbVo=BeanUtils.convertType(fileService.findFileContent(id,file_path,ref,username),BlobVo.class) ;
+            bolbVo=BeanUtils.convertType(fileService.findFileContent(id,file_path,ref,userId),BlobVo.class) ;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -104,7 +104,8 @@ public class FileController {
 
     @ApiOperation(value = "更新文件内容",notes = "更新文件内容，并作为一次提交")
     @PutMapping("/projects/{id}/repository/blob")
-    public void updateFile(@ApiParam(value = "项目id") @PathVariable("id")int id,@ApiParam(value = "文件更新内容") @RequestBody FileUpdateDto fileUpdateDto){
+    public void updateFile(@ApiParam(value = "项目id") @PathVariable("id")int id,
+                           @ApiParam(value = "文件更新内容") @RequestBody FileUpdateDto fileUpdateDto){
 
         try {
             fileService.updateFile(
@@ -113,7 +114,7 @@ public class FileController {
                     fileUpdateDto.getBranch(),
                     fileUpdateDto.getContent(),
                     fileUpdateDto.getCommit_message(),
-                    fileUpdateDto.getUsername());
+                    fileUpdateDto.getUserId());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -127,10 +128,10 @@ public class FileController {
                            @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
                            @ApiParam(value = "分支")@RequestParam("branch") String branch,
                            @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
-                           @ApiParam(value = "用户名")@RequestParam("username") String username){
+                           @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
         try {
-            fileService.deleteFile(id,file_path,branch,commit_message,username);
+            fileService.deleteFile(id,file_path,branch,commit_message,userId);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -140,9 +141,9 @@ public class FileController {
     @ApiOperation(value = "查找项目所有的文件路径",notes = "根据项目id，分支或tag查找项目所有的文件的路径")
     @GetMapping("/projects/{id}/repository/filepathlist")
     public List<String> findAllFilePath(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                                @ApiParam(value = "分支或tag")@RequestParam("ref") String ref,
-                                @ApiParam(value = "用户名")@RequestParam("username") String username){
-        return fileService.findAllFilePath(id,ref,username);
+                                        @ApiParam(value = "分支或tag")@RequestParam("ref") String ref,
+                                        @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        return fileService.findAllFilePath(id,ref,userId);
     }
 
 

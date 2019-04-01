@@ -15,5 +15,5 @@ public class FileUpdateDto {
     private String branch;
     private String content;
     private String commit_message;
-    private String username;
+    private Long userId;
 }

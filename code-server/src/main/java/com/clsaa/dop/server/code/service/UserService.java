@@ -56,7 +56,7 @@ public class UserService {
         params.add(new BasicNameValuePair("password",password));
         params.add(new BasicNameValuePair("skip_confirmation","true"));
 
-        RequestUtil.post("/users","root",params);
+        RequestUtil.post("/users",params);
 
         //获得用户的access_token
         params=new ArrayList<>();
@@ -82,7 +82,7 @@ public class UserService {
     public void updateUserPassword(String username,String password){
 
         String path="/users?username="+username;
-        int id=RequestUtil.getList(path,"root",UserIdBo.class).get(0).getId();
+        int id=RequestUtil.getList(path,UserIdBo.class).get(0).getId();
 
         path="/users/"+id;
         NameValuePair p1=new BasicNameValuePair("password",password);
@@ -90,7 +90,7 @@ public class UserService {
         List<NameValuePair> params=new ArrayList<>();
         params.add(p1);
         params.add(p2);
-        RequestUtil.put(path,"root",params);
+        RequestUtil.put(path,params);
 
     }
 

@@ -35,15 +35,15 @@ public class ProjectController {
     @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")
     @PostMapping("/projects/{id}/star")
     public void starProject(@ApiParam(value = "项目id") @PathVariable("id")int id,
-                            @ApiParam(value = "用户名") @RequestParam("username")String username){
-        projectService.starProject(id,username);
+                            @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        projectService.starProject(id,userId);
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
     @GetMapping("/projectlist")
     public List<ProjectListVo> findProjectList(@ApiParam(value = "分类")@RequestParam("sort")String sort,
-                                               @ApiParam(value = "用户名")@RequestParam("username")String username){
-        List<ProjectListBo> listBos= projectService.findProjectList(sort,username);
+                                               @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        List<ProjectListBo> listBos= projectService.findProjectList(sort,userId);
         List<ProjectListVo> listVos=new ArrayList<>();
         for(ProjectListBo temp:listBos)
             listVos.add(BeanUtils.convertType(temp,ProjectListVo.class));
@@ -58,23 +58,23 @@ public class ProjectController {
                 projectDto.getDescription(),
                 projectDto.getVisibility(),
                 projectDto.getInitialize_with_readme(),
-                projectDto.getUsername()
+                projectDto.getUserId()
         );
     }
 
     @ApiOperation(value = "查询编辑项目需要的信息",notes = "根据项目id查询")
     @GetMapping("/projects/{id}/editinfo")
     public ProjectEditVo findProjectEditInfo(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                                             @ApiParam(value = "用户名")@RequestParam("username") String username){
-        return BeanUtils.convertType(projectService.findProjectEditInfo(id,username),ProjectEditVo.class);
+                                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        return BeanUtils.convertType(projectService.findProjectEditInfo(id,userId),ProjectEditVo.class);
     }
 
     @ApiOperation(value = "获得项目所有的分支名",notes = "根据项目id查询")
     @GetMapping("/projects/{id}/branches")
     public List<BranchVo> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                                          @ApiParam(value = "用户名")@RequestParam("username") String username){
+                                            @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
-        List<String> strs=projectService.findAllBranchName(id,username);
+        List<String> strs=projectService.findAllBranchName(id,userId);
 
         List<BranchVo> branchVos=new ArrayList<>();
         for(String str:strs){
@@ -91,25 +91,25 @@ public class ProjectController {
                                 @ApiParam(value = "项目描述")@RequestParam("description") String description,
                                 @ApiParam(value = "默认分支")@RequestParam("default_branch") String default_branch,
                                 @ApiParam(value = "可见等级")@RequestParam("visibility") String visibility,
-                                @ApiParam(value = "用户名")@RequestParam("username") String username){
+                                @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
 //        System.out.println(id+" "+name+" "+description+" "+default_branch+" "+visibility+" "+username);
 
-        projectService.editProjectInfo(id,name,description,default_branch,visibility,username);
+        projectService.editProjectInfo(id,name,description,default_branch,visibility,userId);
     }
 
     @ApiOperation(value = "删除一个项目",notes = "根据项目id删除")
     @DeleteMapping("/projects/{id}")
     public void deleteProject(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                              @ApiParam(value = "用户名")@RequestParam("username") String username){
-        projectService.deleteProject(id,username);
+                              @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        projectService.deleteProject(id,userId);
     }
 
     @ApiOperation(value = "获得项目的默认分支名",nickname = "根据项目id")
     @GetMapping("/projects/{id}/defaultbranch")
     public String findProjectDefaultBranch(@ApiParam(value = "项目id")@PathVariable("id") int id,
-                                         @ApiParam(value = "用户名")@RequestParam("username") String username){
-        return projectService.findProjectDefaultBranch(id,username);
+                                           @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+        return projectService.findProjectDefaultBranch(id,userId);
     }
 
 

@@ -25,15 +25,16 @@ public class FileService {
      * @param id 项目id
      * @param ref 分支名或tag名
      * @param path 文件路径
+     * @param userId 用户id
      * @return path下的所有文件和文件夹节点
      */
-    public List<TreeNodeBo> findTree(int id, String ref, String path,String username) throws UnsupportedEncodingException {
+    public List<TreeNodeBo> findTree(int id, String ref, String path,Long userId) throws UnsupportedEncodingException {
 
-        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,username,TreeNodeBo.class);
+        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
 
         for(TreeNodeBo treeNode:treeNodeBos){
             //获得最近提交的一次
-            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+URLEncoder.encode(treeNode.getPath(),"GBK"),username,CommitBo.class).get(0);
+            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+URLEncoder.encode(treeNode.getPath(),"GBK"),userId,CommitBo.class).get(0);
             treeNode.setCommit_id(commit.getId());
             treeNode.setCommit_msg(commit.getMessage());
             List<String> res=TimeUtil.natureTime(commit.getCommitted_date());
@@ -48,13 +49,13 @@ public class FileService {
     /**
      * 查找项目所有的分支名和tag名
      * @param id 项目id
-     * @param username 用户名
+     * @param userId 用户id
      * @return 分支名和tag名
      */
-    public List<BranchAndTagBo> findBranchAndTag(int id, String username){
+    public List<BranchAndTagBo> findBranchAndTag(int id, Long userId){
 
-        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",username,BranchBo.class);
-        List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",username,TagBo.class);
+        List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId,BranchBo.class);
+        List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",userId,TagBo.class);
 
         List<ChildrenBo> branches=new ArrayList<>();
         List<ChildrenBo> tags=new ArrayList<>();
@@ -80,17 +81,17 @@ public class FileService {
      * @param id 项目id
      * @param file_path 文件路径(原始路径，需要urlencode)
      * @param ref branch,tag or commit
-     * @param username 用户名
+     * @param userId 用户id
      * @return 文件内容(raw)
      */
-    public BlobBo findFileContent(int id, String file_path, String ref, String username) throws UnsupportedEncodingException {
+    public BlobBo findFileContent(int id, String file_path, String ref, Long userId) throws UnsupportedEncodingException {
 
 
         file_path=URLEncoder.encode(file_path,"GBK").replaceAll("\\+","%20");
 
-        String content=RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,username);
+        String content=RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,userId);
 
-        BlobBo blobBo=RequestUtil.get("/projects/"+id+"/repository/files/"+file_path+"?ref="+ref,username,BlobBo.class);
+        BlobBo blobBo=RequestUtil.get("/projects/"+id+"/repository/files/"+file_path+"?ref="+ref,userId,BlobBo.class);
 
         blobBo.setFile_content(content);
 
@@ -120,10 +121,10 @@ public class FileService {
      * @param branch 分支
      * @param content 更新的文件内容
      * @param commit_message 提交信息
-     * @param username 用户
+     * @param userId 用户id
      * @throws UnsupportedEncodingException
      */
-    public void updateFile(int id,String file_path,String branch,String content,String commit_message,String username) throws UnsupportedEncodingException {
+    public void updateFile(int id,String file_path,String branch,String content,String commit_message,Long userId) throws UnsupportedEncodingException {
 
 
         NameValuePair p1=new BasicNameValuePair("branch",branch);
@@ -137,7 +138,7 @@ public class FileService {
 
         String path="/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK");
 
-        RequestUtil.put(path,username,list);
+        RequestUtil.put(path,userId,list);
     }
 
 
@@ -147,13 +148,13 @@ public class FileService {
      * @param file_path 文件路径
      * @param branch 分支
      * @param commit_message 提交信息
-     * @param username 用户名
+     * @param userId 用户id
      * @throws UnsupportedEncodingException
      */
-    public void deleteFile(int id,String file_path,String branch,String commit_message,String username) throws UnsupportedEncodingException {
+    public void deleteFile(int id,String file_path,String branch,String commit_message,Long userId) throws UnsupportedEncodingException {
 
         String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
-        RequestUtil.delete(path,username);
+        RequestUtil.delete(path,userId);
     }
 
 
@@ -161,13 +162,13 @@ public class FileService {
      * 查找项目所有的文件路径
      * @param id 项目id
      * @param ref 分支或tag
-     * @param username 用户名
+     * @param userId 用户id
      * @return 所有文件路径
      */
-    public List<String> findAllFilePath(int id,String ref,String username){
+    public List<String> findAllFilePath(int id,String ref,Long userId){
 
         String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
-        List<FilePathBo> filePathBos=RequestUtil.getList(path,username,FilePathBo.class);
+        List<FilePathBo> filePathBos=RequestUtil.getList(path,userId,FilePathBo.class);
         List<String> res=new ArrayList<>();
         for(FilePathBo filePathBo:filePathBos){
             if(filePathBo.getType().equals("blob")){
