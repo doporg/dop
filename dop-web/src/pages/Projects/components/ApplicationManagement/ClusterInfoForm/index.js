@@ -115,17 +115,10 @@ export default class ClusterInfoForm extends Component {
 
     }
 
-    render() {
+    clusterDataRender() {
         const {init, getError} = this.field
-        return (
-
-            <Card
-                style={{width: "70%", padding: "2%", margin: "1%"}}
-                title={"Kubernetes环境信息"}
-                bodyHeight="40%"
-            >
-
-
+        if (!(this.state.loading)) {
+            return (
                 <Form style={{width: "100%"}}>
                     <Loading visible={this.state.loading} style={{width: "70%", marginBottom: "3%"}} size='small'
                              shape="dot-circle" color="#2077FF">
@@ -185,7 +178,22 @@ export default class ClusterInfoForm extends Component {
                             onClick={this.toggleEditMode.bind(this)}> 取消 </Button>
                     </Loading>
 
-                </Form>
+                </Form>)
+        }
+    }
+
+    render() {
+        const {init, getError} = this.field
+
+        return (
+
+            <Card
+                style={{width: "70%", padding: "2%", margin: "1%"}}
+                title={"Kubernetes环境信息"}
+                bodyHeight="40%"
+            >
+
+                {this.clusterDataRender()}
 
 
                 {
