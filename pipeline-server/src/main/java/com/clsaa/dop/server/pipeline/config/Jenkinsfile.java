@@ -66,7 +66,7 @@ public class Jenkinsfile {
                         imageName = dockerRepoHost + dockerRepoPath;
                     } else {
                         dockerRepoHost = respository.split("/")[0];
-                        imageName = dockerRepoHost;
+                        imageName = respository;
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
