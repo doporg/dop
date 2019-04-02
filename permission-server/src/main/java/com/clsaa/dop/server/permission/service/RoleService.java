@@ -15,6 +15,7 @@ import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -127,26 +128,25 @@ public class RoleService {
         Pagination<RoleV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
+//        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
-        List<Role> roleList = this.roleRepository.findAll(pageRequest).getContent();
+        List<Role> roleList = this.roleRepository.findAll();
         List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
         List<Role> roleList1=new ArrayList<>();
         for(Role role :roleList)
         {
             for(Long id :idList)
             {
-                if(role.getId().equals(id))
+                if(role.getId()==id)
                 {roleList1.add(role);count++;}
             }
         }
-
         pagination.setTotalCount(count);
         if (count == 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-
+        roleList1=roleList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
 
         pagination.setPageList(roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
         return pagination;
