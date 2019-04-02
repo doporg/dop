@@ -98,12 +98,12 @@ export default class Register extends Component {
 
     checkPass(rule, value, callback) {
         const {validate} = this.field;
-        let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=-]).{6,20}$/;
+        let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=-]).{8,20}$/;
         if (reg.test(value)) {
             validate(["rePasswd"]);
             callback();
         } else {
-            callback([new Error("长度至少为6个字符，最大长度为20, 必须包含一个数字 0-9、包含一个小写字符、包含一个大写字符、包含一个的特殊字符@#$%.-=")]);
+            callback([new Error("长度至少为8个字符，最大长度为20, 必须包含一个数字 0-9、包含一个小写字符、包含一个大写字符、包含一个的特殊字符@#$%.-=")]);
         }
 
     }
