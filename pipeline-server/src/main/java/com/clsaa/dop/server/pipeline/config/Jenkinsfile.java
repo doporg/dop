@@ -57,9 +57,13 @@ public class Jenkinsfile {
                 String ip = task.getIp();
                 String token = task.getToken();
                 String dockerRepoHost = "registry.dop.clsaa.com";
+                String dockerRepoPath = "/default";
+                String imageName = dockerRepoHost + dockerRepoPath;
                 try {
                     if (respository.startsWith("http")) {
                         dockerRepoHost = new URL(respository).getHost();
+                        dockerRepoPath = new URL(respository).getPath();
+                        imageName = dockerRepoHost + dockerRepoPath;
                     } else {
                         dockerRepoHost = respository;
                     }
@@ -83,12 +87,12 @@ public class Jenkinsfile {
                         this.stages += "sh \'npm install \' \n";
                         break;
                     case ("构建docker镜像"):
-                        this.stages += "sh \'docker build -t " + dockerRepoHost + ":" + respositoryVersion + " ./\' \n";
+                        this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
                         break;
                     case ("推送docker镜像"):
 
                         this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
-                        this.stages += "sh \'docker push " + dockerRepoHost + ":" + respositoryVersion + "\' \n";
+                        this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
                         break;
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
