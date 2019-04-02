@@ -94,7 +94,10 @@ public class RegisterConsumer implements MessageListenerConcurrently {
                 Long id = userDto1.getId();
                 String username = userDto1.getName();
                 String email = userDto1.getEmail();
-                String password = UUID.randomUUID().toString() + UUID.randomUUID().toString();
+
+                String password = id.toString().length() > 8 ? id.toString().substring(0, 8) : id
+                        + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase()
+                        + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toLowerCase();
                 userFeign.addUserCredential(userDto1.getId(), username,
                         password, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
                 //在harbor中注册账户
