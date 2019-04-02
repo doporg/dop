@@ -56,7 +56,7 @@ export default class ProjectList extends React.Component {
 
     componentWillMount() {
 
-        let url = API.code + "/projectlist?sort=" + this.state.sort + "&username=" + sessionStorage.getItem("user-name");
+        let url = API.code + "/projectlist?sort=" + this.state.sort + "&userId=" + sessionStorage.getItem("user-id");
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
@@ -66,7 +66,7 @@ export default class ProjectList extends React.Component {
     }
 
     changeSort(sort) {
-        let url = API.code + "/projectlist?sort=" + sort + "&username=" + sessionStorage.getItem("user-name");
+        let url = API.code + "/projectlist?sort=" + sort + "&userId=" + sessionStorage.getItem("user-id");
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);

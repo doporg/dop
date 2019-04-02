@@ -39,6 +39,9 @@ export default class EditFile extends React.Component{
 
     codeHeight(){
         let lineCount=this.state.lineCount;
+        if(lineCount<28){
+            lineCount=28;
+        }
         return {height:lineCount*20};
     }
 
@@ -47,7 +50,7 @@ export default class EditFile extends React.Component{
         let {projectid,path,ref}=this.state;
 
         let self=this;
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             // console.log(response.data);
             self.setState({
@@ -72,15 +75,15 @@ export default class EditFile extends React.Component{
         Axios({
             method: "PUT",
             url: API.code+ "/projects/"+projectid+"/repository/blob",
-            params: {
-                username:sessionStorage.getItem("user-name"),
+            data: {
+                userId:sessionStorage.getItem("user-id"),
                 file_path:path,
                 branch:ref,
                 content:this.state.blobInfo.file_content,
                 commit_message:commit_message
             },
             headers: {
-                'Content-type': 'application/x-www-form-urlencoded',
+                'Content-type':'application/json',
             },
         }).then(response => {
             let {username,path,projectid,ref}=this.state;
@@ -119,7 +122,7 @@ export default class EditFile extends React.Component{
                         }
 
                     </div>
-                    <textarea value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
+                    <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
                     </textarea>
 
                 </div>

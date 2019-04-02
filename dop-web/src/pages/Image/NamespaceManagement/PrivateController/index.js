@@ -4,11 +4,11 @@ import {Radio} from "@icedesign/base";
 const {Group: RadioGroup} = Radio;
 const list = [
     {
-        value: "PUBLIC",
+        value: "true",
         label: "公开"
     },
     {
-        value: "PRIVATE",
+        value: 'false',
         label: "私有"
     },
 ];

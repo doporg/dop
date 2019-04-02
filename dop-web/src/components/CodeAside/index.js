@@ -5,6 +5,8 @@ import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
 import { codeAsideMenuConfig as asideMenuConfig } from './codeMenuConfig';
 import { Icon } from '@icedesign/base';
+import Axios from 'axios';
+import API from "../../pages/API";
 
 import './index.scss';
 
@@ -15,27 +17,47 @@ class CodeAside extends Component {
 
   static defaultProps = {};
 
+
   constructor(props) {
-    super(props);
-    this.state={};
+      super(props);
+      const {projectid,username}=this.props.match.params;
+      this.state={
+          projectid:projectid,
+          username:username,
+          ref:"",
+      };
   }
+
+  componentWillMount(){
+      if(this.props.match.params.hasOwnProperty('ref')){
+          this.setState({
+              ref:this.props.match.params.ref
+          });
+      }else {
+          Axios.get(API.code+"/projects/"+this.state.projectid+"/defaultbranch?userId="+sessionStorage.getItem("user-id")).then(response=>{
+              this.setState({
+                  ref:response.data
+              })
+          })
+      }
+  }
+
+
 
   render() {
     const { location } = this.props;
     const { pathname } = location;
-    const { username,projectid } = this.props.match.params;
-    //需要改成请求获得项目的默认分支名
-    let branch = "master";
-    // if(this.props.match.params.hasOwnProperty('branch')){
-    //   branch=this.props.match.params.branch;
-    // }
+    const { username,projectid,ref } = this.state;
+
 
     const backLink="/code/projectlist";
 
     const projectLink="/code/"+username+"/"+projectid;
-    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+branch;
+    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+ref;
 
-    const fileLink="/code/"+username+"/"+projectid+"/tree/"+branch+"/"+encodeURIComponent("/");
+    const fileLink="/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
+
+    const sshLink="/code/"+username+"/"+projectid+"/ssh";
 
 
     return (
@@ -73,6 +95,15 @@ class CodeAside extends Component {
                     </FoundationSymbol>
                     {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
                     <span className="ice-menu-item-text">{"提交"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={sshLink}>
+                <Link to={sshLink} className="ice-menu-link">
+                    <FoundationSymbol size="small" type="key" >
+                        <Icon size="small" type="key" />
+                    </FoundationSymbol>
+                    {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
+                    <span className="ice-menu-item-text">{"SSH 公钥"}</span>
                 </Link>
             </MenuItem>
         </Menu>

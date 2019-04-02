@@ -16,7 +16,7 @@ public class Validator {
     /**
      * 正则表达式：验证密码
      */
-    public static final String REGEX_PASSWORD = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=\\-]).{6,20})";
+    public static final String REGEX_PASSWORD = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=\\-]).{8,20})";
 
     /**
      * 正则表达式：验证手机号

@@ -5,6 +5,8 @@ import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
 import org.yaml.snakeyaml.Yaml;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -67,11 +69,17 @@ public class Jenkinsfile {
                         this.stages += "sh \'npm install \' \n";
                         break;
                     case ("构建docker镜像"):
-                        this.stages += "sh \'docker build -t registry.dop.clsaa.com/" + dockerUserName + "/" + respository + ":" + respositoryVersion + " ./\' \n";
+                        this.stages += "sh \'docker build -t "+ respository + ":" + respositoryVersion + " ./\' \n";
                         break;
                     case ("推送docker镜像"):
-                        this.stages += "sh \'docker login -u " + dockerUserName + " -p " + dockerPassword + " registry.dop.clsaa.com\' \n";
-                        this.stages += "sh \'docker push registry.dop.clsaa.com/" + dockerUserName + "/" + respository + ":" + respositoryVersion + "\' \n";
+                        String host = "http://registry.dop.clsaa.com";
+                        try {
+                            host = new URL(respository).getHost();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                        this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + host + "\' \n";
+                        this.stages += "sh \'docker push " + respository + ":" + respositoryVersion + "\' \n";
                         break;
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";

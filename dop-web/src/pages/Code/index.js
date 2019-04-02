@@ -11,6 +11,7 @@ import CommitList from './CommitList';
 import FilePathList from './FilePathList';
 import Commit from './Commit';
 import EditProject from './EditProject';
+import SSH from './SSH';
 
 const codeConfig = [
 
@@ -31,11 +32,6 @@ const codeConfig = [
 
     },
     {
-        path: '/code/:username/:projectid/commits/:branch',
-        layout: CodeLayout,
-        component: Code
-    },
-    {
         path: '/code/:username/:projectid/tree/:ref/:path',
         layout: CodeLayout,
         component: Tree
@@ -51,7 +47,7 @@ const codeConfig = [
         component: EditFile
     },
     {
-        path: '/code/:username/:projectid/commitlist/:branch',
+        path: '/code/:username/:projectid/commitlist/:ref',
         layout: CodeLayout,
         component: CommitList
     },
@@ -69,7 +65,12 @@ const codeConfig = [
         path: '/code/:username/:projectid/edit',
         layout: CodeLayout,
         component: EditProject
-    }
+    },
+    {
+        path: '/code/:username/:projectid/ssh',
+        layout: CodeLayout,
+        component: SSH
+    },
 
 ];
 

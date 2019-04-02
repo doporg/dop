@@ -19,11 +19,11 @@ export default class CommitList extends React.Component{
 
     constructor(props){
         super(props);
-        const {projectid,branch,username}=this.props.match.params;
+        const {projectid,ref,username}=this.props.match.params;
         this.state={
             username:username,
             projectid: projectid,
-            ref:branch,
+            ref:ref,
             refOptions: [],
             commitList:[],
             showList:[],
@@ -33,7 +33,7 @@ export default class CommitList extends React.Component{
 
     componentWillMount() {
 
-        let url=API.code+"/projects/"+this.state.projectid+"/repository/branchandtag?username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+this.state.projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             self.setState({
@@ -41,7 +41,7 @@ export default class CommitList extends React.Component{
             })
         });
 
-        url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+this.state.ref+"&username="+sessionStorage.getItem("user-name");
+        url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+this.state.ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             self.setState({
                 commitList:response.data,
@@ -71,7 +71,7 @@ export default class CommitList extends React.Component{
 
     changeRef(value, data, extra) {
 
-        let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+value+"&username="+sessionStorage.getItem("user-name");
+        let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+value+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             // console.log(response.data);

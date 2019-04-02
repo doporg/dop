@@ -26,7 +26,7 @@ export default class NamespaceForm extends Component {
         super(props, context);
         this.field = new Field(this);
         this.state = {
-            loading: false
+            loading: false,
         }
     }
 
@@ -39,7 +39,7 @@ export default class NamespaceForm extends Component {
         // 校验表单数据
         this.field.validate((errors, values) => {
             console.log(errors, values);
-            let _this = this
+            let _this = this;
 
             this.setState({
                 loading: true
@@ -49,8 +49,11 @@ export default class NamespaceForm extends Component {
                 let url = API.image + '/v1/projects';
                 Axios.post(url, {}, {
                         params: {
-                            organizationId: "123",
-                            title: this.field.getValue('title')
+                            name: values.title,
+                            status: values.private
+                        },
+                        headers: {
+                            userId:37
                         }
                     }
                 )
@@ -104,11 +107,6 @@ export default class NamespaceForm extends Component {
                             <PrivateController   {...init('private', {
                                 rules: [{required: true, initValue: "public"}]
                             })}/>
-                        </FormItem>
-                        <FormItem {...formItemLayout}
-                                  label="命名空间描述：">
-                            <Input  {...init('description')}
-                                    multiple placeholder="命名空间描述"/>
                         </FormItem>
                     </Form>
                 </div>
