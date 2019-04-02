@@ -62,6 +62,7 @@ export default class PipelineBindPage extends Component {
 
     getPipelineData() {
         let _this = this
+        console.log(this.state.appEnvId)
         let getUrl = API.gateway + "/pipeline-server/v1/pipeline/envId/" + this.state.appEnvId
         this.setState({
             loading: true
@@ -77,7 +78,7 @@ export default class PipelineBindPage extends Component {
                     })
                 } else {
 
-                    Axios.get(API.gateway + "/pipeline-server/v1/pipeline/" + response.data)
+                    Axios.get(API.gateway + "/pipeline-server/v1/pipeline/" + response.data[0].id)
                         .then((response) => {
                             console.log("currentPipeline", response)
 

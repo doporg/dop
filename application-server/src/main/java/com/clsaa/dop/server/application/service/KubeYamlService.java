@@ -124,12 +124,17 @@ public class KubeYamlService {
                             kind = "Deployment";
                         }
                         V1ObjectMeta meta = AppsV1beta1Deployment.getMetadata();
+                        V1ObjectMeta newMeta = new V1ObjectMetaBuilder()
+                                .withLabels(meta.getLabels())
+                                .withName(meta.getName())
+                                .withNamespace(meta.getNamespace())
+                                .build();
                         AppsV1beta1DeploymentSpec spec = AppsV1beta1Deployment.getSpec();
 
                         AppsV1beta1Deployment appsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
                                 .withApiVersion(apiVersion)
                                 .withKind(kind)
-                                .withMetadata(meta)
+                                .withMetadata(newMeta)
                                 .withSpec(spec)
                                 .build();
                         kubeYamlData.setDeploymentEditableYaml(Yaml.dump(appsV1beta1Deployment));
@@ -269,12 +274,17 @@ public class KubeYamlService {
                             kind = "Deployment";
                         }
                         V1ObjectMeta meta = AppsV1beta1Deployment.getMetadata();
+                        V1ObjectMeta newMeta = new V1ObjectMetaBuilder()
+                                .withLabels(meta.getLabels())
+                                .withName(meta.getName())
+                                .withNamespace(meta.getNamespace())
+                                .build();
                         AppsV1beta1DeploymentSpec spec = AppsV1beta1Deployment.getSpec();
 
                         AppsV1beta1Deployment appsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
                                 .withApiVersion(apiVersion)
                                 .withKind(kind)
-                                .withMetadata(meta)
+                                .withMetadata(newMeta)
                                 .withSpec(spec)
                                 .build();
                         kubeYamlData.setDeploymentEditableYaml(Yaml.dump(appsV1beta1Deployment));
