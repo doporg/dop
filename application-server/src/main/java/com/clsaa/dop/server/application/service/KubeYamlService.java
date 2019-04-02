@@ -115,7 +115,24 @@ public class KubeYamlService {
                             }
                         }
                         AppsV1beta1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
+                        String apiVersion = AppsV1beta1Deployment.getApiVersion();
+                        if (apiVersion == null) {
+                            apiVersion = "apps/v1beta1";
+                        }
+                        String kind = AppsV1beta1Deployment.getKind();
+                        if (kind == null) {
+                            kind = "Deployment";
+                        }
+                        V1ObjectMeta meta = AppsV1beta1Deployment.getMetadata();
+                        AppsV1beta1DeploymentSpec spec = AppsV1beta1Deployment.getSpec();
+
+                        AppsV1beta1Deployment appsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
+                                .withApiVersion(apiVersion)
+                                .withKind(kind)
+                                .withMetadata(meta)
+                                .withSpec(spec)
+                                .build();
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(appsV1beta1Deployment));
                         break;
                         //appsV1beta1Api.createNamespacedDeployment(nameSpace, AppsV1beta1Deployment, false, null, null);
                     }
@@ -123,7 +140,7 @@ public class KubeYamlService {
 
             } else {
                 AppsV1beta1Deployment AppsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
-                        .withApiVersion("extensions/v1beta1")
+                        .withApiVersion("apps/v1beta1")
                         .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
@@ -243,7 +260,24 @@ public class KubeYamlService {
                             }
                         }
                         AppsV1beta1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
-                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
+                        String apiVersion = AppsV1beta1Deployment.getApiVersion();
+                        if (apiVersion == null) {
+                            apiVersion = "apps/v1beta1";
+                        }
+                        String kind = AppsV1beta1Deployment.getKind();
+                        if (kind == null) {
+                            kind = "Deployment";
+                        }
+                        V1ObjectMeta meta = AppsV1beta1Deployment.getMetadata();
+                        AppsV1beta1DeploymentSpec spec = AppsV1beta1Deployment.getSpec();
+
+                        AppsV1beta1Deployment appsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
+                                .withApiVersion(apiVersion)
+                                .withKind(kind)
+                                .withMetadata(meta)
+                                .withSpec(spec)
+                                .build();
+                        kubeYamlData.setDeploymentEditableYaml(Yaml.dump(appsV1beta1Deployment));
                         //kubeYamlData.setDeploymentEditableYaml(Yaml.dump(AppsV1beta1Deployment));
                         break;
                     }
@@ -251,7 +285,7 @@ public class KubeYamlService {
 
             } else {
                 AppsV1beta1Deployment AppsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
-                        .withApiVersion("extensions/v1beta1")
+                        .withApiVersion("apps/v1beta1")
                         .withKind("Deployment")
                         .withNewMetadata()
                         .withName(service)
@@ -514,7 +548,7 @@ public class KubeYamlService {
 
         V1beta1Ingress ingress =
                 new V1beta1IngressBuilder()
-                        .withApiVersion("extensions/v1beta1")
+                        .withApiVersion("apps/v1beta1")
                         .withKind("Ingress")
                         .withNewMetadata()
                         .withName(name)
