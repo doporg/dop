@@ -25,14 +25,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
- *    注册消息消费类
+ * 注册消息消费类
  * </p>
+ *
  * @author xzt
  * @since 2019-3-28
- *
  */
 
 @Component
@@ -89,13 +90,15 @@ public class RegisterConsumer implements MessageListenerConcurrently {
             for (; index < msgs.size(); index++) {
                 MessageExt msg = msgs.get(index);
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
-                UserDto1 userDto1 = JSON.parseObject(messageBody,UserDto1.class);
-                String username = userDto1.getEmail();
-                String password = PasswordUtil.generatePassword();
+                UserDto1 userDto1 = JSON.parseObject(messageBody, UserDto1.class);
+                Long id = userDto1.getId();
+                String username = userDto1.getName();
+                String email = userDto1.getEmail();
+                String password = UUID.randomUUID().toString() + UUID.randomUUID().toString();
                 userFeign.addUserCredential(userDto1.getId(), username,
                         password, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
                 //在harbor中注册账户
-                User user = new User(3,username,userDto1.getEmail(),password,"test","",false,"",0,false,"","","2018-12-31T17:39:18Z","2018-12-31T17:39:18Z");
+                User user = new User(id.intValue(), username, email, password, username, "", false, "", 0, false, "", "", "2018-12-31T17:39:18Z", "2018-12-31T17:39:18Z");
                 harborUserFeign.usersPost(user);
             }
         } catch (Exception e) {

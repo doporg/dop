@@ -36,6 +36,7 @@ public class KubeCredentialService {
 
     public KubeCredentialBoV1 findByAppEnvId(Long appEnvId) {
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
+        KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
         return BeanUtils.convertType(this.kubeCredentialRepository.findById(credentialId).orElse(null), KubeCredentialBoV1.class);
     }
 

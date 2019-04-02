@@ -56,7 +56,9 @@ public class JenkinsService {
 
         try {
             if (jenkins.getJob(name) == null) {
+                System.out.println("=================================");
                 System.out.println(jenkinsfile.getScript());
+                System.out.println("=================================");
                 jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
             } else {
                 jenkins.deleteJob(name);

@@ -3,6 +3,8 @@ package com.clsaa.dop.server.pipeline.config;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.MalformedURLException;
@@ -54,6 +56,18 @@ public class Jenkinsfile {
                 String deploy = task.getDeploy();
                 String ip = task.getIp();
                 String token = task.getToken();
+                String dockerRepoHost = "registry.dop.clsaa.com";
+                try {
+                    if (respository.startsWith("http")) {
+                        dockerRepoHost = new URL(respository).getHost();
+                    } else {
+                        dockerRepoHost = respository;
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
+                            , e.getMessage()));
+                }
                 switch (taskName) {
                     case ("拉取代码"):
                         this.stages += "deleteDir() \n";
@@ -69,17 +83,12 @@ public class Jenkinsfile {
                         this.stages += "sh \'npm install \' \n";
                         break;
                     case ("构建docker镜像"):
-                        this.stages += "sh \'docker build -t "+ respository + ":" + respositoryVersion + " ./\' \n";
+                        this.stages += "sh \'docker build -t " + dockerRepoHost + ":" + respositoryVersion + " ./\' \n";
                         break;
                     case ("推送docker镜像"):
-                        String host = "http://registry.dop.clsaa.com";
-                        try {
-                            host = new URL(respository).getHost();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                        this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + host + "\' \n";
-                        this.stages += "sh \'docker push " + respository + ":" + respositoryVersion + "\' \n";
+
+                        this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
+                        this.stages += "sh \'docker push " + dockerRepoHost + ":" + respositoryVersion + "\' \n";
                         break;
                     case ("自定义脚本"):
                         this.stages += "sh \'" + shell + "\' \n";
@@ -87,7 +96,7 @@ public class Jenkinsfile {
                         String[] deploys = deploy.split("---\n");
                         for (int z = 0; z < deploys.length; z++) {
                             Yaml yaml = new Yaml();
-                            if(deploys[z] == ""){
+                            if (deploys[z] == "") {
                                 break;
                             }
                             Map map = yaml.load(deploys[z]);
@@ -95,27 +104,27 @@ public class Jenkinsfile {
                             Object kind = map.get("kind");
                             Map metadata = (Map) map.get("metadata");
                             Object namespace = metadata.get("namespace");
-                            if(kind.toString().equals("Deployment")){
+                            if (kind.toString().equals("Deployment")) {
                                 // apiVersion: apps/v1beta1
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
-                                        "-k -H \'Bearer "+ token + "\' "+
+                                        "-k -H \'Bearer " + token + "\' " +
                                         ip +
                                         "/apis/" + apiVersion +
-                                        "/namespaces/"+ namespace.toString() +
-                                        "/" + kind.toString().toLowerCase() + "s "+
-                                        "-d \'\n"+
+                                        "/namespaces/" + namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s " +
+                                        "-d \'\n" +
                                         deploys[z].trim() + "\n" +
                                         "\'\n" +
                                         " \'\'\'" + "\n";
-                            }else{
+                            } else {
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
-                                        "-k -H \'Bearer "+ token + "\' "+
+                                        "-k -H \'Bearer " + token + "\' " +
                                         ip +
                                         "/api/" + apiVersion +
-                                        "/namespaces/"+ namespace.toString() +
-                                        "/" + kind.toString().toLowerCase() + "s "+
+                                        "/namespaces/" + namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s " +
                                         "-d \'\n" +
                                         deploys[z].trim() + "\n" +
                                         "\'\n" +
@@ -134,7 +143,7 @@ public class Jenkinsfile {
         return ("pipeline {\n" +
                 "    agent any\n" +
                 "    stages {\n" +
-                this.stages + "\n"+
+                this.stages + "\n" +
                 "    }\n" +
                 "}\n");
     }

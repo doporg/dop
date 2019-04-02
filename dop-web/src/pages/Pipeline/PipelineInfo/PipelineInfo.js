@@ -153,9 +153,10 @@ export default class PipelineInfo extends Component {
                 self.props.history.push('/pipeline/project/' + pipelineId)
             }
         }).catch((error)=>{
+            console.log(error);
             toast.show({
                 type: "error",
-                content: "请检查您环境信息的完整性",
+                content: "请检查您环境信息的完整性"+error,
                 duration: 3000
             });
         })

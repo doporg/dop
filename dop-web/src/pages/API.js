@@ -1,17 +1,24 @@
 // 配置所有接口的API文件
 
+var host = "http://open.dop.clsaa.com";
+// var host = "http://localhost:8888";
+var pipline = "/pipeline-server";
+var application = "/application-server";
+var permission = "/permission-server";
+var code = "/code-server";
+var user = "/user-server";
+var image = "/image-server";
+var test = "/test-server";
 const API = {
-    gateway: "http://open.dop.clsaa.com",
-    pipeline: "http://open.dop.clsaa.com/pipeline-server",
-    jenkins: "http://jenkins.dop.clsaa.com",
-    jenkinsRest: "http://jenkins.dop.clsaa.com/blue/rest/organizations/jenkins/pipelines/",
     address: "http://www.dop.clsaa.com/#/",
-    application: "http://open.dop.clsaa.com/application-server",
-    permission: "http://open.dop.clsaa.com/permission-server",
-    code:"http://open.dop.clsaa.com/code-server",
-    user:"http://open.dop.clsaa.com/user-server",
-    image:"http://open.dop.clsaa.com/image-server",
-    test: "http://open.dop.clsaa.com/test-server"
+    gateway: host,
+    pipeline: host + pipline,
+    application: host + application,
+    permission: host + permission,
+    code: host + code,
+    user: host + user,
+    image: host + image,
+    test: host + test
 };
 
 export default API;
