@@ -51,9 +51,6 @@ export default class NamespaceForm extends Component {
                         params: {
                             name: values.title,
                             status: values.private
-                        },
-                        headers: {
-                            userId:37
                         }
                     }
                 )
