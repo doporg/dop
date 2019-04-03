@@ -170,7 +170,7 @@ export default class Home extends Component {
           <Table.Column
             width={200}
             title="测试负责人"
-            dataIndex="cuser"
+            dataIndex="createUserName"
           />
           <Table.Column
             width={200}

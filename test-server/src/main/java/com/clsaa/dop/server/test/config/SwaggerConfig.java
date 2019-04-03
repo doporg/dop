@@ -9,7 +9,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * swagger配置类
@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
  * @author 任贵杰 812022339@qq.com
  */
 @Configuration
-@EnableSwagger2WebFlux
+@EnableSwagger2
 public class SwaggerConfig {
 
     private static final String API_PACKAGE_NAME = SwaggerConfig.class.getPackage().getName().replace("config", "controller");

@@ -31,6 +31,8 @@ public class InterfaceExecuteLogDto {
 
     private Long caseId;
 
+    private String createUserName;
+
     private List<OperationExecuteLogDto> operationExecuteLogs;
 
     // ----------- common property ---------

@@ -3,10 +3,10 @@ package com.clsaa.dop.server.test.util;
 import com.clsaa.dop.server.test.feign.UserInterface;
 import com.clsaa.dop.server.test.model.dto.User;
 import com.clsaa.dop.server.test.model.po.Po;
+import org.apache.commons.lang.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author xihao
@@ -23,8 +23,10 @@ public class UserUtils {
         userInterface = Services.of(UserInterface.class);
     }
 
-    public static void setUserId(Long userId) {
-        userThread.set(userId);
+    public static void setUserId(String userId) {
+        if (StringUtils.isNotEmpty(userId)) {
+            userThread.set(Long.valueOf(userId));
+        }
     }
 
     public static Long getCurrentUserId() {
