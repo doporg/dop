@@ -33,7 +33,7 @@ public class RepositoryController {
                                               @ApiParam(value = "标签id") @RequestParam(value = "labelId", required = false) Integer labelId,
                                               @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
                                               @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "page_size", required = false) Integer pageSize,
-                                              @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
+                                              @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
             return BeanUtils.convertList(repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId),RepositoryVO.class);
     }
@@ -42,7 +42,7 @@ public class RepositoryController {
     @DeleteMapping(value = "/v1/projects/{projectId}/repositories/{repoName}")
     public void deleteRepository(@ApiParam(value = "项目id") @PathVariable(value = "projectId")Integer projectId,
                                  @ApiParam(value = "镜像仓库名称") @PathVariable(value = "repoName")String repoName,
-                                 @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
+                                 @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
     }
 

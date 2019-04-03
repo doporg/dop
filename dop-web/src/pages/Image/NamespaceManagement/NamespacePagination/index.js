@@ -20,12 +20,12 @@ export default class NamespacePagination extends Component {
     }
 
     refreshList() {
-        let url = API.image + '/v1/projects';
+        let url = API.test_image + '/v1/projects';
         let _this = this;
         Axios.get(url, {
-            headers: {
-                userId:37
-            }
+            // headers: {
+            //     userId:37
+            // }
         })
             .then(function (response) {
                 console.log("镜像信息");

@@ -40,7 +40,7 @@ public class ProjectLogsController {
                                             @ApiParam(value = "结束时间") @RequestParam(value = "endTimestamp", required = false) String endTimestamp,
                                             @ApiParam(value = "页号") @RequestParam(value = "page", required = false) Integer page,
                                             @ApiParam(value = "页大小") @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                            @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
+                                            @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
         return BeanUtils.convertList(projectLogsService.getProjectLogs(projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize,userId),AccessLogVO.class);
     }
 }
