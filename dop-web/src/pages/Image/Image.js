@@ -48,7 +48,6 @@ export default class Image extends Component {
                             onChange={this.onSearch.bind(this)}
                         />
                     }
-                    extraDelete={}
                     extraAfter={< CreateNamespaceDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
                     }
                 />

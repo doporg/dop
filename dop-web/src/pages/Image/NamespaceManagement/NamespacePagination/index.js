@@ -23,6 +23,9 @@ export default class NamespacePagination extends Component {
         let url = API.test_image + '/v1/projects';
         let _this = this;
         Axios.get(url, {
+            headers: {
+                "x-login-user":37
+            }
             
         })
             .then(function (response) {
