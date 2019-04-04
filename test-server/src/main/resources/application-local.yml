@@ -54,6 +54,10 @@ project:
   description: @project.description@
   url: @project.url@
 swagger.enable: true
+
+system:
+  loginNeeded: false
+
 eureka:
   instance:
     appname: ${spring.application.name}

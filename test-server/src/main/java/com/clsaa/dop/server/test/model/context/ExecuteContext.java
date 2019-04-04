@@ -1,6 +1,5 @@
 package com.clsaa.dop.server.test.model.context;
 
-import com.clsaa.dop.server.test.dao.InterfaceCaseLogRepository;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.Stage;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
@@ -9,15 +8,12 @@ import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import com.clsaa.dop.server.test.util.ExecutionLogUtils;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import static java.util.Objects.nonNull;
-import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * @author xihao
