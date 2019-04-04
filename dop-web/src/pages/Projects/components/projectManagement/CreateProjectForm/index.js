@@ -42,12 +42,13 @@ export default class ProjectForm extends Component {
             console.log(errors, values);
             let _this = this
 
-            this.setState({
-                loading: true
-            })
+
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 console.log("noerros");
+                this.setState({
+                    loading: true
+                })
                 let url = API.gateway + '/application-server/project'
                 Axios.post(url, {}, {
                         params: {

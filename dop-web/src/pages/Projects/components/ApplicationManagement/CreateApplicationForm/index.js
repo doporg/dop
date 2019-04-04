@@ -15,6 +15,7 @@ const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
 };
+// const  REGEX_URL = "http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?";
 /**
  *    弹窗中的表单
  *
@@ -34,17 +35,17 @@ export default class ApplicationForm extends Component {
      *
      * */
     handleSubmit(props) {
-        this.setState({
-            loading: true
-        })
         let _this = this
         // 校验表单数据
         this.field.validate((errors, values) => {
             console.log(errors, values);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 console.log("noerros");
+                this.setState({
+                    loading: true
+                })
                 let url = API.gateway + '/application-server/app/' + this.state.projectId;
                 Axios.post(url, {}, {
                         params: {
@@ -116,14 +117,18 @@ export default class ApplicationForm extends Component {
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("gitUrl") ? "error" : ""}
                                   label="git仓库地址："
+                                  help={this.field.getError("gitUrl") ? "请输入Git仓库地址" : ""}
                                   required>
-                            <Input  {...init('gitUrl')} placeholder="git仓库地址"/>
+                            <Input  {...init('gitUrl', {rules: [{required: true, message: "该项不能为空"}]})}
+                                    placeholder="git仓库地址"/>
                         </FormItem>
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("imageUrl") ? "error" : ""}
+                                  help={this.field.getError("imageUrl") ? "请输入镜像仓库地址" : ""}
                                   label="镜像仓库地址："
                                   required>
-                            <Input  {...init('imageUrl')} placeholder="镜像仓库地址"/>
+                            <Input  {...init('imageUrl', {rules: [{required: true, message: "该项不能为空"}]})}
+                                    placeholder="镜像仓库地址"/>
                         </FormItem>
                         <FormItem {...formItemLayout} label="应用描述：">
                             <Input  {...init('description')} multiple placeholder="应用描述"/>

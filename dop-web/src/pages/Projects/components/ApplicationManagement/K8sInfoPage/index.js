@@ -171,12 +171,7 @@ export default class K8sInfoPage extends Component {
     }
 
     componentDidMount() {
-
-
         this.getYamlData()
-
-
-
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -261,15 +256,15 @@ export default class K8sInfoPage extends Component {
 
 
     envDetailSubmit() {
-        this.setState({
-            loading: true
-        })
+
         let _this = this;
         if (this.state.yamlMode == 'path') {
             this.yamlPathField.validate((errors, values) => {
                 console.log(errors)
                 if (errors == null) {
-
+                    this.setState({
+                        loading: true
+                    })
                     let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
                     Axios.get(existUrl)
                         .then((response) => {
@@ -663,6 +658,7 @@ export default class K8sInfoPage extends Component {
                               {...formItemLayout}
                               validateStatus={this.yamlPathField.getError("yamlFilePath") ? "error" : ""}
                               help={this.yamlPathField.getError("yamlFilePath") ? "请输入文件路径" : ""}
+                              required
                     >
                         <div
                             style={{

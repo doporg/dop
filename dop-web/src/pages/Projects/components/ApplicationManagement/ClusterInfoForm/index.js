@@ -47,15 +47,16 @@ export default class ClusterInfoForm extends Component {
 
     clusterInfoSubmit = () => {
         let _this = this;
-        this.setState({
-            loading: true
-        })
+
         //校验输入
         this.field.validate((errors, values) => {
             console.log(errors);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
+                this.setState({
+                    loading: true
+                })
                 let postUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster"
                 Axios.post(postUrl, {
                     targetClusterUrl: _this.field.getValue("targetClusterUrl"),
@@ -85,7 +86,7 @@ export default class ClusterInfoForm extends Component {
 
     getClusterData() {
         let _this = this
-        let urlUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster"
+        let urlUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/clusterUrl"
         _this.setState({
             loading: true
         })

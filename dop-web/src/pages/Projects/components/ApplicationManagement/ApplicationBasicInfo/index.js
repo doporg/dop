@@ -34,6 +34,8 @@ export default class ApplicationBasicInfo extends Component {
         super(props);
         console.log(props)
         this.field = new Field(this);
+        console.log(props)
+        this.urlField = new Field(this);
         this.state = {
             urlEditMode: false,
             basicEditMode: false,
@@ -127,16 +129,18 @@ export default class ApplicationBasicInfo extends Component {
         this.field.validate((errors, values) => {
 
             console.log(errors, values);
-            this.setState({
-                loading: true
-            })
+
 
             // 没有异常则提交表单
             if (errors == null) {
+                this.setState({
+                    loading: true
+                })
                 console.log("noerros");
                 let url = API.gateway + '/application-server/app/' + this.state.appId;
                 Axios.put(url, {}, {
                         params: {
+                            title: this.field.getValue('title'),
                             description: this.field.getValue('description')
                         }
                     }
@@ -170,7 +174,7 @@ export default class ApplicationBasicInfo extends Component {
     urlSubmit() {
         let _this = this;
         //校验输入
-        this.field.validate((errors, values) => {
+        this.urlField.validate((errors, values) => {
 
             console.log(errors, values);
 
@@ -183,12 +187,12 @@ export default class ApplicationBasicInfo extends Component {
                 })
                 Axios.put(url, {}, {
                         params: {
-                            warehouseUrl: this.field.getValue("warehouseUrl"),
-                            imageUrl: this.field.getValue("imageUrl"),
-                            productionDbUrl: this.field.getValue("productionDbUrl"),
-                            testDbUrl: this.field.getValue("testDbUrl"),
-                            productionDomain: this.field.getValue("productionDomain"),
-                            testDomain: this.field.getValue("testDomain"),
+                            warehouseUrl: this.urlField.getValue("warehouseUrl"),
+                            imageUrl: this.urlField.getValue("imageUrl"),
+                            productionDbUrl: this.urlField.getValue("productionDbUrl"),
+                            testDbUrl: this.urlField.getValue("testDbUrl"),
+                            productionDomain: this.urlField.getValue("productionDomain"),
+                            testDomain: this.urlField.getValue("testDomain"),
                         }
                     }
                 )
@@ -216,17 +220,40 @@ export default class ApplicationBasicInfo extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
-        const opr = () => {
+
+        const titleOpr = () => {
+            const {init} = this.field;
             if (!this.state.basicEditMode) {
-                return <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.description}</span>
+                return (
+                    <div  {...init('title')}
+                          placeholder="应用名称"
+                          style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>)
             } else {
-                return <Input defaultValue={this.state.appBasicData.description} {...init('description')}
-                              placeholder="应用描述"/>
+                return (<Input defaultValue={this.state.appBasicData.title} {...init('title', {
+                    rules: [{
+                        required: true,
+                        message: "该项不能为空"
+                    }]
+                })}
+                               placeholder="应用标题"/>)
+            }
+
+        }
+        const opr = () => {
+            const {init} = this.field;
+            if (!this.state.basicEditMode) {
+                return (
+                    <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.description}</span>
+                )
+            } else {
+                return (
+                    <Input defaultValue={this.state.appBasicData.description} {...init('description')}
+                           placeholder="应用描述"/>)
             }
         }
 
         const urlFormRender = () => {
+            const {init} = this.urlField;
             console.log((this.state.appBasicData))
             if (this.state.urlEditMode) {
                 return (
@@ -234,14 +261,38 @@ export default class ApplicationBasicInfo extends Component {
 
                     <div>
 
-                    <FormItem{...formItemLayout} label="Git仓库地址：">
-                        <Input defaultValue={this.state.appBasicData.warehouseUrl} {...init('warehouseUrl')}
+                        <FormItem{...formItemLayout} label="Git仓库地址："
+                                 validateStatus={this.urlField.getError("warehouseUrl") ? "error" : ""}
+                                 help={this.urlField.getError("warehouseUrl") ? "请输入Git仓库地址" : ""}
+
+                                 required>
+                            <Input
+                                {...init('warehouseUrl', {
+                                    rules: [{
+                                        required: true,
+                                        message: "该项不能为空"
+                                    }]
+                                })}
+                                defaultValue={this.state.appBasicData.warehouseUrl}
+
                                placeholder="Git仓库地址"/>
                     </FormItem>
 
-                        <FormItem{...formItemLayout} label="镜像仓库地址：">
-                            <Input defaultValue={this.state.appBasicData.imageUrl} {...init('imageUrl')}
-                                   placeholder="镜像仓库地址"/>
+                        <FormItem{...formItemLayout} label="镜像仓库地址："
+                                 validateStatus={this.urlField.getError("imageUrl") ? "error" : ""}
+                                 help={this.urlField.getError("imageUrl") ? "请输入镜像仓库地址" : ""}
+
+                                 required>
+                            <Input
+                                {...init('imageUrl', {
+                                    rules: [{
+                                        required: true,
+                                        message: "该项不能为空"
+                                    }]
+                                })}
+                                defaultValue={this.state.appBasicData.imageUrl}
+
+                                placeholder="镜像仓库地址"/>
                         </FormItem>
 
                     <FormItem{...formItemLayout} label="开发数据库地址：">
@@ -371,10 +422,12 @@ export default class ApplicationBasicInfo extends Component {
 
 
                             <FormItem{...formItemLayout}
+                                     validateStatus={this.field.getError("title") ? "error" : ""}
+                                     help={this.field.getError("title") ? "请输入应用名称" : ""}
+                                     required
                                      label="应用名称：">
-                                <div  {...init('appTitle')}
-                                      placeholder="应用名称"
-                                      style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>
+                                {titleOpr()}
+
                             </FormItem>
 
                             <FormItem{...formItemLayout}
