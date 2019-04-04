@@ -122,16 +122,15 @@ public class RoleService {
     public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
-//        int count = (int) this.roleRepository.count();
         int count=0;
 
         Pagination<RoleV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-//        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
-        List<Role> roleList = this.roleRepository.findAll();
+        List<Role> roleList = this.roleRepository.findAll(sort);
         List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
+
         List<Role> roleList1=new ArrayList<>();
         for(Role role :roleList)
         {

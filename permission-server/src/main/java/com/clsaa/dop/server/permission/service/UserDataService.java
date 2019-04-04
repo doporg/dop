@@ -114,6 +114,9 @@ public class UserDataService {
 
         //查找用户用来实现该功能点的所有角色
         List<RoleBoV1> roleBoV1List=new ArrayList<>();
+
+        //ID list
+        List<Long> IdList=new ArrayList<>();
         for(RoleBoV1 roleBoV1:roleBoV1List1)
         {
             for(RoleBoV1 roleBoV11:roleBoV1List2)
@@ -122,7 +125,7 @@ public class UserDataService {
                 {roleBoV1List.add(roleBoV1);}
             }
         }
-        if(roleBoV1List.isEmpty())return null;
+        if(roleBoV1List.isEmpty())return IdList;
         for(RoleBoV1 roleBoV1 :roleBoV1List)
         {System.out.println(roleBoV1.getName());}
         Long ruleId=0l;
@@ -131,9 +134,8 @@ public class UserDataService {
                 ruleId = userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()).getId();
             }
         }
-        if(ruleId==0l)return null;
+        if(ruleId==0l)return IdList;
         System.out.println(ruleId);
-        List<Long> IdList=new ArrayList<>();
         List<UserData> userDataList=userDataDAO.findByRuleId(ruleId);
         for(UserData userData:userDataList){
             if(userData.getUserId()==userId)
