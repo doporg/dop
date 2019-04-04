@@ -1,5 +1,8 @@
 import React,{Component} from 'react';
-import {Dialog,Button} from '@icedesign/base';
+import {Dialog} from '@icedesign/base';
+import {Button} from "@alifd/next";
+import Axios from "axios";
+import API from "../../../API";
 
 
 
@@ -8,67 +11,63 @@ export default class DeleteNameSpaceDialog extends Component{
     constructor(props){
         super(props);
         this.state={
-            isSubmit:false,
             footerAlign: "center",
-            visible: false,
+            deleteData:[],
             style: {
                 width: "30%"
             },
-            createDialogStyle: {
+            deleteDialogStyle: {
                 width: "10%"
             },
-            createDialogVisible: false,
+            deleteDialogVisible: false,
         }
     }
+    onDeleteNamespace = () =>{
+        //删除对应的命名空间
+        // let url = API.test_image + '/v1/projects'+projectId;
+        // let _this = this;
+        // Axios.delete(url, {
+        //     headers: {
+        //         "x-login-user":37
+        //     }
+        //
+        // }).then(function (response) {
+        //         console.log("删除镜像");
+        // })
 
-    onClose = () => {
         this.setState({
-            visible: false
-        });
-    };
+            deleteDialogVisible: false,
+            deleteData:[]
+        })
 
-    onOk = () => {
-        this.setState({
-            isSubmit: true
-            // visible: false
-        });
     }
 
 
     onOpen = () => {
         this.setState({
-            visible: true
-        });
-    };
-    onCreateDialogClose = () => {
-        this.setState({
-            createDialogVisible: false
+            deleteDialogVisible: true
         });
     };
 
-    finished() {
+
+    onDeleteLogClose =()=>{
         this.setState({
-            visible: false,
-            createDialogVisible: true,
-            isSubmit: false
+            deleteDialogVisible:false
         })
-
-        this.state.refreshProjectList();
-        console.log("finished");
-    }
+    };
 
     render() {
         return (
             <span>
+                <Button onClick={this.onOpen} type="primary" warning>删除命名空间</Button>
 
-                <Dialog visible={this.state.createDialogVisible}
-                        onOk={this.onCreateDialogClose}
-                        onCancel={this.onCreateDialogClose}
-                        onClose={this.onCreateDialogClose}
-                        title="删除成功"
+                <Dialog visible={this.state.deleteDialogVisible}
+                        onOk={this.onDeleteNamespace}
+                        onCancel={this.onDeleteLogClose}
+                        onClose={this.onDeleteLogClose}
                         style={this.state.createDialogStyle}
                         footerAlign={this.state.footerAlign}>
-                命名空间删除成功！
+                确定要删除命名空间？
                 </Dialog>
             </span>
         );

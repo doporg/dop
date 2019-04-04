@@ -16,6 +16,7 @@ export default class NamespaceList extends Component {
         super(props);
         this.state = {
             currentData: [],
+            selectedKeys:[]
         };
 
     }
@@ -27,16 +28,32 @@ export default class NamespaceList extends Component {
         });
     }
 
+    onRowChange = (selectedKeys,records) => {
+        this.setState({
+            selectedKeys
+        });
+    }
+    onSelect = (selected)=>{
+        this.setState({
+            selected
+        })
+    }
+
     //链接 跳转到对应的命名空间
     idRender = function (id) {
         return <Link to={"/image/projects/"+id+"/repos"}
         >{id}</Link>
     }
+
     render() {
         return (
             <Row wrap gutter="20">
                 <Col>
-                    <Table dataSource={this.state.currentData}>
+                    <Table dataSource={this.state.currentData}
+                           rowSelection={{
+                               selectedRowKeys: this.state.selectedKeys,
+                               onSelect :this.onSelect
+                           }}>
                         <Table.Column cell={this.idRender}
                                       title="命名空间ID"
                                       dataIndex="projectId"/>

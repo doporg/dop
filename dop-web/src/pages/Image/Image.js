@@ -3,10 +3,11 @@ import {Breadcrumb, Input} from '@icedesign/base';
 import TopBar from './NamespaceManagement/TopBar';
 import Pagination from './NamespaceManagement/NamespacePagination'
 import CreateNamespaceDialog from './NamespaceManagement/CreateNamespaceDialog'
+import DeleteNameSpaceDialog from "./NamespaceManagement/DeleteNameSpaceDialog";
 
 export default class Image extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             createdProjectNeedRefresh: false,
         };
@@ -47,6 +48,9 @@ export default class Image extends Component {
                             // hasClear
                             onChange={this.onSearch.bind(this)}
                         />
+                    }
+                    extraDelete={
+                        <DeleteNameSpaceDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
                     }
                     extraAfter={< CreateNamespaceDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
                     }

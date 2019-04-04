@@ -17,7 +17,7 @@ export default class TopBar extends PureComponent {
                 {extraDelete ||(
                     <div style={styles.buttons}>
                         {buttonText ? (
-                            <Button size="large" type="primary" warning>删除</Button>
+                            <Button size="large" type="primary" warning>{buttonText}</Button>
                         ):null}
                     </div>
                 )}
