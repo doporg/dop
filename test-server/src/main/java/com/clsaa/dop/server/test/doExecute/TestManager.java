@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.clsaa.dop.server.test.doExecute.Operation.operationSorter;
-import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
 import static java.util.Objects.nonNull;
 
 /**

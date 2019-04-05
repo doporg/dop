@@ -7,11 +7,10 @@ import com.clsaa.dop.server.test.model.po.TestStep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
 import static java.util.stream.IntStream.range;
 
 /**

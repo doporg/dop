@@ -5,10 +5,9 @@ import com.clsaa.dop.server.test.model.param.RequestResultParam;
 import com.clsaa.dop.server.test.model.po.UrlResultParam;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.clsaa.dop.server.test.util.UserUtils.dateAndUser;
+import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
 
 /**
  * @author xihao
