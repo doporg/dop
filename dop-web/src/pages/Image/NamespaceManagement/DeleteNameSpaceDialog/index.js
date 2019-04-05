@@ -8,11 +8,11 @@ import API from "../../../API";
 
 export default class DeleteNameSpaceDialog extends Component{
 
+
     constructor(props){
         super(props);
         this.state={
             footerAlign: "center",
-            deleteData:[],
             style: {
                 width: "30%"
             },
@@ -20,24 +20,34 @@ export default class DeleteNameSpaceDialog extends Component{
                 width: "10%"
             },
             deleteDialogVisible: false,
+            deleteKeys:[],
+            refreshProjectList: this.props.refreshProjectList,
         }
+    }
+    componentWillReceiveProps(nextProps, nextContext) {
+        this.setState({
+            deleteKeys: nextProps.deleteKeys
+        });
     }
     onDeleteNamespace = () =>{
         //删除对应的命名空间
-        // let url = API.test_image + '/v1/projects'+projectId;
-        // let _this = this;
-        // Axios.delete(url, {
-        //     headers: {
-        //         "x-login-user":37
-        //     }
-        //
-        // }).then(function (response) {
-        //         console.log("删除镜像");
-        // })
+        let url ="";
+        let _this = this;
+        for (let i = 0; i < this.state.deleteKeys.length; i++) {
+            url = API.test_image + '/v1/projects/'+this.state.deleteKeys[i];
+            Axios.delete(url, {
+                headers: {
+                    "x-login-user":37
+                }
+            }).then(function (response) {
+                _this.state.refreshProjectList();
+                console.log("删除镜像");
+                console.log(response.status);
+            })
+        }
 
         this.setState({
-            deleteDialogVisible: false,
-            deleteData:[]
+            deleteDialogVisible: false
         })
 
     }

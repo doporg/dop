@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import {Breadcrumb, Input} from '@icedesign/base';
-import TopBar from './NamespaceManagement/TopBar';
-import Pagination from './NamespaceManagement/NamespacePagination'
-import CreateNamespaceDialog from './NamespaceManagement/CreateNamespaceDialog'
-import DeleteNameSpaceDialog from "./NamespaceManagement/DeleteNameSpaceDialog";
+import {Breadcrumb} from '@icedesign/base';
+import Pagination from './NamespaceManagement/NamespacePagination';
 
 export default class Image extends Component {
     constructor(props) {
@@ -23,11 +20,6 @@ export default class Image extends Component {
             createdProjectNeedRefresh: true
         });
     }
-    onSearch(value) {
-        this.setState({
-            searchKey: value
-        })
-    }
 
 
     componentWillMount(){
@@ -39,26 +31,9 @@ export default class Image extends Component {
                 <Breadcrumb style={{marginBottom: "10px"}}>
                     <Breadcrumb.Item link="#/image/projects">所有命名空间</Breadcrumb.Item>
                 </Breadcrumb>
-                <TopBar
-                    extraBefore={
-                        <Input
-                            size="large"
-                            placeholder="请输入关键字进行搜索"
-                            style={{width: '240px'}}
-                            // hasClear
-                            onChange={this.onSearch.bind(this)}
-                        />
-                    }
-                    extraDelete={
-                        <DeleteNameSpaceDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
-                    }
-                    extraAfter={< CreateNamespaceDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
-                    }
-                />
-
                 <Pagination createdProjectNeedRefresh={this.state.createdProjectNeedRefresh}
-                            refreshFinished={this.refreshFinished.bind(this)}
-                            searchKey={this.state.searchKey}/>
+                refreshFinished={this.refreshFinished.bind(this)}
+                searchKey={this.state.searchKey}/>
 
             </div>
         )
