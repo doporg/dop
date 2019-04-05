@@ -34,13 +34,9 @@ export default class DeleteNameSpaceDialog extends Component{
         let url ="";
         let _this = this;
         for (let i = 0; i < this.state.deleteKeys.length; i++) {
-            url = API.test_image + '/v1/projects/'+this.state.deleteKeys[i];
-            Axios.delete(url, {
-                //之后要删除
-                headers: {
-                    "x-login-user":37
-                }
-            }).then(function (response) {
+            url = API.image + '/v1/projects/'+this.state.deleteKeys[i];
+            Axios.delete(url, {})
+                .then(function (response) {
                 Toast.success("删除成功");
                 _this.state.refreshProjectList();
                 console.log("删除镜像");

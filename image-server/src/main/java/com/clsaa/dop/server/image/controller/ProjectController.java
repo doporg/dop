@@ -80,7 +80,7 @@ public class ProjectController {
     public void updatePublicStatus(@ApiParam(value = "项目id",required = true)@PathVariable(value = "projectId") Long projectId,
                                    @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId,
                                    @ApiParam(value = "属性名称",required = true) @PathVariable(value = "metaName")String metaName,
-                                   @ApiParam(value = "修改状态",required = true) @RequestParam String publicStatus){
+                                   @ApiParam(value = "修改状态",required = true) @RequestParam(value = "publicStatus") String publicStatus){
         projectService.updatePublicStatus(projectId,metaName,userId,publicStatus);
     }
 

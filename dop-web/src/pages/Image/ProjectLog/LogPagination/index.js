@@ -43,7 +43,7 @@ export default class LogPagination extends Component {
             loading: true
         })
         let tmpData = [];
-        let url = API.test_image + '/v1/projects';
+        let url = API.image + '/v1/projects';
         let _this = this;
         Axios.get(url, {
             params: {

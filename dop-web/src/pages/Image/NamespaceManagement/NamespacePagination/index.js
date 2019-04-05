@@ -53,15 +53,11 @@ export default class NamespacePagination extends Component {
     //获取最新数据并刷新
     refreshList(current, searchKey) {
         console.log(this.state.current);
-        let countUrl = API.test_image + '/v1/statistics';
-        let url = API.test_image + '/v1/projects';
+        let countUrl = API.image + '/v1/statistics';
+        let url = API.image + '/v1/projects';
         let _this = this;
         //获取数量
-        Axios.get(countUrl, {
-            headers: {
-                "x-login-user": 37
-            }
-        })
+        Axios.get(countUrl, {})
             .then(function (response) {
                 console.log("统计信息");
                 console.log(response.data.publicProjectCount+response.data.privateProjectCount);
@@ -71,9 +67,6 @@ export default class NamespacePagination extends Component {
             })
         //获取数据
         Axios.get(url, {
-            headers: {
-                "x-login-user": 37
-            },
             params:{
                 page:current,
                 pageSize: this.state.pageSize
@@ -120,7 +113,7 @@ export default class NamespacePagination extends Component {
         if (value==="true"){
             return <Switch onChange={(checked)=>{
                 let namespaceId = record.projectId;
-                let url = API.test_image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -128,11 +121,7 @@ export default class NamespacePagination extends Component {
                 }else {
                     temp = "false";
                 }
-                Axios.put(url, {
-                    //之后要删除
-                    headers: {
-                        "x-login-user":37
-                    },
+                Axios.put(url,{}, {
                     params:{
                         "publicStatus":temp
                     }
@@ -149,7 +138,7 @@ export default class NamespacePagination extends Component {
             return <Switch onChange={(checked)=>
             {
                 let namespaceId = record.projectId;
-                let url = API.test_image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -157,11 +146,7 @@ export default class NamespacePagination extends Component {
                 }else {
                     temp = "false";
                 }
-                Axios.put(url, {
-                    //之后要删除
-                    headers: {
-                        "x-login-user":37
-                    },
+                Axios.put(url, {},{
                     params:{
                         "publicStatus":temp
                     }

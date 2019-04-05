@@ -22,11 +22,7 @@ export default class Repos extends Component {
     refreshList() {
         let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
         let _this = this;
-        Axios.get(url, {
-            headers: {
-                userId:37
-            }
-        })
+        Axios.get(url, {})
             .then(function (response) {
                 console.log("镜像仓库信息");
                 console.log(response.data);
