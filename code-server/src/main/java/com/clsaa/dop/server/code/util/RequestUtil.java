@@ -68,7 +68,9 @@ public class RequestUtil {
 //
 //        httpPost(api+"/users",params);
 
-        String url=api+"/projects/3";
+        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
+
+        String url=api+"/user/keys?access_token="+access_token;
         FormatUtil.printJson(httpGet(url));
 
 

@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.dao.UserMapper;
 import com.clsaa.dop.server.code.feign.UserCredentialType;
 import com.clsaa.dop.server.code.feign.UserFeign;
+import com.clsaa.dop.server.code.model.bo.user.SSHKeyBo;
 import com.clsaa.dop.server.code.model.bo.user.TokenBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.util.RequestUtil;
+import com.clsaa.dop.server.code.util.TimeUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,49 @@ public class UserService {
     }
 
 
+    /**
+     * 查询用户的sshkey列表
+     * @param userId 用户id
+     * @return sshkey列表
+     */
+    public List<SSHKeyBo> findSSHKeys(Long userId){
 
+        String path="/user/keys";
+        List<SSHKeyBo> sshKeyBos=RequestUtil.getList(path,userId,SSHKeyBo.class);
+        for(SSHKeyBo sshKeyBo:sshKeyBos){
+            sshKeyBo.setCreated_at(TimeUtil.natureTime(sshKeyBo.getCreated_at()).get(1));
+        }
+        return sshKeyBos;
+    }
+
+
+    /**
+     * 用户添加一个ssh key
+     * @param key ssh key内容
+     * @param title 标题
+     * @param userId 用户id
+     */
+    public void addSSHKey(String key,String title,Long userId){
+
+        String path="/user/keys";
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("key",key));
+        params.add(new BasicNameValuePair("title",title));
+        RequestUtil.post(path,userId,params);
+
+    }
+
+    /**
+     * 用户删除一个ssh key
+     * @param id ssh key的id
+     * @param userId 用户id
+     */
+    public void deleteSSHkey(int id,Long userId){
+
+        String path="/user/keys/"+id;
+        RequestUtil.delete(path,userId);
+
+    }
 
 
 
