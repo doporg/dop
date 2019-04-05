@@ -2,11 +2,14 @@ package com.clsaa.dop.server.image.controller;
 
 import com.clsaa.dop.server.image.model.dto.ProjectDto1;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
+import com.clsaa.dop.server.image.model.po.PublicStatus;
 import com.clsaa.dop.server.image.model.vo.ProjectVO;
 import com.clsaa.dop.server.image.service.ProjectService;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,6 +73,15 @@ public class ProjectController {
     public void deleteProject(@ApiParam(value = "项目id",required = true) @PathVariable("projectId")Long projectId,
                               @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
         projectService.deleteProject(projectId,userId);
+    }
+
+    @ApiOperation(value = "修改的项目的公开属性",notes = "根据项目id来对项目的基本信息进行修改")
+    @PutMapping(value = "/v1/projects/{projectId}/metadatas/{metaName}")
+    public void updatePublicStatus(@ApiParam(value = "项目id",required = true)@PathVariable(value = "projectId") Long projectId,
+                                   @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId,
+                                   @ApiParam(value = "属性名称",required = true) @PathVariable(value = "metaName")String metaName,
+                                   @ApiParam(value = "修改状态",required = true) @RequestParam String publicStatus){
+        projectService.updatePublicStatus(projectId,metaName,userId,publicStatus);
     }
 
 }

@@ -2,6 +2,7 @@ package com.clsaa.dop.server.image.feign.harborfeign;
 
 import com.clsaa.dop.server.image.config.FeignConfig;
 import com.clsaa.dop.server.image.model.po.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -145,6 +146,19 @@ public interface ProjectFeign {
     ProjectMetadata projectsProjectIdMetadatasMetaNameGet(@PathVariable("project_id") Long projectId,
                                                           @PathVariable("meta_name") String metaName,
                                                           @RequestHeader(value = "Authorization") String auth);
+
+    /**
+     * 修改项目的公开状态
+     * @param projectId 项目id
+     * @param metaName 属性名称
+     * @param auth 用户权限参数
+     * @param publicStatus 修改后的公开状态
+     */
+    @PutMapping(value = "/projects/{project_id}/metadatas/{meta_name}")
+    void projectsProjectIdMetadatasMetaNamePut(@PathVariable("project_id") Long projectId,
+                                               @PathVariable("meta_name") String metaName,
+                                               @RequestHeader(value = "Authorization") String auth,
+                                               @RequestBody PublicStatus publicStatus);
 
     /**
      *  获取项目的参与人员
