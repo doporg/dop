@@ -84,9 +84,6 @@ public class UserController {
     @PostMapping("/user/keys")
     @ApiOperation(value = "添加一个ssh key",notes = "根据用户的id添加一个ssh key，包括key和title")
     public void addSSHKey(@ApiParam(value = "ssh key信息")@RequestBody SSHKeyDto sshKeyDto){
-        System.out.println(sshKeyDto.getKey());
-        System.out.println(sshKeyDto.getTitle());
-        System.out.println(sshKeyDto.getUserId());
         userService.addSSHKey(sshKeyDto.getKey(), sshKeyDto.getTitle(), sshKeyDto.getUserId());
     }
 

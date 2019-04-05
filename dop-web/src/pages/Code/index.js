@@ -12,6 +12,7 @@ import FilePathList from './FilePathList';
 import Commit from './Commit';
 import EditProject from './EditProject';
 import SSH from './SSH';
+import NewSSH from './NewSSH'
 
 const codeConfig = [
 
@@ -71,6 +72,11 @@ const codeConfig = [
         layout: CodeLayout,
         component: SSH
     },
+    {
+        path: '/code/:username/:projectid/ssh/new',
+        layout: CodeLayout,
+        component: NewSSH
+    }
 
 ];
 
