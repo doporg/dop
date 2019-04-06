@@ -46,6 +46,12 @@ export default class SSH extends React.Component{
     }
 
 
+    readmeLink(){
+        let {username,projectid}=this.props.match.params;
+        this.props.history.push("/code/"+username+"/"+projectid+"/ssh/README");
+    }
+
+
 
 
 
@@ -54,7 +60,7 @@ export default class SSH extends React.Component{
             <div className="ssh-container">
                 <div className="div-ssh-top">
                     <span className="text-ssh-intro">在增加 SSH 密钥之前需要先</span>
-                    <a className="text-ssh-help">生成密钥。</a>
+                    <a onClick={this.readmeLink.bind(this)} className="text-ssh-help">生成密钥。</a>
                     <button onClick={this.newKey.bind(this)} className="btn-ssh-add">+ 增加 SSH 密钥</button>
                 </div>
                 <table className="table-ssh-list">
