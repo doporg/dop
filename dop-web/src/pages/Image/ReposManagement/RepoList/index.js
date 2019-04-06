@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {Table} from '@icedesign/base';
+import {Input, Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from 'react-router-dom';
+import DeleteRepoDialog from "../DeleteRepoDialog";
+import TopBar from "../TopBar"
 
 const {Row} = Grid;
 
@@ -14,13 +16,31 @@ export default class RepoList extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props.currentData)
-        //接受来自分页器的参数即当前页数据
         this.state = {
-            currentData: []
+            current : 0,
+            currentData: [],
+            rowSelection: {
+                onChange: this.onChange.bind(this),
+                selectedRowKeys: []
+            },
+            pageSize :10,
+            totalPage: 1,
+            totalCount: 0,
+            refreshList: this.props.refreshList,
+            loading: true,
         };
 
     }
+
+
+    //选择器监听
+    onChange(names, records) {
+        let {rowSelection} = this.state;
+        rowSelection.selectedRowKeys = names;
+        console.log("onChange",rowSelection.selectedRowKeys, records);
+        this.setState({rowSelection});
+    }
+
 
     //接收父组件的参数
     componentWillReceiveProps(nextProps, nextContext) {
@@ -29,31 +49,55 @@ export default class RepoList extends Component {
         });
     }
 
-    //链接 跳转到对应的命名空间
-    idRender = function (id) {
-        return <Link to={"/image/projects/"}
-        >{id}</Link>
+
+    onSearch(value){
+        this.setState({
+            searchKey: value
+        })
     }
+
+    nameRender=(value, index, record)=> {
+        //链接到对应的镜像列表
+        return <Link to={"/image/projects/"+record.projectId+"/repos/"+value+"/images"}
+        >{value}</Link>
+    };
+
     render() {
         return (
-            <Row wrap gutter="20">
-                <Col>
-                    <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender}
-                                      title="命名空间ID"
-                                      dataIndex="projectId"/>
+            <div>
+                <TopBar
+                    extraBefore={
+                        <Input
+                            size="large"
+                            placeholder="请输入关键字进行搜索"
+                            style={{width: '240px'}}
+                            // hasClear
+                            onChange={this.onSearch.bind(this)}
+                        />
+                    }
+                    extraAfter={<DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.state.refreshList}/>
+                    }
+                />
+                <Row wrap gutter="20">
+                    <Col>
+                        <Table dataSource={this.state.currentData}
+                               rowSelection={this.state.rowSelection}
+                               isLoading={this.state.isLoading}
+                               primaryKey="name"
+                        >
 
-                        <Table.Column title="镜像仓库名称"
-                                      dataIndex="name"/>
+                            <Table.Column title="镜像仓库名称" cell={this.nameRender}
+                                          dataIndex="name"/>
 
-                        <Table.Column title="标签数"
-                                      dataIndex="tagsCount"/>
+                            <Table.Column title="标签数"
+                                          dataIndex="tagsCount"/>
 
-                        <Table.Column title="下载数"
-                                      dataIndex="pullCount"/>
-                    </Table>
-                </Col>
-            </Row>
+                            <Table.Column title="下载数"
+                                          dataIndex="pullCount"/>
+                        </Table>
+                    </Col>
+                </Row>
+            </div>
         );
     }
 

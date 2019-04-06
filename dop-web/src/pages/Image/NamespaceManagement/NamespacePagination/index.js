@@ -103,7 +103,7 @@ export default class NamespacePagination extends Component {
     }
 
 
-    //链接 跳转到对应的命名空间
+    //链接跳转到对应的命名空间
     idRender = function (id) {
         return <Link to={"/image/projects/" + id + "/repos"}
         >{id}</Link>

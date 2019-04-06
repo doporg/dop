@@ -29,7 +29,7 @@ export default class Image extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">所有命名空间</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">命名空间列表</Breadcrumb.Item>
                 </Breadcrumb>
                 <Pagination createdProjectNeedRefresh={this.state.createdProjectNeedRefresh}
                 refreshFinished={this.refreshFinished.bind(this)}

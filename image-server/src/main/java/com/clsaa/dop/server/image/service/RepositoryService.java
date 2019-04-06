@@ -20,11 +20,16 @@ import java.util.List;
 @Service
 public class RepositoryService {
 
-    @Autowired
-    private HarborRepoFeign harborRepoFeign;
+    private final HarborRepoFeign harborRepoFeign;
+
+    private final UserFeign userFeign;
 
     @Autowired
-    private UserFeign userFeign;
+    public RepositoryService(HarborRepoFeign harborRepoFeign, UserFeign userFeign) {
+        this.harborRepoFeign = harborRepoFeign;
+        this.userFeign = userFeign;
+    }
+
     /**
      * 获取对应的仓库信息
      * @param projectId 项目id
@@ -44,11 +49,15 @@ public class RepositoryService {
 
     /**
      *
-     * @param projectId 项目id
+     * @param projectName 项目id
      * @param repoName 镜像仓库名称
      * @param userId 用户id
      */
-    public void deleteRepository(Integer projectId,String repoName,Long userId){
-
+    public void deleteRepository(String projectName,String repoName,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        String repo = projectName+"/"+repoName;
+        System.out.println(repo);
+        harborRepoFeign.repositoriesRepoNameDelete(repo,auth);
     }
 }
