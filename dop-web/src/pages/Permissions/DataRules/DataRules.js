@@ -52,14 +52,14 @@ export default class DataRules extends Component
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let getRoleUrl=API.gateway+"/permission-server/v1/roles/roles";
+        let getRoleUrl=API.permission+"/v1/roles/roles";
         /*先得到角色与ID的映射表*/
         Axios.get(getRoleUrl).then(response1=>{
             response1.data.forEach(item=>{
                 roleMap.set(item.id,item.name)
             })
             console.log(roleMap)
-            let url = API.gateway + "/permission-server/v1/userRules" ;
+            let url = API.permission + "/v1/userRules" ;
             let params=
                 {
                     pageNo:this.state.pageNo,
@@ -88,7 +88,7 @@ export default class DataRules extends Component
     //翻页
     onChange=currentPage=> {
         this.setState({isLoading:true})
-        let url = API.gateway + "/permission-server/v1/userRules" ;
+        let url = API.permission + "/v1/userRules" ;
         let params=
             {
                 pageNo:currentPage,
@@ -135,7 +135,7 @@ export default class DataRules extends Component
             let roleId=this.state.rowSelection.selectedRowKey[0]
             console.log(roleId)
 
-            let createUserRuleUrl=API.gateway+"/permission-server/v1/userRules"
+            let createUserRuleUrl=API.permission+"/v1/userRules"
 
             let RuleParams={fieldName: values.fieldName,rule:values.rule,roleId:roleId}
 
@@ -153,7 +153,7 @@ export default class DataRules extends Component
     //弹出创建数据规则窗
     onRuleOpen = () => {
 
-        let url=API.gateway+"/permission-server/v1/roles/roles";
+        let url=API.permission+"/v1/roles/roles";
         Axios.get(url).then(response=>{
 
             this.setState({roleList:response.data})
@@ -178,7 +178,7 @@ export default class DataRules extends Component
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.gateway + "/permission-server/v1/userRules/{id}" ;
+        let url = API.permission + "/v1/userRules/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -234,7 +234,7 @@ export default class DataRules extends Component
                 console.log("Errors in form!!!");
                 return;}
             this.setState({dataVisible: false})
-            let url=API.gateway+"/permission-server/v1/userData"
+            let url=API.permission+"/v1/userData"
             let params={ruleId:this.state.currentRuleId,userId:values.userId,fieldValue:values.fieldValue}
 
             Axios.post(url,{},{params:(params)}).then(response=>{

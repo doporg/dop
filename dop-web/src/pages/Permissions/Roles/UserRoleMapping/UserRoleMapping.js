@@ -71,14 +71,14 @@ export default class UserRoleMapping extends Component {
             currentRoles:[],
                 roleIsLoading:true,
         })
-        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
+        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
         let param={userId:id}
         Axios.get(getRoleUrl,{params:(param)}).then(response=>
         {
             this.setState({currentRoles:response.data,roleIsLoading:false})
             console.log(this.state.currentRoles)
             //获取全部角色
-            let url=API.gateway+"/permission-server/v1/roles";
+            let url=API.permission+"/v1/roles";
             Axios.get(url).then(response=>{
                 this.setState({
                     roleList:response.data.pageList,
@@ -94,7 +94,7 @@ export default class UserRoleMapping extends Component {
 
     //用户角色页数变更
     onRoleChange=currentRolePage=>{
-        let url=API.gateway+"/permission-server/v1/roles"
+        let url=API.permission+"/v1/roles"
         let params={
             pageNo:currentRolePage,
             pageSize:this.state.pageSize
@@ -125,10 +125,10 @@ export default class UserRoleMapping extends Component {
     };
     removeRole=id=>{
         console.log("用户ID"+id)
-        let url=API.gateway+"/permission-server/v1/users/roles"
+        let url=API.permission+"/v1/users/roles"
         let param={userId:this.state.currentUserId,
             roleId:id}
-        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
+        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
         let userId={userId:this.state.currentUserId}
         Axios.delete(url,{params:(param)}).then(response=>
             //再次获取该用户角色
@@ -141,10 +141,10 @@ export default class UserRoleMapping extends Component {
         )
     }
     addRole=id=>{
-        let url =API.gateway+"/permission-server/v1/users/rolemap"
+        let url =API.permission+"/v1/users/rolemap"
         let param={userId:this.state.currentUserId,
             roleId:id}
-        let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
+        let getRoleUrl=API.permission+"/v1/users/roles/{id}"
         let userId={userId:this.state.currentUserId}
         Axios.post(url,{},{params:(param)}).then(response=>
             Axios.get(getRoleUrl,{params:(userId)}).then(response1=>
@@ -164,7 +164,7 @@ export default class UserRoleMapping extends Component {
             currentPermissions:[],
             currentUserId:id ,
             permissionIsLoading:true})
-        let getPermissionUrl=API.gateway+"/permission-server/v1/users/permissions/{id}"
+        let getPermissionUrl=API.permission+"/v1/users/permissions/{id}"
         let param={userId:id}
         Axios.get(getPermissionUrl,{params:(param)}).then(response=>
         {
@@ -187,7 +187,7 @@ export default class UserRoleMapping extends Component {
             currentUserData:[],
             dataIsLoading:true
         })
-        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let getDataUrl=API.permission+"/v1/userData/byUser"
         let param={userId:id}
         Axios.get(getDataUrl,{params:(param)}).then(response=>
         {
@@ -200,9 +200,9 @@ export default class UserRoleMapping extends Component {
     //删除用户数据
     deleteUserData=id=>{
         console.log("用户ID"+id)
-        let url=API.gateway+"/permission-server/v1/userData/{id}"
+        let url=API.permission+"/v1/userData/{id}"
         let param={id:id}
-        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let getDataUrl=API.permission+"/v1/userData/byUser"
         let userId={userId:this.state.currentUserId}
         Axios.delete(url,{params:(param)}).then(response=>
             //再次获取该用户所有数据
@@ -218,7 +218,7 @@ export default class UserRoleMapping extends Component {
     //为用户添加角色时的搜索功能
     onSearchChange=key=>{
 
-        let url=API.gateway+"/permission-server/v1/roles"
+        let url=API.permission+"/v1/roles"
         let params={
             pageNo:1,
             pageSize:this.state.pageSize,
@@ -237,7 +237,7 @@ export default class UserRoleMapping extends Component {
     //查看用户数据时的搜索功能
     onDataSearchChange=key=>{
 
-        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let getDataUrl=API.permission+"/v1/userData/byUser"
         let params={userId:this.state.currentUserId,
                     key:key}
 
