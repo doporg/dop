@@ -53,12 +53,14 @@ public class RoleService {
     @Autowired
     //关联关系service
     private UserRoleMappingService userRoleMappingService;
+
     @Autowired
-    //用户数据规则
+    //数据规则
     private UserRuleService userRuleService;
+
     @Autowired
-    //用户数据
-    private UserDataService userDataService;
+    //权限管理服务
+    private AuthenticationService authenticationService;
 
     /* *
      *
@@ -79,7 +81,7 @@ public class RoleService {
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Long createRole(Long parentId,String name, Long cuser,Long muser)
     {
-            if(permissionService.checkUserPermission("创建角色",cuser))
+            if(authenticationService.checkUserPermission("创建角色",cuser))
             {
                 Role existRole=this.roleRepository.findByName(name);
                 BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
@@ -93,10 +95,10 @@ public class RoleService {
                         .deleted(false)
                         .build();
                 roleRepository.saveAndFlush(role);
-                userDataService.addData(
-                        userRuleService.findUniqueRule("in","roleId",
-                                roleRepository.findByName("权限管理员").getId()).getId(),
-                        cuser,role.getId(),cuser,muser);
+                authenticationService.addData(
+                        authenticationService.findUniqueRule("in","roleId",
+                                authenticationService.findByName("权限管理员").getId()).getId(),
+                        cuser,role.getId(),cuser);
                 return role.getId();
             }
             return null;
@@ -139,7 +141,7 @@ public class RoleService {
             roleList = this.roleRepository.findByNameLike("%"+key+"%");
         }
 
-        List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
+        List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
 
         List<Role> roleList1=new ArrayList<>();
         for(Role role :roleList)
@@ -171,7 +173,7 @@ public class RoleService {
     {
         if(permissionService.checkUserPermission("删除角色",userId))
         {
-            if(userDataService.check("删除角色",userId,"roleId",id))
+            if(authenticationService.check("删除角色",userId,"roleId",id))
             {
                 rolePermissionMappingService.deleteByRoleId(id);
                 userRuleService.deleteByRoleId(id);

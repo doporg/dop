@@ -56,7 +56,6 @@ public class UserDataController {
     }
 
     //判断该用户当前功能点是否可在该条数据执行
-    //使用方法： roleId
     @ApiOperation(value = "验证某个功能点操作的数据是否允许操作", notes = "验证某个功能点操作的数据是否允许操作")
     @GetMapping("/v1/userData")
     public boolean check(

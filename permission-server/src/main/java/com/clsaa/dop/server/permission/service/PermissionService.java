@@ -47,12 +47,8 @@ public class PermissionService {
     private UserRoleMappingService userRoleMappingService;
 
     @Autowired
-    //用户数据
-    private UserDataService userDataService;
-
-    @Autowired
-    //用户数据规则
-    private UserRuleService userRuleService;
+    //权限管理服务
+    private AuthenticationService authenticationService;
 
 /* *
  *
@@ -75,7 +71,7 @@ public class PermissionService {
     public void createPermission(Long parentId,String name,Integer isPrivate,String description,
                                        Long cuser,Long muser)
     {
-        if(checkUserPermission("创建功能点",cuser))
+        if(authenticationService.checkUserPermission("创建功能点",cuser))
         {
             Permission existPermission=this.permissionRepository.findByName(name);
             BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
@@ -91,10 +87,10 @@ public class PermissionService {
                     .deleted(false)
                     .build();
             permissionRepository.saveAndFlush(permission);
-            userDataService.addData(
-                    userRuleService.findUniqueRule("in","permissionId",
-                            roleService.findByName("权限管理员").getId()).getId(),
-                    cuser,permission.getId(),cuser,muser);
+            authenticationService.addData(
+                    authenticationService.findUniqueRule("in","permissionId",
+                            authenticationService.findByName("权限管理员").getId()).getId(),
+                    cuser,permission.getId(),cuser);
         }
 
 
@@ -131,7 +127,7 @@ public class PermissionService {
             permissionList = this.permissionRepository.findByNameLike("%"+key+"%");
         }
 
-        List<Long> idList=userDataService.findAllIds("查询功能点",userId,"permissionId");
+        List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
         List<Permission> permissionList1=new ArrayList<>();
         for(Permission permission :permissionList)
@@ -164,9 +160,9 @@ public class PermissionService {
     @Transactional
     public void deleteById(Long id,Long userId)
     {
-        if(checkUserPermission("删除功能点",userId))
+        if(authenticationService.checkUserPermission("删除功能点",userId))
         {
-            if(userDataService.check("删除功能点",userId,"permissionId",id))
+            if(authenticationService.check("删除功能点",userId,"permissionId",id))
             {
                 rolePermissionMappingService.deleteByPermissionId(id);
                 permissionRepository.deleteById(id);
