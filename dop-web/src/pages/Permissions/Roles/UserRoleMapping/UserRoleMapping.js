@@ -3,6 +3,10 @@ import {Dialog, Feedback, Field, Table} from "@icedesign/base";
 import API from "../../../API";
 import Axios from "axios";
 import Button from "@icedesign/base/lib/button";
+import Pagination from "@icedesign/base/lib/pagination";
+import Search from "@icedesign/base/lib/search";
+
+
 
 /**
  *  用户关联角色管理
@@ -34,9 +38,20 @@ export default class UserRoleMapping extends Component {
 
             isLoading:true,
             permissionIsLoading:true,
-            pageNo:1,
-            pageSize:8,
-            totalCount:0
+            roleIsLoading:true,
+            dataIsLoading:true,
+
+            rolePageNo:1,
+            rolePageSize:8,
+            roleTotalCount:0,
+
+            dataPageNo:1,
+            dataPageSize:8,
+            dataTotalCount:0,
+
+            permissionPageNo:1,
+            permissionPageSize:8,
+            permissionTotalCount:0
         };
 
     };
@@ -53,23 +68,44 @@ export default class UserRoleMapping extends Component {
         //获取当前用户角色
         this.setState({
             currentUserId:id ,
-            currentRoles:[]})
+            currentRoles:[],
+                roleIsLoading:true,
+        })
         let getRoleUrl=API.gateway+"/permission-server/v1/users/roles/{id}"
         let param={userId:id}
         Axios.get(getRoleUrl,{params:(param)}).then(response=>
         {
-            this.setState({currentRoles:response.data})
+            this.setState({currentRoles:response.data,roleIsLoading:false})
             console.log(this.state.currentRoles)
             //获取全部角色
-            let url=API.gateway+"/permission-server/v1/roles/roles";
+            let url=API.gateway+"/permission-server/v1/roles";
             Axios.get(url).then(response=>{
-                this.setState({roleList:response.data})
+                this.setState({
+                    roleList:response.data.pageList,
+                    rolePageNo:response.data.pageNo,
+                    roleTotalCount:response.data.totalCount})
             })
 
         })
 
         this.setState({visible:true
         });
+    }
+
+    //用户角色页数变更
+    onRoleChange=currentRolePage=>{
+        let url=API.gateway+"/permission-server/v1/roles"
+        let params={
+            pageNo:currentRolePage,
+            pageSize:this.state.pageSize
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                roleList:response.data.pageList,
+                rolePageNo:response.data.pageNo,
+                roleTotalCount:response.data.totalCount
+            })
+        })
     }
 
     onPermissionClose=reason=>{
@@ -139,19 +175,23 @@ export default class UserRoleMapping extends Component {
         });
     }
 
+    //用户功能点页数变更
+
+
     //弹出用户数据窗口
     showUserData=id=>{
 
         //获取当前用户的所有可操作数据
         this.setState({
             currentUserId:id,
-            currentUserData:[]
+            currentUserData:[],
+            dataIsLoading:true
         })
         let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
         let param={userId:id}
         Axios.get(getDataUrl,{params:(param)}).then(response=>
         {
-            this.setState({currentUserData:response.data})
+            this.setState({currentUserData:response.data ,dataIsLoading:false})
         })
 
         this.setState({userDataVisible:true
@@ -175,6 +215,39 @@ export default class UserRoleMapping extends Component {
         )
     }
 
+    //为用户添加角色时的搜索功能
+    onSearchChange=key=>{
+
+        let url=API.gateway+"/permission-server/v1/roles"
+        let params={
+            pageNo:1,
+            pageSize:this.state.pageSize,
+            key:key
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                roleList:response.data.pageList,
+                rolePageNo:response.data.pageNo,
+                roleTotalCount:response.data.totalCount
+            })
+        })
+
+    }
+
+    //查看用户数据时的搜索功能
+    onDataSearchChange=key=>{
+
+        let getDataUrl=API.gateway+"/permission-server/v1/userData/byUser"
+        let params={userId:this.state.currentUserId,
+                    key:key}
+
+        Axios.get(getDataUrl,{params:(params)}).then(response=>{
+            this.setState({
+                currentUserData:response.data
+            })
+        })
+
+    }
     render() {
         const dialogStyle= {
             width: "60%" ,height:"70%"
@@ -264,7 +337,8 @@ export default class UserRoleMapping extends Component {
                             <Table
                                 hasBorder={false}
                                 dataSource={this.state.currentRoles}
-                                primaryKey="id">
+                                primaryKey="id"
+                                isLoading={this.state.roleIsLoading}>
                                 <Table.Column  title="名称" dataIndex="name" />
                                 <Table.Column title="删除操作" cell={deleteRoleMap} width="10%" />
                             </Table>
@@ -272,6 +346,12 @@ export default class UserRoleMapping extends Component {
 
 
                             <h2>所有角色</h2>
+                            <Search
+                            onChange={this.onSearchChange.bind(this)}
+                            placeholder="输入角色名称搜索"
+                            hasIcon={false}
+                            autoWidth
+                            />
                             <Table
                                 hasBorder={false}
                                 dataSource={this.state.roleList}
@@ -279,6 +359,11 @@ export default class UserRoleMapping extends Component {
                                 <Table.Column  title="名称" dataIndex="name" />
                                 <Table.Column title="添加" cell={addRoleMap} width="10%" />
                             </Table>
+                            <Pagination total={this.state.roleTotalCount}
+                                current={this.state.rolePageNo}
+                                onChange={this.onRoleChange}
+                                pageSize={this.state.rolePageSize}
+                                className="pagination" />
                 </Dialog>
 
                 <Dialog
@@ -307,9 +392,16 @@ export default class UserRoleMapping extends Component {
                     minMargin={5}
                     footer={footer3}
                     shouldUpdatePosition={true}>
+                    <Search
+                        onChange={this.onDataSearchChange.bind(this)}
+                        placeholder="输入相关描述进行搜索"
+                        hasIcon={false}
+                        autoWidth
+                    />
                     <Table
                         hasBorder={false}
-                        dataSource={this.state.currentUserData}>
+                        dataSource={this.state.currentUserData}
+                        isLoading={this.state.dataIsLoading}>
                         <Table.Column  title="ID" dataIndex="id" width="10%" />
                         <Table.Column  title="规则ID" dataIndex="ruleId" width="10%" />
                         <Table.Column  title="数据描述" dataIndex="description" />

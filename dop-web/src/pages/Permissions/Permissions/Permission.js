@@ -15,6 +15,7 @@ import Input from "@icedesign/base/lib/input";
 import Select from "@icedesign/base/lib/select";
 import {Nav ,Icon , Menu} from "@icedesign/base";
 import '../Styles.scss'
+import Search from "@icedesign/base/lib/search";
 
 
 const { Item: FormItem } = Form;
@@ -233,6 +234,24 @@ export default class Permission extends Component {
         });
     };
 
+    //功能点的搜索功能
+    onSearchChange=key=>{
+        this.setState({isLoading:true})
+        let url=API.gateway+"/permission-server/v1/permissions"
+        let params={
+            pageNo:1,
+            pageSize:this.state.permissionPageSize,
+            key:key
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                currentData:response.data.pageList,
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount,
+                isLoading:false
+            })
+        })
+    }
     render() {
         const { init, getError, getState } = this.field;
         const { Item } = Nav;
@@ -347,7 +366,14 @@ export default class Permission extends Component {
                 </Form>
             </Dialog>
 
-
+            <Search
+                className="search"
+                onChange={this.onSearchChange.bind(this)}
+                dataSource={this.state.dataSource}
+                placeholder="输入功能点名称搜索"
+                hasIcon={false}
+                autoWidth
+            />
             <Table dataSource={this.state.currentData}
                    isLoading={this.state.isLoading}
                    hasBorder={false}>

@@ -9,6 +9,7 @@ import BalloonConfirm from "@icedesign/balloon-confirm";
 import Input from "@icedesign/base/lib/input";
 import Select, {Option} from "@icedesign/base/lib/select";
 import { Link } from 'react-router-dom';
+import Search from "@icedesign/base/lib/search";
 const { Item: FormItem } = Form;
 /**
  *  角色管理
@@ -46,9 +47,16 @@ export default class Role extends Component {
                     parentId:"",
                     name:"",
                 },
+
             pageNo:1,
             pageSize:8,
-            totalCount:0
+            totalCount:0,
+
+           permissionPageNo:1,
+           permissionPageSize:8,
+           permissionTotalCount:0
+
+
         };
 
     }
@@ -207,9 +215,12 @@ export default class Role extends Component {
             })
             this.setState({roleSelectList:tmpList})
             let url=API.gateway+"/permission-server/v1/roles/permissions";
+
             Axios.get(url).then(response=>{
 
-                this.setState({permissionList:response.data})
+                this.setState({
+                    permissionList:response.data
+                })
             }).catch(error=>{
                 console.log(error)
             })
@@ -247,9 +258,10 @@ export default class Role extends Component {
     //弹出角色功能点窗户
     editRoleOpen=id=>{
 
+
         console.log("ID是"+id)
             //获取当前角色功能点
-        this.setState({currentRoleId:id})
+        this.setState({currentRoleId:id ,permissionPageNo:1})
             let getPermissionUrl=API.gateway+"/permission-server/v1/roles/permissions/{id}"
             let param={roleId:id}
             Axios.get(getPermissionUrl,{params:(param)}).then(response=>
@@ -257,9 +269,17 @@ export default class Role extends Component {
                 this.setState({currentPermission:response.data})
                 console.log(this.state.currentPermission)
                 //获取全部功能点
-                let url=API.gateway+"/permission-server/v1/roles/permissions";
-                Axios.get(url).then(response=>{
-                    this.setState({permissionList:response.data})
+                let url=API.gateway+"/permission-server/v1/permissions";
+                let params={
+                    pageNo:this.state.permissionPageNo,
+                    pageSize:this.state.permissionPageSize
+                }
+                Axios.get(url,{params:(params)}).then(response=>{
+                    this.setState({
+                        permissionList:response.data.pageList,
+                        permissionPageNo:response.data.pageNo,
+                        permissionTotalCount:response.data.totalCount
+                    })
                 })
 
             })
@@ -269,6 +289,21 @@ export default class Role extends Component {
         });
     }
 
+    //功能点页数变更
+    onPermissionChange=currentPermissionPage=>{
+        let url=API.gateway+"/permission-server/v1/permissions"
+        let params={
+            pageNo:currentPermissionPage,
+            pageSize:this.state.permissionPageSize
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                permissionList:response.data.pageList,
+                permissionPageNo:response.data.pageNo,
+                permissionTotalCount:response.data.totalCount
+            })
+        })
+    }
 
     //确认删除操作以及
     //删除功能点
@@ -324,6 +359,44 @@ export default class Role extends Component {
                 this.setState({currentPermission:response1.data})
             })
         )
+    }
+
+    //为角色添加功能点时的搜索功能
+    onSearchChange=key=>{
+        let url=API.gateway+"/permission-server/v1/permissions"
+        let params={
+            pageNo:1,
+            pageSize:this.state.permissionPageSize,
+            key:key
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                permissionList:response.data.pageList,
+                permissionPageNo:response.data.pageNo,
+                permissionTotalCount:response.data.totalCount
+            })
+        })
+    }
+
+    //角色的搜索功能
+    onRoleSearchChange=key=>{
+
+        this.setState({isLoading:true})
+        let url=API.gateway+"/permission-server/v1/roles"
+        let params={
+            pageNo:1,
+            pageSize:this.state.pageSize,
+            key:key
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                currentData:response.data.pageList,
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount,
+                isLoading:false
+            })
+        })
+
     }
     render() {
         const { init } = this.field;
@@ -492,7 +565,16 @@ export default class Role extends Component {
                             </FormItem>
 
                             <FormItem>
+
                                 <h2>所有功能点</h2>
+
+                                        <Search
+                                        onChange={this.onSearchChange.bind(this)}
+                                        dataSource={this.state.dataSource}
+                                        placeholder="输入功能点名称搜索"
+                                        hasIcon={false}
+                                        autoWidth
+                                        />
                                         <Table
                                             hasBorder={false}
                                             dataSource={this.state.permissionList}
@@ -501,10 +583,24 @@ export default class Role extends Component {
                                                 <Table.Column title="功能描述" dataIndex="description" />
                                                 <Table.Column title="添加" cell={addPermissionMap} width="10%" />
                                         </Table>
+                                <Pagination total={this.state.permissionTotalCount}
+                                            current={this.state.permissionPageNo}
+                                            onChange={this.onPermissionChange}
+                                            pageSize={this.state.permissionPageSize}
+                                            className="pagination" />
                             </FormItem>
 
                         </Form>
                 </Dialog>
+
+                <Search
+                    className="search"
+                    onChange={this.onRoleSearchChange.bind(this)}
+                    dataSource={this.state.dataSource}
+                    placeholder="输入功能点名称搜索"
+                    hasIcon={false}
+                    autoWidth
+                />
 
                 <Table
                     hasBorder={false}
