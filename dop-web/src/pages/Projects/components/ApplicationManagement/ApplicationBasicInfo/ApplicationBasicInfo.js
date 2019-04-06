@@ -3,7 +3,7 @@ import {Breadcrumb, Button, Card, Dialog, Feedback, Field, Form, Input, Loading}
 import Axios from "axios";
 import API from "../../../../API";
 import TopBar from "./topbar";
-
+import "./ApplicationBasicInfo.scss"
 
 const Toast = Feedback.toast;
 const FormItem = Form.Item;
@@ -11,17 +11,7 @@ const formItemLayout = {
     labelCol: {span: 10},
     wrapperCol: {span: 14}
 };
-const style = {
-    background: "#FFF",
-    width: "100%",
-    height: "100%"
-};
-const style1 = {
-    padding: "2%",
-    background: "#FFF",
-    marginTop: "2%",
-    width: "100%"
-};
+
 
 /**
  * 应用基本信息页面
@@ -49,11 +39,15 @@ export default class ApplicationBasicInfo extends Component {
 
     //加载应用基本信息
     componentDidMount() {
+        this.getData()
+    }
+
+    getData() {
         this.setState({
             loading: true
         })
         let _this = this;
-        let url = API.gateway + '/application-server/app/' + _this.state.appId + "/urlInfo";
+        let url = API.application + '/app/' + _this.state.appId + "/urlInfo";
 
         //获取应用基本信息
         Axios.get(url)
@@ -137,7 +131,7 @@ export default class ApplicationBasicInfo extends Component {
                     loading: true
                 })
                 console.log("noerros");
-                let url = API.gateway + '/application-server/app/' + this.state.appId;
+                let url = API.application + '/app/' + this.state.appId;
                 Axios.put(url, {}, {
                         params: {
                             title: this.field.getValue('title'),
@@ -147,18 +141,7 @@ export default class ApplicationBasicInfo extends Component {
                 )
                     .then(function (response) {
 
-
-                        //提交完成后刷新当前页面
-                        let url = API.gateway + '/application-server/app/' + _this.state.appId + '/urlInfo';
-                        Axios.get(url)
-                            .then(function (response) {
-                                console.log(response)
-                                _this.setState({
-                                    appBasicData: response.data,
-                                    basicEditMode: false,
-                                    loading: false
-                                })
-                            })
+                        _this.getData()
                         Toast.success("更新成功！")
                     })
                     .catch(function (error) {
@@ -181,7 +164,7 @@ export default class ApplicationBasicInfo extends Component {
             // 没有异常则提交表单
             if (errors == null) {
                 console.log("noerros");
-                let url = API.gateway + '/application-server/app/' + this.state.appId + "/urlInfo"
+                let url = API.application + '/app/' + this.state.appId + "/urlInfo"
                 this.setState({
                     loading: true
                 })
@@ -199,16 +182,7 @@ export default class ApplicationBasicInfo extends Component {
                     .then(function (response) {
 
                         //提交完成后刷新当前页面
-                        let url = API.gateway + '/application-server/app/' + _this.state.appId + "/urlInfo";
-                        Axios.get(url)
-                            .then(function (response) {
-                                console.log(response)
-                                _this.setState({
-                                    appBasicData: response.data,
-                                    urlEditMode: false,
-                                    loading: false
-                                })
-                            })
+                        _this.getData()
                         Toast.success("更新成功！")
                     })
                     .catch(function (error) {
@@ -227,7 +201,7 @@ export default class ApplicationBasicInfo extends Component {
                 return (
                     <div  {...init('title')}
                           placeholder="应用名称"
-                          style={{float: "left", margin: "7px"}}>{this.state.appBasicData.title}</div>)
+                          className="form-item-text">{this.state.appBasicData.title}</div>)
             } else {
                 return (<Input defaultValue={this.state.appBasicData.title} {...init('title', {
                     rules: [{
@@ -243,7 +217,7 @@ export default class ApplicationBasicInfo extends Component {
             const {init} = this.field;
             if (!this.state.basicEditMode) {
                 return (
-                    <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.description}</span>
+                    <span className="form-item-text">{this.state.appBasicData.description}</span>
                 )
             } else {
                 return (
@@ -257,14 +231,10 @@ export default class ApplicationBasicInfo extends Component {
             console.log((this.state.appBasicData))
             if (this.state.urlEditMode) {
                 return (
-
-
                     <div>
-
                         <FormItem{...formItemLayout} label="Git仓库地址："
                                  validateStatus={this.urlField.getError("warehouseUrl") ? "error" : ""}
                                  help={this.urlField.getError("warehouseUrl") ? "请输入Git仓库地址" : ""}
-
                                  required>
                             <Input
                                 {...init('warehouseUrl', {
@@ -275,8 +245,8 @@ export default class ApplicationBasicInfo extends Component {
                                 })}
                                 defaultValue={this.state.appBasicData.warehouseUrl}
 
-                               placeholder="Git仓库地址"/>
-                    </FormItem>
+                                placeholder="Git仓库地址"/>
+                        </FormItem>
 
                         <FormItem{...formItemLayout} label="镜像仓库地址："
                                  validateStatus={this.urlField.getError("imageUrl") ? "error" : ""}
@@ -295,25 +265,26 @@ export default class ApplicationBasicInfo extends Component {
                                 placeholder="镜像仓库地址"/>
                         </FormItem>
 
-                    <FormItem{...formItemLayout} label="开发数据库地址：">
-                        <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl')}
-                               placeholder="开发数据库地址"/>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="开发数据库地址：">
+                            <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl')}
+                                   placeholder="开发数据库地址"/>
+                        </FormItem>
 
-                    <FormItem{...formItemLayout} label="测试数据库地址：">
-                        <Input defaultValue={this.state.appBasicData.testDbUrl} {...init('testDbUrl')}
-                               placeholder="测试数据库地址"/>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="测试数据库地址：">
+                            <Input defaultValue={this.state.appBasicData.testDbUrl} {...init('testDbUrl')}
+                                   placeholder="测试数据库地址"/>
+                        </FormItem>
 
-                    <FormItem{...formItemLayout} label="开发域名：">
-                        <Input defaultValue={this.state.appBasicData.productionDomain}  {...init('productionDomain')}
-                               placeholder="开发域名"/>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="开发域名：">
+                            <Input
+                                defaultValue={this.state.appBasicData.productionDomain}  {...init('productionDomain')}
+                                placeholder="开发域名"/>
+                        </FormItem>
 
-                    <FormItem{...formItemLayout} label="测试域名：">
-                        <Input defaultValue={this.state.appBasicData.testDomain} {...init('testDomain')}
-                               placeholder="测试域名"/>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="测试域名：">
+                            <Input defaultValue={this.state.appBasicData.testDomain} {...init('testDomain')}
+                                   placeholder="测试域名"/>
+                        </FormItem>
 
                     </div>
                 )
@@ -323,29 +294,31 @@ export default class ApplicationBasicInfo extends Component {
 
                     <div>
 
-                    <FormItem{...formItemLayout} label="Git仓库地址：">
-                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.warehouseUrl}</span>
-                    </FormItem>
-
-                        <FormItem{...formItemLayout} label="镜像仓库地址：">
-                            <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.imageUrl}</span>
+                        <FormItem{...formItemLayout} label="Git仓库地址：">
+                            <span className="form-item-text">{this.state.appBasicData.warehouseUrl}</span>
                         </FormItem>
 
-                    <FormItem{...formItemLayout} label="开发数据库地址：">
-                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.productionDbUrl}</span>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="镜像仓库地址：">
+                            <span className="form-item-text">{this.state.appBasicData.imageUrl}</span>
+                        </FormItem>
+
+                        <FormItem{...formItemLayout} label="开发数据库地址：">
+                            <span
+                                className="form-item-text">{this.state.appBasicData.productionDbUrl}</span>
+                        </FormItem>
 
                         <FormItem{...formItemLayout} label="测试数据库地址：">
-                            <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.testDbUrl}</span>
-                    </FormItem>
+                            <span className="form-item-text">{this.state.appBasicData.testDbUrl}</span>
+                        </FormItem>
 
-                    <FormItem{...formItemLayout} label="开发域名：">
-                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.productionDomain}</span>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="开发域名：">
+                            <span
+                                className="form-item-text">{this.state.appBasicData.productionDomain}</span>
+                        </FormItem>
 
-                    <FormItem{...formItemLayout} label="测试域名：">
-                        <span style={{float: "left", margin: "7px"}}>{this.state.appBasicData.testDomain}</span>
-                    </FormItem>
+                        <FormItem{...formItemLayout} label="测试域名：">
+                            <span className="form-item-text">{this.state.appBasicData.testDomain}</span>
+                        </FormItem>
                     </div>
                 )
             }
@@ -366,59 +339,48 @@ export default class ApplicationBasicInfo extends Component {
                             link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
-                <div style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "flex-start"
-                }}
+                <div className="card-container "
                 >
 
-            <Card
-                style={{width: "38%", margin: "1%"}}
-                title={this.state.userData.name}
-                bodyHeight="35%"
-                subTitle="应用拥有人"
-                extra={<a href="#">转交应用&gt;</a>}
-            >
-                <img
-                    src={this.state.userData.avatarURL == "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
-                    style={styles.avatar}/>
-            </Card>
+                    <Card
+                        className="user-card"
+                        title={this.state.userData.name}
+                        bodyHeight="100%"
+                        subTitle="应用拥有人"
+                        extra={<a href="#">转交应用&gt;</a>}
+                    >
+                        <img
+                            src={this.state.userData.avatarURL == "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
+                            className="avatar"/>
+                    </Card>
 
                     <Card
-                        style={{width: "58%", height: "35%", margin: "1%"}}
+                        className="basic-card"
                         title={"基本信息"}
                         bodyHeight="35%"
                         subTitle={
-                            <div style={{
-                                float: "right",
-                                textAlign: "right"
-                            }}><Button type="primary"
-                                       style={this.state.basicEditMode == true ? {display: "None"} : {}}
-                                       onClick={this.basicEdit.bind(this)}
-                                       size="small">
-                                修改
-                            </Button>
+                            <div className="sub-title">
+                                <Button type="primary"
+                                        className={this.state.basicEditMode == true ? "edit-button hide" : "edit-button"}
+                                        onClick={this.basicEdit.bind(this)}
+                                        size="small">
+                                    修改
+                                </Button>
                                 <Button onClick={this.basicConfirm.bind(this)}
                                         type="primary"
                                         size="small"
-                                        style={{
-                                            marginRight: "5px",
-                                            display: this.state.basicEditMode == false ? "None" : ""
-                                        }}>
+                                        className={this.state.basicEditMode == true ? "save-button" : "save-button hide"}>
                                     保存
                                 </Button>
 
                                 < Button
                                     size="small"
-                                    style={{display: this.state.basicEditMode == false ? "None" : ""}}
+                                    className={this.state.basicEditMode == true ? "cancel-button" : "cancel-button hide"}
                                     onClick={this.basicEditCancel.bind(this)}> 取消 </Button>
                             </div>}
                     >
                         <Form labelAlign={"left"}
-                              style={style}>
+                              className="card-form">
 
 
                             <FormItem{...formItemLayout}
@@ -432,7 +394,7 @@ export default class ApplicationBasicInfo extends Component {
 
                             <FormItem{...formItemLayout}
                                      label="注册时间：">
-                                <div style={{float: "left", margin: "7px"}}>{this.state.appBasicData.ctime}</div>
+                                <div className="form-item-text">{this.state.appBasicData.ctime}</div>
                             </FormItem>
 
                             <FormItem  {...formItemLayout}
@@ -445,58 +407,38 @@ export default class ApplicationBasicInfo extends Component {
 
 
                     <Card
-                        style={{width: "98%", padding: "2%", margin: "1%"}}
+                        className="url-card"
                         title={"URL信息"}
-                        bodyHeight="35%"
+                        bodyHeight="45%"
                         subTitle={
-                            <div style={{
-                                float: "right",
-                                textAlign: "right"
-                            }}>
+                            <div className="sub-title">
                                 <Button type="primary"
                                         size="small"
-                                        style={this.state.urlEditMode == true ? {display: "None"} : {}}
+                                        className={this.state.urlEditMode == true ? "edit-button hide" : "edit-button"}
                                         onClick={this.urlEdit.bind(this)}>
                                     修改
                                 </Button>
                                 <Button onClick={this.urlConfirm.bind(this)}
                                         type="primary"
                                         size="small"
-                                        style={{
-                                            marginRight: "5px",
-                                            display: this.state.urlEditMode == true ? "" : "None"
-                                        }}>
+                                        className={this.state.urlEditMode == true ? "save-button" : "save-button hide"}
+                                >
                                     保存
                                 </Button>
                                 <Button
                                     size="small"
-                                    style={{display: this.state.urlEditMode == true ? "" : "None"}}
+                                    className={this.state.urlEditMode == true ? "cancel-button" : "cancel-button hide"}
                                     onClick={this.urlEditCancel.bind(this)}>取消</Button>
                             </div>}
                     >
                         <Form labelAlign={"left"}
-                              style={style1}>
+                              className="card-form">
                             {urlFormRender()}
-            </Form>
+                        </Form>
                     </Card>
 
 
-        </div>
+                </div>
             </Loading>)
     }
 }
-const styles = {
-    avatar: {
-        maxWidth: "none",
-        height: "80px",
-        opacity: "1",
-        width: "80px",
-        margiLeft: "30px",
-        marginTop: "30px",
-    },
-    basicUrlInput: {
-        visible: "false"
-    }
-
-
-};

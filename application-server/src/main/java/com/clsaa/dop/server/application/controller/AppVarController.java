@@ -2,14 +2,12 @@ package com.clsaa.dop.server.application.controller;
 
 
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
-import com.clsaa.dop.server.application.model.bo.AppVarBoV1;
 import com.clsaa.dop.server.application.model.vo.AppVarCreateV1;
 import com.clsaa.dop.server.application.model.vo.AppVarV1;
 import com.clsaa.dop.server.application.service.AppVarService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
@@ -32,7 +30,7 @@ public class AppVarController {
     @Autowired
     private AppVarService appVarService;
 
-    @ApiOperation(value = "查询变量", notes = "查询变量")
+    @ApiOperation(value = "查询所有变量", notes = "查询所有变量")
     @GetMapping("/app/{appId}/variable")
     public List<AppVarV1> findAppVarByAppId(
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId) {

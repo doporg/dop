@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import TopBar from "../components/ApplicationManagement/TopBar";
 import {Breadcrumb, Input} from "@icedesign/base";
-import CreateApplicationDialog from "../components/ApplicationManagement/CreateApplicationDialog";
-import Pagination from "../components/ApplicationManagement/ApplicationPagination";
+import CreateApplicationDialog
+    from "../components/ApplicationManagement/CreateApplicationDialog/CreateApplicationDialog";
+import Pagination from "../components/ApplicationManagement/ApplicationPagination/ApplicationPagination";
+import "./Application.scss"
 
 /**
  * 应用列表
@@ -52,7 +54,7 @@ export default class Application extends Component {
         return (
             <div>
                 {/*创建函数的对话框和搜索框*/}
-                <Breadcrumb style={{marginBottom: "10px"}}>
+                <Breadcrumb className="Breadcrumb">
                     <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                     <Breadcrumb.Item
                         link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
@@ -64,12 +66,11 @@ export default class Application extends Component {
 
                     }
                     extraAfter={
-                        <Input
-                            size="large"
-                            placeholder="请输入应用名称进行搜索"
-                            style={{width: '240px'}}
+                        <Input className="TopBarInput"
+                               size="large"
+                               placeholder="请输入应用名称进行搜索"
                             // hasClear
-                            onChange={this.onSearch.bind(this)}
+                               onChange={this.onSearch.bind(this)}
                         />
                     }
 

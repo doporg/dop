@@ -33,6 +33,12 @@ public class AppEnvService {
         return this.appEnvRepository.findAllByAppId(appID).stream().map(l -> BeanUtils.convertType(l, AppEnvBoV1.class)).collect(Collectors.toList());
     }
 
+    public void findPipelineByAppEnvId(Long appEnvId) {
+
+    }
+
+
+
     /**
      * 创建环境信息
      *

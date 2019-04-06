@@ -4,14 +4,10 @@ import Axios from "axios";
 import React, {Component} from 'react';
 
 import PrivateController from "../PrivateController"
+import "./CreateProjectForm.scss"
 
 const FormItem = Form.Item;
-const style = {
-    padding: "20px",
-    background: "#FFF",
-    margin: "20px",
-    width: "100%"
-};
+
 
 const formItemLayout = {
     labelCol: {span: 8},
@@ -49,7 +45,7 @@ export default class ProjectForm extends Component {
                 this.setState({
                     loading: true
                 })
-                let url = API.gateway + '/application-server/project'
+                let url = API.application + '/project'
                 Axios.post(url, {}, {
                         params: {
                             organizationId: "123",
@@ -93,11 +89,11 @@ export default class ProjectForm extends Component {
         // const {init, getValue} = this.field;
 
         return (
-            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF" style={{width: "90%"}}>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>
                     <Form
                         labelAlign={"left"}
-                        style={style}
+                        className="form"
                     >
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("title") ? "error" : ""}

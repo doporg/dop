@@ -3,14 +3,10 @@ import API from "../../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
 import ProductModeController from "../ProductModeController"
+import "./CreateApplicationForm.scss"
 
 const FormItem = Form.Item;
-const style = {
-    padding: "20px",
-    background: "#FFF",
-    margin: "20px",
-    width: "100%"
-};
+
 const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
@@ -46,7 +42,7 @@ export default class ApplicationForm extends Component {
                 this.setState({
                     loading: true
                 })
-                let url = API.gateway + '/application-server/app/' + this.state.projectId;
+                let url = API.application + '/app/' + this.state.projectId;
                 Axios.post(url, {}, {
                         params: {
                             title: this.field.getValue('title'),
@@ -89,11 +85,11 @@ export default class ApplicationForm extends Component {
     render() {
         const {init, getValue} = this.field;
         return (
-            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF" style={{width: "90%"}}>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>
                     <Form
                         labelAlign={"left"}
-                        style={style}
+                        className="form"
                     >
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("title") ? "error" : ""}

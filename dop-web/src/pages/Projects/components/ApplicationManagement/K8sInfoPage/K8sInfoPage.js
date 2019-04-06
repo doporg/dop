@@ -14,6 +14,7 @@ import {
 import React, {Component} from 'react';
 import API from "../../../../API";
 import Axios from "axios"
+import "./K8sInfoPage.scss"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -46,6 +47,9 @@ export default class K8sInfoPage extends Component {
 
     }
 
+    /*
+    * 获取集群内所有命名空间
+    */
     getNameSpaceData() {
         let _this = this
         let namespaceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/allNamespaces"
@@ -58,6 +62,9 @@ export default class K8sInfoPage extends Component {
             })
     }
 
+    /*
+   * 获取集群内指定命名空间的所有服务
+   */
     getServiceData(namespace) {
 
         if (this.field.getValue("nameSpace") === "") {
@@ -81,7 +88,9 @@ export default class K8sInfoPage extends Component {
         }
     }
 
-
+    /*
+      * 获取集群内指定命名空间的对应服务的所有部署
+      */
     getDeploymentData() {
         if (this.field.getValue("nameSpace") === "" || this.field.getValue("service") === "") {
             this.setState({
@@ -108,6 +117,10 @@ export default class K8sInfoPage extends Component {
         }
     }
 
+
+    /*
+  * 获取该服务在数据库中的属性
+  */
     getYamlData() {
         let _this = this;
         this.setState({
@@ -116,17 +129,20 @@ export default class K8sInfoPage extends Component {
         let url = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yaml"
         Axios.get(url)
             .then((response) => {
-                console.log("yaml", response);
-                console.log(response.data.yamlFilePath != "")
+                // console.log("yaml", response);
+                // console.log(response.data.yamlFilePath != "")
+
+                //如果该服务在数据库中无属性
                 if (response.data == "") {
                     _this.setState({
                         editMode: true,
                         yamlData: []
                     })
+                    //获取所有命名空间
                     _this.getNameSpaceData()
                     _this.setState({loading: false})
                 } else {
-
+                    //判断是否使用yaml文件路径 分别赋值
                     if (response.data.yamlFilePath != "") {
 
                         _this.setState({
@@ -137,7 +153,9 @@ export default class K8sInfoPage extends Component {
                         })
 
 
-                    } else {
+                    }
+                    //如果是使用配置，则根据配置去集群获取对应的信息，加载到下拉框以便用户更改
+                    else {
                         _this.setState({
                             editMode: false,
                             yamlData: response.data,
@@ -236,13 +254,9 @@ export default class K8sInfoPage extends Component {
         if (value == 'profile') {
             this.getNameSpaceData()
         }
-
         this.setState({
             yamlMode: value
-            })
-
-
-
+        })
     }
 
     checkDeploymentData() {
@@ -255,9 +269,10 @@ export default class K8sInfoPage extends Component {
     }
 
 
+    //提交时的响应函数
     envDetailSubmit() {
-
         let _this = this;
+        //先判断是否使用yaml路径
         if (this.state.yamlMode == 'path') {
             this.yamlPathField.validate((errors, values) => {
                 console.log(errors)
@@ -265,18 +280,18 @@ export default class K8sInfoPage extends Component {
                     this.setState({
                         loading: true
                     })
+                    //再判断数据库中是否有yaml信息
                     let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
                     Axios.get(existUrl)
                         .then((response) => {
                             console.log("responsssss", response)
+                            //有则更新
                             if (response.data) {
-                                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml';
+                                let url = API.application + '/app/env/' + this.state.appEnvId + '/yaml';
                                 Axios.put(url, {}, {
                                         params: {
                                             deploymentStrategy: "KUBERNETES",
                                             releaseStrategy: this.field.getValue('releaseStrategy'),
-                                            // imageUrl: this.field.getValue('imageUrl'),
-                                            // releaseBatch: this.field.getValue('releaseBatch'),
                                             yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
                                         }
                                     }
@@ -288,14 +303,14 @@ export default class K8sInfoPage extends Component {
                                     //提交完成后刷新当前页面
                                     _this.getYamlData()
                                 })
-                            } else {
-                                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml';
+                            }
+                            //无则创建
+                            else {
+                                let url = API.application + '/app/env/' + this.state.appEnvId + '/yaml';
                                 Axios.post(url, {}, {
                                         params: {
                                             deploymentStrategy: "KUBERNETES",
                                             releaseStrategy: this.field.getValue('releaseStrategy'),
-                                            // imageUrl: this.field.getValue('imageUrl'),
-                                            // releaseBatch: this.field.getValue('releaseBatch'),
                                             yamlFilePath: this.yamlPathField.getValue('yamlFilePath')
                                         }
                                     }
@@ -314,9 +329,12 @@ export default class K8sInfoPage extends Component {
             })
 
 
-
-        } else {
+        }
+        //如果使用配置
+        else {
+            //判断是否需要新建服务
             if (this.state.createService) {
+                //如果是则新建服务
                 let createServiceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/service"
                 Axios.post(createServiceUrl, {}, {
                     params: {
@@ -333,13 +351,15 @@ export default class K8sInfoPage extends Component {
 
                             // 没有异常则提交表单
                             if (errors == null) {
-                                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + "/yaml";
+                                //然后判断是否存在yaml属性
+                                let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
 
                                 let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
                                 Axios.get(existUrl)
                                     .then((response) => {
                                         console.log("responsssss", response)
                                         if (response.data) {
+                                            //存在则更新
                                             Axios.put(url, {}, {
                                                     params: {
                                                         deploymentStrategy: "KUBERNETES",
@@ -364,7 +384,9 @@ export default class K8sInfoPage extends Component {
                                                     console.log(error);
                                                 });
 
-                                        } else {
+                                        }
+                                        //不存在则新建
+                                        else {
                                             Axios.post(url, {}, {
                                                     params: {
                                                         deploymentStrategy: "KUBERNETES",
@@ -394,7 +416,9 @@ export default class K8sInfoPage extends Component {
                             }
                         })
                     })
-            } else {
+            }
+            //如果不需要新建服务则按类似流程执行
+            else {
                 this.postYamlInfo()
             }
         }
@@ -411,7 +435,7 @@ export default class K8sInfoPage extends Component {
 
             // 没有异常则提交表单
             if (errors == null) {
-                let url = API.gateway + '/application-server/app/env/' + this.state.appEnvId + '/yaml'
+                let url = API.application + '/app/env/' + this.state.appEnvId + '/yaml'
                 let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
                 Axios.get(existUrl)
                     .then((response) => {
@@ -484,14 +508,10 @@ export default class K8sInfoPage extends Component {
                                   validateStatus={this.field.getError("nameSpace") ? "error" : ""}
                                   help={this.field.getError("nameSpace") ? "请选择命名空间" : ""}>
                             <div
-                                style={{
-                                    display: this.state.editMode ? "None" : "",
-                                    textAlign: "left",
-                                    marginLeft: "10%",
-                                    marginTop: "5px"
-                                }}>{this.state.yamlData.nameSpace}</div>
+                                className={this.state.editMode ? "form-item-text hide" : "form-item-text"}
+                            >{this.state.yamlData.nameSpace}</div>
                             <Combobox
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
                                 placeholder="命名空间"
                                 {...init('nameSpace', {
                                     initValue: this.state.yamlData.nameSpace,
@@ -507,7 +527,7 @@ export default class K8sInfoPage extends Component {
                             </Combobox>
                         </FormItem>
 
-                        <FormItem style={{display: this.state.editMode ? "" : "None"}}
+                        <FormItem className={this.state.editMode ? "form-item-switch" : "form-item-switch hide"}
                                   label="是否新建服务:"
                                   {...formItemLayout}>
                             <Switch
@@ -523,14 +543,9 @@ export default class K8sInfoPage extends Component {
                                   validateStatus={this.field.getError("service") ? "error" : ""}
                                   help={this.field.getError("service") ? "服务" : ""}>
                             <div
-                                style={{
-                                    display: this.state.editMode ? "None" : "",
-                                    textAlign: "left",
-                                    marginLeft: "10%",
-                                    marginTop: "5px"
-                                }}>{this.state.yamlData.service}</div>
+                                className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.service}</div>
                             <Combobox
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
                                 placeholder="服务"
                                 {...init('service', {
                                     initValue: this.state.yamlData.service,
@@ -548,7 +563,8 @@ export default class K8sInfoPage extends Component {
                             </Combobox>
 
                         </FormItem>
-                        <FormItem style={{display: this.state.editMode && this.state.createService ? "" : "None"}}
+                        <FormItem
+                            className={this.state.editMode && this.state.createService ? "form-item-create-service" : "form-item-create-service hide"}
                                   label="端口:"
                                   {...formItemLayout}
                                   validateStatus={this.editField.getError("port") ? "error" : ""}
@@ -556,16 +572,17 @@ export default class K8sInfoPage extends Component {
                         >
                             <Input placeholder="开放端口"
                                    defaultValue={0}
-                                   style={{width: "40%"}}
+                                   className="port-input"
                                    {...this.editField.init("port", {rules: [{required: true, message: "该项不能为空"}]})}/>
 
                         </FormItem>
 
-                        <FormItem style={{display: this.state.editMode && this.state.createService ? "" : "None"}}
-                                  label="副本数量:"
-                                  {...formItemLayout}
-                                  validateStatus={this.editField.getError("replicas") ? "error" : ""}
-                                  help={this.editField.getError("replicas") ? "副本数量" : ""}>
+                        <FormItem
+                            className={this.state.editMode && this.state.createService ? "form-item-create-service" : "form-item-create-service hide"}
+                            label="副本数量:"
+                            {...formItemLayout}
+                            validateStatus={this.editField.getError("replicas") ? "error" : ""}
+                            help={this.editField.getError("replicas") ? "副本数量" : ""}>
                             <NumberPicker min={1}
                                           max={99}
                                           placeholder="副本数量"
@@ -585,18 +602,12 @@ export default class K8sInfoPage extends Component {
                             {...formItemLayout}
                             validateStatus={this.field.getError("deployment") ? "error" : ""}
                             help={this.field.getError("deployment") ? "部署" : ""}
-                            style={{display: this.checkDeploymentData() ? "None" : ""}}
-
+                            className={this.checkDeploymentData() ? "form-item-deployment-detail hide" : "form-item-deployment-detail"}
                         >
                             <div
-                                style={{
-                                    display: this.state.editMode ? "None" : "",
-                                    textAlign: "left",
-                                    marginLeft: "10%",
-                                    marginTop: "5px"
-                                }}>{this.state.yamlData.deployment}</div>
+                                className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.deployment}</div>
                             <Combobox
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
                                 placeholder="部署"
                                 {...init('deployment', {
                                     initValue: this.state.yamlData.deployment,
@@ -620,18 +631,13 @@ export default class K8sInfoPage extends Component {
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("container") ? "error" : ""}
                                   help={this.field.getError("container") ? "容器" : ""}
-                                  style={{display: this.checkDeploymentData() ? "None" : ""}}
+                                  className={this.checkDeploymentData() ? "form-item-deployment-detail hide" : "form-item-deployment-detail"}
 
                         >
                             <div
-                                style={{
-                                    display: this.state.editMode ? "None" : "",
-                                    textAlign: "left",
-                                    marginLeft: "10%",
-                                    marginTop: "5px"
-                                }}>{this.state.yamlData.container}</div>
+                                className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.container}</div>
                             <Combobox
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
                                 placeholder="容器"
                                 {...init('container', {
                                     initValue: this.state.yamlData.container,
@@ -661,14 +667,9 @@ export default class K8sInfoPage extends Component {
                               required
                     >
                         <div
-                            style={{
-                                display: this.state.editMode ? "None" : "",
-                                textAlign: "left",
-                                marginLeft: "10%",
-                                marginTop: "5px"
-                            }}>{this.state.yamlData.yamlFilePath}</div>
+                            className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.yamlFilePath}</div>
                         <Input placeholder="Yaml文件路径"
-                               style={{display: this.state.editMode ? "" : "None", width: "60%"}}
+                               className={this.state.editMode ? "form-item-yaml-path-input" : "form-item-yaml-path-input hide"}
                                {...this.yamlPathField.init("yamlFilePath", {
                                    initValue: this.state.yamlData.yamlFilePath,
                                    rules: [{
@@ -719,41 +720,42 @@ export default class K8sInfoPage extends Component {
     yamlEditorRender() {
         const {init, getValue} = this.yamlEditorfield
         if (this.state.yamlData !== [] && this.state.yamlData.deploymentEditableYaml !== "") {
-            return <Form>
+            return <Form className="yaml-editor-form">
                 <FormItem label="Deployment Yaml"
-                          style={{width: "100%", height: "100%"}}
+                          className="yaml-editor-form-item"
                           {...formItemLayout}
                           validateStatus={this.field.getError("deploymentYaml") ? "error" : ""}
                           help={this.field.getError("deploymentYaml") ? "该项不能为空" : ""}>
-                        <Input
-                            size="large"
-                            rows="20"
-                            style={{width: "90%"}}
-                            multiple placeholder="Deployment Yaml"
-                            readOnly={!this.state.editDeploymentYaml}
-                            {...init('deploymentYaml', {
-                                initValue: this.state.yamlData.deploymentEditableYaml,
-                                rules: [{
-                                    required: true,
-                                    message: "该项不能为空"
-                                }]
-                            })}>>
-                        </Input>
+                    <Input
+                        className="yaml-input"
+                        // size="large"
+                        rows="20"
+                        multiple placeholder="Deployment Yaml"
+                        readOnly={!this.state.editDeploymentYaml}
+                        {...init('deploymentYaml', {
+                            initValue: this.state.yamlData.deploymentEditableYaml,
+                            rules: [{
+                                required: true,
+                                message: "该项不能为空"
+                            }]
+                        })}>
+                    </Input>
 
-                        <Icon
-                            style={{display: this.state.editDeploymentYaml ? "None" : "", float: "right"}}
-                            type='edit'
-                            onClick={this.toggleYamlEditor.bind(this)}/>
+                    <Icon
+                        className={this.state.editDeploymentYaml ? "edit-yaml-icon hide" : "edit-yaml-icon"}
+                        type='edit'
+                        onClick={this.toggleYamlEditor.bind(this)}/>
 
                 </FormItem>
                 <Button
-                    style={{display: this.state.editDeploymentYaml ? "" : "None", marginRight: "5px"}}
+                    className={this.state.editDeploymentYaml ? "save-yaml-button" : "save-yaml-button hide"}
+
                     onClick={this.yamlEditorConfirm.bind(this)}
                     type="primary">
                     保存
                 </Button>
                 < Button
-                    style={{display: this.state.editDeploymentYaml ? "" : "None"}}
+                    className={this.state.editDeploymentYaml ? "cancel-yaml-button" : "cancel-yaml-button hide"}
                     onClick={this.toggleYamlEditor.bind(this)}>
                     取消
                 </Button>
@@ -776,17 +778,12 @@ export default class K8sInfoPage extends Component {
                               validateStatus={this.field.getError("releaseStrategy") ? "error" : ""}
                               help={this.field.getError("releaseStrategy") ? "发布策略" : ""}>
                         <div
-                            style={{
-                                display: this.state.editMode ? "None" : "",
-                                textAlign: "left",
-                                marginLeft: "10%",
-                                marginTop: "5px"
-                            }}>{this.state.yamlData.releaseStrategy}
+                            className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.releaseStrategy}
                             <Icon
-                                style={{display: this.state.editMode ? "None" : "", float: "right"}}
+                                className={this.state.editMode ? "edit-k8s-icon hide" : "edit-k8s-icon"}
                                 type='edit' onClick={this.toggleEditMode.bind(this)}/></div>
                         <Select placeholder="发布策略"
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-select" : "form-item-select hide"}
                                 {...init('releaseStrategy', {
                                     initValue: this.state.yamlData.releaseStrategy,
                                     rules: [{required: true, message: "该项不能为空"}]
@@ -799,20 +796,16 @@ export default class K8sInfoPage extends Component {
 
                     </FormItem>
 
-                    <FormItem style={{display: this.field.getValue('releaseBatch') === 'BATCH' ? "" : "None"}}
+                    <FormItem
+                        className={this.field.getValue('releaseBatch') === 'BATCH' ? "form-item-release-batch" : "form-item-release-batch hide"}
                               label="发布批次:"
                               {...formItemLayout}
                               validateStatus={this.field.getError("releaseBatch") ? "error" : ""}
                               help={this.field.getError("releaseBatch") ? "发布策略" : ""}>
                         <div
-                            style={{
-                                display: this.state.editMode ? "None" : "",
-                                textAlign: "left",
-                                marginLeft: "10%",
-                                marginTop: "5px"
-                            }}>{this.state.yamlData.releaseBatch}</div>
+                            className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.releaseBatch}</div>
                         <NumberPicker
-                            style={{display: this.state.editMode ? "" : "None"}}
+                            className={this.state.editMode ? "form-item-NumberPicker" : "form-item-NumberPicker hide"}
                             min={1}
                             max={99}
                             placeholder="发布批次"
@@ -839,7 +832,7 @@ export default class K8sInfoPage extends Component {
 
                     {/*</FormItem>*/}
 
-                    <FormItem style={{display: this.state.editMode ? "" : "None"}}
+                    <FormItem className={this.state.editMode ? "form-item-yaml-origin" : "form-item-yaml-origin hide"}
                               label="YAML文件来源:"
                               {...formItemLayout}>
                         <Select
@@ -865,30 +858,33 @@ export default class K8sInfoPage extends Component {
     render() {
 
         return (
-            <div style={{width: "100%"}}>
-                <Loading visible={this.state.loading} style={{width: "70%"}} size='small' shape="dot-circle"
-                         color="#2077FF">
-                    <Form style={{width: "100%"}}>
+            <div className="form-loading-container">
+                <Form className="form">
+                    <Loading visible={this.state.loading} shape="dot-circle"
+                             color="#2077FF" className="form-loading">
+
 
                         {this.k8sBasicRender()}
 
 
                         {this.yamlInfoRender()}
                         <Button
-                            style={{display: this.state.editMode ? "" : "None", marginRight: "5px"}}
+                            className={this.state.editMode ? "save-button" : "save-button hide"}
                             onClick={this.envDetailConfirm.bind(this)}
                             type="primary"
                         >
                             保存
                         </Button>
                         < Button
-                            style={{display: this.state.editMode ? "" : "None"}}
+                            className={this.state.editMode ? "cancel-button" : "cancel-button hide"}
                             onClick={this.toggleEditMode.bind(this)}>
                             取消
                         </Button>
-                    </Form>
-                    {this.yamlEditorRender()}
+
+
+                        {this.yamlEditorRender()}
                 </Loading>
+                </Form>
             </div>
         )
     }
