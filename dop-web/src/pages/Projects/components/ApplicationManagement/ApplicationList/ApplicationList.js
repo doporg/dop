@@ -4,6 +4,7 @@ import API from "../../../../API.js"
 import {Col} from "@alifd/next/lib/grid";
 import Axios from "axios";
 import {Link} from "react-router-dom";
+import "./ApplicationList.scss"
 
 const {Row} = Grid;
 const Toast = Feedback.toast;
@@ -51,9 +52,7 @@ export default class ApplicationList extends Component {
 
     //删除按钮响应函数
     onDelete = (id) => {
-
-
-        let url = API.gateway + '/application-server/app/' + id;
+        let url = API.application + '/app/' + id;
         let _this = this;
         console.log("id", id)
         Axios.delete(url)
@@ -82,11 +81,7 @@ export default class ApplicationList extends Component {
             console.log("record:", record, value)
 
             return <div>{record.ctime}
-                <Icon onClick={this.popupConfirm.bind(this, record.id)} type="ashbin" style={{
-                    cursor: "pointer",
-                    color: "#FFA003",
-                    float: "right"
-                }}/>
+                <Icon onClick={this.popupConfirm.bind(this, record.id)} type="ashbin" className="delete-icon"/>
 
             </div>
         }
@@ -116,15 +111,3 @@ export default class ApplicationList extends Component {
 
 }
 
-const styles = {
-    pagination: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    time: {
-        fontSize: '12px',
-        color: 'rgba(0, 0, 0, 0.5)',
-    },
-};

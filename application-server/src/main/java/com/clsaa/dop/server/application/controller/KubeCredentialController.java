@@ -42,7 +42,7 @@ public class KubeCredentialController {
     }
 
     @ApiOperation(value = "查询集群url", notes = "查询集群url")
-    @GetMapping(value = "/app/env/{appEnvId}/cluster")
+    @GetMapping(value = "/app/env/{appEnvId}/clusterUrl")
     public ClusterUrlV1 getUrlByAppEnvId(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         try {

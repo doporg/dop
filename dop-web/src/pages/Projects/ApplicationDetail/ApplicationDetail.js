@@ -1,32 +1,15 @@
 import React, {Component} from 'react';
 import {Tab} from "@icedesign/base";
 
-import ApplicationBasicInfo from "../components/ApplicationManagement/ApplicationBasicInfo"
-import ApplicationVariable from "../components/ApplicationManagement/ApplicationVariable"
-import ApplicationEnvironment from "../components/ApplicationManagement/ApplicationEnvironment"
-import ApplicationEnvironmentDetail from "../components/ApplicationManagement/ApplicationEnvironmentDetail";
+import ApplicationBasicInfo from "../components/ApplicationManagement/ApplicationBasicInfo/ApplicationBasicInfo"
+import ApplicationVariable from "../components/ApplicationManagement/ApplicationVariable/ApplicationVariable"
+import ApplicationEnvironment from "../components/ApplicationManagement/ApplicationEnvironment/ApplicationEnvironment"
+import ApplicationEnvironmentDetail
+    from "../components/ApplicationManagement/ApplicationEnvironmentDetail/ApplicationEnvironmentDeatil";
+import "./ApplicationDetail.scss"
 
 const TabPane = Tab.TabPane;
-const styles = {
-    container: {
-        position: 'fixed',
-        top: '120px',
-        left: '240px',
-        right: '0px',
-        display: 'block',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: "center",
-        height: '90%',
-        overflow: "scroll",
-        padding: '0 20px',
-        zIndex: '97',
-        background: '#fff',
-        boxShadow: 'rgba(0, 0, 0, 0.2) 2px 0px 4px',
 
-    },
-    tabPane: {}
-};
 
 
 /**
@@ -100,13 +83,13 @@ export default class ApplicationDetail extends Component {
                 {/*/>*/}
 
                 <Tab contentStyle={{padding: 20}}
-                     style={styles.container}
+                     className="Tab"
                      lazyLoad={false}>
 
 
                     <TabPane tab={"基本信息"}
                              key={"basic"}
-                             style={{textAlign: "center"}}
+                             className="TabPane"
                     >
 
                         <ApplicationBasicInfo
@@ -115,14 +98,16 @@ export default class ApplicationDetail extends Component {
                     </TabPane>
 
                     <TabPane tab={"环境配置"}
-                             key={"env"}>
+                             key={"env"}
+                             className="TabPane">
+
                         {this.envRender()}
                         {this.envDetailRender()}
                     </TabPane>
 
                     <TabPane tab={"变量管理"}
                              key={"var"}
-                             style={{textAlign: "center"}}
+                             className="TabPane"
                     >
                         <ApplicationVariable
                             projectId={this.state.projectId}

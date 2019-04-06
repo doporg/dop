@@ -2,7 +2,8 @@ import {Button, Card, Dialog, Feedback, Field, Form, Icon, Input, Loading} from 
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import K8sInfoPage from '../K8sInfoPage'
+import K8sInfoPage from '../K8sInfoPage/K8sInfoPage'
+import "./ClusterInfoForm.scss"
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -47,15 +48,16 @@ export default class ClusterInfoForm extends Component {
 
     clusterInfoSubmit = () => {
         let _this = this;
-        this.setState({
-            loading: true
-        })
+
         //校验输入
         this.field.validate((errors, values) => {
             console.log(errors);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
+                this.setState({
+                    loading: true
+                })
                 let postUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster"
                 Axios.post(postUrl, {
                     targetClusterUrl: _this.field.getValue("targetClusterUrl"),
@@ -85,7 +87,7 @@ export default class ClusterInfoForm extends Component {
 
     getClusterData() {
         let _this = this
-        let urlUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster"
+        let urlUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/clusterUrl"
         _this.setState({
             loading: true
         })
@@ -119,8 +121,8 @@ export default class ClusterInfoForm extends Component {
         const {init, getError} = this.field
         if (!(this.state.loading)) {
             return (
-                <Form style={{width: "100%"}}>
-                    <Loading visible={this.state.loading} style={{width: "70%", marginBottom: "3%"}} size='small'
+                <Form className="card-form">
+                    <Loading visible={this.state.loading} size='small' className="form-loading"
                              shape="dot-circle" color="#2077FF">
                         <FormItem label="目标集群URL:"
                                   {...formItemLayout}
@@ -128,7 +130,7 @@ export default class ClusterInfoForm extends Component {
                                   help={getError("targetClusterUrl") ? "请输入目标集群" : ""}
                         >
                             <Input
-                                style={{display: this.state.editMode ? "" : "None"}}
+                                className={this.state.editMode ? "form-item-input" : "form-item-input hide"}
                                 placeholder="目标集群"
                                 {...init('targetClusterUrl', {
                                     initValue: this.state.clusterData,
@@ -138,14 +140,13 @@ export default class ClusterInfoForm extends Component {
                                     }]
                                 })}>
                             </Input>
-                            <div style={{
-                                display: this.state.editMode ? "None" : "", margin: "5px",
-                                textAlign: "left",
-                                marginLeft: "10%",
-                                marginTop: "5px"
-                            }}>
+                            <div
+                                className={this.state.editMode ? "form-item-text-container hide" : "form-item-text-container"}
+                            >
                                 {this.state.clusterData == "" ? "" : this.state.clusterData}
-                                <Icon style={{float: "right"}} type='edit'
+                                <Icon
+                                    className="edit-icon"
+                                    type='edit'
                                       visible={!this.state.editMode ? "true" : "false"}
                                       onClick={this.toggleEditMode.bind(this)}/>
                             </div>
@@ -153,7 +154,7 @@ export default class ClusterInfoForm extends Component {
 
 
                         <FormItem label="Token:"
-                                  style={{display: this.state.editMode ? "" : "None"}}
+                                  className={this.state.editMode ? "form-item-input" : "form-item-input hide"}
                                   {...formItemLayout}
                                   validateStatus={getError("targetClusterToken") ? "error" : ""}
                                   help={getError("targetClusterToken") ? "请输入Token" : ""}>
@@ -169,12 +170,13 @@ export default class ClusterInfoForm extends Component {
 
                         <Button onClick={this.clusterInfoConfirm.bind(this)}
                                 type="primary"
-                                style={{marginRight: "5px", display: this.state.editMode ? "" : "None"}}>
+                                className={this.state.editMode ? "save-button" : "save-button hide"}
+                        >
                             提交
                         </Button>
 
                         < Button
-                            style={{display: this.state.editMode ? "" : "None"}}
+                            className={this.state.editMode ? "cancel-button" : "cancel-button hide"}
                             onClick={this.toggleEditMode.bind(this)}> 取消 </Button>
                     </Loading>
 
@@ -188,7 +190,7 @@ export default class ClusterInfoForm extends Component {
         return (
 
             <Card
-                style={{width: "70%", padding: "2%", margin: "1%"}}
+                className="card"
                 title={"Kubernetes环境信息"}
                 bodyHeight="40%"
             >

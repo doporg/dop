@@ -6,8 +6,8 @@
 import React, {Component} from 'react';
 import {Breadcrumb, Input} from '@icedesign/base';
 import TopBar from './components/projectManagement/TopBar';
-import Pagination from './components/projectManagement/ProjectPagination'
-import CreateProjectDialog from './components/projectManagement/CreateProjectDialog'
+import Pagination from './components/projectManagement/ProjectPagination/ProjectPagination'
+import CreateProjectDialog from './components/projectManagement/CreateProjectDialog/CreateProjectDialog'
 
 export default class Projects extends Component {
     static displayName = 'Projects';

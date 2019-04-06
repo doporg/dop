@@ -59,7 +59,6 @@ public class KubeYamlController {
             @ApiParam(name = "releaseStrategy", value = "发布策略", required = true) @RequestParam(value = "releaseStrategy") String releaseStrategy,
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
-            //@ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
             @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.kubeYamlService.CreateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, yamlFilePath);
@@ -78,7 +77,6 @@ public class KubeYamlController {
             @ApiParam(name = "releaseStrategy", value = "发布策略", required = true) @RequestParam(value = "releaseStrategy") String releaseStrategy,
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
-            //@ApiParam(name = "imageUrl", value = "镜像地址", required = true) @RequestParam(value = "imageUrl") String imageUrl,
             @ApiParam(name = "yamlFilePath", value = "yaml文件地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
         this.kubeYamlService.updateYamlData(appEnvId, cuser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, yamlFilePath);

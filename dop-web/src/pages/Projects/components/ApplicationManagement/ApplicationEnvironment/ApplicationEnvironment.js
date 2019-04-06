@@ -3,9 +3,9 @@ import {Breadcrumb, Button, Card, Dialog, Feedback, Icon, Loading} from '@icedes
 import Axios from "axios";
 import API from "../../../../API";
 import {Col, Row} from "@alifd/next/lib/grid";
-import CreateApplicationEnvironmentDialog from "../CreateApplicationEnvrionment";
+import CreateApplicationEnvironmentDialog from "../CreateApplicationEnvrionment/CreateApplicationEnvironment";
 import TopBar from "./topbar"
-
+import "./ApplicationEnvironment.scss"
 
 const Toast = Feedback.toast;
 
@@ -114,8 +114,8 @@ export default class ApplicationEnvironment extends Component {
                 {this.state.appEnvData.map((item, index) => {
                     console.log(item)
                     return (
-                        <Col style={{width: "100%"}} key={index}>
-                            <Card style={{width: "100%", height: "70%"}}>
+                        <Col key={index}>
+                            <Card style={{height: "70%"}}>
                                 {this.titleRender(item.title, item.id)}
                                 {/*<Button onClick={this.getYaml.bind(this, item.id)}>*/}
                                 {/*部署主干*/}
@@ -153,8 +153,6 @@ export default class ApplicationEnvironment extends Component {
 
                 <div>
                     <TopBar
-
-                        style={{zIndex: "100"}}
                         extraBefore={<Breadcrumb>
                             <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                             <Breadcrumb.Item
@@ -163,7 +161,7 @@ export default class ApplicationEnvironment extends Component {
                                 link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
                         </Breadcrumb>}
                         extraAfter={<CreateApplicationEnvironmentDialog type="primary"
-                                                                        style={{margin: "20px"}}
+
                                                                         refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
                                                                         appId={this.state.appId}>
                             新建环境
