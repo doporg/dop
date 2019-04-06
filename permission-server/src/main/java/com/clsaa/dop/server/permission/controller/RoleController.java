@@ -71,9 +71,11 @@ public class RoleController {
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
             @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
             @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
+            @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return this.roleService.getRoleV1Pagination(page,size,loginUser);
+        return this.roleService.getRoleV1Pagination(page,size,loginUser,key);
     }
     @ApiOperation(value = "根据名称查询角色", notes = "根据名称查询角色")
     @GetMapping("/v1/roles/byName")

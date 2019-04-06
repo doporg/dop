@@ -5,6 +5,8 @@ import com.clsaa.dop.server.permission.model.po.Permission;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 
 /**
  * 功能点DAO层，用来与数据库交互
@@ -26,4 +28,13 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @return {@link Permission}
      */
     Permission findByName(String name);
+
+    /**
+     * 根据关键字key过滤查询
+     *
+     * @param key 关键字
+     * @return {@link List < Permission >}
+     */
+
+    List<Permission> findByNameLike(String key);
 }

@@ -119,7 +119,7 @@ public class RoleService {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //分页查询所有角色
-    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId)
+    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
         int count=0;
@@ -128,7 +128,17 @@ public class RoleService {
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        List<Role> roleList = this.roleRepository.findAll(sort);
+        List<Role> roleList=new ArrayList<>();
+        //未填写搜索关键字，则查询全部
+        if(key.equals(""))
+        {
+            roleList = this.roleRepository.findAll(sort);
+        }
+        //填写了搜索关键字，带条件查询
+        else {
+            roleList = this.roleRepository.findByNameLike("%"+key+"%");
+        }
+
         List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
 
         List<Role> roleList1=new ArrayList<>();

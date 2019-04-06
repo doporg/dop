@@ -5,6 +5,9 @@ import com.clsaa.dop.server.permission.model.po.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
+import java.util.List;
+
+
 /**
  * 角色DAO层，用来与数据库进行交互
  *
@@ -24,4 +27,12 @@ public interface RoleRepository extends JpaRepository<Role, Long>
      */
     Role findByName(String name);
 
+    /**
+     * 根据关键字key过滤查询
+     *
+     * @param key 关键字
+     * @return {@link List<Role>}
+     */
+
+    List<Role> findByNameLike(String key);
 }
