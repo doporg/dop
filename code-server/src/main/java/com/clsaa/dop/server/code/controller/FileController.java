@@ -2,12 +2,10 @@ package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.file.BranchAndTagBo;
 import com.clsaa.dop.server.code.model.bo.file.ChildrenBo;
+import com.clsaa.dop.server.code.model.bo.file.TreeCommitBo;
 import com.clsaa.dop.server.code.model.bo.file.TreeNodeBo;
 import com.clsaa.dop.server.code.model.dto.file.FileUpdateDto;
-import com.clsaa.dop.server.code.model.vo.file.BlobVo;
-import com.clsaa.dop.server.code.model.vo.file.BranchAndTagVo;
-import com.clsaa.dop.server.code.model.vo.file.ChildrenVo;
-import com.clsaa.dop.server.code.model.vo.file.TreeNodeVo;
+import com.clsaa.dop.server.code.model.vo.file.*;
 import com.clsaa.dop.server.code.service.FileService;
 import com.clsaa.dop.server.code.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
@@ -31,9 +29,9 @@ public class FileController {
     private FileService fileService;
 
 
-    @ApiOperation(value = "查询项目文件结构",notes = "根据项目的id、分支或tag和查找指定路径下的内容")
-    @GetMapping("/projects/{id}/repository/tree")
-    public List<TreeNodeVo> findTree(@ApiParam(value = "项目id") @PathVariable("id") int id,
+    @ApiOperation(value = "查询项目文件结构",notes = "根据项目的id、分支或tag和查找指定路径下的node内容")
+    @GetMapping("/projects/{id}/repository/tree/nodes")
+    public List<TreeNodeVo> findTreeNodes(@ApiParam(value = "项目id") @PathVariable("id") int id,
                                      @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
                                      @ApiParam(value = "路径") @RequestParam("path")String path,
                                      @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
@@ -41,7 +39,7 @@ public class FileController {
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
         try {
-            List<TreeNodeBo> treeNodeBos = fileService.findTree(id,ref,path,userId);
+            List<TreeNodeBo> treeNodeBos = fileService.findTreeNodes(id,ref,path,userId);
             for(TreeNodeBo treeNodeBo:treeNodeBos){
                 treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
             }
@@ -53,10 +51,35 @@ public class FileController {
         return treeNodeVos;
     }
 
+
+    @ApiOperation(value = "查询项目文件结构",notes = "根据项目的id、分支或tag和查找指定路径下的commit内容")
+    @GetMapping("/projects/{id}/repository/tree/commits")
+    public List<TreeCommitVo> findTreeCommits(@ApiParam(value = "项目id") @PathVariable("id") int id,
+                                             @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
+                                             @ApiParam(value = "路径") @RequestParam("path")String path,
+                                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+
+        List<TreeCommitVo> treeCommitVos=new ArrayList<>();
+
+        try {
+            List<TreeCommitBo> treeCommitBos = fileService.findTreeCommits(id,ref,path,userId);
+            for(TreeCommitBo treeCommitBo:treeCommitBos){
+                treeCommitVos.add(BeanUtils.convertType(treeCommitBo,TreeCommitVo.class));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        return treeCommitVos;
+    }
+
     @ApiOperation(value = "查找项目的分支名和tag名",notes = "根据项目id查找项目的分支名和tag名")
     @GetMapping("/projects/{id}/repository/branchandtag")
     public List<BranchAndTagVo> findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") int id,
                                                  @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+
+//        long t1=System.currentTimeMillis();
 
         List<BranchAndTagBo> bos=fileService.findBranchAndTag(id,userId);
         List<BranchAndTagVo> vos=new ArrayList<>();
@@ -77,6 +100,10 @@ public class FileController {
 
         vos.add(vo1);
         vos.add(vo2);
+
+//        long t2=System.currentTimeMillis();
+//
+//        System.out.println("total:"+(t2-t1));
 
         return vos;
 

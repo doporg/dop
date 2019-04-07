@@ -28,21 +28,47 @@ public class FileService {
      * @param userId 用户id
      * @return path下的所有文件和文件夹节点
      */
-    public List<TreeNodeBo> findTree(int id, String ref, String path,Long userId) throws UnsupportedEncodingException {
+    public List<TreeNodeBo> findTreeNodes(int id, String ref, String path,Long userId) throws UnsupportedEncodingException {
 
+        long t1=System.currentTimeMillis();
         List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
-
-        for(TreeNodeBo treeNode:treeNodeBos){
-            //获得最近提交的一次
-            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+URLEncoder.encode(treeNode.getPath(),"GBK"),userId,CommitBo.class).get(0);
-            treeNode.setCommit_id(commit.getId());
-            treeNode.setCommit_msg(commit.getMessage());
-            List<String> res=TimeUtil.natureTime(commit.getCommitted_date());
-            treeNode.setCommit_date(res.get(0));
-            treeNode.setCommit_time(res.get(1));
-        }
+        long t2=System.currentTimeMillis();
+        System.out.println("tree nodes:"+(t2-t1));
 
         return treeNodeBos;
+    }
+
+
+    /**
+     * 查找路径下的tree node节点对应的commit data
+     * @param id 项目id
+     * @param ref 分支名或tag名
+     * @param path 文件路径
+     * @param userId 用户id
+     * @return path下的提交信息
+     * @throws UnsupportedEncodingException
+     */
+    public List<TreeCommitBo> findTreeCommits(int id,String ref,String path,Long userId) throws UnsupportedEncodingException {
+
+        List<TreeNodeBo> treeNodeBos= findTreeNodes(id,ref,path,userId);
+
+        long t1=System.currentTimeMillis();
+        List<TreeCommitBo> treeCommitBos=new ArrayList<>();
+        for(TreeNodeBo treeNode:treeNodeBos){
+            //获得最近提交的一次
+            TreeCommitBo treeCommitBo=new TreeCommitBo();
+            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+URLEncoder.encode(treeNode.getPath(),"GBK"),userId,CommitBo.class).get(0);
+            treeCommitBo.setCommit_id(commit.getId());
+            treeCommitBo.setCommit_msg(commit.getMessage());
+            List<String> res=TimeUtil.natureTime(commit.getCommitted_date());
+            treeCommitBo.setCommit_date(res.get(0));
+            treeCommitBo.setCommit_time(res.get(1));
+            treeCommitBos.add(treeCommitBo);
+        }
+        long t2=System.currentTimeMillis();
+        System.out.println("tree commits:"+(t2-t1));
+
+        return treeCommitBos;
     }
 
 
@@ -54,8 +80,16 @@ public class FileService {
      */
     public List<BranchAndTagBo> findBranchAndTag(int id, Long userId){
 
+//        long tt1=System.currentTimeMillis();
+//
+//        long t1=System.currentTimeMillis();
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId,BranchBo.class);
+//        long t2=System.currentTimeMillis();
+//        System.out.println("request branch:"+(t2-t1));
+//        t1=System.currentTimeMillis();
         List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",userId,TagBo.class);
+//        t2=System.currentTimeMillis();
+//        System.out.println("request tag:"+(t2-t1));
 
         List<ChildrenBo> branches=new ArrayList<>();
         List<ChildrenBo> tags=new ArrayList<>();
@@ -71,6 +105,10 @@ public class FileService {
         List<BranchAndTagBo> res=new ArrayList<>();
         res.add(new BranchAndTagBo("branch","branch",branches));
         res.add(new BranchAndTagBo("tag","tag",tags));
+
+//        long tt2=System.currentTimeMillis();
+//
+//        System.out.println("service:"+(tt2-tt1));
 
         return res;
 

@@ -110,7 +110,6 @@ public class RequestUtil {
             String temp_url=url+"&per_page=50&page="+page++;
             List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
             if(temp_list.size()==0){
-//                System.out.println("BREAK!!!!!!!");
                 break;
             }else {
                 list.addAll(temp_list);
@@ -141,6 +140,18 @@ public class RequestUtil {
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "private_token=" + rootPrivateToken;
+
+        List<T> list=new ArrayList<>();
+        int page=1;
+        while(true){
+            String temp_url=url+"&per_page=50&page="+page++;
+            List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
+            if(temp_list.size()==0){
+                break;
+            }else {
+                list.addAll(temp_list);
+            }
+        }
 
         return JSON.parseArray(httpGet(url), clazz);
 

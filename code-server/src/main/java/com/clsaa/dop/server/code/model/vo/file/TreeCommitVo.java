@@ -10,9 +10,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TreeNodeVo {
+public class TreeCommitVo {
 
-    private String name;
-    private String type;
-    private String path;
+    private String commit_id;
+    private String commit_msg;
+    private String commit_date;
+    private String commit_time;//由commit_date计算得离现在的时间
+
 }
