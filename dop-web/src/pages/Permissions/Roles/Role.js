@@ -17,7 +17,7 @@ const { Item: FormItem } = Form;
  *
  *
  * */
-let mUserMap=new Map()
+
 export default class Role extends Component {
 
 
@@ -581,7 +581,7 @@ export default class Role extends Component {
                     dataSource={this.state.currentData}>
                     <Table.Column title="角色ID" dataIndex="id"/>
                     <Table.Column title="角色名称" dataIndex="name"/>
-                    <Table.Column title="创建人"   dataIndex="muser"/>
+                    <Table.Column title="创建人"   dataIndex="userName"/>
                     <Table.Column title="创建时间" dataIndex="mtime"/>
                     <Table.Column title="编辑角色" cell={showPermission} width="10%"/>
                     <Table.Column title="删除操作" cell={renderDelete} width="10%" />

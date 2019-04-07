@@ -20,7 +20,7 @@ import Search from "@icedesign/base/lib/search";
 
 const { Item: FormItem } = Form;
 const { Group: RadioGroup } = Radio;
-let cUserMap=new Map()
+
 export default class Permission extends Component {
 
 
@@ -345,7 +345,7 @@ export default class Permission extends Component {
                 <Table.Column title="功能点ID" dataIndex="id" width="10%"/>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
-                <Table.Column title="创建人" dataIndex="cuser"/>
+                <Table.Column title="创建人" dataIndex="userName"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
                 <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
