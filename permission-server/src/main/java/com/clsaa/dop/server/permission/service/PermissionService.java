@@ -12,8 +12,7 @@ import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -49,6 +48,10 @@ public class PermissionService {
     @Autowired
     //权限管理服务
     private AuthenticationService authenticationService;
+
+    @Autowired
+    //用户服务
+    private UserFeignService userFeignService;
 
 /* *
  *
@@ -144,9 +147,17 @@ public class PermissionService {
             return pagination;
         }
 
+        //分页
         permissionList1=permissionList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
+        //类型转换
+        List<PermissionV1> permissionV1List=permissionList1.stream().
+                map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
 
-        pagination.setPageList(permissionList1.stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList()));
+        for(PermissionV1 permissionV1 : permissionV1List)
+        {
+            permissionV1.setUserName(userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
+        }
+        pagination.setPageList(permissionV1List);
         return pagination;
     }
 

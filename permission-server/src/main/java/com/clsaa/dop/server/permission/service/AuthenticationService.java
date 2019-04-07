@@ -1,15 +1,11 @@
 package com.clsaa.dop.server.permission.service;
 
-
 import com.clsaa.dop.server.permission.config.FeignConfig;
 import com.clsaa.dop.server.permission.config.HttpHeaders;
 import com.clsaa.dop.server.permission.model.dto.RoleDtoV1;
 import com.clsaa.dop.server.permission.model.dto.UserRuleDtoV1;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

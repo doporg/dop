@@ -62,6 +62,10 @@ public class RoleService {
     //权限管理服务
     private AuthenticationService authenticationService;
 
+    @Autowired
+    //用户服务
+    private UserFeignService userFeignService;
+
     /* *
      *
      *  * @param id 角色ID
@@ -159,7 +163,13 @@ public class RoleService {
         }
         roleList1=roleList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
 
-        pagination.setPageList(roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
+        List<RoleV1> roleV1List=roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+
+        for(RoleV1 roleV1 :roleV1List)
+        {
+            roleV1.setUserName(userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
+        }
+        pagination.setPageList(roleV1List);
         return pagination;
     }
     //根据name查询角色

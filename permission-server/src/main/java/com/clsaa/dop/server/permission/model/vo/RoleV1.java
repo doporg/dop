@@ -29,6 +29,11 @@ public class RoleV1 {
      */
     private String name;
 
+    /**
+     * 创建者名称
+     */
+    private String userName;
+
     /* 表里都要有的字段*/
 
     /**

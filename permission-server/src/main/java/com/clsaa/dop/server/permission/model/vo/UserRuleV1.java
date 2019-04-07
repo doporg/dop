@@ -41,6 +41,11 @@ public class UserRuleV1 implements Serializable {
      * 描述
      */
     private String description;
+    /**
+     * 角色名称
+     */
+    private String roleName;
+
     /* 表里都要有的字段*/
     /**
      * 创建时间
