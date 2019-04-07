@@ -5,6 +5,8 @@ import Axios from 'axios';
 import copy from 'copy-to-clipboard';
 import {Feedback} from '@icedesign/base';
 import ReactMarkdown from 'react-markdown';
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 
 
@@ -20,7 +22,9 @@ import imgEdit from './imgs/edit.png'
 
 const {toast} = Feedback;
 
-
+const spinner=(
+    <Spinner/>
+);
 
 
 
@@ -56,7 +60,8 @@ export default class ProjectOverview extends React.Component{
                 "size": 0,
                 "file_size": "0B",
                 "file_content": ""
-            }
+            },
+            loadingVisible:true,
 
         }
         ;
@@ -73,7 +78,7 @@ export default class ProjectOverview extends React.Component{
                 let default_branch = self.state.projectInfo.default_branch;
                 url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&userId="+sessionStorage.getItem("user-id");
                 Axios.get(url).then((response)=>{
-                    self.setState({readmeInfo:response.data})
+                    self.setState({readmeInfo:response.data,loadingVisible:false})
                 })
             });
         });
@@ -195,16 +200,18 @@ export default class ProjectOverview extends React.Component{
                         <span>{projectInfo.file_size}</span>
                     </div>
                 </div>
-                <div className="div-md">
-                    {
-                        (()=>{
-                            if(this.state.readmeInfo.file_name !== null){
-                                return <ReactMarkdown source={this.state.readmeInfo.file_content} />;
-                            }
-                        })()
-                    }
+                <Loading className="loading-md" visible={this.state.loadingVisible} tip={spinner}>
+                    <div className="div-md">
+                        {
+                            (()=>{
+                                if(this.state.readmeInfo.file_name !== null){
+                                    return <ReactMarkdown source={this.state.readmeInfo.file_content} />;
+                                }
+                            })()
+                        }
 
-                </div>
+                    </div>
+                </Loading>
 
             </div>
         );
