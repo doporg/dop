@@ -6,6 +6,8 @@ import copy from 'copy-to-clipboard';
 import {Feedback} from '@icedesign/base';
 import { Balloon } from "@icedesign/base";
 import ReactTooltip from 'react-tooltip'
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import imgCopy from './imgs/copy.png';
 import imgFolder from './imgs/folder.png';
@@ -15,7 +17,11 @@ import "./CommitList.css"
 
 const {toast} = Feedback;
 
-export default class CommitList extends React.Component{
+const spinner=(
+    <Spinner/>
+);
+
+class CommitList extends React.Component{
 
     constructor(props){
         super(props);
@@ -28,20 +34,29 @@ export default class CommitList extends React.Component{
             commitList:[],
             showList:[],
             msgInput:"",
+            loadingVisible:true,
         }
     }
 
     componentWillMount() {
 
-        let url=API.code+"/projects/"+this.state.projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
+        let {projectid,ref} = this.state;
+        this.loadData(projectid,ref);
+
+    }
+
+    loadData(projectid,ref){
+
+        let url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
             self.setState({
-                refOptions:response.data
+                refOptions:response.data,
+                loadingVisible:false,
             })
         });
 
-        url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+this.state.ref+"&userId="+sessionStorage.getItem("user-id");
+        url=API.code+"/projects/"+projectid+"/repository/commits?path=/&ref_name="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
             self.setState({
                 commitList:response.data,
@@ -74,7 +89,6 @@ export default class CommitList extends React.Component{
         let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+value+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
-            // console.log(response.data);
             self.setState({
                 commitList:response.data,
                 showList:response.data,
@@ -101,8 +115,6 @@ export default class CommitList extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/"));
 
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/");
-
     }
 
     rootLink(){
@@ -115,7 +127,9 @@ export default class CommitList extends React.Component{
         return (
             <div className="commit-list-container">
                 <div className="div-commit-list-top">
-                    <CascaderSelect className="select-ref-commit-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <Loading visible={this.state.loadingVisible} className="loading-ref-commit-list" tip={spinner}>
+                        <CascaderSelect className="select-ref-commit-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    </Loading>
                     <a className="link-commit-root" onClick={this.rootLink.bind(this)}>根目录</a>
                     <input value={this.state.msgInput} onChange={this.handleInputChange.bind(this)} className="input-commit-msg-right" placeholder="输入commit message查找commit"/>
                 </div>
@@ -218,3 +232,5 @@ export default class CommitList extends React.Component{
 
 
 }
+
+export default (props)=><CommitList {...props} key={props.location.pathname} />

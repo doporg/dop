@@ -3,14 +3,19 @@ import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import { Dialog } from '@icedesign/base';
-import ReactTooltip from 'react-tooltip'
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import './Blob.css'
 
 import imgSearch from './imgs/search.png';
 import imgFile from './imgs/file.png';
 
-export default class Blob extends React.Component{
+const spinner=(
+    <Spinner/>
+);
+
+class Blob extends React.Component{
 
 
     constructor(props){
@@ -29,7 +34,8 @@ export default class Blob extends React.Component{
             lineCount:0,
             blobInfo:{},//file_name,file_size,file_content
             deleteVisible:false,
-            commit_message:""
+            commit_message:"",
+            loadingVisible:true,
         }
     }
 
@@ -90,7 +96,8 @@ export default class Blob extends React.Component{
             }
 
             self.setState({
-                refOptions:refOptions
+                refOptions:refOptions,
+                loadingVisible:false,
             })
         });
 
@@ -105,53 +112,6 @@ export default class Blob extends React.Component{
 
     }
 
-
-    componentWillReceiveProps(nextProps, nextState) {
-
-        let {username,projectid,path,ref}=nextProps.match.params;
-
-        path=decodeURIComponent(path);
-
-        let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
-        let self=this;
-        Axios.get(url).then(response=>{
-            // console.log(response.data);
-            self.setState({
-                username:username,
-                projectid:projectid,
-                path:path,
-                ref:ref,
-                blobInfo:response.data,
-                lineCount:response.data.file_content.split("\n").length,
-                deleteVisible:false,
-                commit_message:""
-            })
-        });
-
-        url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
-        Axios.get(url).then(response=>{
-            let refOptions=response.data;
-
-            if(this.isCommit(ref,refOptions)){
-                refOptions.push(
-                    {
-                        value:"commit",
-                        label:"commit",
-                        children:[
-                            {
-                                value:ref,
-                                label:ref
-                            }
-                        ]
-                    }
-                )
-            }
-
-            self.setState({
-                refOptions:refOptions
-            })
-        });
-    }
 
     isCommit(ref,refOptions){
 
@@ -197,7 +157,6 @@ export default class Blob extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+value+"/"+encodeURIComponent(path));
 
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+value+"/"+encodeURIComponent(path);
     }
 
     changePath(path){
@@ -206,8 +165,6 @@ export default class Blob extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
 
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
-
     }
 
     editFile(){
@@ -215,8 +172,6 @@ export default class Blob extends React.Component{
         let {username,path,projectid,ref}=this.state;
 
         this.props.history.push("/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path));
-
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/edit/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -248,8 +203,6 @@ export default class Blob extends React.Component{
 
             this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
 
-            // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
-
         })
     }
 
@@ -259,8 +212,6 @@ export default class Blob extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/filepathlist/"+ref);
 
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
-
     }
 
     render(){
@@ -268,7 +219,9 @@ export default class Blob extends React.Component{
         return (
             <div className="blob-container">
                 <div className="div-blob-top">
-                    <CascaderSelect className="select-ref-blob"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <Loading visible={this.state.loadingVisible} className="loading-ref-blob" tip={spinner}>
+                        <CascaderSelect className="select-ref-blob"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    </Loading>
                     {
                         (()=>{
                             let path=this.state.path;
@@ -357,3 +310,5 @@ export default class Blob extends React.Component{
     }
 
 }
+
+export default (props)=><Blob {...props} key={props.location.pathname} />

@@ -1,4 +1,3 @@
-import Code from './DataOverview'
 import {ProjectList} from './ProjectList'
 import ProjectOverview from './ProjectOverview'
 import NewProject from './NewProject'

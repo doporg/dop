@@ -6,7 +6,7 @@ import FoundationSymbol from 'foundation-symbol';
 import './EditFile.css'
 import imgBranch from './imgs/branch.png';
 
-export default class EditFile extends React.Component{
+class EditFile extends React.Component{
 
     constructor(props){
         super(props);
@@ -135,3 +135,5 @@ export default class EditFile extends React.Component{
         )
     }
 }
+
+export default (props)=><EditFile {...props} key={props.location.pathname} />

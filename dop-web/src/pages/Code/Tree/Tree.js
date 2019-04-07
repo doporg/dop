@@ -5,12 +5,18 @@ import {Link} from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
 import './Tree.css'
 import API from "../../API";
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import imgFile from './imgs/file.png';
 import imgFolder from './imgs/folder.png';
 import imgSearch from './imgs/search.png';
 
-export default class Tree extends React.Component{
+const spinner=(
+    <Spinner/>
+);
+
+class Tree extends React.Component{
 
 
     constructor(props) {
@@ -27,7 +33,9 @@ export default class Tree extends React.Component{
             ref: ref,
             refOptions: [],
             path: path,
-            treeInfo: [],//name,type,path,commit_id,commit_msg,commit_date,commit_time
+            treeNodeInfo: [],//name,type,path
+            treeCommitInfo:[],//commit_id,commit_msg,commit_date,commit_time
+            loadingVisible:true,
         }
 
     }
@@ -42,7 +50,7 @@ export default class Tree extends React.Component{
 
     loadData(username,projectid,path,ref){
 
-        let url=API.code + "/projects/"+projectid+"/repository/tree?path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
+        let url=API.code + "/projects/"+projectid+"/repository/tree/nodes?path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response => {
             self.setState({
@@ -50,7 +58,7 @@ export default class Tree extends React.Component{
                 projectid:projectid,
                 path:path,
                 ref:ref,
-                treeInfo:response.data
+                treeNodeInfo:response.data
             })
         });
 
@@ -75,9 +83,18 @@ export default class Tree extends React.Component{
             }
 
             self.setState({
-                refOptions:refOptions
+                refOptions:refOptions,
+                loadingVisible:false
             })
         });
+
+        url=API.code + "/projects/"+projectid+"/repository/tree/commits?path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
+        Axios.get(url).then(response => {
+            self.setState({
+                treeCommitInfo:response.data
+            })
+        });
+
     }
 
     isCommit(ref,refOptions){
@@ -99,24 +116,12 @@ export default class Tree extends React.Component{
 
     }
 
-    componentWillReceiveProps(nextProps, nextState) {
-        // console.log('componentWillReceiveProps');
-
-        let {username,projectid,path,ref}=nextProps.match.params;
-        path=decodeURIComponent(path);
-        this.loadData(username,projectid,path,ref);
-
-    }
-
-
-
 
     changeRef(value, data, extra) {
 
         let {username,projectid}=this.state;
         let path="/";//切换ref将路径设为根目录，以免子目录不存在
         this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path));
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path);
 
     }
 
@@ -126,9 +131,6 @@ export default class Tree extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
 
-
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path);
-
     }
 
     readFile(path){
@@ -136,8 +138,6 @@ export default class Tree extends React.Component{
         let {username,projectid,ref}=this.state;
 
         this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path));
-
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
 
     }
 
@@ -148,8 +148,6 @@ export default class Tree extends React.Component{
 
         this.props.history.push("/code/"+username+"/"+projectid+"/filepathlist/"+ref);
 
-        // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/filepathlist/"+ref;
-
     }
 
 
@@ -158,7 +156,9 @@ export default class Tree extends React.Component{
         return (
             <div className="file-container">
                 <div className="div-tree-top">
-                    <CascaderSelect className="select-ref-tree"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <Loading visible={this.state.loadingVisible} className="loading-ref-tree" tip={spinner}>
+                        <CascaderSelect className="select-ref-tree"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    </Loading>
                     {
                         (()=>{
                             let path=this.state.path;
@@ -229,7 +229,9 @@ export default class Tree extends React.Component{
                 {
                     (()=> {
 
-                        return this.state.treeInfo.map(treeNode=>{
+                        const {treeNodeInfo,treeCommitInfo}=this.state;
+
+                        return treeNodeInfo.map((treeNode,index)=>{
 
                                 return (
                                     <div className="div-tree-item">
@@ -251,8 +253,37 @@ export default class Tree extends React.Component{
                                                 })()
                                             }>{treeNode.name}</a>
                                         </span>
-                                        <span className="text-tree-commit">{treeNode.commit_msg}</span>
-                                        <span className="text-tree-update">{treeNode.commit_time}</span>
+
+                                        <span className="text-tree-commit">
+                                            {
+                                                (()=>{
+                                                    if(treeCommitInfo.length===0){
+                                                        return "";
+                                                    }else {
+                                                        return treeCommitInfo[index].commit_msg;
+                                                    }
+                                                })()
+                                            }
+                                        </span>
+
+
+                                        {
+                                            (()=>{
+                                                if(treeCommitInfo.length===0){
+                                                    if(index===0){
+                                                        return [
+                                                            <Loading className="loading-tree-update" tip={spinner}></Loading>,
+                                                            <span className="text-tree-update-loading">加载commit数据...</span>
+                                                        ];
+                                                    }else {
+                                                        return <span className="text-tree-update"></span>;
+                                                    }
+                                                }else {
+                                                    return <span className="text-tree-update">{treeCommitInfo[index].commit_time}</span>;
+                                                }
+                                            })()
+                                        }
+
                                     </div>
                                 )
                         })
@@ -264,3 +295,5 @@ export default class Tree extends React.Component{
         );
     }
 }
+
+export default (props)=><Tree {...props} key={props.location.pathname} />
