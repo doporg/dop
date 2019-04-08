@@ -53,36 +53,22 @@ public class RequestUtil {
     private static final String rootAccessToken = "ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899";
 
 
-//        params.add(p8);
 
     public static void main(String[] args) {
 
-//        List<NameValuePair> params= new ArrayList<>();
-//        params.add(new BasicNameValuePair("username","dopcode1"));
-//        //name和username相同，因为dop系统注册不需要填name
-//        params.add(new BasicNameValuePair("name","dopcode1"));
-//        params.add(new BasicNameValuePair("email","dopcode1@163.com"));
-//        params.add(new BasicNameValuePair("password","Wsy@123456"));
-//        params.add(new BasicNameValuePair("skip_confirmation","true"));
-//        params.add(new BasicNameValuePair("access_token","ec20eaf55ac0d544a1fa67d8fb0b53ed330c8eb914889b8b304f8a9bf3d2a899"));
+
+//        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
 //
-//        httpPost(api+"/users",params);
+//        String url=api+"/users?username=dopcode5&access_token="+access_token;
+        String url=api+"/users/14?hard_delete=true&private_token="+rootPrivateToken;
 
-        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
+        httpDelete(url);
 
-        String url=api+"/user/keys?access_token="+access_token;
-        FormatUtil.printJson(httpGet(url));
 
 
 
     }
 
-
-
-//
-//        System.out.println(httpPost1("http://gitlab.dop.clsaa.com/profile/personal_access_tokens",params));
-//
-//    }
 
 
 
@@ -97,7 +83,6 @@ public class RequestUtil {
      */
     public static <T> List<T> getList(String path, Long userId, Class<T> clazz) {
 
-//        String access_token = userService.findUserAccessToken(username);
         String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
@@ -119,18 +104,6 @@ public class RequestUtil {
         return list;
 
     }
-
-//    public static <T> List<T> getList(String path, String username, Class<T> clazz) {
-//
-//        String access_token = userService.findUserAccessToken(username);
-//
-//        String url = api + path;
-//        url += url.indexOf('?') == -1 ? "?" : "&";
-//        url += "access_token=" + access_token;
-//
-//        return JSON.parseArray(httpGet(url), clazz);
-//
-//    }
 
     /**
      * 没有用户名参数，默认使用root的private_token
@@ -162,7 +135,6 @@ public class RequestUtil {
      */
     public static <T> T get(String path, Long userId, Class<T> clazz) {
 
-//        String access_token = userService.findUserAccessToken(username);
         String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
@@ -178,7 +150,6 @@ public class RequestUtil {
      */
     public static String getString(String path,Long userId){
 
-//        String access_token = userService.findUserAccessToken(username);
         String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
@@ -278,12 +249,23 @@ public class RequestUtil {
      */
     public static int delete(String path,Long userId){
 
-//        String access_token = userService.findUserAccessToken(username);
         String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
+
+        return httpDelete(url);
+    }
+
+    /**
+     * 发送delete请求到gitlab，管理员身份
+     */
+    public static int delete(String path){
+
+        String url = api + path;
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        url += "private_token=" + rootPrivateToken;
 
         return httpDelete(url);
     }

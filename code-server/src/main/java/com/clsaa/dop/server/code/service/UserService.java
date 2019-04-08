@@ -41,12 +41,24 @@ public class UserService {
 
 
     /**
-     * 注册一个用户，并且获得access_token插入数据库
+     * 注册一个用户，并且获得access_token插入数据库,并创建用户凭证
      * @param username 用户名
      * @param password 密码
      * @param email 邮箱
      */
     public void addUser(Long id,String username,String password,String email){
+
+        //保证唯一性，查询用户名是否已经存在，如存在则先删除用户
+        String path="/users?username="+username;
+        List<UserIdBo> userIdBos= RequestUtil.getList(path,UserIdBo.class);
+//        System.out.println("userId size:"+userIdBos.size());
+        if(userIdBos.size()!=0){
+
+            int gitlabId=userIdBos.get(0).getId();
+            path="/users/"+gitlabId+"?hard_delete=true";
+            RequestUtil.delete(path);
+
+        }
 
         //首先创建gitlab 用户
 

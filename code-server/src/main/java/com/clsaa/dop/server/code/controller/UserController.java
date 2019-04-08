@@ -67,6 +67,13 @@ public class UserController {
 //        return userFeign.getUserCredentialV1ByUserId(userId,type);
 //    }
 
+//    @PostMapping("/users")
+//    public void addUser(@RequestParam("id") Long id,@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email){
+//
+//        userService.addUser(id,username,password,email);
+//
+//    }
+
 
     @GetMapping("/user/keys")
     @ApiOperation(value = "查询用户sshkey列表",notes = "根据用户id进行查询")
