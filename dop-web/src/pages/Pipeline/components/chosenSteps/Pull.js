@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {Input, Select} from '@icedesign/base';
+import {Input} from '@icedesign/base';
 import API from '../../../API'
 import Axios from 'axios'
 import '../Styles.scss'
 
-const {Combobox} = Select;
 
 export default class Pull extends Component{
     constructor(props){
@@ -14,8 +13,7 @@ export default class Pull extends Component{
         }
     }
     componentWillMount(){
-        console.log(this.props.appId)
-        if(this.props.appId != null && this.props.appId != undefined){
+        if(this.props.appId !== null && this.props.appId !== undefined){
             let url = API.application + "/app/" + this.props.appId + "/urlInfo";
             let self = this;
             Axios.get(url).then((response)=>{

@@ -258,7 +258,6 @@ public class PipelineService {
 
 
             if(pipelineBoV1.getAppId() != null){
-
                 AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();

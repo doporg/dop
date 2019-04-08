@@ -85,7 +85,6 @@ export default class Login extends Component {
 
     getUser(){
         let url = API.gateway + '/user-server/v1/users';
-        let self = this;
         Axios.get(url).then((response)=>{
             window.sessionStorage.setItem('user-id', response.data.id);
             window.sessionStorage.setItem('user-name', response.data.name);
