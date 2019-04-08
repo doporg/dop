@@ -103,7 +103,14 @@ public class UserRuleService {
 
         Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
         List<UserRule> userRuleList = this.userRuleDAO.findAll(pageRequest).getContent();
-        pagination.setPageList(userRuleList.stream().map(p -> BeanUtils.convertType(p, UserRuleV1.class)).collect(Collectors.toList()));
+
+        List<UserRuleV1> userRuleV1List=userRuleList.stream().map(p -> BeanUtils.convertType(p, UserRuleV1.class)).collect(Collectors.toList());
+
+        for(UserRuleV1 userRuleV1 : userRuleV1List)
+        {
+            userRuleV1.setRoleName( roleService.findById(userRuleV1.getRoleId()).getName());
+        }
+        pagination.setPageList(userRuleV1List);
         return pagination;
     }
     //根据角色ID查找规则

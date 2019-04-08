@@ -12,8 +12,7 @@ import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -46,6 +45,14 @@ public class PermissionService {
     //关联关系service
     private UserRoleMappingService userRoleMappingService;
 
+    @Autowired
+    //权限管理服务
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    //用户服务
+    private UserFeignService userFeignService;
+
 /* *
  *
  *  * @param id 功能点ID
@@ -67,21 +74,28 @@ public class PermissionService {
     public void createPermission(Long parentId,String name,Integer isPrivate,String description,
                                        Long cuser,Long muser)
     {
+        if(authenticationService.checkUserPermission("创建功能点",cuser))
+        {
+            Permission existPermission=this.permissionRepository.findByName(name);
+            BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
+            Permission permission= Permission.builder()
+                    .parentId(parentId)
+                    .name(name)
+                    .isPrivate(isPrivate)
+                    .description(description)
+                    .cuser(cuser)
+                    .muser(muser)
+                    .ctime(LocalDateTime.now())
+                    .mtime(LocalDateTime.now())
+                    .deleted(false)
+                    .build();
+            permissionRepository.saveAndFlush(permission);
+            authenticationService.addData(
+                    authenticationService.findUniqueRule("in","permissionId",
+                            authenticationService.findByName("权限管理员").getId()).getId(),
+                    cuser,permission.getId(),cuser);
+        }
 
-        Permission existPermission=this.permissionRepository.findByName(name);
-        BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
-        Permission permission= Permission.builder()
-                .parentId(parentId)
-                .name(name)
-                .isPrivate(isPrivate)
-                .description(description)
-                .cuser(cuser)
-                .muser(muser)
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .deleted(false)
-                .build();
-         permissionRepository.saveAndFlush(permission);
 
     }
 
@@ -96,25 +110,54 @@ public class PermissionService {
         return null;
     }
     //分页查询所有功能点
-    public Pagination<PermissionV1> getPermissionV1Pagination(Integer pageNo, Integer pageSize)
+    public Pagination<PermissionV1> getPermissionV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
-        int count = (int) this.permissionRepository.count();
+        int count = 0;
 
         Pagination<PermissionV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-        pagination.setTotalCount(count);
 
+        List<Permission> permissionList=new ArrayList<>();
+        //未填写搜索关键字，则查询全部
+        if(key.equals(""))
+        {
+            permissionList = this.permissionRepository.findAll(sort);
+        }
+        //填写了搜索关键字，带条件查询
+        else {
+            permissionList = this.permissionRepository.findByNameLike("%"+key+"%");
+        }
+
+        List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
+
+        List<Permission> permissionList1=new ArrayList<>();
+        for(Permission permission :permissionList)
+        {
+            for(Long id :idList)
+            {
+                if(permission.getId()==id)
+                {permissionList1.add(permission);count++;}
+            }
+        }
+        pagination.setTotalCount(count);
         if (count == 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
 
-        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
-        List<Permission> permissionList = this.permissionRepository.findAll(pageRequest).getContent();
-        pagination.setPageList(permissionList.stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList()));
+        //分页
+        permissionList1=permissionList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
+        //类型转换
+        List<PermissionV1> permissionV1List=permissionList1.stream().
+                map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
 
+        for(PermissionV1 permissionV1 : permissionV1List)
+        {
+            permissionV1.setUserName(userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
+        }
+        pagination.setPageList(permissionV1List);
         return pagination;
     }
 
@@ -126,11 +169,16 @@ public class PermissionService {
 
     //根据ID删除功能点,并删除关联关系
     @Transactional
-    public void deleteById(Long id)
+    public void deleteById(Long id,Long userId)
     {
-        rolePermissionMappingService.deleteByPermissionId(id);
-        permissionRepository.deleteById(id);
-
+        if(authenticationService.checkUserPermission("删除功能点",userId))
+        {
+            if(authenticationService.check("删除功能点",userId,"permissionId",id))
+            {
+                rolePermissionMappingService.deleteByPermissionId(id);
+                permissionRepository.deleteById(id);
+            }
+        }
     }
 
     //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点

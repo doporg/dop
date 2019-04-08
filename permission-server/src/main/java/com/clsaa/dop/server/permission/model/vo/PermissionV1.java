@@ -35,6 +35,11 @@ public class PermissionV1 {
      */
     private String description;
 
+    /**
+     * 创建者名称
+     */
+    private String userName;
+
     /* 表里都要有的字段*/
     /**
      * 创建时间

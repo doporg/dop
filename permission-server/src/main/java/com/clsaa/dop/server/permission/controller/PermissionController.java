@@ -80,9 +80,12 @@ public class PermissionController {
             @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
             @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
-            @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size)
+            @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size,
+            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
+            @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return this.permissionService.getPermissionV1Pagination(page,size);
+        return this.permissionService.getPermissionV1Pagination(page,size,loginUser,key);
     }
     @ApiOperation(value = "根据名称查询功能点", notes = "根据名称查询功能点")
     @GetMapping("/v1/permissions/byName")
@@ -95,9 +98,11 @@ public class PermissionController {
     @ApiOperation(value="根据ID删除功能点",notes = "根据ID删除功能点")
     @DeleteMapping("v1/permissions/{id}")
     public void deleteById(@ApiParam(name = "id",value = "功能点ID",required = true)
-                               @RequestParam(value = "id", required = true)Long id)
+                               @RequestParam(value = "id", required = true)Long id,
+                           @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
+                           )
     {
-        permissionService.deleteById(id);
+        permissionService.deleteById(id,loginUser);
     }
 
     @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")
