@@ -94,6 +94,10 @@ public class PermissionService {
                     authenticationService.findUniqueRule("in","permissionId",
                             authenticationService.findByName("权限管理员").getId()).getId(),
                     cuser,permission.getId(),cuser);
+            authenticationService.addData(
+                    authenticationService.findUniqueRule("equals","permissionId",
+                            authenticationService.findByName("权限管理员").getId()).getId(),
+                    cuser,permission.getId(),cuser);
         }
 
 

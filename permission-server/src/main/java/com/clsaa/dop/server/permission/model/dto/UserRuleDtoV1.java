@@ -8,6 +8,7 @@ package com.clsaa.dop.server.permission.model.dto;
  *
  * since :2019.4.6
  */
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRuleDtoV1 implements Serializable {
     /**
      * 用户数据规则ID

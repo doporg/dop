@@ -63,7 +63,7 @@ public interface AuthenticationService {
      *
      */
 
-    @GetMapping("v1/userRules/{id}")
+    @GetMapping("v1/userRule")
      UserRuleDtoV1 findUniqueRule(
             @RequestParam(value = "rule") String rule,
             @RequestParam(value = "fieldName") String fieldName,
@@ -109,7 +109,7 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/userData")
-    public boolean check(
+     boolean check(
             @RequestParam(value = "permissionName", required = true) String permissionName,
             @RequestParam(value = "userId", required = true)Long userId,
             @RequestParam(value = "fieldName", required = true)String fieldName,

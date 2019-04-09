@@ -93,7 +93,7 @@ public class UserRuleController {
 
     //查询唯一规则
     @ApiOperation(value = "查询唯一规则", notes = "查询唯一规则")
-    @GetMapping("v1/userRules/{id}")
+    @GetMapping("v1/userRule")
     public UserRuleV1 findUniqueRule(
             @ApiParam(name = "rule",value = "规则",required = true)
             @RequestParam(value = "rule") String rule,

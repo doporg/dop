@@ -103,6 +103,10 @@ public class RoleService {
                         authenticationService.findUniqueRule("in","roleId",
                                 authenticationService.findByName("权限管理员").getId()).getId(),
                         cuser,role.getId(),cuser);
+                authenticationService.addData(
+                        authenticationService.findUniqueRule("equals","roleId",
+                                authenticationService.findByName("权限管理员").getId()).getId(),
+                        cuser,role.getId(),cuser);
                 return role.getId();
             }
             return null;
