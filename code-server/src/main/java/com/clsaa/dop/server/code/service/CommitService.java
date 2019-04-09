@@ -24,7 +24,7 @@ public class CommitService {
      * @param path 路径(需要urlencode)
      * @return 提交列表
      */
-    public List<CommitBo> findCommitList(int id,String path,String ref_name,Long userId) throws UnsupportedEncodingException {
+    public List<CommitBo> findCommitList(String id,String path,String ref_name,Long userId) throws UnsupportedEncodingException {
 
         String url="/projects/"+id+"/repository/commits?ref_name="+ref_name;
         //若不为根目录

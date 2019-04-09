@@ -28,7 +28,7 @@ public class FileService {
      * @param userId 用户id
      * @return path下的所有文件和文件夹节点
      */
-    public List<TreeNodeBo> findTreeNodes(int id, String ref, String path,Long userId) throws UnsupportedEncodingException {
+    public List<TreeNodeBo> findTreeNodes(String id, String ref, String path,Long userId) throws UnsupportedEncodingException {
 
         long t1=System.currentTimeMillis();
         List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
@@ -48,7 +48,7 @@ public class FileService {
      * @return path下的提交信息
      * @throws UnsupportedEncodingException
      */
-    public List<TreeCommitBo> findTreeCommits(int id,String ref,String path,Long userId) throws UnsupportedEncodingException {
+    public List<TreeCommitBo> findTreeCommits(String id,String ref,String path,Long userId) throws UnsupportedEncodingException {
 
         List<TreeNodeBo> treeNodeBos= findTreeNodes(id,ref,path,userId);
 
@@ -78,7 +78,7 @@ public class FileService {
      * @param userId 用户id
      * @return 分支名和tag名
      */
-    public List<BranchAndTagBo> findBranchAndTag(int id, Long userId){
+    public List<BranchAndTagBo> findBranchAndTag(String id, Long userId){
 
 //        long tt1=System.currentTimeMillis();
 //
@@ -122,7 +122,7 @@ public class FileService {
      * @param userId 用户id
      * @return 文件内容(raw)
      */
-    public BlobBo findFileContent(int id, String file_path, String ref, Long userId) throws UnsupportedEncodingException {
+    public BlobBo findFileContent(String id, String file_path, String ref, Long userId) throws UnsupportedEncodingException {
 
 
         file_path=URLEncoder.encode(file_path,"GBK").replaceAll("\\+","%20");
@@ -162,7 +162,7 @@ public class FileService {
      * @param userId 用户id
      * @throws UnsupportedEncodingException
      */
-    public void updateFile(int id,String file_path,String branch,String content,String commit_message,Long userId) throws UnsupportedEncodingException {
+    public void updateFile(String id,String file_path,String branch,String content,String commit_message,Long userId) throws UnsupportedEncodingException {
 
 
         NameValuePair p1=new BasicNameValuePair("branch",branch);
@@ -189,7 +189,7 @@ public class FileService {
      * @param userId 用户id
      * @throws UnsupportedEncodingException
      */
-    public void deleteFile(int id,String file_path,String branch,String commit_message,Long userId) throws UnsupportedEncodingException {
+    public void deleteFile(String id,String file_path,String branch,String commit_message,Long userId) throws UnsupportedEncodingException {
 
         String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
         RequestUtil.delete(path,userId);
@@ -203,7 +203,7 @@ public class FileService {
      * @param userId 用户id
      * @return 所有文件路径
      */
-    public List<String> findAllFilePath(int id,String ref,Long userId){
+    public List<String> findAllFilePath(String id,String ref,Long userId){
 
         String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
         List<FilePathBo> filePathBos=RequestUtil.getList(path,userId,FilePathBo.class);

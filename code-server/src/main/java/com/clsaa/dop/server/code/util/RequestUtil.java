@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +59,24 @@ public class RequestUtil {
     public static void main(String[] args) {
 
 
-//        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
+        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
 //
 //        String url=api+"/users?username=dopcode5&access_token="+access_token;
-        String url=api+"/users/14?hard_delete=true&private_token="+rootPrivateToken;
+//        String url=api+"/users/14?hard_delete=true&private_token="+rootPrivateToken;
 
-        httpDelete(url);
+        String path="waszqt/KobeBryant";
+        try {
+            path=URLEncoder.encode(path,"GBK");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(path);
+
+        String url=api+"/projects/"+path+"?access_token="+access_token;
+//        String url=api+"/projects/13"+"?access_token="+access_token;
+
+        FormatUtil.printJson(httpGet(url));
 
 
 

@@ -25,7 +25,7 @@ public class CommitController {
 
     @ApiOperation(value = "查看项目的提交列表",notes = "根据项目的id查看项目的提交列表")
     @GetMapping("/projects/{id}/repository/commits")
-    public List<CommitVo> findCommitList(@ApiParam(value = "项目id") @PathVariable("id") int id,
+    public List<CommitVo> findCommitList(@ApiParam(value = "项目id") @PathVariable("id") String id,
                                          @ApiParam(value = "路径") @RequestParam("path")String path,
                                          @ApiParam(value = "分支名或tag名")@RequestParam("ref_name")String ref_name,
                                          @ApiParam(value = "用户id") @RequestParam("userId") Long userId){

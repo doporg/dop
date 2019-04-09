@@ -28,13 +28,13 @@ public class ProjectController {
 
     @ApiOperation(value = "查询项目信息",notes="根据项目的id查询项目总览需要的信息")
     @GetMapping("/projects/{id}")
-    public ProjectVo findProject(@ApiParam(value = "项目id") @PathVariable("id") int id){
+    public ProjectVo findProject(@ApiParam(value = "项目id") @PathVariable("id") String id){
         return BeanUtils.convertType(projectService.findProject(id),ProjectVo.class);
     }
 
     @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")
     @PostMapping("/projects/{id}/star")
-    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")int id,
+    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")String id,
                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
         projectService.starProject(id,userId);
     }
@@ -64,14 +64,14 @@ public class ProjectController {
 
     @ApiOperation(value = "查询编辑项目需要的信息",notes = "根据项目id查询")
     @GetMapping("/projects/{id}/editinfo")
-    public ProjectEditVo findProjectEditInfo(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public ProjectEditVo findProjectEditInfo(@ApiParam(value = "项目id")@PathVariable("id") String id,
                                              @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
         return BeanUtils.convertType(projectService.findProjectEditInfo(id,userId),ProjectEditVo.class);
     }
 
     @ApiOperation(value = "获得项目所有的分支名",notes = "根据项目id查询")
     @GetMapping("/projects/{id}/branches")
-    public List<BranchVo> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public List<BranchVo> findAllBranchName(@ApiParam(value = "项目id")@PathVariable("id") String id,
                                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
 
         List<String> strs=projectService.findAllBranchName(id,userId);
@@ -86,7 +86,7 @@ public class ProjectController {
 
     @ApiOperation(value = "编辑项目信息",notes = "编辑项目信息包括名称、描述、默认分支和可见等级")
     @PutMapping("/projects/{id}")
-    public void editProjectInfo(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public void editProjectInfo(@ApiParam(value = "项目id")@PathVariable("id") String id,
                                 @ApiParam(value = "项目名称")@RequestParam("name") String name,
                                 @ApiParam(value = "项目描述")@RequestParam("description") String description,
                                 @ApiParam(value = "默认分支")@RequestParam("default_branch") String default_branch,
@@ -100,14 +100,14 @@ public class ProjectController {
 
     @ApiOperation(value = "删除一个项目",notes = "根据项目id删除")
     @DeleteMapping("/projects/{id}")
-    public void deleteProject(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public void deleteProject(@ApiParam(value = "项目id")@PathVariable("id") String id,
                               @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
         projectService.deleteProject(id,userId);
     }
 
     @ApiOperation(value = "获得项目的默认分支名",nickname = "根据项目id")
     @GetMapping("/projects/{id}/defaultbranch")
-    public String findProjectDefaultBranch(@ApiParam(value = "项目id")@PathVariable("id") int id,
+    public String findProjectDefaultBranch(@ApiParam(value = "项目id")@PathVariable("id") String id,
                                            @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
         return projectService.findProjectDefaultBranch(id,userId);
     }
