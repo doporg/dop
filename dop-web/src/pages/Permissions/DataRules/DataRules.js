@@ -25,10 +25,15 @@ export default class DataRules extends Component
             currentData : [],
             roleList:[],
             currentRuleId:0,
-            userList:[{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+            userList:[
+                {id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                 {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
                 {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}],
+                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+                {id:23,name:"Rgj",email:"1046504820@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+                {id:28,name:"ren",email:"812022339@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
+                {id:39,name:"newTest",email:"1171067930@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
+            ],
 
             userSelectList:[],
             isLoading:true,
