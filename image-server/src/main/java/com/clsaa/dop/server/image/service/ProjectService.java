@@ -12,10 +12,12 @@ import com.clsaa.dop.server.image.model.po.ProjectReq;
 import com.clsaa.dop.server.image.model.po.PublicStatus;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import com.clsaa.dop.server.image.util.TimeConvertUtil;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,10 +47,16 @@ public class ProjectService {
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
         List<Project> projects = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
+        List<ProjectBO> projectBOS = new ArrayList<>();
         if (projects.size()==0){
             return  null;
         }else {
-            return BeanUtils.convertList(projects,ProjectBO.class);
+            for(Project project:projects){
+                ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
+                projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
+                projectBOS.add(projectBO);
+            }
+            return projectBOS;
         }
     }
 

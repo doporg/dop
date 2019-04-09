@@ -8,9 +8,12 @@ import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.DetailedTag;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import com.clsaa.dop.server.image.util.SizeConvertUtil;
+import com.clsaa.dop.server.image.util.TimeConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,14 +40,22 @@ public class ImageService {
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
-        return BeanUtils.convertList(harborRepoFeign.repositoriesRepoNameTagsGet(repo,labels,auth),ImageInfoBO.class);
+        List<DetailedTag> detailedTags = harborRepoFeign.repositoriesRepoNameTagsGet(repo,labels,auth);
+        List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
+        for (DetailedTag detailedTag:detailedTags){
+            ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
+            imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
+            imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
+            imageInfoBOS.add(imageInfo);
+        }
+        return imageInfoBOS;
     }
 
     /**
      * 通过镜像仓库名和tag名来删除镜像
      * @param projectName 项目名称
      * @param repoName  镜像仓库名称
-     * @param tagName 镜像的tag名
+     * @param imageName 镜像的tag名
      * @param userId   用户id
      */
     public void deleteImage(String projectName,String repoName,String imageName,Long userId){

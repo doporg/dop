@@ -31,7 +31,7 @@ public class ProjectLogsController {
 
     @ApiOperation(value = "根据项目id获取项目日志")
     @GetMapping(value = "/v1/projects/{projectId}/logs")
-    public List<AccessLogVO> getProjectLogs(@ApiParam(value = "项目的id",required = true)@PathVariable(value = "projectId")Long projectId,
+    public List<AccessLogVO> getProjectLogs(@ApiParam(value = "项目的id",required = true)@PathVariable(value = "projectId")Integer projectId,
                                             @ApiParam(value = "用户名称") @RequestParam(value = "username", required = false) String username,
                                             @ApiParam(value = "仓库名称") @RequestParam(value = "repository", required = false) String repository,
                                             @ApiParam(value = "标签号") @RequestParam(value = "tag", required = false) String tag,

@@ -33,7 +33,6 @@ export default class NamespacePagination extends Component {
             },
             //总页数
             pageSize :10,
-            totalPage: 1,
             totalCount: 0,
             queryKey: props.searchKey,
             loading: true
@@ -70,6 +69,7 @@ export default class NamespacePagination extends Component {
             params:{
                 page:current,
                 pageSize: this.state.pageSize
+
             }
 
         })
@@ -92,9 +92,8 @@ export default class NamespacePagination extends Component {
 
     //搜索框内容变化
     onSearch(value) {
-        this.setState({
-            searchKey: value
-        })
+        console.log("search ",value)
+        this.refreshList(1,value);
     }
 
     //分页器监听
@@ -108,7 +107,7 @@ export default class NamespacePagination extends Component {
         return <Link to={"/image/projects/" + id + "/repos"}
         >{id}</Link>
     };
-    //命名空间状态监听
+    //命名空间公开状态监听
     renderSwitch = (value,index,record) => {
         if (value==="true"){
             return <Switch onChange={(checked)=>{
@@ -201,6 +200,8 @@ export default class NamespacePagination extends Component {
 
                             <Table.Column title="镜像仓库数量"
                                           dataIndex="repoCount"/>
+                            <Table.Column title="创建时间"
+                                          dataIndex="creationTime"/>
                         </Table>
                     </Row>
                     <Pagination style={styles.body}

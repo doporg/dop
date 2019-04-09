@@ -1,11 +1,19 @@
 import React,{Component} from 'react';
 import TopBar from '../TopBar'
-import {Grid, Input, Table} from "@icedesign/base";
+import {Grid, Input, Loading, Pagination, Table} from "@icedesign/base";
 import DeleteImageDialog from "../deleteImageDialog";
 import {Col} from "@alifd/next/lib/grid";
 
 
 const {Row} = Grid;
+const styles = {
+    body: {
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
+};
 
 export default class ImagePagination extends Component{
 
@@ -13,6 +21,9 @@ export default class ImagePagination extends Component{
         super(props);
         this.state={
             imageData:[],
+            current:0,
+            pageSize:10,
+            totalCount:12,
             rowSelection: {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
@@ -42,6 +53,9 @@ export default class ImagePagination extends Component{
             searchKey: value
         })
         console.log("search",value)
+    }
+    handleChange(){
+
     }
     //image列表
     render() {
@@ -79,9 +93,20 @@ export default class ImagePagination extends Component{
 
                             <Table.Column title="docker版本"
                                           dataIndex="dockerVersion"/>
+                            <Table.Column title="创建时间"
+                                          dataIndex="created"/>
+                            <Table.Column title="标签"
+                                          dataIndex="labels"/>
+                            <Table.Column title="摘要"
+                                          dataIndex="digest"/>
                         </Table>
                     </Col>
                 </Row>
+                <Pagination style={styles.body}
+                            current={this.state.current}
+                            onChange={this.handleChange.bind(this)}
+                            pageSize={this.state.pageSize}
+                            total={this.state.totalCount}/>
             </div>
         )
     }

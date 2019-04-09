@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Input, Table} from '@icedesign/base';
+import {Input, Loading, Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from 'react-router-dom';
@@ -15,19 +15,15 @@ export default class RepoList extends Component {
 
     constructor(props) {
         super(props);
-
         this.state = {
-            current : 0,
             currentData: [],
             rowSelection: {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
             },
             pageSize :10,
-            totalPage: 1,
-            totalCount: 0,
-            refreshList: this.props.refreshList,
             loading: true,
+            refreshRepoList:this.props.refreshList
         };
 
     }
@@ -45,15 +41,14 @@ export default class RepoList extends Component {
     //接收父组件的参数
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({
-            currentData: nextProps.currentData
+            currentData: nextProps.currentData,
+            loading :false
         });
     }
 
 
     onSearch(value){
-        this.setState({
-            searchKey: value
-        })
+
     }
 
     nameRender=(value, index, record)=> {
@@ -75,7 +70,7 @@ export default class RepoList extends Component {
                             onChange={this.onSearch.bind(this)}
                         />
                     }
-                    extraAfter={<DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.state.refreshList}/>
+                    extraAfter={<DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshRepoList}/>
                     }
                 />
                 <Row wrap gutter="20">
@@ -102,16 +97,3 @@ export default class RepoList extends Component {
     }
 
 }
-
-const styles = {
-    pagination: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    time: {
-        fontSize: '12px',
-        color: 'rgba(0, 0, 0, 0.5)',
-    },
-};

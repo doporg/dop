@@ -93,7 +93,7 @@ public interface ProjectFeign {
      * @return 对于项目的访问日志
      */
     @GetMapping(value = "/projects/{project_id}/logs")
-    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Long projectId,
+    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
                                              @RequestParam(value = "username", required = false) String username,
                                              @RequestParam(value = "repository", required = false) String repository,
                                              @RequestParam(value = "tag", required = false) String tag,

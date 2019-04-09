@@ -18,7 +18,7 @@ public class ImageInfoBO {
 
     private String name;
 
-    private Integer size;
+    private String size;
 
     private String architecture;
 
