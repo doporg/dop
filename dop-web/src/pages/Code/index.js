@@ -3,6 +3,7 @@ import ProjectOverview from './ProjectOverview'
 import NewProject from './NewProject'
 import Tree from './Tree'
 import CodeLayout from "../../layouts/CodeLayout";
+import CodeProjectLayout from '../../layouts/CodeProjectLayout';
 import Blob from "./Blob";
 import EditFile from './EditFile'
 import CommitList from './CommitList';
@@ -42,43 +43,43 @@ const codeConfig = [
     },
     {
         path: '/code/:username/:projectname',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: ProjectOverview
 
     },
     {
         path: '/code/:username/:projectname/tree/:ref/:path',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: Tree
     },
     {
         path: '/code/:username/:projectname/blob/:ref/:path',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: Blob
     },
     {
         path: '/code/:username/:projectname/edit/:ref/:path',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: EditFile
     },
     {
         path: '/code/:username/:projectname/commitlist/:ref',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: CommitList
     },
     {
         path: '/code/:username/:projectname/filepathlist/:ref',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: FilePathList
     },
     {
         path: '/code/:username/:projectname/commit/:commitid',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: Commit
     },
     {
         path: '/code/:username/:projectname/edit',
-        layout: CodeLayout,
+        layout: CodeProjectLayout,
         component: EditProject
     },
 

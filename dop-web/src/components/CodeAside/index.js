@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
-import { codeAsideMenuConfig as asideMenuConfig } from './codeMenuConfig';
 import { Icon } from '@icedesign/base';
-import Axios from 'axios';
-import API from "../../pages/API";
 
 import './index.scss';
 
@@ -48,8 +45,8 @@ class CodeAside extends Component {
             </MenuItem>
             <MenuItem key={projectsLink}>
                 <Link to={projectsLink} className="ice-menu-link">
-                        <FoundationSymbol size="small" type="directory" >
-                            <Icon size="small" type="directory" />
+                        <FoundationSymbol size="small" type="cascades" >
+                            <Icon size="small" type="cascades" />
                         </FoundationSymbol>
                     <span className="ice-menu-item-text">{"项目"}</span>
                 </Link>
