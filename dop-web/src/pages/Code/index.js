@@ -2,7 +2,6 @@ import {ProjectList} from './ProjectList'
 import ProjectOverview from './ProjectOverview'
 import NewProject from './NewProject'
 import Tree from './Tree'
-import BasicLayout from "../../layouts/BasicLayout";
 import CodeLayout from "../../layouts/CodeLayout";
 import Blob from "./Blob";
 import EditFile from './EditFile'
@@ -18,70 +17,71 @@ const codeConfig = [
 
     {
         path: '/code/projects/new',
-        layout: BasicLayout,
+        layout: CodeLayout,
         component: NewProject
     },
     {
-        path: '/code/projectlist',
-        layout: BasicLayout,
+        path: '/code/projects',
+        layout: CodeLayout,
         component: ProjectList
     },
     {
-        path: '/code/:username/:projectid',
+        path: '/code/ssh',
+        layout: CodeLayout,
+        component: SSH
+    },
+    {
+        path: '/code/ssh/README',
+        layout: CodeLayout,
+        component: SSHREADME
+    },
+    {
+        path: '/code/ssh/new',
+        layout: CodeLayout,
+        component: NewSSH
+    },
+    {
+        path: '/code/:username/:projectname',
         layout: CodeLayout,
         component: ProjectOverview
 
     },
     {
-        path: '/code/:username/:projectid/tree/:ref/:path',
+        path: '/code/:username/:projectname/tree/:ref/:path',
         layout: CodeLayout,
         component: Tree
     },
     {
-        path: '/code/:username/:projectid/blob/:ref/:path',
+        path: '/code/:username/:projectname/blob/:ref/:path',
         layout: CodeLayout,
         component: Blob
     },
     {
-        path: '/code/:username/:projectid/edit/:ref/:path',
+        path: '/code/:username/:projectname/edit/:ref/:path',
         layout: CodeLayout,
         component: EditFile
     },
     {
-        path: '/code/:username/:projectid/commitlist/:ref',
+        path: '/code/:username/:projectname/commitlist/:ref',
         layout: CodeLayout,
         component: CommitList
     },
     {
-        path: '/code/:username/:projectid/filepathlist/:ref',
+        path: '/code/:username/:projectname/filepathlist/:ref',
         layout: CodeLayout,
         component: FilePathList
     },
     {
-        path: '/code/:username/:projectid/commit/:commitid',
+        path: '/code/:username/:projectname/commit/:commitid',
         layout: CodeLayout,
         component: Commit
     },
     {
-        path: '/code/:username/:projectid/edit',
+        path: '/code/:username/:projectname/edit',
         layout: CodeLayout,
         component: EditProject
     },
-    {
-        path: '/code/:username/:projectid/ssh',
-        layout: CodeLayout,
-        component: SSH
-    },
-    {
-        path: '/code/:username/:projectid/ssh/README',
-        layout: CodeLayout,
-        component: SSHREADME
-    },
-    {
-        path: '/code/:username/:projectid/ssh/new',
-        layout: CodeLayout,
-        component: NewSSH
-    }
+
 
 ];
 

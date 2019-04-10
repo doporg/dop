@@ -19,7 +19,6 @@ export default class NewSSH extends React.Component{
 
     changeKey(e){
         let val=e.target.value;
-        // console.log(val);
         let strs=val.split(" ");
         if(strs.length===3){
             this.setState({
@@ -36,7 +35,6 @@ export default class NewSSH extends React.Component{
 
     changeTitle(e){
         let val=e.target.value;
-        // console.log(val);
         this.setState({
             title:val
         })
@@ -55,14 +53,12 @@ export default class NewSSH extends React.Component{
             },
         }).then(response=>{
             toast.success("创建ssh成功");
-            let {username,projectid}=this.props.match.params;
-            this.props.history.push("/code/"+username+"/"+projectid+"/ssh");
+            this.props.history.push("/code/ssh");
         })
     }
 
     cancel(){
-        let {username,projectid}=this.props.match.params;
-        this.props.history.push("/code/"+username+"/"+projectid+"/ssh");
+        this.props.history.push("/code/ssh");
     }
 
     render(){

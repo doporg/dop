@@ -49,7 +49,7 @@ export default class NewProject extends React.Component {
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");
-            this.props.history.push("/code/projectlist");
+            this.props.history.push("/code/"+sessionStorage.getItem("user-name").toLowerCase()+"/"+this.state.name.toLowerCase());
         }).catch(error => {
             toast.error("创建失败");
         })

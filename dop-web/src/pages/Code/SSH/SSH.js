@@ -22,9 +22,8 @@ export default class SSH extends React.Component{
 
     loadData(){
         let url=API.code+"/user/keys?userId="+sessionStorage.getItem("user-id");
-        let self=this;
         Axios.get(url).then(response=>{
-            self.setState({
+            this.setState({
                 keys:response.data,
             })
         })
@@ -33,22 +32,19 @@ export default class SSH extends React.Component{
     deleteKey(id,title){
         if(window.confirm("确认删除SSHKey:"+title)) {
             let url = API.code + "/user/keys/" + id + "?userId=" + sessionStorage.getItem("user-id");
-            let self = this;
             Axios.delete(url).then(response => {
-                self.loadData();
+                this.loadData();
             })
         }
     }
 
     newKey(){
-        let {username,projectid}=this.props.match.params;
-        this.props.history.push("/code/"+username+"/"+projectid+"/ssh/new");
+        this.props.history.push("/code/ssh/new");
     }
 
 
     readmeLink(){
-        let {username,projectid}=this.props.match.params;
-        this.props.history.push("/code/"+username+"/"+projectid+"/ssh/README");
+        this.props.history.push("/code/ssh/README");
     }
 
 

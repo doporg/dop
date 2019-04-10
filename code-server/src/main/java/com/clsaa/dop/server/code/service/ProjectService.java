@@ -194,7 +194,10 @@ public class ProjectService {
 
         id=URLUtil.encode(id);
 
+//        long t1=System.currentTimeMillis();
         DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,userId,DefaultBranchBo.class);
+//        long t2=System.currentTimeMillis();
+//        System.out.println("default branch:"+(t2-t1));
         return defaultBranchBo.getDefault_branch();
     }
 
