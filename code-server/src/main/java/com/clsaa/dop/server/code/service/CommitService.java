@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.service;
 import com.clsaa.dop.server.code.model.bo.commit.CommitBo;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -25,6 +26,8 @@ public class CommitService {
      * @return 提交列表
      */
     public List<CommitBo> findCommitList(String id,String path,String ref_name,Long userId) throws UnsupportedEncodingException {
+
+        id=URLUtil.encode(id);
 
         String url="/projects/"+id+"/repository/commits?ref_name="+ref_name;
         //若不为根目录

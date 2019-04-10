@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.service;
 import com.clsaa.dop.server.code.model.bo.file.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class FileService {
      */
     public List<TreeNodeBo> findTreeNodes(String id, String ref, String path,Long userId) throws UnsupportedEncodingException {
 
+        id=URLUtil.encode(id);
+
         long t1=System.currentTimeMillis();
         List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
         long t2=System.currentTimeMillis();
@@ -49,6 +52,8 @@ public class FileService {
      * @throws UnsupportedEncodingException
      */
     public List<TreeCommitBo> findTreeCommits(String id,String ref,String path,Long userId) throws UnsupportedEncodingException {
+
+        id=URLUtil.encode(id);
 
         List<TreeNodeBo> treeNodeBos= findTreeNodes(id,ref,path,userId);
 
@@ -79,6 +84,8 @@ public class FileService {
      * @return 分支名和tag名
      */
     public List<BranchAndTagBo> findBranchAndTag(String id, Long userId){
+
+        id=URLUtil.encode(id);
 
 //        long tt1=System.currentTimeMillis();
 //
@@ -124,6 +131,7 @@ public class FileService {
      */
     public BlobBo findFileContent(String id, String file_path, String ref, Long userId) throws UnsupportedEncodingException {
 
+        id=URLUtil.encode(id);
 
         file_path=URLEncoder.encode(file_path,"GBK").replaceAll("\\+","%20");
 
@@ -164,6 +172,7 @@ public class FileService {
      */
     public void updateFile(String id,String file_path,String branch,String content,String commit_message,Long userId) throws UnsupportedEncodingException {
 
+        id=URLUtil.encode(id);
 
         NameValuePair p1=new BasicNameValuePair("branch",branch);
         NameValuePair p2=new  BasicNameValuePair("content",content);
@@ -191,6 +200,8 @@ public class FileService {
      */
     public void deleteFile(String id,String file_path,String branch,String commit_message,Long userId) throws UnsupportedEncodingException {
 
+        id=URLUtil.encode(id);
+
         String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
         RequestUtil.delete(path,userId);
     }
@@ -204,6 +215,8 @@ public class FileService {
      * @return 所有文件路径
      */
     public List<String> findAllFilePath(String id,String ref,Long userId){
+
+        id=URLUtil.encode(id);
 
         String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
         List<FilePathBo> filePathBos=RequestUtil.getList(path,userId,FilePathBo.class);

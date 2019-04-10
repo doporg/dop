@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.service;
 
 import com.clsaa.dop.server.code.model.bo.project.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import java.util.List;
 @Service
 public class ProjectService {
 
-    @Autowired
-    private UserService userService;
 
     /**
      * 根据id查找项目
@@ -28,6 +27,9 @@ public class ProjectService {
      * @author wsy
      */
     public ProjectBo findProject(String id){
+
+        id=URLUtil.encode(id);
+
         //获得项目基本信息
         ProjectBo projectBo=RequestUtil.get("/projects/"+id+"?statistics=true",ProjectBo.class);
         //获得tag的数量
@@ -59,6 +61,8 @@ public class ProjectService {
      * @param userId 用户id
      */
     public void starProject(String id,Long userId){
+
+        id=URLUtil.encode(id);
 
         List<NameValuePair> params=new ArrayList<>();
         int code=RequestUtil.post("/projects/"+id+"/star",userId,params);
@@ -119,6 +123,8 @@ public class ProjectService {
      */
     public ProjectEditBo findProjectEditInfo(String id,Long userId){
 
+        id=URLUtil.encode(id);
+
         String path="/projects/"+id;
         return RequestUtil.get(path,userId,ProjectEditBo.class);
 
@@ -134,6 +140,8 @@ public class ProjectService {
      * @param userId 用户id
      */
     public void editProjectInfo(String id,String name,String description,String default_branch,String visibility,Long userId){
+
+        id=URLUtil.encode(id);
 
         String path="/projects/"+id;
         List<NameValuePair> params=new ArrayList<>();
@@ -151,6 +159,9 @@ public class ProjectService {
      * @return 项目信息
      */
     public List<String> findAllBranchName(String id,Long userId){
+
+        id=URLUtil.encode(id);
+
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId, BranchBo.class);
         List<String> res=new ArrayList<>();
         for(BranchBo branchBo:branchBos)
@@ -165,6 +176,9 @@ public class ProjectService {
      * @param userId 用户id
      */
     public void deleteProject(String id,Long userId){
+
+        id=URLUtil.encode(id);
+
         String path="/projects/"+id;
         RequestUtil.delete(path,userId);
     }
@@ -177,6 +191,8 @@ public class ProjectService {
      * @return 项目的默认分支名
      */
     public String findProjectDefaultBranch(String id,Long userId){
+
+        id=URLUtil.encode(id);
 
         DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,userId,DefaultBranchBo.class);
         return defaultBranchBo.getDefault_branch();
