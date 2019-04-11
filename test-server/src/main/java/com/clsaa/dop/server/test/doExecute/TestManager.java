@@ -28,7 +28,8 @@ public class TestManager {
     public static InterfaceCaseDto execute(InterfaceCaseDto interfaceCaseDto) {
         ExecuteContext executeContext = ExecuteContext.builder()
                                                 .interfaceExecuteLog(initExecuteLog(interfaceCaseDto))
-                                                .interfaceCaseDto(interfaceCaseDto).build();
+                                                .interfaceCaseDto(interfaceCaseDto)
+                                                .build();
         List<InterfaceStageDto> stages = interfaceCaseDto.getStages();
         sort(stages, new StageSorter())
                 .forEach(stage -> doExecute(stage, executeContext));

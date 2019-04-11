@@ -3,7 +3,6 @@ package com.clsaa.dop.server.test.model.param;
 import com.clsaa.dop.server.test.model.po.CaseStatus;
 import lombok.Data;
 
-import javax.annotation.Nonnull;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

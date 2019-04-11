@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xihao
@@ -37,6 +38,10 @@ public class InterfaceCaseDto {
     private CaseStatus status;
 
     private List<InterfaceStageDto> stages;
+
+    private List<CaseParamDto> caseParams;
+
+    private Map<String, String> paramsMap;
 
     private boolean executeSuccess;
 
