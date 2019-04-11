@@ -55,9 +55,12 @@ public class FileService {
 
         id=URLUtil.encode(id);
 
-        List<TreeNodeBo> treeNodeBos= findTreeNodes(id,ref,path,userId);
-
         long t1=System.currentTimeMillis();
+        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
+        long t2=System.currentTimeMillis();
+        System.out.println("tree nodes:"+(t2-t1));
+
+        t1=System.currentTimeMillis();
         List<TreeCommitBo> treeCommitBos=new ArrayList<>();
         for(TreeNodeBo treeNode:treeNodeBos){
             //获得最近提交的一次
@@ -70,7 +73,7 @@ public class FileService {
             treeCommitBo.setCommit_time(res.get(1));
             treeCommitBos.add(treeCommitBo);
         }
-        long t2=System.currentTimeMillis();
+        t2=System.currentTimeMillis();
         System.out.println("tree commits:"+(t2-t1));
 
         return treeCommitBos;

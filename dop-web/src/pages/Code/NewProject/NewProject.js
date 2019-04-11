@@ -4,11 +4,16 @@ import React from 'react';
 import {Radio} from "@icedesign/base";
 import {Checkbox} from '@icedesign/base';
 import {Feedback} from '@icedesign/base';
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import './NewProject.css'
 
 const {Group: RadioGroup} = Radio;
 const {toast} = Feedback;
+const spinner=(
+    <Spinner/>
+);
 
 export default class NewProject extends React.Component {
 
@@ -18,7 +23,8 @@ export default class NewProject extends React.Component {
             name: "",
             description: "",
             visibility: "private",
-            initialize_with_readme: "false"
+            initialize_with_readme: "false",
+            loadingVisible:false,
         }
     }
 
@@ -36,6 +42,10 @@ export default class NewProject extends React.Component {
 
     createProject() {
 
+        this.setState({
+            loadingVisible:true
+        });
+
         let data={};
         data.name=this.state.name;
         data.description=this.state.description;
@@ -49,7 +59,7 @@ export default class NewProject extends React.Component {
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");
-            this.props.history.push("/code/"+sessionStorage.getItem("user-name").toLowerCase()+"/"+this.state.name.toLowerCase());
+            this.props.history.push("/code/"+sessionStorage.getItem("user-name")+"/"+this.state.name.toLowerCase());
         }).catch(error => {
             toast.error("创建失败");
         })
@@ -70,41 +80,42 @@ export default class NewProject extends React.Component {
 
     render() {
 
-        // console.log(this.state);
         return (
-            <div className="new-container">
-                <div className="div_title">
-                    新建项目
-                </div>
-                <div className="div_input">
-                    <label className="label_left">名称</label>
-                    <input className="input_name" onChange={this.setName.bind(this)}/>
-                </div>
-                <div className="div_input">
-                    <label className="label_left">描述</label>
-                    <textarea className="input_description" onChange={this.setDescription.bind(this)}/>
-                </div>
-                <div className="div_input">
-                    <label className="label_left">可见等级</label>
-                    <div className="div_visibility">
-                        <RadioGroup value={this.state.visibility} onChange={this.changeVisibility.bind(this)}>
-                            <Radio id="private" value="private">
-                                PRIVATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </Radio>
-                            <Radio id="public" value="public">
-                                PUBLIC
-                            </Radio>
-                        </RadioGroup>
+            <Loading className="loading-new-project" visible={this.state.loadingVisible} tip={spinner}>
+                <div className="new-container">
+                    <div className="div_title">
+                        新建项目
                     </div>
-                </div>
-                <div className="div_input">
-                    <label className="label_left">其他</label>
-                    <div className="div_visibility">
-                        <Checkbox onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
+                    <div className="div_input">
+                        <label className="label_left">名称</label>
+                        <input className="input_name" onChange={this.setName.bind(this)}/>
                     </div>
+                    <div className="div_input">
+                        <label className="label_left">描述</label>
+                        <textarea className="input_description" onChange={this.setDescription.bind(this)}/>
+                    </div>
+                    <div className="div_input">
+                        <label className="label_left">可见等级</label>
+                        <div className="div_visibility">
+                            <RadioGroup value={this.state.visibility} onChange={this.changeVisibility.bind(this)}>
+                                <Radio id="private" value="private">
+                                    PRIVATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </Radio>
+                                <Radio id="public" value="public">
+                                    PUBLIC
+                                </Radio>
+                            </RadioGroup>
+                        </div>
+                    </div>
+                    <div className="div_input">
+                        <label className="label_left">其他</label>
+                        <div className="div_visibility">
+                            <Checkbox onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
+                        </div>
+                    </div>
+                    <button onClick={this.createProject.bind(this)} className="btn_create">创建项目</button>
                 </div>
-                <button onClick={this.createProject.bind(this)} className="btn_create">创建项目</button>
-            </div>
+            </Loading>
         );
     }
 }

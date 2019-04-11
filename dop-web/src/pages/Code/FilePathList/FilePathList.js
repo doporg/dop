@@ -18,11 +18,12 @@ class FilePathList extends React.Component{
     constructor(props){
         super(props);
 
-        let {username,projectid,ref}=this.props.match.params;
+        let {username,projectname,ref}=this.props.match.params;
 
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:encodeURIComponent(username+"/"+projectname),
             ref:ref,
             refOptions:[],
             pathList:[],
@@ -123,17 +124,17 @@ class FilePathList extends React.Component{
 
     blobLink(path){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path))
+        this.props.history.push("/code/"+username+"/"+projectname+"/blob/"+ref+"/"+encodeURIComponent(path))
 
     }
 
     treeRootLink(){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/"));
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/"));
 
     }
 

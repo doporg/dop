@@ -23,13 +23,14 @@ class Tree extends React.Component{
 
         super(props);
 
-        let {username,projectid,path,ref}=this.props.match.params;
+        let {username,projectname,path,ref}=this.props.match.params;
 
         path=decodeURIComponent(path);
 
         this.state = {
             username:username,
-            projectid: projectid,
+            projectname:projectname,
+            projectid:encodeURIComponent(username+"/"+projectname),
             ref: ref,
             refOptions: [],
             path: path,
@@ -41,23 +42,18 @@ class Tree extends React.Component{
     }
 
     componentWillMount() {
-
-        let {username,projectid,path,ref}=this.state;
-
-        this.loadData(username,projectid,path,ref);
+        this.loadData();
     }
 
 
-    loadData(username,projectid,path,ref){
+    loadData(){
+
+        let {projectid,path,ref}=this.state;
 
         let url=API.code + "/projects/"+projectid+"/repository/tree/nodes?path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response => {
             self.setState({
-                username:username,
-                projectid:projectid,
-                path:path,
-                ref:ref,
                 treeNodeInfo:response.data
             })
         });
@@ -119,34 +115,34 @@ class Tree extends React.Component{
 
     changeRef(value, data, extra) {
 
-        let {username,projectid}=this.state;
+        let {username,projectname}=this.state;
         let path="/";//切换ref将路径设为根目录，以免子目录不存在
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+value+"/"+encodeURIComponent(path));
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+value+"/"+encodeURIComponent(path));
 
     }
 
     changePath(path){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent(path));
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent(path));
 
     }
 
     readFile(path){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path));
+        this.props.history.push("/code/"+username+"/"+projectname+"/blob/"+ref+"/"+encodeURIComponent(path));
 
     }
 
 
     findFile(){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/filepathlist/"+ref);
+        this.props.history.push("/code/"+username+"/"+projectname+"/filepathlist/"+ref);
 
     }
 

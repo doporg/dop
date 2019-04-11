@@ -35,9 +35,9 @@ public class ProjectController {
 
     @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")
     @PostMapping("/projects/{id}/star")
-    public void starProject(@ApiParam(value = "项目id") @PathVariable("id")String id,
+    public int starProject(@ApiParam(value = "项目id") @PathVariable("id")String id,
                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-        projectService.starProject(id,userId);
+        return projectService.starProject(id,userId);
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")

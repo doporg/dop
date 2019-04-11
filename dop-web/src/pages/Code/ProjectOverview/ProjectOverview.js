@@ -1,5 +1,4 @@
 import React from 'react';
-import FoundationSymbol from 'foundation-symbol';
 import API from "../../API";
 import Axios from 'axios';
 import copy from 'copy-to-clipboard';
@@ -28,16 +27,17 @@ const spinner=(
 
 
 
-export default class ProjectOverview extends React.Component{
+class ProjectOverview extends React.Component{
 
     constructor(props){
 
         super(props);
-        const {username,projectid} = this.props.match.params;
+        const {username,projectname} = this.props.match.params;
 
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:encodeURIComponent(username+"/"+projectname),
             url:"",
             projectInfo:{
                 commit_count: 0,
@@ -45,7 +45,7 @@ export default class ProjectOverview extends React.Component{
                 file_size: "",
                 forks_count: 0,
                 http_url_to_repo: "",
-                id: projectid,
+                id: 0,
                 name: "",
                 default_branch:"",
                 ssh_url_to_repo: "",
@@ -99,9 +99,15 @@ export default class ProjectOverview extends React.Component{
                 'Content-type': 'application/x-www-form-urlencoded',
             },
         }).then(response => {
-                let url=API.code+ "/projects/"+this.state.projectid;
-                Axios.get(url).then((response) => {
-                    self.setState({projectInfo:response.data});
+                let code=response.data;
+                let projectInfo=this.state.projectInfo;
+                if(code===304){
+                    projectInfo.star_count-=1;
+                }else {
+                    projectInfo.star_count+=1;
+                }
+                self.setState({
+                    projectInfo:projectInfo
                 });
         })
 
@@ -119,12 +125,11 @@ export default class ProjectOverview extends React.Component{
     copyUrl = () => {
         copy(this.state.url);
         toast.success("已复制到剪贴板");
-        // message.success('复制成功，如果失败，请在输入框内手动复制.');
     };
 
     editProjectLink(){
-        let {username,projectid}=this.state;
-        this.props.history.push("/code/"+username+"/"+projectid+"/edit");
+        let {username,projectname}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/edit");
     }
 
     downLoadZipLink(){
@@ -217,4 +222,7 @@ export default class ProjectOverview extends React.Component{
         );
     }
 }
+
+
+export default (props)=><ProjectOverview {...props} key={props.location.pathname} />
 

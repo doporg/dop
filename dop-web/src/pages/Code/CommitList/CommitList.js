@@ -25,10 +25,11 @@ class CommitList extends React.Component{
 
     constructor(props){
         super(props);
-        const {projectid,ref,username}=this.props.match.params;
+        const {projectname,ref,username}=this.props.match.params;
         this.state={
             username:username,
-            projectid: projectid,
+            projectname:projectname,
+            projectid:encodeURIComponent(username+"/"+projectname),
             ref:ref,
             refOptions: [],
             commitList:[],
@@ -86,16 +87,8 @@ class CommitList extends React.Component{
 
     changeRef(value, data, extra) {
 
-        let url=API.code+"/projects/"+this.state.projectid+"/repository/commits?path=/&ref_name="+value+"&userId="+sessionStorage.getItem("user-id");
-        let self=this;
-        Axios.get(url).then(response=>{
-            self.setState({
-                commitList:response.data,
-                showList:response.data,
-                ref:value,
-                msgInput:""
-            })
-        });
+        let {username,projectname}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/commitlist/"+value);
 
     }
 
@@ -111,15 +104,15 @@ class CommitList extends React.Component{
 
     browseFile(commit_id){
 
-        let {username,projectid}=this.state;
+        let {username,projectname}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+commit_id+"/"+encodeURIComponent("/"));
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+commit_id+"/"+encodeURIComponent("/"));
 
     }
 
     rootLink(){
-        let {username,projectid,ref}=this.state;
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/"));
+        let {username,projectname,ref}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/"));
     }
 
 

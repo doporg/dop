@@ -59,8 +59,9 @@ public class ProjectService {
      * 以username的身份star一个project,若已经star，则unstar
      * @param id 项目id
      * @param userId 用户id
+     * @return 状态码
      */
-    public void starProject(String id,Long userId){
+    public int starProject(String id,Long userId){
 
         id=URLUtil.encode(id);
 
@@ -69,6 +70,8 @@ public class ProjectService {
         if(code==304){
             RequestUtil.post("/projects/"+id+"/unstar",userId,params);
         }
+
+        return code;
 
     }
 

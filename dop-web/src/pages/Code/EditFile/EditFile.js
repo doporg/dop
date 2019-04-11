@@ -2,27 +2,35 @@ import React from 'react'
 import Axios from 'axios';
 import API from "../../API";
 import FoundationSymbol from 'foundation-symbol';
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import './EditFile.css'
 import imgBranch from './imgs/branch.png';
+
+const spinner=(
+    <Spinner/>
+);
 
 class EditFile extends React.Component{
 
     constructor(props){
         super(props);
 
-        let {username,projectid,path,ref} =this.props.match.params;
+        let {username,projectname,path,ref} =this.props.match.params;
 
         path=decodeURIComponent(path);
 
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:encodeURIComponent(username+"/"+projectname),
             path:path,
             ref:ref,
             lineCount:0,
             blobInfo:{},
-            commit_message:""
+            commit_message:"",
+            loadingVisible:false,
         }
     }
 
@@ -52,7 +60,6 @@ class EditFile extends React.Component{
         let self=this;
         let url=API.code+"/projects/"+projectid+"/repository/blob?file_path="+path+"&ref="+ref+"&userId="+sessionStorage.getItem("user-id");
         Axios.get(url).then(response=>{
-            // console.log(response.data);
             self.setState({
                 blobInfo:response.data,
                 lineCount:response.data.file_content.split("\n").length
@@ -70,8 +77,11 @@ class EditFile extends React.Component{
 
     commitUpdate(){
 
+        this.setState({
+            loadingVisible:true,
+        });
+
         let {projectid,path,ref,commit_message}=this.state;
-        // console.log(this.state.blobInfo.file_content);
         Axios({
             method: "PUT",
             url: API.code+ "/projects/"+projectid+"/repository/blob",
@@ -86,52 +96,53 @@ class EditFile extends React.Component{
                 'Content-type':'application/json',
             },
         }).then(response => {
-            let {username,path,projectid,ref}=this.state;
 
-            this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path));
+            let {username,path,projectname,ref}=this.state;
+            this.props.history.push("/code/"+username+"/"+projectname+"/blob/"+ref+"/"+encodeURIComponent(path));
 
-            // window.location.href = "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
         })
     }
 
 
     render(){
         return (
-            <div className="edit-file-container">
-                <div className="edit-file-section">
-                    <div className="div-edit-file-top">
-                        <span className="text-edit-file-title">
-                            <FoundationSymbol type="publish"/>
-                            &nbsp;编辑文件
-                        </span>
+            <Loading className="loading-edit-file" visible={this.state.loadingVisible} tip={spinner}>
+                <div className="edit-file-container">
+                    <div className="edit-file-section">
+                        <div className="div-edit-file-top">
+                            <span className="text-edit-file-title">
+                                <FoundationSymbol type="publish"/>
+                                &nbsp;编辑文件
+                            </span>
 
-                        <img src={imgBranch}/>
-                        <span className="text-edit-file-branch">{this.state.ref}</span>
-                        <span className="text-edit-file-name">{this.state.blobInfo.file_name}</span>
+                            <img src={imgBranch}/>
+                            <span className="text-edit-file-branch">{this.state.ref}</span>
+                            <span className="text-edit-file-name">{this.state.blobInfo.file_name}</span>
+                        </div>
+                        <div className="div-line-number-edit">
+
+                            {
+                                (()=> {
+                                    let res = [];
+                                    for (let i = 1; i <= this.state.lineCount; i++) {
+                                        res.push(<span className="text-line-number">{i}</span>)
+                                    }
+                                    return res;
+                                })()
+                            }
+
+                        </div>
+                        <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
+                        </textarea>
+
                     </div>
-                    <div className="div-line-number-edit">
-
-                        {
-                            (()=> {
-                                let res = [];
-                                for (let i = 1; i <= this.state.lineCount; i++) {
-                                    res.push(<span className="text-line-number">{i}</span>)
-                                }
-                                return res;
-                            })()
-                        }
-
+                    <div className="edit-file-commit-section">
+                        <div className="edit-file-commit-lable">提交信息</div>
+                        <textarea className="edit-file-commit-input" onChange={this.setCommitMessage.bind(this)}/>
                     </div>
-                    <textarea wrap="off" value={this.state.blobInfo.file_content} style={this.codeHeight()}  className="input-area-code" onChange={this.changeCode.bind(this)} >
-                    </textarea>
-
+                    <button className="btn-edit-file-commit" onClick={this.commitUpdate.bind(this)}>提交修改</button>
                 </div>
-                <div className="edit-file-commit-section">
-                    <div className="edit-file-commit-lable">提交信息</div>
-                    <textarea className="edit-file-commit-input" onChange={this.setCommitMessage.bind(this)}/>
-                </div>
-                <button className="btn-edit-file-commit" onClick={this.commitUpdate.bind(this)}>提交修改</button>
-            </div>
+            </Loading>
         )
     }
 }
