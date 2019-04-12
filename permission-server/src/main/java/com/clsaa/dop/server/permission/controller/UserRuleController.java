@@ -91,7 +91,19 @@ public class UserRuleController {
         userRuleService.deleteById(id);
     }
 
-
-
+    //查询唯一规则
+    @ApiOperation(value = "查询唯一规则", notes = "查询唯一规则")
+    @GetMapping("v1/userRule")
+    public UserRuleV1 findUniqueRule(
+            @ApiParam(name = "rule",value = "规则",required = true)
+            @RequestParam(value = "rule") String rule,
+            @ApiParam(name = "fieldName",value = "作用域参数名称",required = true)
+            @RequestParam(value = "fieldName") String fieldName,
+            @ApiParam(name = "roleId",value = "角色ID",required = true)
+            @RequestParam(value = "roleId") Long roleId
+   )
+    {
+       return BeanUtils.convertType(userRuleService.findUniqueRule(rule,fieldName,roleId),UserRuleV1.class);
+    }
 
 }

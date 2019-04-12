@@ -56,7 +56,6 @@ public class UserDataController {
     }
 
     //判断该用户当前功能点是否可在该条数据执行
-    //使用方法： roleId
     @ApiOperation(value = "验证某个功能点操作的数据是否允许操作", notes = "验证某个功能点操作的数据是否允许操作")
     @GetMapping("/v1/userData")
     public boolean check(
@@ -88,15 +87,16 @@ public class UserDataController {
        return userDataService.findAllIds(permissionName,userId,fieldName);
     }
 
-    //根据用户ID查询规则
-    @ApiOperation(value = "根据用户ID查询规则", notes = "根据用户ID查询规则")
+    //根据用户ID和关键字查询数据
+    @ApiOperation(value = "根据用户ID查询数据", notes = "根据用户ID查询数据")
     @GetMapping("/v1/userData/byUser")
     public List<UserDataV1> findByUserId(
             @ApiParam(name = "userId",value = "用户ID",required = true)
-            @RequestParam(value = "userId", required = true) Long userId
-    )
+            @RequestParam(value = "userId", required = true) Long userId,
+            @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
+            @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return userDataService.findByUserId(userId);
+        return userDataService.findByUserId(userId,key);
     }
 
     //根据ID删除数据

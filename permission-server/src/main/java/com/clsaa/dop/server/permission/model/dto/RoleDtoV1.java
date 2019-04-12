@@ -1,24 +1,26 @@
-package com.clsaa.dop.server.permission.model.vo;
+package com.clsaa.dop.server.permission.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 /**
- * 角色显示层对象
+ * 角色DTO对象
  *
  * @author lzy
  *
 
  *
- * @since :2019.3.7
+ * @since :2019.4.6
  */
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleV1 {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RoleDtoV1 {
 
     /**
      * 角色ID
@@ -28,11 +30,6 @@ public class RoleV1 {
      * 角色名称
      */
     private String name;
-
-    /**
-     * 创建者名称
-     */
-    private String userName;
 
     /* 表里都要有的字段*/
 

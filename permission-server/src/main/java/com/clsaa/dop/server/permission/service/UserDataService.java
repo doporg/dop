@@ -90,13 +90,13 @@ public class UserDataService {
                 {roleBoV1List.add(roleBoV1);}
             }
         }
-        Long ruleId=0l;
+        Long ruleId=0L;
         for (RoleBoV1 roleBoV1 : roleBoV1List) {
             if (userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()) != null) {
                 ruleId = userRuleService.findUniqueRule("equals", fieldName, roleBoV1.getId()).getId();
             }
         }
-        if(ruleId==0l)return false;
+        if(ruleId==0L)return false;
         if(userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId)!=null)
         {return true;}
         return false;
@@ -128,13 +128,13 @@ public class UserDataService {
         if(roleBoV1List.isEmpty())return IdList;
         for(RoleBoV1 roleBoV1 :roleBoV1List)
         {System.out.println(roleBoV1.getName());}
-        Long ruleId=0l;
+        Long ruleId=0L;
         for (RoleBoV1 roleBoV1 : roleBoV1List) {
             if (userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()) != null) {
                 ruleId = userRuleService.findUniqueRule("in", fieldName, roleBoV1.getId()).getId();
             }
         }
-        if(ruleId==0l)return IdList;
+        if(ruleId==0L)return IdList;
         System.out.println(ruleId);
         List<UserData> userDataList=userDataDAO.findByRuleId(ruleId);
         for(UserData userData:userDataList){
@@ -147,9 +147,10 @@ public class UserDataService {
     }
 
     //根据用户ID查找数据
-    public List<UserDataV1> findByUserId(Long userId)
+    public List<UserDataV1> findByUserId(Long userId,String key)
     {
-        return userDataDAO.findByUserId(userId).stream().map(p-> BeanUtils.convertType(p, UserDataV1.class)).collect(Collectors.toList());
+        return userDataDAO.findByUserIdAndDescriptionLike(userId,"%"+key+"%")
+                .stream().map(p-> BeanUtils.convertType(p, UserDataV1.class)).collect(Collectors.toList());
     }
 
     //根据规则ID删除数据

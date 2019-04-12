@@ -53,12 +53,18 @@ public class RoleService {
     @Autowired
     //关联关系service
     private UserRoleMappingService userRoleMappingService;
+
     @Autowired
-    //用户数据规则
+    //数据规则
     private UserRuleService userRuleService;
+
     @Autowired
-    //用户数据
-    private UserDataService userDataService;
+    //权限管理服务
+    private AuthenticationService authenticationService;
+
+    @Autowired
+    //用户服务
+    private UserFeignService userFeignService;
 
     /* *
      *
@@ -79,7 +85,7 @@ public class RoleService {
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     public Long createRole(Long parentId,String name, Long cuser,Long muser)
     {
-            if(permissionService.checkUserPermission("创建角色",cuser))
+            if(authenticationService.checkUserPermission("创建角色",cuser))
             {
                 Role existRole=this.roleRepository.findByName(name);
                 BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
@@ -93,10 +99,14 @@ public class RoleService {
                         .deleted(false)
                         .build();
                 roleRepository.saveAndFlush(role);
-                userDataService.addData(
-                        userRuleService.findUniqueRule("in","roleId",
-                                roleRepository.findByName("权限管理员").getId()).getId(),
-                        cuser,role.getId(),cuser,muser);
+                authenticationService.addData(
+                        authenticationService.findUniqueRule("in","roleId",
+                                authenticationService.findByName("权限管理员").getId()).getId(),
+                        cuser,role.getId(),cuser);
+                authenticationService.addData(
+                        authenticationService.findUniqueRule("equals","roleId",
+                                authenticationService.findByName("权限管理员").getId()).getId(),
+                        cuser,role.getId(),cuser);
                 return role.getId();
             }
             return null;
@@ -119,7 +129,7 @@ public class RoleService {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //分页查询所有角色
-    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId)
+    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
         int count=0;
@@ -128,8 +138,18 @@ public class RoleService {
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        List<Role> roleList = this.roleRepository.findAll(sort);
-        List<Long> idList=userDataService.findAllIds("查询角色",userId,"roleId");
+        List<Role> roleList=new ArrayList<>();
+        //未填写搜索关键字，则查询全部
+        if(key.equals(""))
+        {
+            roleList = this.roleRepository.findAll(sort);
+        }
+        //填写了搜索关键字，带条件查询
+        else {
+            roleList = this.roleRepository.findByNameLike("%"+key+"%");
+        }
+
+        List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
 
         List<Role> roleList1=new ArrayList<>();
         for(Role role :roleList)
@@ -147,7 +167,13 @@ public class RoleService {
         }
         roleList1=roleList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
 
-        pagination.setPageList(roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList()));
+        List<RoleV1> roleV1List=roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+
+        for(RoleV1 roleV1 :roleV1List)
+        {
+            roleV1.setUserName(userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
+        }
+        pagination.setPageList(roleV1List);
         return pagination;
     }
     //根据name查询角色
@@ -161,7 +187,7 @@ public class RoleService {
     {
         if(permissionService.checkUserPermission("删除角色",userId))
         {
-            if(userDataService.check("删除角色",userId,"roleId",id))
+            if(authenticationService.check("删除角色",userId,"roleId",id))
             {
                 rolePermissionMappingService.deleteByRoleId(id);
                 userRuleService.deleteByRoleId(id);

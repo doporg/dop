@@ -1,25 +1,26 @@
-package com.clsaa.dop.server.permission.model.vo;
+package com.clsaa.dop.server.permission.model.dto;
 
+
+/**
+ * 用户规则表DTO层
+ *
+ * @author lzy
+ *
+ * since :2019.4.6
+ */
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-/**
- * 用户规则表VO层
- *
- * @author lzy
- *
- * since :2019.3.21
- */
-
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRuleV1 implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class UserRuleDtoV1 implements Serializable {
     /**
      * 用户数据规则ID
      */
@@ -41,11 +42,6 @@ public class UserRuleV1 implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 角色名称
-     */
-    private String roleName;
-
     /* 表里都要有的字段*/
     /**
      * 创建时间

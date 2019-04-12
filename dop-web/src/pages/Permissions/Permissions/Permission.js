@@ -15,11 +15,12 @@ import Input from "@icedesign/base/lib/input";
 import Select from "@icedesign/base/lib/select";
 import {Nav ,Icon , Menu} from "@icedesign/base";
 import '../Styles.scss'
+import Search from "@icedesign/base/lib/search";
 
 
 const { Item: FormItem } = Form;
 const { Group: RadioGroup } = Radio;
-let cUserMap=new Map()
+
 export default class Permission extends Component {
 
 
@@ -76,7 +77,7 @@ export default class Permission extends Component {
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
-        let url = API.gateway + "/permission-server/v1/permissions" ;
+        let url = API.permission + "/v1/permissions" ;
         let params=
             {
                 pageNo:this.state.pageNo,
@@ -84,16 +85,10 @@ export default class Permission extends Component {
             }
         Axios.get(url,{params:(params)}).then((response) => {
             this.setState({
+                currentData:response.data.pageList,
                 pageNo:response.data.pageNo,
-                totalCount:response.data.totalCount})
-            //先不要set currentData,先用 response.data.pageList
-            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
-                console.log(cUserMap)
-                response.data.pageList.forEach(item=>{
-                    item.cuser=cUserMap.get(item.cuser)
-                })
-                this.setState({currentData:response.data.pageList})
-                this.setState({isLoading:false})
+                totalCount:response.data.totalCount,
+                isLoading:false
             })
         }).catch((error)=>{
             // handle error
@@ -105,7 +100,7 @@ export default class Permission extends Component {
     onChange=currentPage=> {
 
         this.setState({isLoading:true})
-        let url = API.gateway + "/permission-server/v1/permissions" ;
+        let url = API.permission + "/v1/permissions" ;
         let params=
             {
                 pageNo:currentPage,
@@ -115,47 +110,18 @@ export default class Permission extends Component {
         Axios.get(url,{params:(params)}).then((response) => {
             // handle success
             this.setState({
+                currentData:response.data.pageList,
                 pageNo:response.data.pageNo,
-                totalCount:response.data.totalCount}
+                totalCount:response.data.totalCount,
+                    isLoading:false
+            }
                );
-            Axios.all(this.getUserName(response.data.pageList)).then(()=>{
-                console.log(cUserMap)
-                response.data.pageList.forEach(item=>{
-                    item.cuser=cUserMap.get(item.cuser)
-                })
-                this.setState({currentData:response.data.pageList})
-                this.setState({isLoading:false})
-            })
-
         }).catch((error)=>{
             // handle error
             console.log(error);
         });
         console.log(this.state.pageNo)
     }
-
-
-
-    //通过get请求中的userid获取username的函数
-    getUserName=(data)=>{
-        let axiosList=[]
-        let cuserSet=[]
-        data.forEach(item=>{
-            cuserSet.push(item.cuser)
-        })
-        console.log(cuserSet)
-        cuserSet = new Set(cuserSet)
-        console.log(cuserSet)
-        cuserSet.forEach(item=>{
-                    let url = API.gateway + "/user-server/v1/users/"+item
-                    axiosList.push(Axios.get(url).then((response) => {
-                        cUserMap.set(item,response.data.name)
-                    }))
-        })
-        return axiosList
-    }
-
-
 
     //创建功能点
     handleSubmit(e) {
@@ -167,12 +133,12 @@ export default class Permission extends Component {
                 return;
             }
             //检测重复的url以及参数
-            let byNameUrl=API.gateway+"/permission-server/v1/permissions/byName"
+            let byNameUrl=API.permission+"/v1/permissions/byName"
             let byNameParams=
                 {name:values.name}
 
             //创建的url
-            let url= API.gateway + "/permission-server/v1/permissions";
+            let url= API.permission + "/v1/permissions";
             let params=
                 {
                     description: values.description,
@@ -181,7 +147,7 @@ export default class Permission extends Component {
                     parentId: 0,
                 }
 
-                let permissionUrl=API.gateway +
+
              //先检测是否重复
                 Axios.get(byNameUrl,{params:(byNameParams)}
                 ).then((response) => {
@@ -221,7 +187,7 @@ export default class Permission extends Component {
     onConfirm = id => {
 
         const { dataSource } = this.state;
-        let url = API.gateway + "/permission-server/v1/permissions/{id}" ;
+        let url = API.permission + "/v1/permissions/{id}" ;
         let params= {id:id}
         Axios.delete(url,{params:(params)}
         )
@@ -233,6 +199,24 @@ export default class Permission extends Component {
         });
     };
 
+    //功能点的搜索功能
+    onSearchChange=key=>{
+        this.setState({isLoading:true})
+        let url=API.permission+"/v1/permissions"
+        let params={
+            pageNo:1,
+            pageSize:this.state.permissionPageSize,
+            key:key
+        }
+        Axios.get(url,{params:(params)}).then(response=>{
+            this.setState({
+                currentData:response.data.pageList,
+                pageNo:response.data.pageNo,
+                totalCount:response.data.totalCount,
+                isLoading:false
+            })
+        })
+    }
     render() {
         const { init, getError, getState } = this.field;
         const { Item } = Nav;
@@ -347,14 +331,21 @@ export default class Permission extends Component {
                 </Form>
             </Dialog>
 
-
+            <Search
+                className="search"
+                onChange={this.onSearchChange.bind(this)}
+                dataSource={this.state.dataSource}
+                placeholder="输入功能点名称搜索"
+                hasIcon={false}
+                autoWidth
+            />
             <Table dataSource={this.state.currentData}
                    isLoading={this.state.isLoading}
                    hasBorder={false}>
                 <Table.Column title="功能点ID" dataIndex="id" width="10%"/>
                 <Table.Column title="功能点名称" dataIndex="name"/>
                 <Table.Column title="功能点描述" dataIndex="description"/>
-                <Table.Column title="创建人" dataIndex="cuser"/>
+                <Table.Column title="创建人" dataIndex="userName"/>
                 <Table.Column title="创建时间" dataIndex="ctime"/>
                 <Table.Column title="删除操作" cell={renderDelete} width="10%" />
 
