@@ -73,6 +73,7 @@ export default class RepoList extends Component {
                     extraAfter={<DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshRepoList}/>
                     }
                 />
+
                 <Row wrap gutter="20">
                     <Col>
                         <Table dataSource={this.state.currentData}
