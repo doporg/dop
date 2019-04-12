@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.doExecute;
+package com.clsaa.dop.server.test.doExecute.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

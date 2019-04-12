@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.test.doExecute;
 
 import com.clsaa.dop.server.test.enums.OperationType;
-import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import com.clsaa.dop.server.test.manager.UserManager;
 

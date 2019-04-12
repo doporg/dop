@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.model.context;
+package com.clsaa.dop.server.test.doExecute.context;
 
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.Stage;
@@ -29,6 +29,8 @@ public class ExecuteContext {
     private InterfaceCaseDto interfaceCaseDto;
 
     private Stage currentStage;
+
+    private Map<String, String> caseParams;
 
     public void logAfterExecution() {
         interfaceExecuteLog.setEnd(LocalDateTime.now());
