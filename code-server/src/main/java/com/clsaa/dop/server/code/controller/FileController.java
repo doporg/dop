@@ -30,12 +30,13 @@ public class FileController {
 
 
     @ApiOperation(value = "查询项目文件结构",notes = "根据项目的id、分支或tag和查找指定路径下的node内容")
-    @GetMapping("/projects/{id}/repository/tree/nodes")
-    public List<TreeNodeVo> findTreeNodes(@ApiParam(value = "项目id") @PathVariable("id") String id,
-                                     @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
-                                     @ApiParam(value = "路径") @RequestParam("path")String path,
-                                     @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-
+    @GetMapping("/projects/{username}/{projectname}/repository/tree/nodes")
+    public List<TreeNodeVo> findTreeNodes(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                          @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                          @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
+                                          @ApiParam(value = "路径") @RequestParam("path")String path,
+                                          @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
         try {
@@ -53,12 +54,13 @@ public class FileController {
 
 
     @ApiOperation(value = "查询项目文件结构",notes = "根据项目的id、分支或tag和查找指定路径下的commit内容")
-    @GetMapping("/projects/{id}/repository/tree/commits")
-    public List<TreeCommitVo> findTreeCommits(@ApiParam(value = "项目id") @PathVariable("id") String id,
-                                             @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
-                                             @ApiParam(value = "路径") @RequestParam("path")String path,
-                                             @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-
+    @GetMapping("/projects/{username}/{projectname}/repository/tree/commits")
+    public List<TreeCommitVo> findTreeCommits(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                              @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                              @ApiParam(value = "分支或tag名") @RequestParam("ref")String ref,
+                                              @ApiParam(value = "路径") @RequestParam("path")String path,
+                                              @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
         List<TreeCommitVo> treeCommitVos=new ArrayList<>();
 
         try {
@@ -75,10 +77,11 @@ public class FileController {
     }
 
     @ApiOperation(value = "查找项目的分支名和tag名",notes = "根据项目id查找项目的分支名和tag名")
-    @GetMapping("/projects/{id}/repository/branchandtag")
-    public List<BranchAndTagVo> findBranchAndTag(@ApiParam(value = "项目id")@PathVariable("id") String id,
-                                                 @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-
+    @GetMapping("/projects/{username}/{projectname}/repository/branchandtag")
+    public List<BranchAndTagVo> findBranchAndTag(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                                 @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                                 @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
 //        long t1=System.currentTimeMillis();
 
         List<BranchAndTagBo> bos=fileService.findBranchAndTag(id,userId);
@@ -110,13 +113,14 @@ public class FileController {
     }
 
     @ApiOperation(value = "查找文件内容",notes = "根据项目id，文件路径，ref查找文件内容")
-    @GetMapping("/projects/{id}/repository/blob")
-    public BlobVo findFileContent(@ApiParam(value = "项目id")@PathVariable("id") String id,
+    @GetMapping("/projects/{username}/{projectname}/repository/blob")
+    public BlobVo findFileContent(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                  @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                                   @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
                                   @ApiParam(value = "branch,tag or commit")@RequestParam("ref") String ref,
-                                  @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+                                  @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
 
-
+        String id=username+"/"+projectname;
         BlobVo bolbVo=null;
 
         try {
@@ -130,10 +134,11 @@ public class FileController {
     }
 
     @ApiOperation(value = "更新文件内容",notes = "更新文件内容，并作为一次提交")
-    @PutMapping("/projects/{id}/repository/blob")
-    public void updateFile(@ApiParam(value = "项目id") @PathVariable("id")String id,
+    @PutMapping("/projects/{username}/{projectname}/repository/blob")
+    public void updateFile(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                           @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                            @ApiParam(value = "文件更新内容") @RequestBody FileUpdateDto fileUpdateDto){
-
+        String id=username+"/"+projectname;
         try {
             fileService.updateFile(
                     id,
@@ -150,13 +155,14 @@ public class FileController {
 
 
     @ApiOperation(value = "删除文件",notes = "删除文件，并作为一次提交")
-    @DeleteMapping("/projects/{id}/repository/blob")
-    public void deleteFile(@ApiParam(value = "项目id")@PathVariable("id") String id,
+    @DeleteMapping("/projects/{username}/{projectname}/repository/blob")
+    public void deleteFile(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                           @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                            @ApiParam(value = "文件路径")@RequestParam("file_path") String file_path,
                            @ApiParam(value = "分支")@RequestParam("branch") String branch,
                            @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
-                           @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-
+                           @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
         try {
             fileService.deleteFile(id,file_path,branch,commit_message,userId);
         } catch (UnsupportedEncodingException e) {
@@ -166,10 +172,12 @@ public class FileController {
     }
 
     @ApiOperation(value = "查找项目所有的文件路径",notes = "根据项目id，分支或tag查找项目所有的文件的路径")
-    @GetMapping("/projects/{id}/repository/filepathlist")
-    public List<String> findAllFilePath(@ApiParam(value = "项目id")@PathVariable("id") String id,
+    @GetMapping("/projects/{username}/{projectname}/repository/filepathlist")
+    public List<String> findAllFilePath(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                        @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                                         @ApiParam(value = "分支或tag")@RequestParam("ref") String ref,
-                                        @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+                                        @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
         return fileService.findAllFilePath(id,ref,userId);
     }
 

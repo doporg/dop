@@ -77,7 +77,7 @@ public class UserController {
 
     @GetMapping("/user/keys")
     @ApiOperation(value = "查询用户sshkey列表",notes = "根据用户id进行查询")
-    public List<SSHKeyVo> findSSHKeys(@ApiParam(value = "用户id") @RequestParam("userId") Long userId){
+    public List<SSHKeyVo> findSSHKeys(@ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
 
         List<SSHKeyBo> sshKeyBos=userService.findSSHKeys(userId);
         List<SSHKeyVo> sshKeyVos=new ArrayList<>();
@@ -98,7 +98,7 @@ public class UserController {
     @DeleteMapping("/user/keys/{id}")
     @ApiOperation(value = "删除一个ssh key",notes = "根据ssh key的id和userId删除ssh key")
     public void deleteSSHKey(@ApiParam(value = "ssh key的id")@PathVariable("id") int id,
-                             @ApiParam(value = "用户id")@RequestParam("userId") Long userId){
+                             @ApiParam(value = "用户id")@RequestHeader("x-login-user") Long userId){
         userService.deleteSSHkey(id,userId);
     }
 
