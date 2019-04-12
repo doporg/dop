@@ -37,7 +37,7 @@ class ProjectOverview extends React.Component{
         this.state={
             username:username,
             projectname:projectname,
-            projectid:encodeURIComponent(username+"/"+projectname),
+            projectid:username+"/"+projectname,
             url:"",
             projectInfo:{
                 commit_count: 0,
@@ -74,7 +74,7 @@ class ProjectOverview extends React.Component{
         let self = this;
         Axios.get(url).then((response) => {
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data},()=>{
-                //先取得default_branch
+                // 先取得default_branch
                 let default_branch = self.state.projectInfo.default_branch;
                 url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&userId="+sessionStorage.getItem("user-id");
                 Axios.get(url).then((response)=>{
@@ -133,7 +133,7 @@ class ProjectOverview extends React.Component{
     }
 
     downLoadZipLink(){
-        window.open("http://gitlab.dop.clsaa.com/api/v4/projects/"+this.state.projectid+"/repository/archive.zip");
+        window.open("http://gitlab.dop.clsaa.com/api/v4/projects/"+encodeURIComponent(this.state.projectid)+"/repository/archive.zip");
     }
 
 

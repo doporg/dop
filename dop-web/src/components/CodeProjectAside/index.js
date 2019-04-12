@@ -23,7 +23,7 @@ class CodeProjectAside extends Component {
       this.state={
           username:username,
           projectname:projectname,
-          projectid:encodeURIComponent(username+"/"+projectname),
+          projectid:username+"/"+projectname,
       };
   }
 
@@ -46,7 +46,6 @@ class CodeProjectAside extends Component {
 
       let { username,projectname} = this.state;
       let commitLink="/code/"+username+"/"+projectname+"/commitlist/"+ref;
-      console.log(commitLink);
       this.props.history.push(commitLink);
 
   }
@@ -55,7 +54,6 @@ class CodeProjectAside extends Component {
 
       let { username,projectname} = this.state;
       let fileLink="/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/");
-      console.log(fileLink);
       this.props.history.push(fileLink);
 
   }
@@ -68,8 +66,6 @@ class CodeProjectAside extends Component {
       }else {
 
           Axios.get(API.code + "/projects/" + this.state.projectid + "/defaultbranch?userId=" + sessionStorage.getItem("user-id")).then(response => {
-              console.log(this);
-              console.log(response.data);
               Link(response.data);
           })
 

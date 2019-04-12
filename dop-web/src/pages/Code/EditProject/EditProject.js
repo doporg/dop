@@ -21,7 +21,7 @@ class EditProject extends React.Component{
         this.state={
             username:username,
             projectname:projectname,
-            projectid:encodeURIComponent(username+"/"+projectname),
+            projectid:username+"/"+projectname,
             editInfo:{},//id,name,description,default_branch,visibility
             branches:[],
             deleteVisible:false
@@ -54,7 +54,7 @@ class EditProject extends React.Component{
 
         Axios({
             method: "PUT",
-            url: API.code+ "/projects/"+editInfo.id,
+            url: API.code+ "/projects/"+this.state.projectid,
             params: {
                 userId:sessionStorage.getItem("user-id"),
                 name:editInfo.name,
@@ -80,7 +80,7 @@ class EditProject extends React.Component{
 
     deleteProject(){
 
-        let projectid=this.state.editInfo.id;
+        let projectid=this.state.projectid;
         let url=API.code+"/projects/"+projectid+"?userId="+sessionStorage.getItem("user-id");
         Axios.delete(url).then(response=>{
             this.props.history.push("/code/projects");
@@ -135,9 +135,6 @@ class EditProject extends React.Component{
 
 
     render(){
-
-        // console.log(this.state.editInfo);
-
 
         return (
             <div>

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * gitlab项目服务类
+ * 项目服务类
  * @author wsy
  */
 @Service
@@ -24,11 +24,10 @@ public class ProjectService {
      * 根据id查找项目
      * @param id 项目id
      * @return 项目overview需要的信息
-     * @author wsy
      */
     public ProjectBo findProject(String id){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         //获得项目基本信息
         ProjectBo projectBo=RequestUtil.get("/projects/"+id+"?statistics=true",ProjectBo.class);
@@ -63,7 +62,7 @@ public class ProjectService {
      */
     public int starProject(String id,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         List<NameValuePair> params=new ArrayList<>();
         int code=RequestUtil.post("/projects/"+id+"/star",userId,params);
@@ -126,7 +125,7 @@ public class ProjectService {
      */
     public ProjectEditBo findProjectEditInfo(String id,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id;
         return RequestUtil.get(path,userId,ProjectEditBo.class);
@@ -144,7 +143,7 @@ public class ProjectService {
      */
     public void editProjectInfo(String id,String name,String description,String default_branch,String visibility,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id;
         List<NameValuePair> params=new ArrayList<>();
@@ -163,7 +162,7 @@ public class ProjectService {
      */
     public List<String> findAllBranchName(String id,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId, BranchBo.class);
         List<String> res=new ArrayList<>();
@@ -180,7 +179,7 @@ public class ProjectService {
      */
     public void deleteProject(String id,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id;
         RequestUtil.delete(path,userId);
@@ -195,7 +194,7 @@ public class ProjectService {
      */
     public String findProjectDefaultBranch(String id,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         long t1=System.currentTimeMillis();
         DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,userId,DefaultBranchBo.class);

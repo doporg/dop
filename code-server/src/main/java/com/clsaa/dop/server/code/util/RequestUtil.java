@@ -73,7 +73,7 @@ public class RequestUtil {
 
         System.out.println(path);
 
-        String url=api+"/projects/"+path+"?access_token="+access_token;
+        String url=api+"/projects/"+path+"?access_token="+access_token+"?&wsy=111 222";
 //        String url=api+"/projects/13"+"?access_token="+access_token;
 
         FormatUtil.printJson(httpGet(url));
@@ -296,6 +296,8 @@ public class RequestUtil {
      */
     private static String httpGet(String url) {
 
+        //首先对url的request param进行url encode
+        url=URLUtil.encodeURI(url);
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
@@ -411,6 +413,8 @@ public class RequestUtil {
      */
     private static int httpDelete(String url) {
 
+        //首先对url的request param进行url encode
+        url=URLUtil.encodeURI(url);
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
 

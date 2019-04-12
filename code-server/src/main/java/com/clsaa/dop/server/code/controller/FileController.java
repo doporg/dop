@@ -39,15 +39,10 @@ public class FileController {
         String id=username+"/"+projectname;
         List<TreeNodeVo> treeNodeVos=new ArrayList<>();
 
-        try {
-            List<TreeNodeBo> treeNodeBos = fileService.findTreeNodes(id,ref,path,userId);
-            for(TreeNodeBo treeNodeBo:treeNodeBos){
-                treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        List<TreeNodeBo> treeNodeBos = fileService.findTreeNodes(id,ref,path,userId);
+        for(TreeNodeBo treeNodeBo:treeNodeBos){
+            treeNodeVos.add(BeanUtils.convertType(treeNodeBo,TreeNodeVo.class));
         }
-
 
         return treeNodeVos;
     }
@@ -63,15 +58,10 @@ public class FileController {
         String id=username+"/"+projectname;
         List<TreeCommitVo> treeCommitVos=new ArrayList<>();
 
-        try {
-            List<TreeCommitBo> treeCommitBos = fileService.findTreeCommits(id,ref,path,userId);
-            for(TreeCommitBo treeCommitBo:treeCommitBos){
-                treeCommitVos.add(BeanUtils.convertType(treeCommitBo,TreeCommitVo.class));
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        List<TreeCommitBo> treeCommitBos = fileService.findTreeCommits(id,ref,path,userId);
+        for(TreeCommitBo treeCommitBo:treeCommitBos){
+            treeCommitVos.add(BeanUtils.convertType(treeCommitBo,TreeCommitVo.class));
         }
-
 
         return treeCommitVos;
     }
@@ -121,15 +111,7 @@ public class FileController {
                                   @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
 
         String id=username+"/"+projectname;
-        BlobVo bolbVo=null;
-
-        try {
-            bolbVo=BeanUtils.convertType(fileService.findFileContent(id,file_path,ref,userId),BlobVo.class) ;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return bolbVo;
+        return BeanUtils.convertType(fileService.findFileContent(id,file_path,ref,userId),BlobVo.class) ;
 
     }
 
@@ -139,17 +121,13 @@ public class FileController {
                            @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                            @ApiParam(value = "文件更新内容") @RequestBody FileUpdateDto fileUpdateDto){
         String id=username+"/"+projectname;
-        try {
-            fileService.updateFile(
-                    id,
-                    fileUpdateDto.getFile_path(),
-                    fileUpdateDto.getBranch(),
-                    fileUpdateDto.getContent(),
-                    fileUpdateDto.getCommit_message(),
-                    fileUpdateDto.getUserId());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        fileService.updateFile(
+                id,
+                fileUpdateDto.getFile_path(),
+                fileUpdateDto.getBranch(),
+                fileUpdateDto.getContent(),
+                fileUpdateDto.getCommit_message(),
+                fileUpdateDto.getUserId());
 
     }
 
@@ -162,12 +140,10 @@ public class FileController {
                            @ApiParam(value = "分支")@RequestParam("branch") String branch,
                            @ApiParam(value = "提交信息")@RequestParam("commit_message") String commit_message,
                            @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+
+
         String id=username+"/"+projectname;
-        try {
-            fileService.deleteFile(id,file_path,branch,commit_message,userId);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        fileService.deleteFile(id,file_path,branch,commit_message,userId);
 
     }
 

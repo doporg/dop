@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 文件服务类
  * @author wsy
  */
 @Service
@@ -29,12 +30,12 @@ public class FileService {
      * @param userId 用户id
      * @return path下的所有文件和文件夹节点
      */
-    public List<TreeNodeBo> findTreeNodes(String id, String ref, String path,Long userId) throws UnsupportedEncodingException {
+    public List<TreeNodeBo> findTreeNodes(String id, String ref, String path,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         long t1=System.currentTimeMillis();
-        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
+        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+path ,userId,TreeNodeBo.class);
         long t2=System.currentTimeMillis();
         System.out.println("tree nodes:"+(t2-t1));
 
@@ -49,14 +50,13 @@ public class FileService {
      * @param path 文件路径
      * @param userId 用户id
      * @return path下的提交信息
-     * @throws UnsupportedEncodingException
      */
-    public List<TreeCommitBo> findTreeCommits(String id,String ref,String path,Long userId) throws UnsupportedEncodingException {
+    public List<TreeCommitBo> findTreeCommits(String id,String ref,String path,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         long t1=System.currentTimeMillis();
-        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+URLEncoder.encode(path,"GBK") ,userId,TreeNodeBo.class);
+        List<TreeNodeBo> treeNodeBos= RequestUtil.getList("/projects/"+id+"/repository/tree?ref="+ref+"&path="+path ,userId,TreeNodeBo.class);
         long t2=System.currentTimeMillis();
         System.out.println("tree nodes:"+(t2-t1));
 
@@ -65,7 +65,7 @@ public class FileService {
         for(TreeNodeBo treeNode:treeNodeBos){
             //获得最近提交的一次
             TreeCommitBo treeCommitBo=new TreeCommitBo();
-            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+URLEncoder.encode(treeNode.getPath(),"GBK"),userId,CommitBo.class).get(0);
+            CommitBo commit=RequestUtil.getList("/projects/"+id+"/repository/commits?ref_name="+ref+"&path="+treeNode.getPath(),userId,CommitBo.class).get(0);
             treeCommitBo.setCommit_id(commit.getId());
             treeCommitBo.setCommit_msg(commit.getMessage());
             List<String> res=TimeUtil.natureTime(commit.getCommitted_date());
@@ -88,18 +88,10 @@ public class FileService {
      */
     public List<BranchAndTagBo> findBranchAndTag(String id, Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
-//        long tt1=System.currentTimeMillis();
-//
-//        long t1=System.currentTimeMillis();
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId,BranchBo.class);
-//        long t2=System.currentTimeMillis();
-//        System.out.println("request branch:"+(t2-t1));
-//        t1=System.currentTimeMillis();
         List<TagBo> tagBos=RequestUtil.getList("/projects/"+id+"/repository/tags",userId,TagBo.class);
-//        t2=System.currentTimeMillis();
-//        System.out.println("request tag:"+(t2-t1));
 
         List<ChildrenBo> branches=new ArrayList<>();
         List<ChildrenBo> tags=new ArrayList<>();
@@ -116,10 +108,6 @@ public class FileService {
         res.add(new BranchAndTagBo("branch","branch",branches));
         res.add(new BranchAndTagBo("tag","tag",tags));
 
-//        long tt2=System.currentTimeMillis();
-//
-//        System.out.println("service:"+(tt2-tt1));
-
         return res;
 
     }
@@ -132,20 +120,16 @@ public class FileService {
      * @param userId 用户id
      * @return 文件内容(raw)
      */
-    public BlobBo findFileContent(String id, String file_path, String ref, Long userId) throws UnsupportedEncodingException {
+    public BlobBo findFileContent(String id, String file_path, String ref, Long userId){
 
-        id=URLUtil.encode(id);
-
-        file_path=URLEncoder.encode(file_path,"GBK").replaceAll("\\+","%20");
+        id=URLUtil.encodeURIComponent(id);
+        file_path=URLUtil.encodeURIComponent(file_path);
 
         String content=RequestUtil.getString("/projects/"+id+"/repository/files/"+file_path+"/raw?ref="+ref,userId);
-
         BlobBo blobBo=RequestUtil.get("/projects/"+id+"/repository/files/"+file_path+"?ref="+ref,userId,BlobBo.class);
-
         blobBo.setFile_content(content);
 
         int size=blobBo.getSize();
-
         if(size<1024){
             blobBo.setFile_size(size+"B");
         }else if(size<(1024*1024)){
@@ -171,11 +155,11 @@ public class FileService {
      * @param content 更新的文件内容
      * @param commit_message 提交信息
      * @param userId 用户id
-     * @throws UnsupportedEncodingException
      */
-    public void updateFile(String id,String file_path,String branch,String content,String commit_message,Long userId) throws UnsupportedEncodingException {
+    public void updateFile(String id,String file_path,String branch,String content,String commit_message,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
+        file_path=URLUtil.encodeURIComponent(file_path);
 
         NameValuePair p1=new BasicNameValuePair("branch",branch);
         NameValuePair p2=new  BasicNameValuePair("content",content);
@@ -186,7 +170,7 @@ public class FileService {
         list.add(p2);
         list.add(p3);
 
-        String path="/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK");
+        String path="/projects/"+id+"/repository/files/"+file_path;
 
         RequestUtil.put(path,userId,list);
     }
@@ -199,13 +183,13 @@ public class FileService {
      * @param branch 分支
      * @param commit_message 提交信息
      * @param userId 用户id
-     * @throws UnsupportedEncodingException
      */
-    public void deleteFile(String id,String file_path,String branch,String commit_message,Long userId) throws UnsupportedEncodingException {
+    public void deleteFile(String id,String file_path,String branch,String commit_message,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
+        file_path=URLUtil.encodeURIComponent(file_path);
 
-        String path= "/projects/"+id+"/repository/files/"+URLEncoder.encode(file_path,"GBK")+"?branch="+branch+"&commit_message="+commit_message;
+        String path= "/projects/"+id+"/repository/files/"+file_path+"?branch="+branch+"&commit_message="+commit_message;
         RequestUtil.delete(path,userId);
     }
 
@@ -219,7 +203,7 @@ public class FileService {
      */
     public List<String> findAllFilePath(String id,String ref,Long userId){
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id+"/repository/tree?ref="+ref+"&recursive=true";
         List<FilePathBo> filePathBos=RequestUtil.getList(path,userId,FilePathBo.class);

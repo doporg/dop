@@ -2,7 +2,6 @@ import React from 'react'
 import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import {Link} from 'react-router-dom';
-import FoundationSymbol from 'foundation-symbol';
 import './Tree.css'
 import API from "../../API";
 import { Loading } from "@icedesign/base";
@@ -30,7 +29,7 @@ class Tree extends React.Component{
         this.state = {
             username:username,
             projectname:projectname,
-            projectid:encodeURIComponent(username+"/"+projectname),
+            projectid:username+"/"+projectname,
             ref: ref,
             refOptions: [],
             path: path,

@@ -28,7 +28,7 @@ class Blob extends React.Component{
         this.state={
             username:username,
             projectname:projectname,
-            projectid:encodeURIComponent(username+"/"+projectname),
+            projectid:username+"/"+projectname,
             path:path,
             ref:ref,
             refOptions:[],

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 提交服务类
  * @author wsy
  */
 @Service
@@ -27,12 +28,12 @@ public class CommitService {
      */
     public List<CommitBo> findCommitList(String id,String path,String ref_name,Long userId) throws UnsupportedEncodingException {
 
-        id=URLUtil.encode(id);
+        id=URLUtil.encodeURIComponent(id);
 
         String url="/projects/"+id+"/repository/commits?ref_name="+ref_name;
         //若不为根目录
         if(!path.equals("/")){
-            url+="&path="+URLEncoder.encode(path,"GBK");
+            url+="&path="+URLUtil.encodeURIComponent(path);
         }
 
         List<CommitBo> commitBos=RequestUtil.getList(url, userId, CommitBo.class);

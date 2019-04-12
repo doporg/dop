@@ -23,7 +23,7 @@ export default class NewProject extends React.Component {
             name: "",
             description: "",
             visibility: "private",
-            initialize_with_readme: "false",
+            initialize_with_readme: "true",
             loadingVisible:false,
         }
     }
@@ -110,7 +110,7 @@ export default class NewProject extends React.Component {
                     <div className="div_input">
                         <label className="label_left">其他</label>
                         <div className="div_visibility">
-                            <Checkbox onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
+                            <Checkbox defaultChecked onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
                         </div>
                     </div>
                     <button onClick={this.createProject.bind(this)} className="btn_create">创建项目</button>
