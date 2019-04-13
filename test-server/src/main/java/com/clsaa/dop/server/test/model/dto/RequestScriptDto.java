@@ -1,10 +1,12 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
+import com.clsaa.dop.server.test.doExecute.Version;
+import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
-import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
@@ -28,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.clsaa.dop.server.test.doExecute.TestManager.FAIL_RESULT;
-import static com.clsaa.dop.server.test.doExecute.TestManager.SUCCESS_RESULT;
+import static com.clsaa.dop.server.test.doExecute.TestManager.*;
+import static com.clsaa.dop.server.test.doExecute.Version.currentVersion;
 import static com.clsaa.dop.server.test.enums.OperationType.REQUEST;
 
 /**
@@ -50,6 +52,8 @@ public class RequestScriptDto implements Operation {
     private HttpMethod httpMethod;
 
     private List<RequestHeaderDto> requestHeaders;
+
+    private Map<String, String> headersMap;
 
     private String requestBody;
 
@@ -83,28 +87,37 @@ public class RequestScriptDto implements Operation {
 
     @Override
     public void run(ExecuteContext executeContext) {
+        // 1, execute log
+        OperationExecuteLog operationExecuteLog = initOperationLog(executeContext);
         try {
-            OperationExecuteLog operationExecuteLog = initOperationLog(executeContext);
-            Map<String, String> headers = requestHeaders.stream()
-                    .collect(Collectors.toMap(RequestHeaderDto::getName, RequestHeaderDto::getValue));
-            StringBuilder executionLog = executeContext.logRequestInfo(headers, requestBody, httpMethod, rawUrl);
+            // 2, plugins to handle request info
+            RequestContext requestContext = RequestContext.builder()
+                    .url(rawUrl)
+                    .requestHeaders(headersMap)
+                    .requestBody(requestBody)
+                    .params(executeContext.getCaseParams())
+                    .version(currentVersion())
+                    .build();
+            String url = urlHandled(requestContext);
+            Map<String, String> headers = requestHeadersHandled(requestContext);
 
+            StringBuilder executionLog = executeContext.logRequestInfo(headers, requestBody, httpMethod, url);
+
+            // 3, http call and log response
             //string writer to store response info
             StringWriter writer = new StringWriter();
             PrintStream captor = new PrintStream(new WriterOutputStream(writer), true);
-            RestAssuredConfig config = RestAssured.config()
-                    .logConfig(new LogConfig(captor, true));
-
             RequestSpecification requestSpecification = RestAssured.given()
-                    .config(config)
+                    .config(RestAssured.config()
+                            .logConfig(new LogConfig(captor, true)))
                     .headers(headers)
                     .body(requestBody);
 
-            URL url = new URL(rawUrl);
-            //http call and log response
-            ValidatableResponse response = httpCall(requestSpecification, url, httpMethod)
-                                            .then()
-                                            .log().everything(true);
+            URL urlObj = new URL(url);
+            ValidatableResponse response = httpCall(requestSpecification, urlObj, httpMethod)
+                    .then()
+                    .log()
+                    .everything(true);
             executionLog = executeContext.logResponseInfo(executionLog, writer);
 
             // auto test
@@ -117,13 +130,15 @@ public class RequestScriptDto implements Operation {
                     checkPoint.fail(error.getMessage());
                 }
             }
-
-            // collect log info
             operationExecuteLog.setExecuteInfo(executionLog.toString());
-            executeContext.addOperationLog(endOperationLog(operationExecuteLog));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            String message = e.getMessage();
+            operationExecuteLog.setExecuteInfo(message);
             setResultFail();
+        } finally {
+            executeContext.addOperationLog(
+                    endOperationLog(operationExecuteLog)
+            );
         }
     }
 

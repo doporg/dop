@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -50,6 +52,13 @@ public class InterfaceCase implements Po{
     private CaseStatus status;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_id", referencedColumnName = "id"
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private List<CaseParam> caseParams;
+
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "case_id", referencedColumnName = "id"
             ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<InterfaceStage> stages;

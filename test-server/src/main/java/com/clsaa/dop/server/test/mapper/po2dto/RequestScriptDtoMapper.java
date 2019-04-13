@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author xihao
@@ -52,6 +54,9 @@ public class RequestScriptDtoMapper extends AbstractCommonServiceMapper<RequestS
                                List<RequestCheckPointDto> checkPointDtos, List<UrlResultParamDto> resultParamDtos) {
         return requestScriptDto -> {
             requestScriptDto.setRequestHeaders(headerDtos);
+            Map<String, String> headersMap = headerDtos.stream()
+                    .collect(Collectors.toMap(RequestHeaderDto::getName, RequestHeaderDto::getValue));
+            requestScriptDto.setHeadersMap(headersMap);
             requestScriptDto.setRequestCheckPoints(checkPointDtos);
             requestScriptDto.setResultParams(resultParamDtos);
             return requestScriptDto;

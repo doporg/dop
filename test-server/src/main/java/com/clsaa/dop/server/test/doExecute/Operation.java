@@ -1,15 +1,14 @@
 package com.clsaa.dop.server.test.doExecute;
 
 import com.clsaa.dop.server.test.enums.OperationType;
-import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
-import com.clsaa.dop.server.test.util.UserUtils;
+import com.clsaa.dop.server.test.manager.UserManager;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.SUCCESS_RESULT;
-import static com.clsaa.dop.server.test.enums.OperationType.REQUEST;
 
 public interface Operation {
 
@@ -26,7 +25,7 @@ public interface Operation {
     }
 
     default OperationExecuteLog initOperationLog(ExecuteContext executeContext) {
-        return (OperationExecuteLog) UserUtils.dateAndUser().apply(
+        return (OperationExecuteLog) UserManager.dateAndUser().apply(
                 OperationExecuteLog.builder()
                         .interfaceExecuteLog(executeContext.getInterfaceExecuteLog())
                         .stage(executeContext.getCurrentStage())

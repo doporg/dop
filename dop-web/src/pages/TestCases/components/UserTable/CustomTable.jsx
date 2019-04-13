@@ -277,7 +277,7 @@ class CustomTable extends Component {
               <Table.Column title="类型" cell={this.renderCaseType} width={100} />
               <Table.Column title="状态" dataIndex="status" width={100} />
               <Table.Column title="执行结果" dataIndex="executeResult" width={100} />
-              <Table.Column title="创建者" dataIndex="cuser" width={100} />
+              <Table.Column title="创建者" dataIndex="createUserName" width={100} />
               <Table.Column title="执行/终止" width={100} cell={this.renderSwitch} />
               <Table.Column title="操作" width={100} cell={this.renderOper} />
             </Table>

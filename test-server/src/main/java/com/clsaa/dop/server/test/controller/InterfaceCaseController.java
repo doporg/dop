@@ -4,12 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.clsaa.dop.server.test.config.BizCodes;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceExecuteLogDto;
+import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
-import com.clsaa.dop.server.test.service.InterfaceCaseCreateService;
-import com.clsaa.dop.server.test.service.InterfaceCaseLogQueryService;
-import com.clsaa.dop.server.test.service.InterfaceCaseQueryService;
-import com.clsaa.dop.server.test.service.InterfaceStageCreateService;
+import com.clsaa.dop.server.test.service.*;
 import com.clsaa.dop.server.test.util.ValidateUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
@@ -21,6 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.execute;
+import static com.clsaa.dop.server.test.util.ValidateUtils.validate;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -46,6 +45,9 @@ public class InterfaceCaseController {
     @Autowired
     private InterfaceCaseLogQueryService logQueryService;
 
+    @Autowired
+    private CaseParamCreateService caseParamCreateService;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping
     public Long createCase(@RequestBody @Valid InterfaceCaseParam interfaceCase) {
@@ -59,6 +61,15 @@ public class InterfaceCaseController {
         validate(stageParams);
         return interfaceStageCreateService.create(stageParams);
     }
+
+    @ApiOperation(value = "新增接口测试用例全局参数", notes = "创建失败500，message为错误信息")
+    @PostMapping("/caseParams")
+    public List<Long> createParams(@RequestBody JSONArray jsonArray) {
+        List<CaseParamRef> caseParamRefs = jsonArray.toJavaList(CaseParamRef.class);
+        validate(caseParamRefs);
+        return caseParamCreateService.create(caseParamRefs);
+    }
+
 
     @ApiOperation(value = "根据id查询接口测试用例信息", notes = "参数为需要获取的接口测试用例ID")
     @GetMapping("/{id}")
@@ -88,9 +99,5 @@ public class InterfaceCaseController {
         return logQueryService.getExecuteLogs(caseId, pageNo, pageSize);
     }
 
-    private void validate(List<InterfaceStageParam> stageParams) {
-        for (InterfaceStageParam stageParam : stageParams) {
-            ValidateUtils.validate(stageParam);
-        }
-    }
+
 }

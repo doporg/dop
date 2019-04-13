@@ -2,13 +2,12 @@ package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
 import com.clsaa.dop.server.test.enums.OperationType;
-import com.clsaa.dop.server.test.model.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,6 +5,7 @@ import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.ConstraintViolation;
+import java.util.List;
 import java.util.Set;
 
 import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpty;
@@ -17,6 +18,14 @@ import static org.hibernate.internal.util.collections.CollectionHelper.isNotEmpt
 public class ValidateUtils {
 
     private static LocalValidatorFactoryBean validator;
+
+    public static <T> void validate(List<T> ts) {
+        if (isNotEmpty(ts)) {
+            for (T t : ts) {
+                validate(t);
+            }
+        }
+    }
 
     public static <T> void validate(T t) {
         ensureValidatorNotNull();

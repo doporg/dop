@@ -1,16 +1,14 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.model.po.CaseStatus;
-import com.clsaa.dop.server.test.model.po.InterfaceCase;
-import com.clsaa.dop.server.test.model.po.InterfaceStage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xihao
@@ -41,7 +39,13 @@ public class InterfaceCaseDto {
 
     private List<InterfaceStageDto> stages;
 
+    private List<CaseParamDto> caseParams;
+
+    private Map<String, String> paramsMap;
+
     private boolean executeSuccess;
+
+    private String createUserName;
 
     // ----------- common property ---------
     private LocalDateTime ctime;

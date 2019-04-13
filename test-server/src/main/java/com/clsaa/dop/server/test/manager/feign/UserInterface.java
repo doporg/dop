@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.feign;
+package com.clsaa.dop.server.test.manager.feign;
 
 import com.clsaa.dop.server.test.config.FeignConfig;
 import com.clsaa.dop.server.test.model.dto.User;
