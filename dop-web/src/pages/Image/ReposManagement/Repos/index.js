@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import API from "../../../API"
 import Axios from "axios";
 import RepoList from '../RepoList'
+import {Breadcrumb} from "@icedesign/base";
 
 
 export default class Repos extends Component {
@@ -22,17 +23,12 @@ export default class Repos extends Component {
     refreshList() {
         let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
         let _this = this;
-        Axios.get(url, {
-            headers: {
-                userId:37
-            }
-        })
+        Axios.get(url, {})
             .then(function (response) {
                 console.log("镜像仓库信息");
                 console.log(response.data);
                 _this.setState({
-                    currentData: response.data,
-                    totalCount: response.data.length
+                    currentData: response.data
                 });
 
             })
@@ -44,10 +40,6 @@ export default class Repos extends Component {
     }
 
 
-    componentWillReceiveProps(nextProps) {
-        let key = nextProps.searchKey;
-        this.refreshList(1, key);
-    }
 
     componentDidMount() {
         this.refreshList(1, "");
@@ -56,7 +48,10 @@ export default class Repos extends Component {
     render() {
         return (
             <div>
-                <RepoList currentData={this.state.currentData}/>
+                <Breadcrumb style={{marginBottom: "10px"}}>
+                    <Breadcrumb.Item link="#/image/projects">所有命名空间</Breadcrumb.Item>
+                </Breadcrumb>
+                <RepoList currentData={this.state.currentData} projectId={this.state.id} refreshList={this.refreshList.bind(this)}/>
             </div>
         )
     }

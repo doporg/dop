@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * 用于管理镜像仓库的控制类
+ * @author 2019-3-25
  */
 @RestController
 @CrossOrigin
@@ -33,17 +34,18 @@ public class RepositoryController {
                                               @ApiParam(value = "标签id") @RequestParam(value = "labelId", required = false) Integer labelId,
                                               @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
                                               @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "page_size", required = false) Integer pageSize,
-                                              @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
+                                              @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
             return BeanUtils.convertList(repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId),RepositoryVO.class);
     }
 
     @ApiOperation(value = "删除镜像仓库")
-    @DeleteMapping(value = "/v1/projects/{projectId}/repositories/{repoName}")
-    public void deleteRepository(@ApiParam(value = "项目id") @PathVariable(value = "projectId")Integer projectId,
+    @DeleteMapping(value = "/v1/repositories/{projectName}/{repoName}")
+    public void deleteRepository(@ApiParam(value = "项目名称") @PathVariable(value = "projectName") String projectName,
                                  @ApiParam(value = "镜像仓库名称") @PathVariable(value = "repoName")String repoName,
-                                 @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
-
+                                 @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        System.out.println(repoName);
+        repositoryService.deleteRepository(projectName,repoName,userId);
     }
 
 

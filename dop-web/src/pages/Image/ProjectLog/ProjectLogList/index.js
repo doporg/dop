@@ -3,13 +3,13 @@ import React, {Component} from 'react';
 import {Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
-import {Link} from 'react-router-dom';
 
 const {Row} = Grid;
 
-export default class NamespaceList extends Component {
+//用于展示
+export default class NamespaceLogList extends Component {
 
-    static displayName = 'NamespaceList';
+    static displayName = 'NamespaceLogList';
 
 
     constructor(props) {
@@ -27,45 +27,30 @@ export default class NamespaceList extends Component {
         });
     }
 
-    //链接 跳转到对应的命名空间
-    idRender = function (id) {
-        return <Link to={"/image/projects/"+id+"/repos"}
-        >{id}</Link>
-    }
     render() {
         return (
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender}
-                                      title="命名空间ID"
+                        <Table.Column title="用户名"
                                       dataIndex="projectId"/>
 
-                        <Table.Column title="命名空间名称"
+                        <Table.Column title="镜像名称"
                                       dataIndex="name"/>
 
-                        <Table.Column title="命名空间是否公开"
+                        <Table.Column title="标签"
                                       dataIndex="metadata.public"/>
 
-                        <Table.Column title="镜像仓库数量"
+                        <Table.Column title="操作"
                                       dataIndex="repoCount"/>
+                                      
+                        <Table.Column title="时间戳"
+                                      dataIndex="time"/>
                     </Table>
                 </Col>
             </Row>
         );
     }
 
-}
 
-const styles = {
-    pagination: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    time: {
-        fontSize: '12px',
-        color: 'rgba(0, 0, 0, 0.5)',
-    },
 };
