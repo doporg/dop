@@ -1,20 +1,22 @@
+import {Button, Dialog,} from "@icedesign/base";
+import CreateApplicationForm from "../CreateApplicationForm/CreateApplicationForm"
+import React, {Component} from 'react';
+import "./CreateApplicationDialog.scss"
 
+const formItemLayout = {
+    labelCol: {span: 8},
+    wrapperCol: {span: 16}
+};
 
-
-import {
-    Dialog,
-    Button,
-}
-    from "@icedesign/base";
-import ProjectForm from "../CreateProjectForm"
-import React, {Component} from 'react'
 
 /**
- *  创建项目的弹窗
+ *  创建应用的弹窗
  *  @author Bowen
  *
  * */
-export default class CreateProjectDialog extends Component {
+
+export default class CreateApplicationDialog extends Component {
+
     constructor(props) {
         super(props);
 
@@ -23,17 +25,11 @@ export default class CreateProjectDialog extends Component {
             isSubmit: false,
             footerAlign: "center",
             visible: false,
-            style: {
-                width: "30%"
-            },
-            createDialogStyle: {
-                width: "10%"
-            },
             createDialogVisible: false,
-            refreshProjectList: props.refreshProjectList
+            refreshApplicationList: props.refreshApplicationList,
+            projectId: props.projectId
         }
     };
-
     onClose = () => {
         this.setState({
             visible: false
@@ -72,7 +68,7 @@ export default class CreateProjectDialog extends Component {
             isSubmit: false
         })
 
-        this.state.refreshProjectList();
+        this.state.refreshApplicationList();
         console.log("finished");
     }
 
@@ -80,20 +76,19 @@ export default class CreateProjectDialog extends Component {
         return (
             <span>
                 <Button onClick={this.onOpen} type="primary">
-          创建项目
+          创建应用
         </Button>
         <Dialog
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="创建项目"
-            style={this.state.style}
+            title="创建应用"
+            className="dialog"
             footerAlign={this.state.footerAlign}
         >
-          <ProjectForm
-              isSubmit={this.state.isSubmit}
-              finished={this.finished.bind(this)}/>
+          <CreateApplicationForm isSubmit={this.state.isSubmit} finished={this.finished.bind(this)}
+                                 projectId={this.state.projectId}/>
         </Dialog>
 
 <Dialog visible={this.state.createDialogVisible}
@@ -101,9 +96,9 @@ export default class CreateProjectDialog extends Component {
         onCancel={this.onCreateDialogClose}
         onClose={this.onCreateDialogClose}
         title="创建成功"
-        style={this.state.createDialogStyle}
+        className="success-dialog"
         footerAlign={this.state.footerAlign}>
-项目创建成功！
+应用创建成功！
 </Dialog>
       </span>
         );

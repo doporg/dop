@@ -1,11 +1,8 @@
-
 import React, {Component} from 'react';
-import {Table} from '@icedesign/base';
-import {Grid} from '@icedesign/base';
-import {Icon} from '@icedesign/base';
-import API from "../../../../API.js"
+import {Grid, Table} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from 'react-router-dom';
+import "./ProjectList.scss"
 
 const {Row} = Grid;
 
@@ -75,15 +72,3 @@ export default class ProjectList extends Component {
 
 }
 
-const styles = {
-    pagination: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    time: {
-        fontSize: '12px',
-        color: 'rgba(0, 0, 0, 0.5)',
-    },
-};

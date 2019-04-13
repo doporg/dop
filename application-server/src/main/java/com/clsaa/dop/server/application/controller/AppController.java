@@ -89,6 +89,7 @@ public class AppController {
                           @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode") String productMode,
                           @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl,
                           @ApiParam(name = "imageUrl", value = "镜像仓库地址", defaultValue = "") @RequestParam(value = "imageUrl", required = false) String imageUrl) {
+
         this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl, imageUrl);
         return;
     }
@@ -97,7 +98,8 @@ public class AppController {
     @ApiOperation(value = "更新应用", notes = "更新应用")
     @PutMapping(value = "/app/{appId}")
     public void updateApp(@ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
-                          @ApiParam(name = "description", value = "应用描述", required = true) @RequestParam(value = "description") String description) {
+                          @ApiParam(name = "title", value = "应用标题", required = true) @RequestParam(value = "title") String title,
+                          @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", defaultValue = "") String description) {
         this.appService.updateApp(appId, description);
     }
 

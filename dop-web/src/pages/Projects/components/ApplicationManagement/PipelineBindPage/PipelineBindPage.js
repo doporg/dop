@@ -3,6 +3,7 @@ import Axios from "axios";
 import API from "../../../../API.js"
 import {Link} from 'react-router-dom';
 import {Field, Form, Loading} from "@icedesign/base";
+import "./PipelineBindPage.scss"
 
 const formItemLayout = {
     labelCol: {span: 8},
@@ -202,18 +203,16 @@ export default class PipelineBindPage extends Component {
         // } else {
             return (
 
-                <Form style={{width: "100%", textAlign: "center", alignItems: "center"}}>
-                    <Loading style={{width: "30%"}} visible={this.state.loading} size='small' shape="dot-circle"
+                <Form className="form">
+                    <Loading visible={this.state.loading} size='small' shape="dot-circle"
                              color="#2077FF"
                     >
-                        <FormItem   {...formItemLayout}
-                                    label="流水线">
+                        <FormItem    {...formItemLayout}
+                                     label="流水线:">
                             <Link
                                 to={this.state.currentPipeline == "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
-                                <div style={{
-                                    textAlign: "center",
-                                    padding: "5px"
-                                }}>{this.state.currentPipeline == "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
+                                <div
+                                    className="text">{this.state.currentPipeline == "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
                             </Link>
                         </FormItem>
 

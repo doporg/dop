@@ -65,7 +65,7 @@ public class AppService {
 
         }
 
-        //新建BO层对象 并赋值
+        //新建VO层对象 并赋值
         Pagination<AppV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
         pagination.setPageNo(pageNo);

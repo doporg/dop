@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
 import {Breadcrumb, Dialog, Feedback, Field, Form, Icon, Loading, Table} from '@icedesign/base';
-import CreateApplicationVariableDialog from "../CreateApplicationVariable";
+import CreateApplicationVariableDialog from "../CreateApplicationVariable/CreateApplicationVariable";
 import Input from "@icedesign/base/lib/input";
 import TopBar from "./topbar";
+import "./ApplicationVariable.scss"
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -144,10 +145,12 @@ export default class ApplicationVariable extends Component {
         const keyRender = (value, index, record) => {
             console.log(record, value);
             return <div>
-                <div style={{float: "left", textAlign: "left"}}>{record.varKey}</div>
-                <Icon onClick={this.deleteConfirm.bind(this, record.id)}
+                <div className="key-text">{record.varKey}</div>
+                <Icon
+                    className="key-icon"
+                    onClick={this.deleteConfirm.bind(this, record.id)}
                       type="ashbin"
-                      style={{float: "right", color: "#99ccff"}}/>
+                />
             </div>
         }
         const valueRender = (value, index, record) => {
@@ -166,10 +169,11 @@ export default class ApplicationVariable extends Component {
                 </div>
             } else {
                 return <div>
-                    <div style={{float: "left", textAlign: "left"}}>******</div>
+                    <div className="value-text">******</div>
                     <Icon type="edit"
+                          className="value-icon"
                           onClick={this.onEdit.bind(this, record.varKey)}
-                          style={{float: "right", color: "#81c7ff"}}/>
+                    />
                 </div>
             }
         }
@@ -179,7 +183,6 @@ export default class ApplicationVariable extends Component {
             >
                 <TopBar
 
-                    style={{zIndex: "100"}}
                     extraBefore={<Breadcrumb>
                         <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
@@ -192,12 +195,8 @@ export default class ApplicationVariable extends Component {
                         refreshApplicationVariableList={this.refreshApplicationVariableList.bind(this)}
                         appId={this.state.appId}/>}
                 />
-                <div style={{width: "48%", margin: "0 auto"}}>
-
-
-                    <div>
-
-                        <Table style={{width: "100%", margin: "20px"}}
+                <div className="table-container">
+                    <Table className="table"
                                dataSource={this.state.varData}>
                             <Table.Column cell={keyRender}
                                           title="Key"
@@ -205,7 +204,7 @@ export default class ApplicationVariable extends Component {
                             <Table.Column cell={valueRender}
                                           title="Value"/>
                         </Table>
-                    </div>
+
                 </div>
             </Loading>
         )

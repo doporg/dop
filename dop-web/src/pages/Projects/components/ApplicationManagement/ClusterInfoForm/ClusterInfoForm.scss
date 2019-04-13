@@ -1,0 +1,52 @@
+.card {
+  width: 70%;
+  padding: 2%;
+  margin: 1%;
+
+  .card-form {
+    width: 100%;
+
+    .form-loading {
+      width: 70%;
+      margin-bottom: 3%;
+
+      .form-item-input {
+        &.hide {
+          display: none
+        }
+      }
+
+      .form-item-text-container {
+        text-align: left;
+        margin-left: 10%;
+        margin-top: 5px;
+
+        &.hide {
+          display: none;
+        }
+
+        .edit-icon {
+          float: right
+        }
+      }
+
+      .save-button {
+        margin-right: 5px;
+
+        &.hide {
+          display: none;
+        }
+
+      }
+
+      .cancel-button {
+        &.hide {
+          display: none;
+        }
+      }
+
+    }
+
+  }
+
+}

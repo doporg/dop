@@ -1,0 +1,23 @@
+.form-container {
+  //margin: 0 auto;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .form-loading {
+    width: 23%;
+
+    .deployment-strategy-from {
+      width: 50%;
+      text-align: center;
+      align-items: center;
+
+    }
+
+  }
+
+}

@@ -2,9 +2,10 @@ import {Breadcrumb, Button, Feedback, Field, Form, Loading, Select} from "@icede
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
-import PipelineBindPage from "../PipelineBindPage"
-import ClusterInfoForm from "../ClusterInfoForm"
+import PipelineBindPage from "../PipelineBindPage/PipelineBindPage"
+import ClusterInfoForm from "../ClusterInfoForm/ClusterInfoForm"
 import TopBar from "./topbar";
+import "./ApplicationEnvironmentDetail.scss"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -91,24 +92,14 @@ export default class ApplicationEnvironmentDetail extends Component {
                         <Breadcrumb.Item>{"应用环境：" + this.state.appEnvId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
-                <div style={{
-                    // overflow:"scroll",
-                    margin: "0 auto",
-                    width: "70%",
-                    height: "50%",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    alignItems: "center"
-                }}>
-
-
-                    <Form style={{width: "100%", textAlign: "center", alignItems: "center"}}>
-                        <Loading visible={this.state.loading} style={{width: "30%"}} size='small' shape="dot-circle"
-                                 color="#2077FF"
+                <div className="form-container">
+                    <Loading className="form-loading" visible={this.state.loading} shape="dot-circle"
+                             color="#2077FF"
                     >
-                    <FormItem label="部署方式"
+                        <Form className="deployment-strategy-form">
+
+                            <FormItem label="部署方式:"
+                                      className="deployment-strategy-form"
                               {...formItemLayout}
                               validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
                               help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}
@@ -128,10 +119,10 @@ export default class ApplicationEnvironmentDetail extends Component {
                     </FormItem>
 
 
-                    </Loading>
+
 
                 </Form>
-
+                    </Loading>
                 <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 

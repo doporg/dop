@@ -93,7 +93,12 @@ public class AppEnvController {
     }
 
 
-
+    @ApiOperation(value = "根据应用环境id查询流水线", notes = "根据应用环境id查询流水线")
+    @GetMapping(value = "/app/env/{appEnvId}/pipeline")
+    public void findPipelineByAppEnvId(
+            @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        this.appEnvService.findPipelineByAppEnvId(appEnvId);
+    }
 
 
 }
