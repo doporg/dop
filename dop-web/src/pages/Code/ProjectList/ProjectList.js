@@ -151,8 +151,7 @@ export default class ProjectList extends React.Component {
                                 let begin = (this.state.pageNo - 1) * this.state.pageSize;
                                 let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.showData.length);
                                 return this.state.showData.slice(begin, end).map((item) => {
-                                    const path = "/code/" + item.path_with_namespace.substring(0, item.path_with_namespace.indexOf('/')) + "/" + item.id;
-                                    // console.log(path);
+                                    const path = "/code/" + item.path_with_namespace;
                                     return (
                                         <li className="list-item">
                                             <div className="list-item-avatar">
@@ -160,7 +159,7 @@ export default class ProjectList extends React.Component {
                                             </div>
                                             <div className="list-item-intro">
                                                 <div><Link to={path}><span
-                                                    className="text_path">{item.path_with_namespace}</span></Link></div>
+                                                    className="text_path">{item.name_with_namespace}</span></Link></div>
                                                 <div><span className="text_description">{item.description}</span></div>
                                             </div>
                                             <div className="list-item-tag">

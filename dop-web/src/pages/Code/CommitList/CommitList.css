@@ -16,9 +16,13 @@
     color: black;
 }
 
-.select-ref-commit-list{
+.loading-ref-commit-list{
     float: left;
     margin: 25px 20px auto 10px;
+    color: #aeaeae;
+}
+
+.select-ref-commit-list{
     width: 200px;
 }
 

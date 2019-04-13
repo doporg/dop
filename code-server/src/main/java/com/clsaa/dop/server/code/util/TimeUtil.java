@@ -24,25 +24,18 @@ public class TimeUtil {
     private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     public static void main(String[] args) {
-        LocalDateTime dt1= LocalDateTime.parse("2019-02-26T07:57:50.000Z",dtf);
-        System.out.println(dt1);
-        dt1=dt1.plusHours(8);
-        System.out.println(dt1);
-//        String str=dtf2.format(dt1);
-        System.out.println(dt1.toString());
 
-//        LocalDateTime now=LocalDateTime.now();
-//
-//        System.out.println(now);
-//
-//        System.out.println(now.toInstant(ZoneOffset.UTC).toEpochMilli());
+        String lastTime = "2019-02-26T07:57:50.000Z";
+        List<String> res=natureTime(lastTime);
+        System.out.println(res.get(0));
+        System.out.println(res.get(1));
+
     }
 
     /**
-     * 2019-02-26T07:57:50.000Z
-     *
-     * @param lastTime
-     * @return
+     * 将gitlab返回的时间(例如2019-02-26T07:57:50.000Z)加上8小时的时差转换成距现在的时间
+     * @param lastTime gitlab返回的时间
+     * @return 加上8小时的时差后的时间以及距现在的时间
      */
     public static List<String> natureTime(String lastTime) {
 

@@ -61,6 +61,9 @@
 }
 
 .select-ref-file-list{
-    margin-right:20px;
     width:200px;
+}
+
+.loading-ref-file-list{
+    margin-right:20px;
 }

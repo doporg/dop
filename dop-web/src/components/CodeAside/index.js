@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
-import { codeAsideMenuConfig as asideMenuConfig } from './codeMenuConfig';
 import { Icon } from '@icedesign/base';
-import Axios from 'axios';
-import API from "../../pages/API";
 
 import './index.scss';
 
@@ -20,44 +17,20 @@ class CodeAside extends Component {
 
   constructor(props) {
       super(props);
-      const {projectid,username}=this.props.match.params;
-      this.state={
-          projectid:projectid,
-          username:username,
-          ref:"",
-      };
   }
-
-  componentWillMount(){
-      if(this.props.match.params.hasOwnProperty('ref')){
-          this.setState({
-              ref:this.props.match.params.ref
-          });
-      }else {
-          Axios.get(API.code+"/projects/"+this.state.projectid+"/defaultbranch?userId="+sessionStorage.getItem("user-id")).then(response=>{
-              this.setState({
-                  ref:response.data
-              })
-          })
-      }
-  }
-
 
 
   render() {
     const { location } = this.props;
     const { pathname } = location;
-    const { username,projectid,ref } = this.state;
 
+    const backLink="/project";
 
-    const backLink="/code/projectlist";
+    const projectsLink="/code/projects";
 
-    const projectLink="/code/"+username+"/"+projectid;
-    const commitLink="/code/"+username+"/"+projectid+"/commitlist/"+ref;
+    const groupsLink="/code/groups";
 
-    const fileLink="/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
-
-    const sshLink="/code/"+username+"/"+projectid+"/ssh";
+    const sshLink="/code/ssh";
 
 
     return (
@@ -70,31 +43,20 @@ class CodeAside extends Component {
                     <span className="ice-menu-item-text">{"首页"}</span>
                 </Link>
             </MenuItem>
-            <MenuItem key={projectLink}>
-                <Link to={projectLink} className="ice-menu-link">
-                        <FoundationSymbol size="small" type="directory" >
-                            <Icon size="small" type="directory" />
+            <MenuItem key={projectsLink}>
+                <Link to={projectsLink} className="ice-menu-link">
+                        <FoundationSymbol size="small" type="cascades" >
+                            <Icon size="small" type="cascades" />
                         </FoundationSymbol>
-                    {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
                     <span className="ice-menu-item-text">{"项目"}</span>
                 </Link>
             </MenuItem>
-            <MenuItem key={fileLink}>
-                <Link to={fileLink} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="copy" >
-                        <Icon size="small" type="copy" />
+            <MenuItem key={groupsLink}>
+                <Link to={groupsLink} className="ice-menu-link">
+                    <FoundationSymbol size="small" type="fans" >
+                        <Icon size="small" type="fans" />
                     </FoundationSymbol>
-                    {/*<span className="ice-menu-item-text">{"项目"+username+" "+projectid}</span>*/}
-                    <span className="ice-menu-item-text">{"文件"}</span>
-                </Link>
-            </MenuItem>
-            <MenuItem key={commitLink}>
-                <Link to={commitLink} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="edit2" >
-                        <Icon size="small" type="edit2" />
-                    </FoundationSymbol>
-                    {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
-                    <span className="ice-menu-item-text">{"提交"}</span>
+                    <span className="ice-menu-item-text">{"小组"}</span>
                 </Link>
             </MenuItem>
             <MenuItem key={sshLink}>
@@ -102,7 +64,6 @@ class CodeAside extends Component {
                     <FoundationSymbol size="small" type="key" >
                         <Icon size="small" type="key" />
                     </FoundationSymbol>
-                    {/*<span className="ice-menu-item-text">{"提交"+branch}</span>*/}
                     <span className="ice-menu-item-text">{"SSH 公钥"}</span>
                 </Link>
             </MenuItem>

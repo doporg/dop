@@ -9,7 +9,13 @@
     padding-top: 50px;
 }
 
+.loading-md{
+    width:100%;
+    min-height: 300px;
+}
+
 .div-md{
+    width:100%;
     padding: 15px;
 }
 

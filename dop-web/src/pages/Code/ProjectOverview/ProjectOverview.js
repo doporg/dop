@@ -1,10 +1,11 @@
 import React from 'react';
-import FoundationSymbol from 'foundation-symbol';
 import API from "../../API";
 import Axios from 'axios';
 import copy from 'copy-to-clipboard';
 import {Feedback} from '@icedesign/base';
 import ReactMarkdown from 'react-markdown';
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 
 
@@ -20,20 +21,23 @@ import imgEdit from './imgs/edit.png'
 
 const {toast} = Feedback;
 
+const spinner=(
+    <Spinner/>
+);
 
 
 
-
-export default class ProjectOverview extends React.Component{
+class ProjectOverview extends React.Component{
 
     constructor(props){
 
         super(props);
-        const {username,projectid} = this.props.match.params;
+        const {username,projectname} = this.props.match.params;
 
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:username+"/"+projectname,
             url:"",
             projectInfo:{
                 commit_count: 0,
@@ -41,7 +45,7 @@ export default class ProjectOverview extends React.Component{
                 file_size: "",
                 forks_count: 0,
                 http_url_to_repo: "",
-                id: projectid,
+                id: 0,
                 name: "",
                 default_branch:"",
                 ssh_url_to_repo: "",
@@ -56,7 +60,8 @@ export default class ProjectOverview extends React.Component{
                 "size": 0,
                 "file_size": "0B",
                 "file_content": ""
-            }
+            },
+            loadingVisible:true,
 
         }
         ;
@@ -69,11 +74,11 @@ export default class ProjectOverview extends React.Component{
         let self = this;
         Axios.get(url).then((response) => {
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data},()=>{
-                //先取得default_branch
+                // 先取得default_branch
                 let default_branch = self.state.projectInfo.default_branch;
                 url=API.code+"/projects/"+self.state.projectid+"/repository/blob?file_path=README.md&ref="+default_branch+"&userId="+sessionStorage.getItem("user-id");
                 Axios.get(url).then((response)=>{
-                    self.setState({readmeInfo:response.data})
+                    self.setState({readmeInfo:response.data,loadingVisible:false})
                 })
             });
         });
@@ -94,9 +99,15 @@ export default class ProjectOverview extends React.Component{
                 'Content-type': 'application/x-www-form-urlencoded',
             },
         }).then(response => {
-                let url=API.code+ "/projects/"+this.state.projectid;
-                Axios.get(url).then((response) => {
-                    self.setState({projectInfo:response.data});
+                let code=response.data;
+                let projectInfo=this.state.projectInfo;
+                if(code===304){
+                    projectInfo.star_count-=1;
+                }else {
+                    projectInfo.star_count+=1;
+                }
+                self.setState({
+                    projectInfo:projectInfo
                 });
         })
 
@@ -114,16 +125,15 @@ export default class ProjectOverview extends React.Component{
     copyUrl = () => {
         copy(this.state.url);
         toast.success("已复制到剪贴板");
-        // message.success('复制成功，如果失败，请在输入框内手动复制.');
     };
 
     editProjectLink(){
-        let {username,projectid}=this.state;
-        this.props.history.push("/code/"+username+"/"+projectid+"/edit");
+        let {username,projectname}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/edit");
     }
 
     downLoadZipLink(){
-        window.open("http://gitlab.dop.clsaa.com/api/v4/projects/"+this.state.projectid+"/repository/archive.zip");
+        window.open("http://gitlab.dop.clsaa.com/api/v4/projects/"+encodeURIComponent(this.state.projectid)+"/repository/archive.zip");
     }
 
 
@@ -195,19 +205,24 @@ export default class ProjectOverview extends React.Component{
                         <span>{projectInfo.file_size}</span>
                     </div>
                 </div>
-                <div className="div-md">
-                    {
-                        (()=>{
-                            if(this.state.readmeInfo.file_name !== null){
-                                return <ReactMarkdown source={this.state.readmeInfo.file_content} />;
-                            }
-                        })()
-                    }
+                <Loading className="loading-md" visible={this.state.loadingVisible} tip={spinner}>
+                    <div className="div-md">
+                        {
+                            (()=>{
+                                if(this.state.readmeInfo.file_name !== null){
+                                    return <ReactMarkdown source={this.state.readmeInfo.file_content} />;
+                                }
+                            })()
+                        }
 
-                </div>
+                    </div>
+                </Loading>
 
             </div>
         );
     }
 }
+
+
+export default (props)=><ProjectOverview {...props} key={props.location.pathname} />
 
