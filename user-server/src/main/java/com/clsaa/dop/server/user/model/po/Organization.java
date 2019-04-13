@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "t_organization", schema = "db_dop_user")
 @SQLDelete(sql = "update t_organization set is_deleted = true where id = ?")
-@Where(clause = "is_deleted =false")
+@Where(clause = "is_deleted = false")
 public class Organization implements Serializable {
     private static final long serialVersionUID = 6906097411517275871L;
     /**
@@ -43,6 +43,12 @@ public class Organization implements Serializable {
     @Basic
     @Column(name = "description")
     private String description;
+    /**
+     * 组织编码
+     */
+    @Basic
+    @Column(name = "code")
+    private String code;
     /**
      * 创建人
      */

@@ -14,9 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author joyren
  */
-//@EntityScan(
-//        basePackageClasses = { UserServerApplication.class, Jsr310JpaConverters.class}
-//)
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync

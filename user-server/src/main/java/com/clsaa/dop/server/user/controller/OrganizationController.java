@@ -4,6 +4,7 @@ import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.HttpHeaders;
 import com.clsaa.dop.server.user.model.vo.OrganizationV1;
 import com.clsaa.dop.server.user.service.OrganizationService;
+import com.clsaa.dop.server.user.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
@@ -88,6 +89,6 @@ public class OrganizationController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "组织不存在"));
         BizAssert.validParam(loginUserId != null && loginUserId != 0,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户未登录"));
-        return this.organizationService.findOrganizationById(id);
+        return BeanUtils.convertType(this.organizationService.findOrganizationById(id), OrganizationV1.class);
     }
 }

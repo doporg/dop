@@ -8,6 +8,7 @@ import com.clsaa.dop.server.user.model.bo.UserBoV1;
 import com.clsaa.dop.server.user.model.bo.UserCredentialBoV1;
 import com.clsaa.dop.server.user.model.po.User;
 import com.clsaa.dop.server.user.model.po.UserCredential;
+import com.clsaa.dop.server.user.model.vo.UserV1;
 import com.clsaa.dop.server.user.mq.MessageQueueException;
 import com.clsaa.dop.server.user.mq.MessageSender;
 import com.clsaa.dop.server.user.util.BeanUtils;
@@ -27,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -205,5 +208,18 @@ public class UserService {
         boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
         BizAssert.pass(verifyResult, BizCodes.INVALID_PASSWORD);
         return BeanUtils.convertType(user, UserBoV1.class);
+    }
+
+    /**
+     * 根据关键字查询用户
+     *
+     * @param key 邮箱或密码前缀
+     * @return {@link List<UserBoV1>}
+     */
+    public List<UserBoV1> searchUserByEmailOrPassword(String key, String organizationId) {
+        return this.userRepository.searchUserByEmailOrPassword(key)
+                .stream()
+                .map(u -> BeanUtils.convertType(u, UserBoV1.class))
+                .collect(Collectors.toList());
     }
 }
