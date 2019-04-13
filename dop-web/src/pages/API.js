@@ -1,7 +1,7 @@
 // 配置所有接口的API文件
 
-// var host = "http://open.dop.clsaa.com";
-var host = "http://localhost:8888";
+var host = "http://open.dop.clsaa.com";
+// var host = "http://localhost:8888";
 var pipline = "/pipeline-server";
 var application = "/application-server";
 var permission = "/permission-server";
