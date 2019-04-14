@@ -83,6 +83,7 @@ public class RoleService {
 
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
+
     public Long createRole(Long parentId,String name, Long cuser,Long muser)
     {
             if(authenticationService.checkUserPermission("创建角色",cuser))
@@ -132,42 +133,34 @@ public class RoleService {
     public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
-        int count=0;
 
         Pagination<RoleV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        List<Role> roleList=new ArrayList<>();
-        //未填写搜索关键字，则查询全部
-        if(key.equals(""))
-        {
-            roleList = this.roleRepository.findAll(sort);
-        }
-        //填写了搜索关键字，带条件查询
-        else {
-            roleList = this.roleRepository.findByNameLike("%"+key+"%");
-        }
+        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
+        //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
 
-        List<Role> roleList1=new ArrayList<>();
-        for(Role role :roleList)
+        List<Role> roleList=new ArrayList<>();
+        if(key.equals(""))
         {
-            for(Long id :idList)
-            {
-                if(role.getId()==id)
-                {roleList1.add(role);count++;}
-            }
+             roleList=this.roleRepository.findByIdIn(idList,pageRequest).getContent();
         }
+        else
+        {
+             roleList = this.roleRepository.findAllByNameLikeAndIdIn("%"+key+"%",idList,pageRequest).getContent();
+        }
+        int count=roleList.size();
         pagination.setTotalCount(count);
         if (count == 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-        roleList1=roleList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
 
-        List<RoleV1> roleV1List=roleList1.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+        //类型转换
+        List<RoleV1> roleV1List=roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
 
         for(RoleV1 roleV1 :roleV1List)
         {
@@ -197,9 +190,9 @@ public class RoleService {
     }
 
     //查询所有权限的ID和名称
-    public List<PermissionBoV1> findAllPermission()
+    public List<PermissionBoV1> findAllPermission(Long loginUser)
     {
-        return permissionService.findAll();
+        return permissionService.findAll(loginUser);
     }
 
     //根据功能点ID查询角色

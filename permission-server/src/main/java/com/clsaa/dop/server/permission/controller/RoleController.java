@@ -96,9 +96,9 @@ public class RoleController {
 
     @ApiOperation(value="查询所有功能点ID和名称",notes = "查询所有功能点ID和名称")
     @GetMapping("v1/roles/permissions")
-    public List<PermissionV1> findAllPermission()
+    public List<PermissionV1> findAllPermission(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        return roleService.findAllPermission().stream().map(p ->
+        return roleService.findAllPermission(loginUser).stream().map(p ->
             BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
     @ApiOperation(value="查询所有角色",notes = "查询所有角色")

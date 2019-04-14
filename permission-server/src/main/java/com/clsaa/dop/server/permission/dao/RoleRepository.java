@@ -1,7 +1,8 @@
 package com.clsaa.dop.server.permission.dao;
 
-import com.clsaa.dop.server.permission.model.po.Permission;
 import com.clsaa.dop.server.permission.model.po.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
@@ -28,11 +29,23 @@ public interface RoleRepository extends JpaRepository<Role, Long>
     Role findByName(String name);
 
     /**
-     * 根据关键字key过滤查询
+     * 查询全部
      *
-     * @param key 关键字
-     * @return {@link List<Role>}
+     * @param {List <Long> idList}
+     * @param  pageable 分页
+     * @return {@link Page<Role>}
      */
 
-    List<Role> findByNameLike(String key);
+    Page<Role> findByIdIn(List<Long> idList,Pageable pageable);
+
+    /**
+     * 根据关键字key过滤查询
+     *
+     * @param   key 关键字
+     * @param  {List <Long> idList}
+     * @param  pageable 分页
+     * @return {@link Page < Role >}
+     */
+
+    Page<Role> findAllByNameLikeAndIdIn(String key, List<Long> idList, Pageable pageable);
 }

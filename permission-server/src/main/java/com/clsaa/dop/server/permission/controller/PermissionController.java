@@ -77,12 +77,12 @@ public class PermissionController {
     @ApiOperation(value = "分页查询所有功能点", notes = "分页查询所有功能点")
     @GetMapping("/v1/permissions")
     public Pagination<PermissionV1> getPermissionV1Pagination(
-            @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
+            @ApiParam(name = "pageNo",value = "页号",defaultValue = "1")
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
-            @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
+            @ApiParam(name = "pageSize",value = "页大小",defaultValue = "8")
             @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size,
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser,
-            @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
+            @ApiParam(name = "key",value = "搜索关键字",defaultValue = "")
             @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
         return this.permissionService.getPermissionV1Pagination(page,size,loginUser,key);
