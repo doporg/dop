@@ -13,6 +13,8 @@ import EditProject from './EditProject';
 import SSH from './SSH';
 import NewSSH from './NewSSH'
 import SSHREADME from './SSHREADME'
+import BranchList from './BranchList'
+import TagList from './TagList'
 
 const codeConfig = [
 
@@ -81,6 +83,16 @@ const codeConfig = [
         path: '/code/:username/:projectname/edit',
         layout: CodeProjectLayout,
         component: EditProject
+    },
+    {
+        path: '/code/:username/:projectname/branches',
+        layout: CodeProjectLayout,
+        component: BranchList
+    },
+    {
+        path: '/code/:username/:projectname/tags',
+        layout: CodeProjectLayout,
+        component: TagList
     },
 
 
