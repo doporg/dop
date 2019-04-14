@@ -39,6 +39,10 @@ public class TimeUtil {
      */
     public static List<String> natureTime(String lastTime) {
 
+        if(lastTime.contains("+")){
+            lastTime=lastTime.substring(0, lastTime.indexOf("+")) + "Z";
+        }
+
         LocalDateTime dt_commit=LocalDateTime.parse(lastTime,dtf);
         dt_commit=dt_commit.plusHours(8);
 
