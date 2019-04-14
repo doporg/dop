@@ -1,11 +1,15 @@
 package com.clsaa.dop.server.application.service;
 
+import com.clsaa.dop.server.application.config.BizCodes;
+import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.ProjectRepository;
+import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
 import com.clsaa.dop.server.application.model.po.Project;
 import com.clsaa.dop.server.application.model.vo.ProjectV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,8 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -23,7 +26,14 @@ import java.util.stream.Collectors;
 public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private UserFeign userFeign;
 
+    @Autowired
+    private PermissionConfig permissionConfig;
+
+    @Autowired
+    private PermissionService permissionService;
     /**
      * 分页查询项目
      *
@@ -31,9 +41,12 @@ public class ProjectService {
      * @param pageSize        页大小
      * @param includeFinished 是否包含已结项目
      * @param queryKey        查询关键字
-     * @return {@link Pagination< ProjectBoV1>}
+     * @return {@link Pagination<ProjectBoV1>}
      */
-    public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
+    public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
+
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
+                , BizCodes.NO_PERMISSION);
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
@@ -72,6 +85,31 @@ public class ProjectService {
             }
         }
 
+        projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
+        List<ProjectV1> projectV1List = projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
+
+        Set userIdList = new HashSet();
+        Map<Long, String> idNameMap = new HashMap<>();
+        for (int i = 0; i < projectV1List.size(); i++) {
+            Long id = projectV1List.get(i).getCuser();
+
+            if (!userIdList.contains(id)) {
+                userIdList.add(id);
+                try {
+                    String userName = this.userFeign.findUserNameById(id).getName();
+                    idNameMap.put(id, userName);
+                } catch (Exception e) {
+                    System.out.print(e);
+                }
+
+            }
+
+            ProjectV1 projectV1 = projectV1List.get(i);
+            projectV1.setCuserName(idNameMap.get(projectV1.getCuser()));
+            projectV1List.set(i, projectV1);
+        }
+
+
         //新建VO层对象 并赋值
         Pagination<ProjectV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
@@ -81,7 +119,7 @@ public class ProjectService {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-        pagination.setPageList(projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList()));
+        pagination.setPageList(projectV1List);
 
         return pagination;
     }
@@ -93,15 +131,18 @@ public class ProjectService {
      * @param description 项目描述
      * @return {@link Pagination< ProjectBoV1>}
      */
-    public void createProjects(Long cuser, String title, Long origanizationId, String description) {
+    public void createProjects(Long loginUser, String title, Long origanizationId, String description) {
+
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateProject(), loginUser)
+                , BizCodes.NO_PERMISSION);
 
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         Project project = Project.builder()
                 .title(title)
                 .description(description)
-                .cuser(cuser)
-                .muser(cuser)
+                .cuser(loginUser)
+                .muser(loginUser)
                 .is_deleted(false)
                 .organizationId(origanizationId)
                 .status(Project.Status.NORMAL)
@@ -109,8 +150,7 @@ public class ProjectService {
                 .mtime(mtime)
                 .build();
         this.projectRepository.saveAndFlush(project);
-        return;
+
+
     }
-
-
 }

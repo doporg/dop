@@ -34,15 +34,16 @@ export default class K8sInfoPage extends Component {
         this.yamlEditorfield = new Field(this)
         this.state = {
             appEnvId: props.appEnvId,
-            yamlData: [],
             nameSpaceData: [],
             editMode: false,
             serviceData: [],
             deploymentData: [],
+            yamlData: [],
             containerData: [],
             createService: false,
             yamlMode: "profile",
-            editDeploymentYaml: false
+            editDeploymentYaml: false,
+            loading: true
         }
 
     }
@@ -130,10 +131,10 @@ export default class K8sInfoPage extends Component {
         Axios.get(url)
             .then((response) => {
                 // console.log("yaml", response);
-                // console.log(response.data.yamlFilePath != "")
+                // console.log(response.data.yamlFilePath !== "")
 
                 //如果该服务在数据库中无属性
-                if (response.data == "") {
+                if (response.data === "") {
                     _this.setState({
                         editMode: true,
                         yamlData: []
@@ -143,7 +144,7 @@ export default class K8sInfoPage extends Component {
                     _this.setState({loading: false})
                 } else {
                     //判断是否使用yaml文件路径 分别赋值
-                    if (response.data.yamlFilePath != "") {
+                    if (response.data.yamlFilePath !== "") {
 
                         _this.setState({
                             editMode: false,
@@ -184,7 +185,13 @@ export default class K8sInfoPage extends Component {
                 }
             })
             .catch((response) => {
-                console.log("catch", response)
+                _this.setState({
+                    editMode: true,
+                    yamlData: []
+                })
+                //获取所有命名空间
+                _this.getNameSpaceData()
+                _this.setState({loading: false})
             })
     }
 
@@ -251,7 +258,7 @@ export default class K8sInfoPage extends Component {
     switchYamlMode(e, values) {
         console.log(values)
         let value = values.value
-        if (value == 'profile') {
+        if (value === 'profile') {
             this.getNameSpaceData()
         }
         this.setState({
@@ -261,11 +268,11 @@ export default class K8sInfoPage extends Component {
 
     checkDeploymentData() {
         return this.state.createService ||
-            (this.state.deploymentData == null) ||
-            (this.state.deploymentData == "") ||
-            (this.state.deploymentData == []) ||
+            (this.state.deploymentData === null) ||
+            (this.state.deploymentData === "") ||
+            (this.state.deploymentData.length === 0) ||
             ((this.state.deploymentData.length < 2) &&
-                (this.state.containerData.length == 0 || this.state.containerData[this.state.deploymentData[0]].length < 2))
+                (this.state.containerData.length === 0 || this.state.containerData[this.state.deploymentData[0]].length < 2))
     }
 
 
@@ -273,10 +280,10 @@ export default class K8sInfoPage extends Component {
     envDetailSubmit() {
         let _this = this;
         //先判断是否使用yaml路径
-        if (this.state.yamlMode == 'path') {
+        if (this.state.yamlMode === 'path') {
             this.yamlPathField.validate((errors, values) => {
                 console.log(errors)
-                if (errors == null) {
+                if (errors === null) {
                     this.setState({
                         loading: true
                     })
@@ -303,6 +310,11 @@ export default class K8sInfoPage extends Component {
                                     //提交完成后刷新当前页面
                                     _this.getYamlData()
                                 })
+                                    .catch((response) => {
+                                        _this.setState({
+                                            loading: false
+                                        })
+                                    })
                             }
                             //无则创建
                             else {
@@ -321,6 +333,10 @@ export default class K8sInfoPage extends Component {
                                     })
                                     //提交完成后刷新当前页面
                                     _this.getYamlData()
+                                }).catch((response) => {
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 })
                             }
                         })
@@ -350,7 +366,7 @@ export default class K8sInfoPage extends Component {
                             console.log(errors, values);
 
                             // 没有异常则提交表单
-                            if (errors == null) {
+                            if (errors === null) {
                                 //然后判断是否存在yaml属性
                                 let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
 
@@ -381,7 +397,9 @@ export default class K8sInfoPage extends Component {
                                                     _this.getYamlData()
                                                 })
                                                 .catch(function (error) {
-                                                    console.log(error);
+                                                    _this.setState({
+                                                        loading: false
+                                                    })
                                                 });
 
                                         }
@@ -408,7 +426,9 @@ export default class K8sInfoPage extends Component {
                                                     _this.getYamlData()
                                                 })
                                                 .catch(function (error) {
-                                                    console.log(error);
+                                                    _this.setState({
+                                                        loading: false
+                                                    })
                                                 });
                                         }
                                     })
@@ -434,7 +454,7 @@ export default class K8sInfoPage extends Component {
             console.log(errors, values);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 let url = API.application + '/app/env/' + this.state.appEnvId + '/yaml'
                 let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
                 Axios.get(existUrl)
@@ -463,7 +483,9 @@ export default class K8sInfoPage extends Component {
                                     _this.getYamlData()
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 });
                         } else {
                             Axios.post(url, {}, {
@@ -488,7 +510,9 @@ export default class K8sInfoPage extends Component {
                                     _this.getYamlData()
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 });
                         }
                     })
@@ -498,9 +522,9 @@ export default class K8sInfoPage extends Component {
 
 
     yamlInfoRender() {
-        const {init, getValue} = this.field
-        if (this.state.yamlData !== []) {
-            if (this.state.yamlMode == "profile") {
+        const {init} = this.field
+        if (!this.state.loading) {
+            if (this.state.yamlMode === "profile") {
                 return (
                     <div>
                         <FormItem label="命名空间:"
@@ -707,6 +731,11 @@ export default class K8sInfoPage extends Component {
                 loading: false
             })
         })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
+            })
         this.toggleYamlEditor()
 
     }
@@ -718,8 +747,8 @@ export default class K8sInfoPage extends Component {
     }
 
     yamlEditorRender() {
-        const {init, getValue} = this.yamlEditorfield
-        if (this.state.yamlData !== [] && this.state.yamlData.deploymentEditableYaml !== "") {
+        const {init} = this.yamlEditorfield
+        if (!this.state.loading && this.state.yamlData.length !== 0 && this.state.yamlData.deploymentEditableYaml !== "") {
             return <Form className="yaml-editor-form">
                 <FormItem label="Deployment Yaml"
                           className="yaml-editor-form-item"
@@ -767,10 +796,10 @@ export default class K8sInfoPage extends Component {
     }
 
     k8sBasicRender() {
-        const {init, getValue} = this.field
-        console.log("yamlData", this.state.yamlData, this.state.yamlData != [])
-        if (!this.state.yamlData.loading) {
-            console.log(this.state.yamlData.yamlFilePath == "")
+        const {init} = this.field
+        console.log("yamlData", this.state.yamlData, this.state.yamlData !== [])
+        if (!this.state.loading) {
+            console.log(this.state.yamlData.yamlFilePath === "")
             return (
                 <div>
                     <FormItem label="发布策略:"
@@ -838,7 +867,7 @@ export default class K8sInfoPage extends Component {
                         <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
-                            defaultValue={(this.state.yamlData.length == 0 || this.state.yamlFilePath == "") ? "profile" : "path"}>
+                            defaultValue={(this.state.yamlData.length === 0 || this.state.yamlFilePath === "") ? "profile" : "path"}>
                             <Option value="profile">
                                 使用配置
                             </Option>

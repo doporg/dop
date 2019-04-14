@@ -1,4 +1,4 @@
-import {Button, Dialog, Field, Form, Grid, Input, Loading, Radio} from "@icedesign/base";
+import {Button, Dialog, Field, Form, Input, Loading} from "@icedesign/base";
 
 import React, {Component} from 'react';
 import Axios from "axios";
@@ -6,8 +6,7 @@ import API from "../../../../API.js"
 import "./CreateApplicationVariable.scss"
 
 const FormItem = Form.Item;
-const {Row, Col} = Grid;
-const {Group: RadioGroup} = Radio;
+
 
 
 
@@ -48,7 +47,7 @@ class ApplicationVariableForm extends Component {
             console.log(errors, values);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 console.log("noerros");
                 let postUrl = API.gateway + "/application-server/app/" + this.state.appId + "/variable";
                 Axios.post(postUrl, {
@@ -64,7 +63,9 @@ class ApplicationVariableForm extends Component {
                         props.finished();
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }
@@ -83,7 +84,7 @@ class ApplicationVariableForm extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
+        const {init} = this.field;
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
             >

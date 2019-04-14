@@ -1,4 +1,4 @@
-import {Button, Dialog, Field, Form, Grid, Input, Loading, Select} from "@icedesign/base";
+import {Button, Dialog, Field, Form, Input, Loading, Select} from "@icedesign/base";
 
 
 import React, {Component} from 'react';
@@ -6,9 +6,9 @@ import Axios from "axios";
 import API from "../../../../API.js"
 import "./CreateApplicationEnvironment.scss"
 
-const {Combobox} = Select;
+
 const FormItem = Form.Item;
-const {Row, Col} = Grid;
+
 const Option = Select.Option;
 
 
@@ -49,7 +49,7 @@ class ApplicationEnvironmentForm extends Component {
             console.log(_this.field.getValue('deploymentStrategy'))
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 this.setState({
                     loading: true
                 })
@@ -71,7 +71,9 @@ class ApplicationEnvironmentForm extends Component {
                         props.finished();
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }
@@ -88,7 +90,7 @@ class ApplicationEnvironmentForm extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
+        const {init} = this.field;
         return (
             <Loading visible={this.state.loading}
                      shape="dot-circle"

@@ -36,7 +36,6 @@ export default class ProjectPagination extends Component {
         this.setState({
             loading: true
         })
-        let tmpData = [];
         let url = API.application + '/project';
         let _this = this;
         Axios.get(url, {
@@ -52,57 +51,61 @@ export default class ProjectPagination extends Component {
                 _this.setState({
                     current: current,
                     pageSize: response.data.pageSize,
-                    totalCount: response.data.totalCount
+                    totalCount: response.data.totalCount,
+                    currentData: response.data.pageList,
+                    loading: false
                 });
 
-                //获取用户数据
-                tmpData = response.data.pageList;
-
-                //使用SET数组去重，获取所有不重复的用户ID
-                let userIdList = new Set();
-                console.log(tmpData)
-                for (let i = 0; i < tmpData.length; i++) {
-                    userIdList.add(tmpData[i].cuser);
-                }
-                console.log("userIdList", userIdList)
-
-                //存放所有请求URL的数组
-                let getList = []
-                for (let id of userIdList) {
-                    let nameUrl = API.gateway + '/user-server/v1/users/' + id;
-                    getList.push(Axios.get(nameUrl));
-                }
-                console.log("getList", getList)
-
-                //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
-                let finalList = {};
-
-                //将所有URL请求发出
-                Axios.all(getList).then(Axios.spread(function (...resList) {
-                    console.log("resList", resList);
-                    for (let i = 0; i < resList.length; i++) {
-                        //如果该值不为空则添加到哈希表中
-                        if (resList[i].data !== "") {
-                            finalList[resList[i].data.id.toString()] = resList[i].data.name;
-                        }
-                    }
-                    console.log("finalList", finalList)
-
-                    //将所有ID置换为NAME
-                    for (let i = 0; i < tmpData.length; i++) {
-                        tmpData[i].cuser = finalList[tmpData[i].cuser.toString()];
-                    }
-                    console.log(tmpData);
-                    //赋值
-                    _this.setState({
-                        currentData: tmpData,
-                        loading: false
-                    });
-                }))
+                // //获取用户数据
+                // tmpData = response.data.pageList;
+                //
+                // //使用SET数组去重，获取所有不重复的用户ID
+                // let userIdList = new Set();
+                // console.log(tmpData)
+                // for (let i = 0; i < tmpData.length; i++) {
+                //     userIdList.add(tmpData[i].cuser);
+                // }
+                // console.log("userIdList", userIdList)
+                //
+                // //存放所有请求URL的数组
+                // let getList = []
+                // for (let id of userIdList) {
+                //     let nameUrl = API.gateway + '/user-server/v1/users/' + id;
+                //     getList.push(Axios.get(nameUrl));
+                // }
+                // console.log("getList", getList)
+                //
+                // //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
+                // let finalList = {};
+                //
+                // //将所有URL请求发出
+                // Axios.all(getList).then(Axios.spread(function (...resList) {
+                //     console.log("resList", resList);
+                //     for (let i = 0; i < resList.length; i++) {
+                //         //如果该值不为空则添加到哈希表中
+                //         if (resList[i].data !== "") {
+                //             finalList[resList[i].data.id.toString()] = resList[i].data.name;
+                //         }
+                //     }
+                //     console.log("finalList", finalList)
+                //
+                //     //将所有ID置换为NAME
+                //     for (let i = 0; i < tmpData.length; i++) {
+                //         tmpData[i].cuser = finalList[tmpData[i].cuser.toString()];
+                //     }
+                //     console.log(tmpData);
+                //     //赋值
+                //     _this.setState({
+                //         currentData: tmpData,
+                //         loading: false
+                //     });
+                // }))
 
             })
             .catch(function (error) {
-                console.log(error);
+                _this.setState({
+                    loading: false
+                });
             });
 
     }

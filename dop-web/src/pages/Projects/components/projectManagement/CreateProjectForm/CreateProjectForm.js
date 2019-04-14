@@ -85,7 +85,7 @@ export default class ProjectForm extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
+        const {init} = this.field;
         // const {init, getValue} = this.field;
 
         return (

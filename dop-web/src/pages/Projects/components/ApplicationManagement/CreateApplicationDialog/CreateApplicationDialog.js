@@ -3,11 +3,6 @@ import CreateApplicationForm from "../CreateApplicationForm/CreateApplicationFor
 import React, {Component} from 'react';
 import "./CreateApplicationDialog.scss"
 
-const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
-};
-
 
 /**
  *  创建应用的弹窗

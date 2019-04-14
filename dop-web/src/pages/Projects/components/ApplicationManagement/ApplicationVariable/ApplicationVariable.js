@@ -52,16 +52,19 @@ export default class ApplicationVariable extends Component {
 
                 })
                 let list = {}
-                response.data.map((item) => {
-                    console.log("item", item)
-                    list[item.varKey] = false
+                list = response.data.map((item) => {
+
+                    return list[item.varKey] = false
                 })
-                console.log("list", list)
                 _this.setState({
                     editMode: list
-
                 })
 
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
 
     }
@@ -89,9 +92,16 @@ export default class ApplicationVariable extends Component {
 
         Axios.delete(deleteUrl)
             .then(function (response) {
-
+                _this.setState({
+                    loading: false
+                })
                 Toast.success("删除成功")
                 _this.refreshApplicationVariableList();
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
     }
 
@@ -115,9 +125,16 @@ export default class ApplicationVariable extends Component {
             varValue: _this.field.getValue(id)
         })
             .then(function (response) {
-
+                _this.setState({
+                    loading: false
+                })
                 Toast.success("修改成功")
                 _this.refreshApplicationVariableList();
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
     }
 
