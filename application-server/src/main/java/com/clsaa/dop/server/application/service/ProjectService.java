@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.application.service;
 
 import com.clsaa.dop.server.application.dao.ProjectRepository;
+import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
 import com.clsaa.dop.server.application.model.po.Project;
 import com.clsaa.dop.server.application.model.vo.ProjectV1;
@@ -14,8 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -23,7 +23,8 @@ import java.util.stream.Collectors;
 public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
-
+    @Autowired
+    private UserFeign userFeign;
     /**
      * 分页查询项目
      *
@@ -31,7 +32,7 @@ public class ProjectService {
      * @param pageSize        页大小
      * @param includeFinished 是否包含已结项目
      * @param queryKey        查询关键字
-     * @return {@link Pagination< ProjectBoV1>}
+     * @return {@link Pagination<ProjectBoV1>}
      */
     public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
 
@@ -72,6 +73,34 @@ public class ProjectService {
             }
         }
 
+        projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
+        List<ProjectV1> projectV1List = projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
+
+        Set userIdList = new HashSet();
+        Map<Long, String> idNameMap = new HashMap<>();
+        for (int i = 0; i < projectV1List.size(); i++) {
+            Long id = projectV1List.get(i).getCuser();
+
+            if (!userIdList.contains(id)) {
+                userIdList.add(id);
+                try {
+                    String userName = this.userFeign.findUserNameById(id).getName();
+                    idNameMap.put(id, userName);
+                } catch (Exception e) {
+                    System.out.print(e);
+                }
+
+            }
+
+            ProjectV1 projectV1 = projectV1List.get(i);
+            projectV1.setCuserName(idNameMap.get(projectV1.getCuser()));
+            projectV1List.set(i, projectV1);
+        }
+
+
+
+
+
         //新建VO层对象 并赋值
         Pagination<ProjectV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
@@ -81,7 +110,7 @@ public class ProjectService {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-        pagination.setPageList(projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList()));
+        pagination.setPageList(projectV1List);
 
         return pagination;
     }

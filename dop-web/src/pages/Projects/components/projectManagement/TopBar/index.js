@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 
 export default class TopBar extends PureComponent {
 
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         const {title, buttonText, extraBefore, extraAfter, style} = this.props;

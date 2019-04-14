@@ -64,30 +64,23 @@ export default class PipelineBindPage extends Component {
     getPipelineData() {
         let _this = this
         console.log(this.state.appEnvId)
-        let getUrl = API.gateway + "/pipeline-server/v1/pipeline/envId/" + this.state.appEnvId
+        let getUrl = API.application + "/app/env/" + this.state.appEnvId + "/pipeline"
         this.setState({
             loading: true
         })
         Axios.get(getUrl)
             .then((response) => {
                 console.log("pipelineId", response)
-                if (response.data == "") {
+                if (response.data === "") {
                     _this.setState({
                         editMode: true,
                         currentPipeline: "",
                         loading: false
                     })
                 } else {
-
-                    Axios.get(API.gateway + "/pipeline-server/v1/pipeline/" + response.data[0].id)
-                        .then((response) => {
-                            console.log("currentPipeline", response)
-
                             _this.setState({
                                 currentPipeline: response.data,
                                 editMode: false,
-                                loading: false
-                            })
                         })
 
                 }
@@ -123,7 +116,7 @@ export default class PipelineBindPage extends Component {
     //     })
     //     this.field.validate((errors, values) => {
     //         console.log(errors);
-    //         if (errors == null) {
+    //         if (errors === null) {
     //
     //             // let updateUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/pipeline"
     //             // Axios.put(updateUrl, {}, {
@@ -210,9 +203,9 @@ export default class PipelineBindPage extends Component {
                         <FormItem    {...formItemLayout}
                                      label="流水线:">
                             <Link
-                                to={this.state.currentPipeline == "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
+                                to={this.state.currentPipeline === "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
                                 <div
-                                    className="text">{this.state.currentPipeline == "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
+                                    className="text">{this.state.currentPipeline === "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
                             </Link>
                         </FormItem>
 

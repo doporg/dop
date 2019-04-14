@@ -20,6 +20,11 @@ public class AppV1 {
     private Long ouser;
 
     /**
+     * 应用拥有者
+     */
+    private String ouserName;
+
+    /**
      * 应用名称
      */
     private String title;

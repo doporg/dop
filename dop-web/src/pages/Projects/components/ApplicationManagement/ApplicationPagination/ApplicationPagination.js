@@ -38,7 +38,6 @@ export default class ApplicationPagination extends Component {
         })
         let url = API.application + '/pagedapp'
         let _this = this;
-        let tmpData = [];
         Axios.get(url, {
             params: {
                 projectId: this.state.projectId,
@@ -53,53 +52,55 @@ export default class ApplicationPagination extends Component {
                     current: currentPage,
                     pageSize: response.data.pageSize,
                     searchKey: searchKey,
-                    totalCount: response.data.totalCount
+                    totalCount: response.data.totalCount,
+                    currentData: response.data.pageList,
+                    loading: false
                 });
-                tmpData = response.data.pageList;
+                // tmpData = response.data.pageList
 
-                //获取用户数据
-
-
-                //使用SET数组去重，获取所有不重复的用户ID
-                let userIdList = new Set();
-                for (let i = 0; i < tmpData.length; i++) {
-                    userIdList.add(tmpData[i].ouser);
-                }
-
-
-                //存放所有请求URL的数组
-                let getList = []
-                for (let id of userIdList) {
-                    let nameUrl = API.gateway + '/user-server/v1/users/' + id;
-                    getList.push(Axios.get(nameUrl));
-                }
-
-                //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
-                let finalList = {};
-
-                //将所有URL请求发出
-                Axios.all(getList).then(Axios.spread(function (...resList) {
-
-
-                    for (let i = 0; i < resList.length; i++) {
-                        //如果该值不为空则添加到哈希表中
-                        if (resList[i].data !== "") {
-                            finalList[resList[i].data.id.toString()] = resList[i].data.name;
-                        }
-                    }
-
-                    //将所有ID置换为NAME
-                    for (let i = 0; i < tmpData.length; i++) {
-                        tmpData[i].ouser = finalList[tmpData[i].ouser.toString()];
-                    }
-
-
-                    //赋值
-                    _this.setState({
-                        currentData: tmpData,
-                        loading: false
-                    });
-                }))
+                //     //获取用户数据
+                //
+                //
+                //     //使用SET数组去重，获取所有不重复的用户ID
+                //     let userIdList = new Set();
+                //     for (let i = 0; i < tmpData.length; i++) {
+                //         userIdList.add(tmpData[i].ouser);
+                //     }
+                //
+                //
+                //     //存放所有请求URL的数组
+                //     let getList = []
+                //     for (let id of userIdList) {
+                //         let nameUrl = API.gateway + '/user-server/v1/users/' + id;
+                //         getList.push(Axios.get(nameUrl));
+                //     }
+                //
+                //     //存放最终结果的数组，使用finalList[ID]---NAME的哈希映射
+                //     let finalList = {};
+                //
+                //     //将所有URL请求发出
+                //     Axios.all(getList).then(Axios.spread(function (...resList) {
+                //
+                //
+                //         for (let i = 0; i < resList.length; i++) {
+                //             //如果该值不为空则添加到哈希表中
+                //             if (resList[i].data !== "") {
+                //                 finalList[resList[i].data.id.toString()] = resList[i].data.name;
+                //             }
+                //         }
+                //
+                //         //将所有ID置换为NAME
+                //         for (let i = 0; i < tmpData.length; i++) {
+                //             tmpData[i].ouser = finalList[tmpData[i].ouser.toString()];
+                //         }
+                //
+                //
+                //         //赋值
+                //         _this.setState({
+                //             currentData: tmpData,
+                //             loading: false
+                //         });
+                //     }))
             })
             .catch(function (error) {
                 console.log(error);

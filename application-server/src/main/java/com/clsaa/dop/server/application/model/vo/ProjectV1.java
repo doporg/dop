@@ -25,6 +25,10 @@ public class ProjectV1 {
      */
     private Long cuser;
 
+    /**
+     * 创建人
+     */
+    private String cuserName;
 
     /**
      * 创建日期

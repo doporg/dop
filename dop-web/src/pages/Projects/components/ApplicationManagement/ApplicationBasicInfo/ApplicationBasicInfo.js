@@ -62,6 +62,7 @@ export default class ApplicationBasicInfo extends Component {
                         _this.setState({
                             appBasicData: appBasicData,
                             basicEditMode: false,
+                            urlEditMode: false,
                             userData: response.data,
                             loading: false
                         })
@@ -126,7 +127,7 @@ export default class ApplicationBasicInfo extends Component {
 
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 this.setState({
                     loading: true
                 })
@@ -162,7 +163,7 @@ export default class ApplicationBasicInfo extends Component {
             console.log(errors, values);
 
             // 没有异常则提交表单
-            if (errors == null) {
+            if (errors === null) {
                 console.log("noerros");
                 let url = API.application + '/app/' + this.state.appId + "/urlInfo"
                 this.setState({
@@ -347,11 +348,11 @@ export default class ApplicationBasicInfo extends Component {
                         title={this.state.userData.name}
                         bodyHeight="100%"
                         subTitle="应用拥有人"
-                        extra={<a href="#">转交应用&gt;</a>}
+                        extra={<a href="">转交应用&gt;</a>}
                     >
-                        <img
-                            src={this.state.userData.avatarURL == "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
-                            className="avatar"/>
+                        <img alt="avatar"
+                             src={this.state.userData.avatarURL === "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
+                             className="avatar"/>
                     </Card>
 
                     <Card
@@ -361,7 +362,7 @@ export default class ApplicationBasicInfo extends Component {
                         subTitle={
                             <div className="sub-title">
                                 <Button type="primary"
-                                        className={this.state.basicEditMode == true ? "edit-button hide" : "edit-button"}
+                                        className={this.state.basicEditMode === true ? "edit-button hide" : "edit-button"}
                                         onClick={this.basicEdit.bind(this)}
                                         size="small">
                                     修改
@@ -369,13 +370,13 @@ export default class ApplicationBasicInfo extends Component {
                                 <Button onClick={this.basicConfirm.bind(this)}
                                         type="primary"
                                         size="small"
-                                        className={this.state.basicEditMode == true ? "save-button" : "save-button hide"}>
+                                        className={this.state.basicEditMode === true ? "save-button" : "save-button hide"}>
                                     保存
                                 </Button>
 
                                 < Button
                                     size="small"
-                                    className={this.state.basicEditMode == true ? "cancel-button" : "cancel-button hide"}
+                                    className={this.state.basicEditMode === true ? "cancel-button" : "cancel-button hide"}
                                     onClick={this.basicEditCancel.bind(this)}> 取消 </Button>
                             </div>}
                     >
@@ -414,20 +415,20 @@ export default class ApplicationBasicInfo extends Component {
                             <div className="sub-title">
                                 <Button type="primary"
                                         size="small"
-                                        className={this.state.urlEditMode == true ? "edit-button hide" : "edit-button"}
+                                        className={this.state.urlEditMode === true ? "edit-button hide" : "edit-button"}
                                         onClick={this.urlEdit.bind(this)}>
                                     修改
                                 </Button>
                                 <Button onClick={this.urlConfirm.bind(this)}
                                         type="primary"
                                         size="small"
-                                        className={this.state.urlEditMode == true ? "save-button" : "save-button hide"}
+                                        className={this.state.urlEditMode === true ? "save-button" : "save-button hide"}
                                 >
                                     保存
                                 </Button>
                                 <Button
                                     size="small"
-                                    className={this.state.urlEditMode == true ? "cancel-button" : "cancel-button hide"}
+                                    className={this.state.urlEditMode === true ? "cancel-button" : "cancel-button hide"}
                                     onClick={this.urlEditCancel.bind(this)}>取消</Button>
                             </div>}
                     >

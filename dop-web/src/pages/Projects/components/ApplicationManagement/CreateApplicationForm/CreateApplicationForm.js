@@ -83,7 +83,7 @@ export default class ApplicationForm extends Component {
     }
 
     render() {
-        const {init, getValue} = this.field;
+        const {init} = this.field;
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>

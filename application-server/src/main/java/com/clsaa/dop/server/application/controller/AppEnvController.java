@@ -3,6 +3,7 @@ package com.clsaa.dop.server.application.controller;
 
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.AppEnvV1;
+import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
 import com.clsaa.dop.server.application.service.AppEnvService;
 import com.clsaa.dop.server.application.service.BuildTagRunningIdMappingService;
 import com.clsaa.dop.server.application.service.KubeCredentialService;
@@ -72,6 +73,13 @@ public class AppEnvController {
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
         this.appEnvService.deleteEnvironmentById(appEnvId);
     }
+
+    @ApiOperation(value = "根据环境id查询pipelineId", notes = "根据环境id查询pipelineId")
+    @GetMapping(value = "/app/env/{appEnvId}/pipeline")
+    public PipelineIdAndNameV1 findPipelineByAppEnvId(
+            @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        return this.appEnvService.findPipelineByAppEnvId(appEnvId);
+    }
     //@ApiOperation(value = "更新Build_Tag", notes = "更新Build_Tag")
     //@PutMapping(value = "/app/env/{appEnvId}/build_tag")
     //public String updateBuildTag(
@@ -93,12 +101,12 @@ public class AppEnvController {
     }
 
 
-    @ApiOperation(value = "根据应用环境id查询流水线", notes = "根据应用环境id查询流水线")
-    @GetMapping(value = "/app/env/{appEnvId}/pipeline")
-    public void findPipelineByAppEnvId(
-            @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
-        this.appEnvService.findPipelineByAppEnvId(appEnvId);
-    }
+    //@ApiOperation(value = "根据应用环境id查询流水线", notes = "根据应用环境id查询流水线")
+    //@GetMapping(value = "/app/env/{appEnvId}/pipeline")
+    //public void findPipelineByAppEnvId(
+    //        @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+    //    this.appEnvService.findPipelineByAppEnvId(appEnvId);
+    //}
 
 
 }

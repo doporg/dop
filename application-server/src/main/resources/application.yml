@@ -68,3 +68,15 @@ eureka:
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 
 logging.path: ./logs/${spring.application.name}
+
+k8s:
+  apiVersion: "apps/v1beta1"
+  kind: "Deployment"
+  LabelPrefix: "app"
+  ContainerPortProtocol: "TCP"
+  ImagePullPolicy: "Always"
+  LocalTimeMountPath: "/etc/localtime"
+  LocalTimeMountName: "host-time"
+  TimeZoneMountPath: "/etc/timezone"
+  TimeZoneMountName: "host-timezone"
+  DnsPolicy: "ClusterFirst"

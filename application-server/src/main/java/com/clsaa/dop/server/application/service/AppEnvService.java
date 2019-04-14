@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.application.service;
 
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
+import com.clsaa.dop.server.application.feign.PipelineFeign;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
 import com.clsaa.dop.server.application.model.po.AppEnv;
+import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,8 @@ public class AppEnvService {
 
     @Autowired
     AppEnvRepository appEnvRepository;
-
+    @Autowired
+    PipelineFeign pipelineFeign;
 
     @Autowired
     KubeCredentialService kubeCredentialService;
@@ -33,9 +36,9 @@ public class AppEnvService {
         return this.appEnvRepository.findAllByAppId(appID).stream().map(l -> BeanUtils.convertType(l, AppEnvBoV1.class)).collect(Collectors.toList());
     }
 
-    public void findPipelineByAppEnvId(Long appEnvId) {
-
-    }
+    //public void findPipelineByAppEnvId(Long appEnvId) {
+    //
+    //}
 
 
 
@@ -104,6 +107,11 @@ public class AppEnvService {
             this.kubeCredentialService.createCredentialByAppEnvId(cuser, appEnv.getId());
         }
 
+    }
+
+
+    public PipelineIdAndNameV1 findPipelineByAppEnvId(Long appEnvId) {
+        return this.pipelineFeign.findPipelineByAppEnvId(appEnvId);
     }
 
     /**

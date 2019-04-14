@@ -2,6 +2,7 @@ package com.clsaa.dop.server.application.service;
 
 
 import com.clsaa.dop.server.application.dao.AppRepository;
+import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
 import com.clsaa.dop.server.application.model.po.App;
 import com.clsaa.dop.server.application.model.po.AppEnv;
@@ -17,8 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service(value = "AppService")
@@ -29,6 +29,9 @@ public class AppService {
     private AppUrlInfoService appUrlInfoService;
     @Autowired
     private AppEnvService appEnvService;
+
+    @Autowired
+    private UserFeign userFeign;
 
     /**
      * 通过projectId分页查询应用
@@ -65,7 +68,33 @@ public class AppService {
 
         }
 
-        //新建VO层对象 并赋值
+
+        List<AppV1> appV1List = applicationList.stream().map(l -> BeanUtils.convertType(l, AppV1.class)).collect(Collectors.toList());
+
+
+        Set userIdList = new HashSet();
+        Map<Long, String> idNameMap = new HashMap<>();
+        for (int i = 0; i < appV1List.size(); i++) {
+            Long id = appV1List.get(i).getOuser();
+
+            if (!userIdList.contains(id)) {
+                userIdList.add(id);
+                try {
+                    String userName = this.userFeign.findUserNameById(id).getName();
+                    idNameMap.put(id, userName);
+                } catch (Exception e) {
+                    System.out.print(e);
+                }
+
+            }
+
+            AppV1 appV1 = appV1List.get(i);
+            appV1.setOuserName(idNameMap.get(appV1.getOuser()));
+            appV1List.set(i, appV1);
+        }
+
+
+        //新建BO层对象 并赋值
         Pagination<AppV1> pagination = new Pagination<>();
         pagination.setTotalCount(totalCount);
         pagination.setPageNo(pageNo);
@@ -74,7 +103,7 @@ public class AppService {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
-        pagination.setPageList(applicationList.stream().map(l -> BeanUtils.convertType(l, AppV1.class)).collect(Collectors.toList()));
+        pagination.setPageList(appV1List);
 
         return pagination;
 

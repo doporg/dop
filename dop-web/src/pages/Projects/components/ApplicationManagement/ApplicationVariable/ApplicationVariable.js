@@ -52,14 +52,12 @@ export default class ApplicationVariable extends Component {
 
                 })
                 let list = {}
-                response.data.map((item) => {
-                    console.log("item", item)
-                    list[item.varKey] = false
+                list = response.data.map((item) => {
+
+                    return list[item.varKey] = false
                 })
-                console.log("list", list)
                 _this.setState({
                     editMode: list
-
                 })
 
             })

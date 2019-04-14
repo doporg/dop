@@ -1,4 +1,4 @@
-import {Breadcrumb, Button, Feedback, Field, Form, Loading, Select} from "@icedesign/base";
+import {Breadcrumb, Button, Field, Form, Loading, Select} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
@@ -9,12 +9,11 @@ import "./ApplicationEnvironmentDetail.scss"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const Toast = Feedback.toast;
 const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
 };
-const {Combobox} = Select;
+
 
 /**
  * 展示应用环境详情的列表
@@ -41,7 +40,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         Axios.get(url)
             .then((response) => {
                 console.log(response)
-                if (response.data == "") {
+                if (response.data === "") {
                     this.setState({
                         envData: [],
                         editMode: true,
@@ -78,7 +77,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         }
     }
     render() {
-        const {init, getValue} = this.field
+        const {init} = this.field
         return (
             <div>
 

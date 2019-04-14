@@ -34,7 +34,7 @@ export default class ApplicationDetail extends Component {
         console.log("id", id)
         this.setState({
             showEnvDetail: !this.state.showEnvDetail,
-            envId: id == undefined ? "" : id
+            envId: id === undefined ? "" : id
         })
     }
 

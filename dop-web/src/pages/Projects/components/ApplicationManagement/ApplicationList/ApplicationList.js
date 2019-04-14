@@ -28,7 +28,7 @@ export default class ApplicationList extends Component {
             isVisible: false,
             currentData: props.currentData,
             deletedCallRefresh: props.deletedCallRefresh,
-            searchKey: props.searchKey == undefined ? "" : props.searchKey
+            searchKey: props.searchKey === undefined ? "" : props.searchKey
         };
         console.log("constructor");
 
@@ -77,7 +77,6 @@ export default class ApplicationList extends Component {
 
     render() {
         const renderOpr = (value, index, record) => {
-            let id = record.id;
             console.log("record:", record, value)
 
             return <div>{record.ctime}
@@ -98,7 +97,7 @@ export default class ApplicationList extends Component {
                                       dataIndex="title"/>
 
                         <Table.Column title="拥有者"
-                                      dataIndex="ouser"/>
+                                      dataIndex="ouserName"/>
 
                         <Table.Column cell={renderOpr}
                                       title="创建时间"

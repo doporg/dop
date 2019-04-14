@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
 @Service(value = "KubeYamlService")
 public class KubeYamlService {
     @Autowired
     KubeYamlRepository kubeYamlRepository;
-
+    @Autowired
+    KubernetesDefaultConfig kubernetesDefaultConfig;
     @Autowired
     AppEnvService appEnvService;
     @Autowired
@@ -160,11 +162,11 @@ public class KubeYamlService {
                         AppsV1beta1Deployment.getSpec().getTemplate().getSpec().setContainers(containerList);
                         String apiVersion = AppsV1beta1Deployment.getApiVersion();
                         if (apiVersion == null) {
-                            apiVersion = KubernetesDefaultConfig.deploymentApiVersion;
+                            apiVersion = kubernetesDefaultConfig.getDeploymentApiVersion();
                         }
                         String kind = AppsV1beta1Deployment.getKind();
                         if (kind == null) {
-                            kind = KubernetesDefaultConfig.deploymentKind;
+                            kind = kubernetesDefaultConfig.getDeploymentKind();
                         }
                         V1ObjectMeta meta = AppsV1beta1Deployment.getMetadata();
                         V1ObjectMeta newMeta = new V1ObjectMetaBuilder()
@@ -188,17 +190,17 @@ public class KubeYamlService {
 
             } else {
                 AppsV1beta1Deployment AppsV1beta1Deployment = new AppsV1beta1DeploymentBuilder()
-                        .withApiVersion(KubernetesDefaultConfig.deploymentApiVersion)
-                        .withKind(KubernetesDefaultConfig.deploymentKind)
+                        .withApiVersion(kubernetesDefaultConfig.getDeploymentApiVersion())
+                        .withKind(kubernetesDefaultConfig.getDeploymentKind())
                         .withNewMetadata()
                         .withName(service)
                         .withNamespace(nameSpace)
-                        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, service)
+                        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), service)
                         .endMetadata()
                         .withNewSpec()
                         .withReplicas(replicas)
                         .withNewSelector()
-                        .addToMatchLabels(KubernetesDefaultConfig.deploymentLabelPrefix, service)
+                        .addToMatchLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), service)
                         .endSelector()
                         .withNewStrategy()
                         .withNewRollingUpdate()
@@ -208,7 +210,7 @@ public class KubeYamlService {
                         .endStrategy()
                         .withNewTemplate()
                         .withNewMetadata()
-                        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, service)
+                        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), service)
                         .endMetadata()
                         .withNewSpec()
                         .addNewContainer()
@@ -216,30 +218,30 @@ public class KubeYamlService {
                         .withImage("<image_url>")
                         .addNewPort()
                         .withContainerPort(targetPort.getIntValue())
-                        .withProtocol(KubernetesDefaultConfig.deploymentContainerPortProtocol)
+                        .withProtocol(kubernetesDefaultConfig.getDeploymentContainerPortProtocol())
                         .endPort()
-                        .withImagePullPolicy(KubernetesDefaultConfig.deploymentImagePullPolicy)
+                        .withImagePullPolicy(kubernetesDefaultConfig.getDeploymentImagePullPolicy())
                         .addNewVolumeMount()
-                        .withMountPath(KubernetesDefaultConfig.deploymentLocalTimeMountPath)
-                        .withName(KubernetesDefaultConfig.deploymentLocalTimeMountName)
-                        .withMountPath(KubernetesDefaultConfig.deploymentTimeZoneMountPath)
-                        .withName(KubernetesDefaultConfig.deploymentTimeZoneMountName)
+                        .withMountPath(kubernetesDefaultConfig.getDeploymentLocalTimeMountPath())
+                        .withName(kubernetesDefaultConfig.getDeploymentLocalTimeMountName())
+                        .withMountPath(kubernetesDefaultConfig.getDeploymentTimeZoneMountPath())
+                        .withName(kubernetesDefaultConfig.getDeploymentTimeZoneMountName())
                         .endVolumeMount()
                         .endContainer()
-                        .withDnsPolicy(KubernetesDefaultConfig.deploymentDnsPolicy)
+                        .withDnsPolicy(kubernetesDefaultConfig.getDeploymentDnsPolicy())
                         .addNewVolume()
                         .withNewHostPath()
                         .withType("")
-                        .withPath(KubernetesDefaultConfig.deploymentLocalTimeMountPath)
+                        .withPath(kubernetesDefaultConfig.getDeploymentLocalTimeMountPath())
                         .endHostPath()
-                        .withName(KubernetesDefaultConfig.deploymentLocalTimeMountName)
+                        .withName(kubernetesDefaultConfig.getDeploymentLocalTimeMountName())
                         .endVolume()
                         .addNewVolume()
                         .withNewHostPath()
                         .withType("")
-                        .withPath(KubernetesDefaultConfig.deploymentTimeZoneMountPath)
+                        .withPath(kubernetesDefaultConfig.getDeploymentTimeZoneMountPath())
                         .endHostPath()
-                        .withName(KubernetesDefaultConfig.deploymentTimeZoneMountName)
+                        .withName(kubernetesDefaultConfig.getDeploymentTimeZoneMountName())
                         .endVolume()
                         .endSpec()
                         .endTemplate()
@@ -287,7 +289,7 @@ public class KubeYamlService {
      * 根据id获取client
      *
      * @param id 应用环境id
-     * @renturn ApiClient
+     * @return ApiClient
      */
     public ApiClient getClient(Long id) {
         KubeCredentialBoV1 kubeCredentialBoV1 = this.kubeCredentialService.findByAppEnvId(id);
@@ -305,7 +307,7 @@ public class KubeYamlService {
      * 根据id获取api
      *
      * @param id 应用环境id
-     * @renturn NetworkingV1Api
+     * @return NetworkingV1Api
      */
     public ExtensionsV1beta1Api getExtensionsV1beta1Api(Long id) {
 
@@ -317,7 +319,7 @@ public class KubeYamlService {
      * 根据id获取api
      *
      * @param id 应用环境id
-     * @renturn CoreV1Api
+     * @return CoreV1Api
      */
     public CoreV1Api getCoreV1Api(Long id) {
 
@@ -329,7 +331,7 @@ public class KubeYamlService {
      * 根据id获取api
      *
      * @param id 应用环境id
-     * @renturn AppsV1beta1Api
+     * @return AppsV1beta1Api
      */
     public AppsV1beta1Api getAppsV1beta1Api(Long id) {
         getClient(id);
@@ -351,16 +353,16 @@ public class KubeYamlService {
         //AppsV1beta1Deployment deployment = new AppsV1beta1DeploymentBuilder()
         //        .withNewMetadata()
         //        .withName("test-deployment2")
-        //        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //        .endMetadata()
         //        .withNewSpec()
         //        .withReplicas(2)
         //        .withNewSelector()
-        //        .addToMatchLabels(KubernetesDefaultConfig.deploymentLabelPrefix,name)
+        //        .addToMatchLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(),name)
         //        .endSelector()
         //        .withNewTemplate()
         //        .withNewMetadata()
-        //        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //        .endMetadata()
         //        .withNewSpec()
         //        .addNewContainer()
@@ -379,16 +381,16 @@ public class KubeYamlService {
         //AppsV1beta1Deployment deployment2 = new AppsV1beta1DeploymentBuilder()
         //        .withNewMetadata()
         //        .withName("test-deployment")
-        //        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //        .endMetadata()
         //        .withNewSpec()
         //        .withReplicas(2)
         //        .withNewSelector()
-        //        .addToMatchLabels(KubernetesDefaultConfig.deploymentLabelPrefix,name)
+        //        .addToMatchLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(),name)
         //        .endSelector()
         //        .withNewTemplate()
         //        .withNewMetadata()
-        //        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //        .endMetadata()
         //        .withNewSpec()
         //        .addNewContainer()
@@ -407,11 +409,11 @@ public class KubeYamlService {
         //                .endMetadata()
         //                .withNewSpec()
         //                .withReplicas(replicas.intValue())
-        //                .addToSelector(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //                .addToSelector(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //                .withNewTemplate()
         //                .withNewMetadata()
         //                .withName(name)
-        //                .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+        //                .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
         //                .endMetadata()
         //                .withNewSpec()
         //                .addNewContainer()
@@ -434,15 +436,15 @@ public class KubeYamlService {
                         .withNewMetadata()
                         .withName(name)
                         .withNamespace(namespace)
-                        .addToLabels(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+                        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
                         .endMetadata()
                         .withNewSpec()
                         .addNewPort()
                         .withPort(port)
                         .withTargetPort(new IntOrString(port))
-                        .withProtocol(KubernetesDefaultConfig.deploymentContainerPortProtocol)
+                        .withProtocol(kubernetesDefaultConfig.getDeploymentContainerPortProtocol())
                         .endPort()
-                        .addToSelector(KubernetesDefaultConfig.deploymentLabelPrefix, name)
+                        .addToSelector(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
                         .endSpec()
                         .build();
         //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
@@ -452,7 +454,7 @@ public class KubeYamlService {
 
         V1beta1Ingress ingress =
                 new V1beta1IngressBuilder()
-                        .withApiVersion(KubernetesDefaultConfig.deploymentApiVersion)
+                        .withApiVersion(kubernetesDefaultConfig.getDeploymentApiVersion())
                         .withKind("Ingress")
                         .withNewMetadata()
                         .withName(name)
@@ -485,7 +487,7 @@ public class KubeYamlService {
      * 获取该应用对应的cluster的所有命名空间
      *
      * @param id 应用环境id
-     * @renturn{@link List<String>}
+     * @return {@link List<String>}
      */
     public List<String> findNameSpaces(Long id) throws Exception {
         CoreV1Api api = getCoreV1Api(id);
@@ -503,7 +505,7 @@ public class KubeYamlService {
      *
      * @param id        应用环境id
      * @param namespace 命名空间
-     * @renturn{@link List<String>}
+     * @return {@link List<String>}
      */
     public List<String> getServiceByNameSpace(Long id, String namespace) throws Exception {
         CoreV1Api api = getCoreV1Api(id);
@@ -521,7 +523,7 @@ public class KubeYamlService {
      * @param id        应用环境id
      * @param namespace 命名空间
      * @param service   服务
-     * @renturn{@link List<String>}
+     * @return {@link List<String>}
      */
     public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long id, String namespace, String service) throws Exception {
 
