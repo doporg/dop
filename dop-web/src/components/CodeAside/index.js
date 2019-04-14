@@ -26,7 +26,7 @@ class CodeAside extends Component {
 
     const backLink="/project";
 
-    const projectsLink="/code/projects";
+    const projectsLink="/code/projects/personal";
 
     const groupsLink="/code/groups";
 

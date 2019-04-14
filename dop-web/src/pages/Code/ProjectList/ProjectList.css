@@ -5,6 +5,11 @@
     padding-top: 1px;
 }
 
+.loading-project-list{
+    width: 100%;
+    min-height: 400px;
+}
+
 .center-top-menu{
     display: flex;
     justify-content: center;

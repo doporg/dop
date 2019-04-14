@@ -22,7 +22,7 @@ const codeConfig = [
         component: NewProject
     },
     {
-        path: '/code/projects',
+        path: '/code/projects/:sort',
         layout: CodeLayout,
         component: ProjectList
     },

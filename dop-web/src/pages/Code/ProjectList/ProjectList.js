@@ -1,9 +1,10 @@
 import React from 'react';
 import {Table} from '@icedesign/base';
 import {Link, withRouter} from 'react-router-dom';
-import FoundationSymbol from 'foundation-symbol';
 import API from "../../API";
 import Axios from 'axios';
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import './ProjectList.css';
 
@@ -11,18 +12,25 @@ import imgPublic from './imgs/public.png'
 import imgStar from './imgs/star.png'
 import imgPrivate from './imgs/private.png'
 
-export default class ProjectList extends React.Component {
+
+const spinner=(
+    <Spinner/>
+);
+
+class ProjectList extends React.Component {
 
 
     constructor(props) {
         super(props);
+        const {sort}=this.props.match.params;
         this.state = {
-            sort: "personal",
+            sort: sort,
             data: [],
             showData:[],
             pageNo: 1,
             pageSize: 5,
-            pageTotal: 0
+            pageTotal: 0,
+            loadingVisible:true,
         };
     }
 
@@ -60,18 +68,13 @@ export default class ProjectList extends React.Component {
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
-            self.setState({pageTotal: pageTotal, data: response.data,showData:response.data});
+            self.setState({pageTotal: pageTotal, data: response.data,showData:response.data,loadingVisible:false});
         })
 
     }
 
     changeSort(sort) {
-        let url = API.code + "/projectlist?sort=" + sort + "&userId=" + sessionStorage.getItem("user-id");
-        let self = this;
-        Axios.get(url).then((response) => {
-            const pageTotal = Math.ceil(response.data.length / this.state.pageSize);
-            self.setState({sort: sort, pageTotal: pageTotal, pageNo: 1, data: response.data,showData:response.data});
-        })
+        this.props.history.push("/code/projects/"+sort);
     }
 
     prePage() {
@@ -87,7 +90,6 @@ export default class ProjectList extends React.Component {
     }
 
     handleInputChange(event) {
-        // console.log(event.target.value);
         const val = event.target.value;
         if (val !== "") {
             const showData = this.state.data.filter(function (item) {
@@ -145,45 +147,47 @@ export default class ProjectList extends React.Component {
                             <span className="text_new">+新建项目</span>
                         </button>
                     </div>
-                    <div>
-                        <ul>
-                            {(() => {
-                                let begin = (this.state.pageNo - 1) * this.state.pageSize;
-                                let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.showData.length);
-                                return this.state.showData.slice(begin, end).map((item) => {
-                                    const path = "/code/" + item.path_with_namespace;
-                                    return (
-                                        <li className="list-item">
-                                            <div className="list-item-avatar">
-                                                {item.name.substring(0, 1).toUpperCase()}
-                                            </div>
-                                            <div className="list-item-intro">
-                                                <div><Link to={path}><span
-                                                    className="text_path">{item.name_with_namespace}</span></Link></div>
-                                                <div><span className="text_description">{item.description}</span></div>
-                                            </div>
-                                            <div className="list-item-tag">
-                                                <img src={imgStar}/>
-                                                <span>{item.star_count}</span>
-                                                {
-                                                    (() => {
-                                                        if (item.visibility === "public") {
-                                                            return <img src={imgPublic}/>
-                                                        } else {
-                                                            return <img src={imgPrivate}/>
-                                                        }
-                                                    })()
-                                                }
+                    <Loading visible={this.state.loadingVisible} className="loading-project-list" tip={spinner}>
+                        <div>
+                            <ul>
+                                {(() => {
+                                    let begin = (this.state.pageNo - 1) * this.state.pageSize;
+                                    let end = Math.min(this.state.pageNo * this.state.pageSize, this.state.showData.length);
+                                    return this.state.showData.slice(begin, end).map((item) => {
+                                        const path = "/code/" + item.path_with_namespace;
+                                        return (
+                                            <li className="list-item">
+                                                <div className="list-item-avatar">
+                                                    {item.name.substring(0, 1).toUpperCase()}
+                                                </div>
+                                                <div className="list-item-intro">
+                                                    <div><Link to={path}><span
+                                                        className="text_path">{item.name_with_namespace}</span></Link></div>
+                                                    <div><span className="text_description">{item.description}</span></div>
+                                                </div>
+                                                <div className="list-item-tag">
+                                                    <img src={imgStar}/>
+                                                    <span>{item.star_count}</span>
+                                                    {
+                                                        (() => {
+                                                            if (item.visibility === "public") {
+                                                                return <img src={imgPublic}/>
+                                                            } else {
+                                                                return <img src={imgPrivate}/>
+                                                            }
+                                                        })()
+                                                    }
 
-                                            </div>
-                                        </li>
-                                    );
-                                })
-                            })()
-                            }
-                        </ul>
+                                                </div>
+                                            </li>
+                                        );
+                                    })
+                                })()
+                                }
+                            </ul>
 
-                    </div>
+                        </div>
+                    </Loading>
                 </div>
 
                 <div className="div_page">
@@ -200,6 +204,7 @@ export default class ProjectList extends React.Component {
 
 }
 
+export default (props)=><ProjectList {...props} key={props.location.pathname} />
 
 
 

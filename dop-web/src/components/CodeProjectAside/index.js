@@ -81,7 +81,7 @@ class CodeProjectAside extends Component {
     const { username,projectname} = this.state;
 
 
-    const backLink="/code/projects";
+    const backLink="/code/projects/personal";
 
     const projectLink="/code/"+username+"/"+projectname;
 
