@@ -38,8 +38,9 @@ export default class ApplicationEnvironment extends Component {
                 })
             })
             .catch(function (response) {
-
-                console.log(response);
+                _this.setState({
+                    loading: false
+                })
             })
     }
 

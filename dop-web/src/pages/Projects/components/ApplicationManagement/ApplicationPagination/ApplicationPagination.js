@@ -103,7 +103,9 @@ export default class ApplicationPagination extends Component {
                 //     }))
             })
             .catch(function (error) {
-                console.log(error);
+                _this.setState({
+                    loading: false
+                })
             });
     }
 

@@ -185,7 +185,13 @@ export default class K8sInfoPage extends Component {
                 }
             })
             .catch((response) => {
-                console.log("catch", response)
+                _this.setState({
+                    editMode: true,
+                    yamlData: []
+                })
+                //获取所有命名空间
+                _this.getNameSpaceData()
+                _this.setState({loading: false})
             })
     }
 
@@ -304,6 +310,11 @@ export default class K8sInfoPage extends Component {
                                     //提交完成后刷新当前页面
                                     _this.getYamlData()
                                 })
+                                    .catch((response) => {
+                                        _this.setState({
+                                            loading: false
+                                        })
+                                    })
                             }
                             //无则创建
                             else {
@@ -322,6 +333,10 @@ export default class K8sInfoPage extends Component {
                                     })
                                     //提交完成后刷新当前页面
                                     _this.getYamlData()
+                                }).catch((response) => {
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 })
                             }
                         })
@@ -382,7 +397,9 @@ export default class K8sInfoPage extends Component {
                                                     _this.getYamlData()
                                                 })
                                                 .catch(function (error) {
-                                                    console.log(error);
+                                                    _this.setState({
+                                                        loading: false
+                                                    })
                                                 });
 
                                         }
@@ -409,7 +426,9 @@ export default class K8sInfoPage extends Component {
                                                     _this.getYamlData()
                                                 })
                                                 .catch(function (error) {
-                                                    console.log(error);
+                                                    _this.setState({
+                                                        loading: false
+                                                    })
                                                 });
                                         }
                                     })
@@ -464,7 +483,9 @@ export default class K8sInfoPage extends Component {
                                     _this.getYamlData()
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 });
                         } else {
                             Axios.post(url, {}, {
@@ -489,7 +510,9 @@ export default class K8sInfoPage extends Component {
                                     _this.getYamlData()
                                 })
                                 .catch(function (error) {
-                                    console.log(error);
+                                    _this.setState({
+                                        loading: false
+                                    })
                                 });
                         }
                     })
@@ -708,6 +731,11 @@ export default class K8sInfoPage extends Component {
                 loading: false
             })
         })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
+            })
         this.toggleYamlEditor()
 
     }

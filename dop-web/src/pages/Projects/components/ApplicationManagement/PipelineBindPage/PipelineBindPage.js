@@ -84,7 +84,11 @@ export default class PipelineBindPage extends Component {
                         })
 
                 }
+            }).catch((response) => {
+            _this.setState({
+                loading: false
             })
+        })
 
         // let pipelineListUrl = API.gateway + "/pipeline-server/v1/pipeline/cuser"
         // Axios.get(pipelineListUrl, {

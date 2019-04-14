@@ -1,15 +1,20 @@
 package com.clsaa.dop.server.application.service;
 
 
+import com.clsaa.dop.server.application.config.BizCodes;
+import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppRepository;
 import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
+import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
 import com.clsaa.dop.server.application.model.po.App;
 import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.model.po.AppUrlInfo;
+import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +34,11 @@ public class AppService {
     private AppUrlInfoService appUrlInfoService;
     @Autowired
     private AppEnvService appEnvService;
+    @Autowired
+    private PermissionConfig permissionConfig;
 
+    @Autowired
+    private PermissionService permissionService;
     @Autowired
     private UserFeign userFeign;
 
@@ -42,7 +51,10 @@ public class AppService {
      * @param queryKey  查询关键字
      * @return {@link Pagination< AppBoV1>}
      */
-    public Pagination<AppV1> findApplicationByProjectIdOrderByCtimeWithPage(Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
+    public Pagination<AppV1> findApplicationByProjectIdOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
+                , BizCodes.NO_PERMISSION);
+
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
@@ -115,7 +127,9 @@ public class AppService {
      *
      * @param id appId
      */
-    public void deleteApp(Long id) {
+    public void deleteApp(Long loginUser, Long id) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteApp(), loginUser)
+                , BizCodes.NO_PERMISSION);
         this.appRepository.deleteById(id);
         //appUrlInfoService.deleteAppUrlInfo(id);
         //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
@@ -123,7 +137,7 @@ public class AppService {
     }
 
     /**
-     * 删除应用
+     * 根据拥有者查询应用
      *
      * @param ouser ouser
      */
@@ -132,12 +146,15 @@ public class AppService {
     }
 
     /**
-     * 删除应用
+     * 编辑应用
      *
      * @param id appId
      */
-    public void updateApp(Long id, String description) {
+    public void updateApp(Long loginUser, Long id, String title, String description) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditApp(), loginUser)
+                , BizCodes.NO_PERMISSION);
         App app = this.appRepository.findById(id).orElse(null);
+        app.setTitle(title);
         app.setDescription(description);
         this.appRepository.saveAndFlush(app);
         //appUrlInfoService.deleteAppUrlInfo(id);
@@ -155,17 +172,18 @@ public class AppService {
      * @param description 应用描述
      *
      */
-    public void createApp(Long cuser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
-
+    public void createApp(Long loginUser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateApp(), loginUser)
+                , BizCodes.NO_PERMISSION);
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         App app = App.builder()
                 .projectId(projectId)
                 .title(title)
                 .description(description)
-                .cuser(cuser)
-                .muser(cuser)
-                .ouser(cuser)
+                .cuser(loginUser)
+                .muser(loginUser)
+                .ouser(loginUser)
                 .is_deleted(false)
                 .ctime(ctime)
                 .mtime(mtime)
@@ -178,10 +196,10 @@ public class AppService {
         AppEnv appEnv = AppEnv.builder()
                 .appId(appId)
                 .ctime(ctime)
-                .cuser(cuser)
+                .cuser(loginUser)
                 .is_deleted(false)
                 .mtime(mtime)
-                .muser(cuser)
+                .muser(loginUser)
                 .deploymentStrategy(AppEnv.DeploymentStrategy.KUBERNETES)
                 .title("日常开发")
                 .environmentLevel(AppEnv.EnvironmentLevel.DAILY)
@@ -191,11 +209,11 @@ public class AppService {
         AppUrlInfo appUrlInfo = AppUrlInfo.builder()
                 .appId(appId)
                 .ctime(ctime)
-                .cuser(cuser)
+                .cuser(loginUser)
                 .is_deleted(false)
                 .imageUrl(imageUrl)
                 .mtime(mtime)
-                .muser(cuser)
+                .muser(loginUser)
                 .warehouseUrl(gitUrl)
                 .build();
         this.appUrlInfoService.createAppUrlInfo(appUrlInfo);
@@ -207,11 +225,27 @@ public class AppService {
      * 查询应用
      *
      * @param id id
-     * @return @return {@link AppBoV1}
+     * @return @return {@link AppBasicInfoV1}
      */
-    public AppBoV1 findAppById(Long id) {
+    public AppBasicInfoV1 findAppById(Long loginUser, Long id) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
+                , BizCodes.NO_PERMISSION);
         System.out.print(this.appRepository.findById(id).orElse(null));
-        return BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
+        AppBoV1 app = BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
+        AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);
+        AppBasicInfoV1 appBasicInfoV1 = AppBasicInfoV1.builder()
+                .ctime(app.getCtime())
+                .title(app.getTitle())
+                .description(app.getDescription())
+                .ouser(app.getOuser())
+                .warehouseUrl(appUrlInfoBoV1.getWarehouseUrl())
+                .productionDbUrl(appUrlInfoBoV1.getProductionDbUrl())
+                .testDbUrl(appUrlInfoBoV1.getTestDbUrl())
+                .productionDomain(appUrlInfoBoV1.getProductionDomain())
+                .testDomain(appUrlInfoBoV1.getTestDomain())
+                .imageUrl(appUrlInfoBoV1.getImageUrl())
+                .build();
+        return appBasicInfoV1;
 
     }
 }

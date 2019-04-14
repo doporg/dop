@@ -61,6 +61,11 @@ export default class ApplicationVariable extends Component {
                 })
 
             })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
+            })
 
     }
 
@@ -87,9 +92,16 @@ export default class ApplicationVariable extends Component {
 
         Axios.delete(deleteUrl)
             .then(function (response) {
-
+                _this.setState({
+                    loading: false
+                })
                 Toast.success("删除成功")
                 _this.refreshApplicationVariableList();
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
     }
 
@@ -113,9 +125,16 @@ export default class ApplicationVariable extends Component {
             varValue: _this.field.getValue(id)
         })
             .then(function (response) {
-
+                _this.setState({
+                    loading: false
+                })
                 Toast.success("修改成功")
                 _this.refreshApplicationVariableList();
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
     }
 

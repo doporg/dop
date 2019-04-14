@@ -141,12 +141,16 @@ export default class ApplicationBasicInfo extends Component {
                     }
                 )
                     .then(function (response) {
-
+                        _this.setState({
+                            loading: false
+                        })
                         _this.getData()
                         Toast.success("更新成功！")
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }
@@ -161,7 +165,7 @@ export default class ApplicationBasicInfo extends Component {
         this.urlField.validate((errors, values) => {
 
             console.log(errors, values);
-
+            let _this = this
             // 没有异常则提交表单
             if (errors === null) {
                 console.log("noerros");
@@ -181,13 +185,17 @@ export default class ApplicationBasicInfo extends Component {
                     }
                 )
                     .then(function (response) {
-
+                        _this.setState({
+                            loading: false
+                        })
                         //提交完成后刷新当前页面
                         _this.getData()
                         Toast.success("更新成功！")
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }

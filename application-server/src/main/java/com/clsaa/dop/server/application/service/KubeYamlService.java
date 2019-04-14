@@ -1,11 +1,14 @@
 package com.clsaa.dop.server.application.service;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.KubernetesDefaultConfig;
+import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.KubeYamlRepository;
 import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
 import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
 import com.clsaa.dop.server.application.model.po.KubeYamlData;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.apis.AppsV1beta1Api;
 import io.kubernetes.client.apis.CoreV1Api;
@@ -39,13 +42,18 @@ public class KubeYamlService {
     BuildTagRunningIdMappingService buildTagRunningIdMappingService;
     @Autowired
     AppUrlInfoService appUrlInfoService;
+    @Autowired
+    private PermissionConfig permissionConfig;
 
-    public String createYamlFileForDeploy(Long cuser, Long appEnvId, String runningId) {
+    @Autowired
+    private PermissionService permissionService;
 
-        KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(appEnvId);
+    public String createYamlFileForDeploy(Long loginUser, Long appEnvId, String runningId) {
+
+        KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(loginUser, appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
             String yaml = (kubeYamlDataBoV1.getDeploymentEditableYaml());
-            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
+            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(loginUser, runningId, appEnvId);
             Long appId = this.appEnvService.findAppIdById(appEnvId);
             String imageUrl = appUrlInfoService.findAppUrlInfoByAppId(appId).getImageUrl();
             yaml = yaml.replace("<image_url>", imageUrl + ":" + buildTag);
@@ -60,7 +68,7 @@ public class KubeYamlService {
 
             RestTemplate restTemplate = new RestTemplate();
             String yaml = restTemplate.getForObject(finalPath, String.class);
-            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(cuser, runningId, appEnvId);
+            String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(loginUser, runningId, appEnvId);
 
             yaml = yaml.replace("<image_url>", buildTag);
             return yaml;
@@ -72,7 +80,7 @@ public class KubeYamlService {
      * 创建YAML信息
      *
      * @param appEnvId        应用环境id
-     * @param cuser           创建者
+     * @param loginUser           创建者
      * @param nameSpace       命名空间
      * @param service         服务
      * @param deployment      部署
@@ -81,15 +89,16 @@ public class KubeYamlService {
      * @param releaseBatch    发布批次
      * @param replicas        副本数量
      */
-    public void CreateYamlData(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
+    public void CreateYamlData(Long appEnvId, Long loginUser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
             , Long releaseBatch, String yamlFilePath) throws Exception {
-
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateYamlData(), loginUser)
+                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = KubeYamlData.builder()
                 .appEnvId(appEnvId)
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
-                .cuser(cuser)
-                .muser(cuser)
+                .cuser(loginUser)
+                .muser(loginUser)
                 .is_deleted(false)
                 .nameSpace(nameSpace)
                 .service(service)
@@ -110,7 +119,7 @@ public class KubeYamlService {
      * 更新YAML信息
      *
      * @param appEnvId        应用环境id
-     * @param cuser           创建者
+     * @param loginUser           创建者
      * @param nameSpace       命名空间
      * @param service         服务
      * @param deployment      部署
@@ -119,11 +128,13 @@ public class KubeYamlService {
      * @param releaseBatch    发布批次
      * @param replicas        副本数量
      */
-    public void updateYamlData(Long appEnvId, Long cuser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
+    public void updateYamlData(Long appEnvId, Long loginUser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
             , Long releaseBatch, String yamlFilePath) throws Exception {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditYamlData(), loginUser)
+                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
-        kubeYamlData.setMuser(cuser);
+        kubeYamlData.setMuser(loginUser);
         kubeYamlData.setNameSpace(nameSpace);
         kubeYamlData.setService(service);
         kubeYamlData.setDeployment(deployment);
@@ -272,14 +283,18 @@ public class KubeYamlService {
         return yamlCount.equals(new Long(1));
     }
 
-    public KubeYamlDataBoV1 findYamlDataByEnvId(Long appEnvId) {
+    public KubeYamlDataBoV1 findYamlDataByEnvId(Long loginUser, Long appEnvId) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewYamlData(), loginUser)
+                , BizCodes.NO_PERMISSION);
         return BeanUtils.convertType(this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null), KubeYamlDataBoV1.class);
     }
 
-    public void updateDeploymentYaml(Long muser, Long appEnvId, String deploymentYaml) {
+    public void updateDeploymentYaml(Long loginUser, Long appEnvId, String deploymentYaml) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditDeploymentYaml(), loginUser)
+                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
-        kubeYamlData.setMuser(muser);
+        kubeYamlData.setMuser(loginUser);
         kubeYamlData.setDeploymentEditableYaml(deploymentYaml);
         this.kubeYamlRepository.saveAndFlush(kubeYamlData);
     }
@@ -292,7 +307,7 @@ public class KubeYamlService {
      * @return ApiClient
      */
     public ApiClient getClient(Long id) {
-        KubeCredentialBoV1 kubeCredentialBoV1 = this.kubeCredentialService.findByAppEnvId(id);
+        KubeCredentialBoV1 kubeCredentialBoV1 = this.kubeCredentialService.queryByAppEnvId(id);
         String url = kubeCredentialBoV1.getTargetClusterUrl();
         String token = kubeCredentialBoV1.getTargetClusterToken();
         ApiClient client = Config.fromToken(url,
@@ -346,7 +361,9 @@ public class KubeYamlService {
      * @param name      服务
      * @param port      容器
      */
-    public void createServiceByNameSpace(Long id, String namespace, String name, Integer port) throws Exception {
+    public void createServiceByNameSpace(Long loginUser, Long id, String namespace, String name, Integer port) throws Exception {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateService(), loginUser)
+                , BizCodes.NO_PERMISSION);
         CoreV1Api coreV1Api = getCoreV1Api(id);
 
         AppsV1beta1Api AppsV1beta1Api = getAppsV1beta1Api(id);
@@ -489,7 +506,9 @@ public class KubeYamlService {
      * @param id 应用环境id
      * @return {@link List<String>}
      */
-    public List<String> findNameSpaces(Long id) throws Exception {
+    public List<String> findNameSpaces(Long loginUser, Long id) throws Exception {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewNameSpace(), loginUser)
+                , BizCodes.NO_PERMISSION);
         CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespace(true, null, null, null, null, null, null, null, false)
@@ -507,7 +526,9 @@ public class KubeYamlService {
      * @param namespace 命名空间
      * @return {@link List<String>}
      */
-    public List<String> getServiceByNameSpace(Long id, String namespace) throws Exception {
+    public List<String> getServiceByNameSpace(Long loginUser, Long id, String namespace) throws Exception {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewService(), loginUser)
+                , BizCodes.NO_PERMISSION);
         CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespacedService(namespace, false, null, null, null, null, Integer.MAX_VALUE, null, null, false)
@@ -525,8 +546,9 @@ public class KubeYamlService {
      * @param service   服务
      * @return {@link List<String>}
      */
-    public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long id, String namespace, String service) throws Exception {
-
+    public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long loginUser, Long id, String namespace, String service) throws Exception {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewDeployment(), loginUser)
+                , BizCodes.NO_PERMISSION);
         AppsV1beta1Api api = getAppsV1beta1Api(id);
 
 

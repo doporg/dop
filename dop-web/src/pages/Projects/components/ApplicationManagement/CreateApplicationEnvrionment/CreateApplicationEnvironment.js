@@ -71,7 +71,9 @@ class ApplicationEnvironmentForm extends Component {
                         props.finished();
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        _this.setState({
+                            loading: false
+                        })
                     });
 
             }

@@ -77,7 +77,7 @@ export default class ClusterInfoForm extends Component {
                             _this.setState({
                                 loading: false
                             })
-                            Toast.error("保存失败")
+
                         }
                     )
             }
@@ -108,6 +108,11 @@ export default class ClusterInfoForm extends Component {
                     })
                 }
 
+            })
+            .catch((response) => {
+                _this.setState({
+                    loading: false
+                })
             })
     }
 

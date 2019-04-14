@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 @Setter
 @ConfigurationProperties(prefix = "k8s")
 public class KubernetesDefaultConfig {
-    private String deploymentApiVersion = "apps/v1beta1";
-    private String deploymentKind = "Deployment";
-    private String deploymentLabelPrefix = "app";
-    private String deploymentContainerPortProtocol = "TCP";
-    private String deploymentImagePullPolicy = "Always";
-    private String deploymentLocalTimeMountPath = "/etc/localtime";
-    private String deploymentLocalTimeMountName = "host-time";
-    private String deploymentTimeZoneMountPath = "/etc/timezone";
-    private String deploymentTimeZoneMountName = "host-timezone";
-    private String deploymentDnsPolicy = "ClusterFirst";
+    private String deploymentApiVersion;
+    private String deploymentKind;
+    private String deploymentLabelPrefix;
+    private String deploymentContainerPortProtocol;
+    private String deploymentImagePullPolicy;
+    private String deploymentLocalTimeMountPath;
+    private String deploymentLocalTimeMountName;
+    private String deploymentTimeZoneMountPath;
+    private String deploymentTimeZoneMountName;
+    private String deploymentDnsPolicy;
 
 }
