@@ -7,6 +7,8 @@ import ApplicationEnvironment from "../components/ApplicationManagement/Applicat
 import ApplicationEnvironmentDetail
     from "../components/ApplicationManagement/ApplicationEnvironmentDetail/ApplicationEnvironmentDeatil";
 import "./ApplicationDetail.scss"
+import ApplicationEnvironmentLog
+    from "../components/ApplicationManagement/ApplicationEnvironmentLog/ApplicationEnvironmentLog";
 
 const TabPane = Tab.TabPane;
 
@@ -25,36 +27,49 @@ export default class ApplicationDetail extends Component {
             //在应用列表点击应用ID跳转到该页面，通过正则表达式解析应用ID
             projectId: props.location.search.match("projectId=[0-9]+")[0].split("=")[1],
             appId: props.location.search.match("appId=[0-9]+")[0].split("=")[1],
-            showEnvDetail: false,
+            showPage: "envList",
             envId: undefined
         }
     }
 
-    toggleEnvDetail(id) {
+    switchPage(page, id) {
         console.log("id", id)
         this.setState({
-            showEnvDetail: !this.state.showEnvDetail,
+            showPage: page,
             envId: id === undefined ? "" : id
         })
     }
 
     envRender() {
-        if (this.state.showEnvDetail) {
+        if (this.state.showPage === "envList") {
             return (<div></div>)
         } else {
             return (<ApplicationEnvironment
                 projectId={this.state.projectId}
-                showEnvDetail={this.toggleEnvDetail.bind(this)}
+                switchPage={this.switchPage.bind(this)}
+                appId={this.state.appId}/>)
+        }
+
+    }
+
+    envLogRender() {
+        if (this.state.showPage === "envLog") {
+            return (<div></div>)
+        } else {
+            return (<ApplicationEnvironmentLog
+                projectId={this.state.projectId}
+                switchPage={this.switchPage.bind(this)}
+                appEnvId={this.state.envId}
                 appId={this.state.appId}/>)
         }
 
     }
 
     envDetailRender() {
-        if (this.state.showEnvDetail) {
+        if (this.state.showPage === "envDetail") {
             return (
                 <ApplicationEnvironmentDetail
-                    toggleEnvDetail={this.toggleEnvDetail.bind(this)}
+                    switchPage={this.switchPage.bind(this)}
                     projectId={this.state.projectId}
                     appEnvId={this.state.envId}
                     appId={this.state.appId}/>

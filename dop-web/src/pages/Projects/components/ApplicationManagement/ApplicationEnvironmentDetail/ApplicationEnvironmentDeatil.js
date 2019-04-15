@@ -31,7 +31,7 @@ export default class ApplicationEnvironmentDetail extends Component {
             envData: [],
             loading: true,
             projectId: props.projectId,
-            toggleEnvDetail: props.toggleEnvDetail
+            switchPage: props.switchPage
         }
     }
 
@@ -125,7 +125,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                 <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 
-                <Button onClick={this.state.toggleEnvDetail.bind(this)} type="primary">返回环境列表</Button>
+                    <Button onClick={this.state.switchPage.bind(this, "envList")} type="primary">返回环境列表</Button>
 
                 </div>
             </div>
