@@ -1,25 +1,16 @@
 package com.clsaa.dop.server.test.doExecute;
 
-import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.plugin.PluginManager;
+import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
-import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
-import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 import com.clsaa.dop.server.test.util.Services;
-import freemarker.template.TemplateException;
 
-import javax.xml.ws.Service;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
-
-import static com.clsaa.dop.server.test.doExecute.Operation.operationSorter;
-import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
-import static java.util.Objects.nonNull;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 完成测试脚本的执行
@@ -32,22 +23,29 @@ public class TestManager {
     public static final String FAIL_RESULT = "fail";
     public static final String SUCCESS_RESULT = "success";
 
+    public static final int MAX_TASK_SIZE = 1000;
+
     private static PluginManager pluginManager;
+
+    private static BlockingQueue<Runnable> tasksHolder;
+    private static ThreadPoolExecutor testScriptExecutor;
 
     static {
         pluginManager = Services.of(PluginManager.class);
+        tasksHolder = new ArrayBlockingQueue<>(MAX_TASK_SIZE, false);
+        testScriptExecutor = new ThreadPoolExecutor(
+                3,
+                5,
+                5,
+                TimeUnit.MINUTES,
+                tasksHolder
+        );
     }
 
     public static InterfaceCaseDto execute(InterfaceCaseDto interfaceCaseDto) {
-        ExecuteContext executeContext = ExecuteContext.builder()
-                                                .interfaceExecuteLog(initExecuteLog(interfaceCaseDto))
-                                                .interfaceCaseDto(interfaceCaseDto)
-                                                .caseParams(interfaceCaseDto.getParamsMap())
-                                                .build();
-        List<InterfaceStageDto> stages = interfaceCaseDto.getStages();
-        sort(stages, new StageSorter())
-                .forEach(stage -> doExecute(stage, executeContext));
-        executeContext.logAfterExecution();
+        Long userId = UserManager.getCurrentUserId();
+        ExecuteTask executeTask = new ExecuteTask(interfaceCaseDto, userId);
+        testScriptExecutor.execute(executeTask);
         return interfaceCaseDto;
     }
 
@@ -57,29 +55,6 @@ public class TestManager {
 
     public static Map<String, String> requestHeadersHandled(RequestContext requestContext) {
         return pluginManager.headers(requestContext);
-    }
-
-    private static InterfaceExecuteLog initExecuteLog(InterfaceCaseDto interfaceCaseDto) {
-        return (InterfaceExecuteLog) dateAndUser().apply(
-                InterfaceExecuteLog.builder()
-                        .operationExecuteLogs(new ArrayList<>())
-                        .caseId(interfaceCaseDto.getId())
-                        .begin(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    private static void doExecute(InterfaceStageDto stage, ExecuteContext executeContext) {
-        if (nonNull(stage)) {
-            executeContext.setCurrentStage(stage.getStage());
-            sort(stage.getOperations(), operationSorter())
-                    .forEach(operation -> operation.run(executeContext));
-        }
-    }
-
-    private static <T> List<T> sort(List<T> data, Comparator<T> sorter) {
-        data.sort(sorter);
-        return data;
     }
 
 }

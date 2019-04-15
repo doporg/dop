@@ -61,6 +61,10 @@ public class UserManager {
         return userThread.get();
     }
 
+    public static void setUserId(Long userId) {
+        userThread.set(userId);
+    }
+
     public static void removeThreadUserId() {
         userThread.remove();
     }
