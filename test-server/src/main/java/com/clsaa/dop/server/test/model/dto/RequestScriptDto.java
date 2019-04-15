@@ -1,16 +1,16 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
-import com.clsaa.dop.server.test.doExecute.Version;
+import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
-import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
-import io.restassured.config.RestAssuredConfig;
+import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.output.WriterOutputStream;
+import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.*;
 import static com.clsaa.dop.server.test.doExecute.Version.currentVersion;
@@ -120,7 +120,7 @@ public class RequestScriptDto implements Operation {
                     .everything(true);
             executionLog = executeContext.logResponseInfo(executionLog, writer);
 
-            // auto test
+            // 4, auto test
             for (RequestCheckPointDto checkPoint : requestCheckPoints) {
                 Matcher matcher = getMatcher(checkPoint);
                 try {
@@ -130,12 +130,30 @@ public class RequestScriptDto implements Operation {
                     checkPoint.fail(error.getMessage());
                 }
             }
+
+            // 5, update interface case param
+            try {
+                response.contentType(ContentType.JSON);
+            } catch (AssertionError assertionError) {
+                executionLog.append("[Unsupported Content Type]Only JSON content as next request's param supported!");
+                throw new UnsupportedOperationException(executionLog.toString());
+            }
+
+            ExtractableResponse extractableResponse = response.extract();
+            for (UrlResultParamDto resultParam : resultParams) {
+                String paramName = resultParam.getName();
+                String paramRef = resultParam.getRawValue();
+                String value = extractableResponse.path(paramRef);
+                if (StringUtils.isNotEmpty(value)) {
+                    executeContext.addParam(paramName, value);
+                }
+            }
             operationExecuteLog.setExecuteInfo(executionLog.toString());
         } catch (Exception e) {
             String message = e.getMessage();
             operationExecuteLog.setExecuteInfo(message);
             setResultFail();
-        } finally {
+        }  finally {
             executeContext.addOperationLog(
                     endOperationLog(operationExecuteLog)
             );

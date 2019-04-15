@@ -8,6 +8,7 @@ import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import com.clsaa.dop.server.test.util.ExecutionLogUtils;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.util.CollectionUtils;
 
 import java.io.StringWriter;
 import java.time.LocalDateTime;
@@ -96,5 +97,11 @@ public class ExecuteContext {
                 .append(nextLine)
                 .append(writer.toString().trim());
         return origin;
+    }
+
+    public void addParam(String key, String value) {
+        if (nonNull(caseParams)) {
+            caseParams.put(key, value);
+        }
     }
 }

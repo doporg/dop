@@ -48,7 +48,12 @@ public class UserManager {
 
     public static void setUserId(String userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            userThread.set(Long.valueOf(userId));
+            try {
+                Long userIdL = Long.valueOf(userId);
+                userThread.set(userIdL);
+            } catch (NumberFormatException n) {
+                log.error("Invalid user id: {}", userId);
+            }
         }
     }
 
