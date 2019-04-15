@@ -21,7 +21,6 @@ public class BasicAuthUtil {
      */
     public static String createAuth(UserCredentialDto userCredentialDto){
         String userNamePassword = userCredentialDto.getIdentifier() +":"+userCredentialDto.getCredential();
-        System.out.println(userNamePassword);
         String auth = "Basic "+Base64.getEncoder().encodeToString(userNamePassword.getBytes());
         return auth;
     }

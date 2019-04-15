@@ -2,26 +2,34 @@ import React from 'react';
 import { CascaderSelect } from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
+import { Loading } from "@icedesign/base";
+import Spinner from '../components/Spinner';
 
 import './FilePathList.css'
 
 import imgFile from './imgs/file.png';
 
-export default class FilePathList extends React.Component{
+const spinner=(
+    <Spinner/>
+);
+
+class FilePathList extends React.Component{
 
     constructor(props){
         super(props);
 
-        let {username,projectid,ref}=this.props.match.params;
+        let {username,projectname,ref}=this.props.match.params;
 
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:username+"/"+projectname,
             ref:ref,
             refOptions:[],
             pathList:[],
             showData:[],
             path:"",
+            loadingVisible:true,
         }
 
     }
@@ -51,7 +59,8 @@ export default class FilePathList extends React.Component{
             }
 
             self.setState({
-                refOptions:refOptions
+                refOptions:refOptions,
+                loadingVisible:false,
             })
         });
 
@@ -115,20 +124,17 @@ export default class FilePathList extends React.Component{
 
     blobLink(path){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path))
+        this.props.history.push("/code/"+username+"/"+projectname+"/blob/"+ref+"/"+encodeURIComponent(path))
 
-        // return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/blob/"+ref+"/"+encodeURIComponent(path);
     }
 
     treeRootLink(){
 
-        let {username,projectid,ref}=this.state;
+        let {username,projectname,ref}=this.state;
 
-        this.props.history.push("/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/"));
-
-        // return "http://" + window.location.host + "/#/code/"+username+"/"+projectid+"/tree/"+ref+"/"+encodeURIComponent("/");
+        this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/"));
 
     }
 
@@ -136,7 +142,9 @@ export default class FilePathList extends React.Component{
         return (
             <div className="file-list-container">
                 <div className="div-file-list-top">
-                    <CascaderSelect className="select-ref-file-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    <Loading visible={this.state.loadingVisible} className="loading-ref-file-list" tip={spinner}>
+                        <CascaderSelect className="select-ref-file-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
+                    </Loading>
                     <a onClick={this.treeRootLink.bind(this)}>根目录</a>
                     <span className="text-file-list-separator">/</span>
                     <input className="input-file-list-search" placeholder="输入路径搜索文件" value={this.state.path} onChange={this.changePath.bind(this)}/>
@@ -157,3 +165,5 @@ export default class FilePathList extends React.Component{
         )
     }
 }
+
+export default (props)=><FilePathList {...props} key={props.location.pathname} />

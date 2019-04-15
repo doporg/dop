@@ -93,7 +93,7 @@ public interface ProjectFeign {
      * @return 对于项目的访问日志
      */
     @GetMapping(value = "/projects/{project_id}/logs")
-    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Long projectId,
+    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
                                              @RequestParam(value = "username", required = false) String username,
                                              @RequestParam(value = "repository", required = false) String repository,
                                              @RequestParam(value = "tag", required = false) String tag,
@@ -145,6 +145,19 @@ public interface ProjectFeign {
     ProjectMetadata projectsProjectIdMetadatasMetaNameGet(@PathVariable("project_id") Long projectId,
                                                           @PathVariable("meta_name") String metaName,
                                                           @RequestHeader(value = "Authorization") String auth);
+
+    /**
+     * 修改项目的公开状态
+     * @param projectId 项目id
+     * @param metaName 属性名称
+     * @param auth 用户权限参数
+     * @param publicStatus 修改后的公开状态
+     */
+    @PutMapping(value = "/projects/{project_id}/metadatas/{meta_name}")
+    void projectsProjectIdMetadatasMetaNamePut(@PathVariable("project_id") Long projectId,
+                                               @PathVariable("meta_name") String metaName,
+                                               @RequestHeader(value = "Authorization") String auth,
+                                               @RequestBody PublicStatus publicStatus);
 
     /**
      *  获取项目的参与人员

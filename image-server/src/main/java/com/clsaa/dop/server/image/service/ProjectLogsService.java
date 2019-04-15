@@ -5,11 +5,14 @@ import com.clsaa.dop.server.image.feign.harborfeign.ProjectFeign;
 import com.clsaa.dop.server.image.model.bo.AccessLogBO;
 import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
 import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
+import com.clsaa.dop.server.image.model.po.AccessLog;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import com.clsaa.dop.server.image.util.TimeConvertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,11 +43,19 @@ public class ProjectLogsService {
      * @param pageSize 页大小
      * @return {@link List<AccessLogBO>}根据参数检索项目日志
      */
-    public List<AccessLogBO> getProjectLogs(Long projectId,String userName,String repo,String tag,
+    public List<AccessLogBO> getProjectLogs(Integer projectId,String userName,String repo,String tag,
                                             String operation,String beginTime,String endTime,Integer page,Integer pageSize,Long userId){
-            UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        return BeanUtils.convertList(projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,endTime,page,pageSize,auth),AccessLogBO.class);
+        List<AccessLog> accessLogs = projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,
+                endTime,page,pageSize,auth);
+        List<AccessLogBO> accessLogBOS = new ArrayList<>();
+        for (AccessLog accessLog:accessLogs){
+            AccessLogBO accessLogBO = BeanUtils.convertType(accessLog,AccessLogBO.class);
+            accessLogBO.setOpTime(TimeConvertUtil.convertTime(accessLog.getOpTime()));
+            accessLogBOS.add(accessLogBO);
+        }
+        return accessLogBOS;
     }
 
 }

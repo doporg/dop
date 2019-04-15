@@ -2,7 +2,8 @@ import Projects from './Projects.js';
 import BasicLayout from "../../layouts/BasicLayout";
 import Application from './Application/Application';
 import ApplicationDetail from './ApplicationDetail/ApplicationDetail';
-import ApplicationEnvironmentDetail from './components/ApplicationManagement/ApplicationEnvironmentDetail'
+import ApplicationEnvironmentDetail
+    from './components/ApplicationManagement/ApplicationEnvironmentDetail/ApplicationEnvironmentDeatil'
 
 
 const projectConfig = [

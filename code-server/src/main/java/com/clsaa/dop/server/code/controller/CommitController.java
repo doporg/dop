@@ -24,12 +24,13 @@ public class CommitController {
     private CommitService commitService;
 
     @ApiOperation(value = "查看项目的提交列表",notes = "根据项目的id查看项目的提交列表")
-    @GetMapping("/projects/{id}/repository/commits")
-    public List<CommitVo> findCommitList(@ApiParam(value = "项目id") @PathVariable("id") int id,
+    @GetMapping("/projects/{username}/{projectname}/repository/commits")
+    public List<CommitVo> findCommitList(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                         @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                                          @ApiParam(value = "路径") @RequestParam("path")String path,
                                          @ApiParam(value = "分支名或tag名")@RequestParam("ref_name")String ref_name,
-                                         @ApiParam(value = "用户id") @RequestParam("userId") Long userId){
-
+                                         @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
         List<CommitBo> commitBos;
         List<CommitVo> commitVos=new ArrayList<>();
 

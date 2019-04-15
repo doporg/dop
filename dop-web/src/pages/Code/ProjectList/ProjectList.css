@@ -96,13 +96,12 @@
 
 .list-item-intro{
     height: 80px;
-    width: 200px;
+    width: 800px;
     float: left;
     padding: 20px;
 }
 
 .list-item-intro div{
-    text-align: center;
     height: 20px;
     line-height: 20px;
 }

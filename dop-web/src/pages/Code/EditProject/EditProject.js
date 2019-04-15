@@ -13,14 +13,15 @@ const {Group: RadioGroup} = Radio;
 const {toast} = Feedback;
 
 
-export default class EditProject extends React.Component{
+class EditProject extends React.Component{
 
     constructor(props){
         super(props);
-        const {projectid,username}=this.props.match.params;
+        const {username,projectname}=this.props.match.params;
         this.state={
             username:username,
-            projectid:projectid,
+            projectname:projectname,
+            projectid:username+"/"+projectname,
             editInfo:{},//id,name,description,default_branch,visibility
             branches:[],
             deleteVisible:false
@@ -53,7 +54,7 @@ export default class EditProject extends React.Component{
 
         Axios({
             method: "PUT",
-            url: API.code+ "/projects/"+editInfo.id,
+            url: API.code+ "/projects/"+this.state.projectid,
             params: {
                 userId:sessionStorage.getItem("user-id"),
                 name:editInfo.name,
@@ -68,9 +69,9 @@ export default class EditProject extends React.Component{
 
             toast.success("修改项目信息成功");
 
-            let {username,projectid}=this.state;
+            let {username,projectname}=this.state;
 
-            this.props.history.push("/code/"+username+"/"+projectid);
+            this.props.history.push("/code/"+username+"/"+projectname);
 
         })
 
@@ -79,10 +80,10 @@ export default class EditProject extends React.Component{
 
     deleteProject(){
 
-        let projectid=this.state.editInfo.id;
+        let projectid=this.state.projectid;
         let url=API.code+"/projects/"+projectid+"?userId="+sessionStorage.getItem("user-id");
         Axios.delete(url).then(response=>{
-            this.props.history.push("/code/projectlist");
+            this.props.history.push("/code/projects");
         })
 
     }
@@ -134,9 +135,6 @@ export default class EditProject extends React.Component{
 
 
     render(){
-
-        // console.log(this.state.editInfo);
-
 
         return (
             <div>
@@ -201,3 +199,5 @@ export default class EditProject extends React.Component{
         )
     }
 }
+
+export default (props)=><EditProject {...props} key={props.location.pathname} />

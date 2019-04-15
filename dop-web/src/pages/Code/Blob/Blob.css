@@ -161,7 +161,10 @@
     font-size: 12px;
 }
 
-.select-ref-blob{
+.loading-ref-blob{
     margin-right:20px;
+}
+
+.select-ref-blob{
     width:200px;
 }

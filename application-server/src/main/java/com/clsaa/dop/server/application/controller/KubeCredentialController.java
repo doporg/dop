@@ -31,38 +31,31 @@ public class KubeCredentialController {
     @ApiOperation(value = "更新集群信息", notes = "更新集群信息")
     @PostMapping(value = "/app/env/{appEnvId}/cluster")
     public void updateUrlAndToken(
-            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "clusterInfoV1", name = "clusterInfoV1", required = true) @RequestBody ClusterInfoV1 clusterInfoV1) {
-        try {
-            this.kubeCredentialService.updateClusterInfo(muser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
-        } catch (Exception e) {
-            System.out.print(e);
-        }
+
+        this.kubeCredentialService.updateClusterInfo(loginUser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
+
     }
 
     @ApiOperation(value = "查询集群url", notes = "查询集群url")
-    @GetMapping(value = "/app/env/{appEnvId}/cluster")
+    @GetMapping(value = "/app/env/{appEnvId}/clusterUrl")
     public ClusterUrlV1 getUrlByAppEnvId(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
-        try {
-            return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(appEnvId), ClusterUrlV1.class);
-        } catch (Exception e) {
-            System.out.print(e);
-            return null;
-        }
+
+        return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(loginUser, appEnvId), ClusterUrlV1.class);
+
     }
 
     @ApiOperation(value = "查询集群url和Token", notes = "查询集群url和Token")
     @GetMapping(value = "/app/env/{appEnvId}/clusterWithToken")
     public KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
-        try {
-            return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(appEnvId), KubeCredentialWithTokenV1.class);
-        } catch (Exception e) {
-            System.out.print(e);
-            return null;
-        }
+
+        return BeanUtils.convertType(this.kubeCredentialService.queryByAppEnvId(appEnvId), KubeCredentialWithTokenV1.class);
+
     }
 
 }

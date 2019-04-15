@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.service;
 
 import com.clsaa.dop.server.code.model.bo.project.*;
 import com.clsaa.dop.server.code.util.RequestUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * gitlab项目服务类
+ * 项目服务类
  * @author wsy
  */
 @Service
 public class ProjectService {
 
-    @Autowired
-    private UserService userService;
 
     /**
      * 根据id查找项目
      * @param id 项目id
      * @return 项目overview需要的信息
-     * @author wsy
      */
-    public ProjectBo findProject(int id){
+    public ProjectBo findProject(String id){
+
+        id=URLUtil.encodeURIComponent(id);
+
         //获得项目基本信息
         ProjectBo projectBo=RequestUtil.get("/projects/"+id+"?statistics=true",ProjectBo.class);
         //获得tag的数量
@@ -57,14 +58,19 @@ public class ProjectService {
      * 以username的身份star一个project,若已经star，则unstar
      * @param id 项目id
      * @param userId 用户id
+     * @return 状态码
      */
-    public void starProject(int id,Long userId){
+    public int starProject(String id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
 
         List<NameValuePair> params=new ArrayList<>();
         int code=RequestUtil.post("/projects/"+id+"/star",userId,params);
         if(code==304){
             RequestUtil.post("/projects/"+id+"/unstar",userId,params);
         }
+
+        return code;
 
     }
 
@@ -117,7 +123,9 @@ public class ProjectService {
      * @param userId 用户id
      * @return 项目信息
      */
-    public ProjectEditBo findProjectEditInfo(int id,Long userId){
+    public ProjectEditBo findProjectEditInfo(String id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id;
         return RequestUtil.get(path,userId,ProjectEditBo.class);
@@ -133,7 +141,9 @@ public class ProjectService {
      * @param visibility 可见等级
      * @param userId 用户id
      */
-    public void editProjectInfo(int id,String name,String description,String default_branch,String visibility,Long userId){
+    public void editProjectInfo(String id,String name,String description,String default_branch,String visibility,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
 
         String path="/projects/"+id;
         List<NameValuePair> params=new ArrayList<>();
@@ -150,7 +160,10 @@ public class ProjectService {
      * @param userId 用户id
      * @return 项目信息
      */
-    public List<String> findAllBranchName(int id,Long userId){
+    public List<String> findAllBranchName(String id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+
         List<BranchBo> branchBos= RequestUtil.getList("/projects/"+id+"/repository/branches",userId, BranchBo.class);
         List<String> res=new ArrayList<>();
         for(BranchBo branchBo:branchBos)
@@ -164,7 +177,10 @@ public class ProjectService {
      * @param id 项目id
      * @param userId 用户id
      */
-    public void deleteProject(int id,Long userId){
+    public void deleteProject(String id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+
         String path="/projects/"+id;
         RequestUtil.delete(path,userId);
     }
@@ -176,14 +192,17 @@ public class ProjectService {
      * @param userId 用户id
      * @return 项目的默认分支名
      */
-    public String findProjectDefaultBranch(int id,Long userId){
+    public String findProjectDefaultBranch(String id,Long userId){
 
+        id=URLUtil.encodeURIComponent(id);
+
+        long t1=System.currentTimeMillis();
         DefaultBranchBo defaultBranchBo=RequestUtil.get("/projects/"+id,userId,DefaultBranchBo.class);
+        long t2=System.currentTimeMillis();
+        System.out.println("default branch:"+(t2-t1));
         return defaultBranchBo.getDefault_branch();
     }
 
-
-//    public void findProjectEditInfo(int id,String name,String description,String default_branch,String visibility)
 
 
 }

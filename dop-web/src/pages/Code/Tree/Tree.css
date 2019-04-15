@@ -105,18 +105,31 @@
 
 .text-tree-commit{
     display: inline-block;
-    width: 50%;
+    width: 45%;
     font-size: 15px;
     color: #848484;
 }
 
 .text-tree-update{
     display: inline-block;
-    width: 10%;
+    width: 15%;
     text-align: right;
     font-size: 15px;
     color: #585858;
 }
+
+.loading-tree-update{
+    width: 3%;
+}
+
+.text-tree-update-loading{
+    display: inline-block;
+    width: 12%;
+    font-size: 15px;
+    color: #585858;
+}
+
+
 
 .img-tree-folder{
     width: 15px;
@@ -141,8 +154,11 @@ a:hover{
     color: black;
 }
 
-.select-ref-tree{
+.loading-ref-tree{
     margin-right:20px;
+}
+
+.select-ref-tree{
     width:200px
 }
 

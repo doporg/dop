@@ -32,7 +32,7 @@ public class AppUrlInfoController {
     @ApiOperation(value = "修改应用基本Url", notes = "根据应用ID修改应用基本Url")
     @PutMapping(value = "/app/{appId}/urlInfo")
     public void updateAppUrlInfoByAppId(
-            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId,
             @ApiParam(name = "warehouseUrl", value = "Git仓库Url", defaultValue = "") @RequestParam(value = "warehouseUrl", required = false, defaultValue = "") String warehouseUrl,
             @ApiParam(name = "productionDbUrl", value = "开发数据库Url", defaultValue = "") @RequestParam(value = "productionDbUrl", required = false, defaultValue = "") String productionDbUrl,
@@ -40,7 +40,7 @@ public class AppUrlInfoController {
             @ApiParam(name = "testDbUrl", value = "测试数据库Url", defaultValue = "") @RequestParam(value = "testDbUrl", required = false, defaultValue = "") String testDbUrl,
             @ApiParam(name = "productionDomain", value = "开发域名", defaultValue = "") @RequestParam(value = "productionDomain", required = false, defaultValue = "") String productionDomain,
             @ApiParam(name = "testDomain", value = "测试域名", defaultValue = "") @RequestParam(value = "testDomain", required = false, defaultValue = "") String testDomain) {
-        this.appUrlInfoService.updateAppUrlInfoByAppId(appId, muser, warehouseUrl, imageUrl, productionDbUrl, testDbUrl, productionDomain, testDomain);
+        this.appUrlInfoService.updateAppUrlInfoByAppId(appId, loginUser, warehouseUrl, imageUrl, productionDbUrl, testDbUrl, productionDomain, testDomain);
     }
 
 

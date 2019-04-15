@@ -1,32 +1,17 @@
 import React, {Component} from 'react';
 import {Tab} from "@icedesign/base";
 
-import ApplicationBasicInfo from "../components/ApplicationManagement/ApplicationBasicInfo"
-import ApplicationVariable from "../components/ApplicationManagement/ApplicationVariable"
-import ApplicationEnvironment from "../components/ApplicationManagement/ApplicationEnvironment"
-import ApplicationEnvironmentDetail from "../components/ApplicationManagement/ApplicationEnvironmentDetail";
+import ApplicationBasicInfo from "../components/ApplicationManagement/ApplicationBasicInfo/ApplicationBasicInfo"
+import ApplicationVariable from "../components/ApplicationManagement/ApplicationVariable/ApplicationVariable"
+import ApplicationEnvironment from "../components/ApplicationManagement/ApplicationEnvironment/ApplicationEnvironment"
+import ApplicationEnvironmentDetail
+    from "../components/ApplicationManagement/ApplicationEnvironmentDetail/ApplicationEnvironmentDeatil";
+import "./ApplicationDetail.scss"
+import ApplicationEnvironmentLog
+    from "../components/ApplicationManagement/ApplicationEnvironmentLog/ApplicationEnvironmentLog";
 
 const TabPane = Tab.TabPane;
-const styles = {
-    container: {
-        position: 'fixed',
-        top: '120px',
-        left: '240px',
-        right: '0px',
-        display: 'block',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: "center",
-        height: '90%',
-        overflow: "scroll",
-        padding: '0 20px',
-        zIndex: '97',
-        background: '#fff',
-        boxShadow: 'rgba(0, 0, 0, 0.2) 2px 0px 4px',
 
-    },
-    tabPane: {}
-};
 
 
 /**
@@ -42,36 +27,49 @@ export default class ApplicationDetail extends Component {
             //在应用列表点击应用ID跳转到该页面，通过正则表达式解析应用ID
             projectId: props.location.search.match("projectId=[0-9]+")[0].split("=")[1],
             appId: props.location.search.match("appId=[0-9]+")[0].split("=")[1],
-            showEnvDetail: false,
+            showPage: "envList",
             envId: undefined
         }
     }
 
-    toggleEnvDetail(id) {
+    switchPage(page, id) {
         console.log("id", id)
         this.setState({
-            showEnvDetail: !this.state.showEnvDetail,
-            envId: id == undefined ? "" : id
+            showPage: page,
+            envId: id === undefined ? "" : id
         })
     }
 
     envRender() {
-        if (this.state.showEnvDetail) {
+        if (this.state.showPage === "envList") {
             return (<div></div>)
         } else {
             return (<ApplicationEnvironment
                 projectId={this.state.projectId}
-                showEnvDetail={this.toggleEnvDetail.bind(this)}
+                switchPage={this.switchPage.bind(this)}
+                appId={this.state.appId}/>)
+        }
+
+    }
+
+    envLogRender() {
+        if (this.state.showPage === "envLog") {
+            return (<div></div>)
+        } else {
+            return (<ApplicationEnvironmentLog
+                projectId={this.state.projectId}
+                switchPage={this.switchPage.bind(this)}
+                appEnvId={this.state.envId}
                 appId={this.state.appId}/>)
         }
 
     }
 
     envDetailRender() {
-        if (this.state.showEnvDetail) {
+        if (this.state.showPage === "envDetail") {
             return (
                 <ApplicationEnvironmentDetail
-                    toggleEnvDetail={this.toggleEnvDetail.bind(this)}
+                    switchPage={this.switchPage.bind(this)}
                     projectId={this.state.projectId}
                     appEnvId={this.state.envId}
                     appId={this.state.appId}/>
@@ -100,13 +98,13 @@ export default class ApplicationDetail extends Component {
                 {/*/>*/}
 
                 <Tab contentStyle={{padding: 20}}
-                     style={styles.container}
+                     className="Tab"
                      lazyLoad={false}>
 
 
                     <TabPane tab={"基本信息"}
                              key={"basic"}
-                             style={{textAlign: "center"}}
+                             className="TabPane"
                     >
 
                         <ApplicationBasicInfo
@@ -115,14 +113,16 @@ export default class ApplicationDetail extends Component {
                     </TabPane>
 
                     <TabPane tab={"环境配置"}
-                             key={"env"}>
+                             key={"env"}
+                             className="TabPane">
+
                         {this.envRender()}
                         {this.envDetailRender()}
                     </TabPane>
 
                     <TabPane tab={"变量管理"}
                              key={"var"}
-                             style={{textAlign: "center"}}
+                             className="TabPane"
                     >
                         <ApplicationVariable
                             projectId={this.state.projectId}

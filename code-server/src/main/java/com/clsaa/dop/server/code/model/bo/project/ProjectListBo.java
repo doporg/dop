@@ -14,8 +14,9 @@ public class ProjectListBo {
 
     private int id;
     private String description;
-    private String path_with_namespace;
     private String name;
+    private String name_with_namespace;
+    private String path_with_namespace;
     private int star_count;
     private String visibility;
 }

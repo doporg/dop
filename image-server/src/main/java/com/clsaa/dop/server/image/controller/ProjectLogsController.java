@@ -31,7 +31,7 @@ public class ProjectLogsController {
 
     @ApiOperation(value = "根据项目id获取项目日志")
     @GetMapping(value = "/v1/projects/{projectId}/logs")
-    public List<AccessLogVO> getProjectLogs(@ApiParam(value = "项目的id",required = true)@PathVariable(value = "projectId")Long projectId,
+    public List<AccessLogVO> getProjectLogs(@ApiParam(value = "项目的id",required = true)@PathVariable(value = "projectId")Integer projectId,
                                             @ApiParam(value = "用户名称") @RequestParam(value = "username", required = false) String username,
                                             @ApiParam(value = "仓库名称") @RequestParam(value = "repository", required = false) String repository,
                                             @ApiParam(value = "标签号") @RequestParam(value = "tag", required = false) String tag,
@@ -40,7 +40,7 @@ public class ProjectLogsController {
                                             @ApiParam(value = "结束时间") @RequestParam(value = "endTimestamp", required = false) String endTimestamp,
                                             @ApiParam(value = "页号") @RequestParam(value = "page", required = false) Integer page,
                                             @ApiParam(value = "页大小") @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                            @ApiParam(value = "用户id") @RequestHeader(value = "userId")Long userId){
+                                            @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
         return BeanUtils.convertList(projectLogsService.getProjectLogs(projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize,userId),AccessLogVO.class);
     }
 }
