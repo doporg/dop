@@ -68,14 +68,14 @@ public class AppService {
             applicationPage = appRepository.findAllByProjectIdAndTitleStartingWith(projectId, queryKey, pageable);
 
             applicationList = applicationPage.getContent();
-            totalCount = appRepository.findAllByProjectIdAndTitleStartingWith(projectId, queryKey).size();
+            totalCount = appRepository.countAllByProjectIdAndTitleStartingWith(projectId, queryKey);
         } else {
 
             applicationPage = appRepository.findAllByProjectId(projectId, pageable);
 
             applicationList = applicationPage.getContent();
 
-            totalCount = appRepository.findAllByProjectId(projectId).size();
+            totalCount = appRepository.countAllByProjectId(projectId);
             //applicationList = applicationPage.getContent();
 
         }
@@ -96,6 +96,7 @@ public class AppService {
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
                     System.out.print(e);
+                    throw e;
                 }
 
             }

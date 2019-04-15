@@ -65,10 +65,10 @@ public class ProjectService {
                 projectList = projectRepository.findAllByTitleStartingWith(queryKey, pageable).getContent();
 
                 //这一句是为了获得所有条目的数量
-                totalCount = projectRepository.findAllByTitleStartingWith(queryKey).size();
+                totalCount = projectRepository.countAllByTitleStartingWith(queryKey);
             } else {
                 projectList = projectRepository.findAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey, pageable).getContent();
-                totalCount = projectRepository.findAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey).size();
+                totalCount = projectRepository.countAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey);
             }
         }
         /*
@@ -100,6 +100,7 @@ public class ProjectService {
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
                     System.out.print(e);
+                    throw e;
                 }
 
             }
@@ -129,7 +130,6 @@ public class ProjectService {
      *
      * @param title       项目名称
      * @param description 项目描述
-     * @return {@link Pagination< ProjectBoV1>}
      */
     public void createProjects(Long loginUser, String title, Long origanizationId, String description) {
 
