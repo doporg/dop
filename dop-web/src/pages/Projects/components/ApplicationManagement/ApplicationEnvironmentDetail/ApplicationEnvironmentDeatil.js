@@ -1,4 +1,4 @@
-import {Breadcrumb, Button, Feedback, Field, Form, Loading, Select} from "@icedesign/base";
+import {Breadcrumb, Button, Field, Form, Loading, Select} from "@icedesign/base";
 import React, {Component} from 'react';
 import Axios from "axios";
 import API from "../../../../API";
@@ -9,12 +9,11 @@ import "./ApplicationEnvironmentDetail.scss"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-const Toast = Feedback.toast;
 const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
 };
-const {Combobox} = Select;
+
 
 /**
  * 展示应用环境详情的列表
@@ -32,7 +31,7 @@ export default class ApplicationEnvironmentDetail extends Component {
             envData: [],
             loading: true,
             projectId: props.projectId,
-            toggleEnvDetail: props.toggleEnvDetail
+            switchPage: props.switchPage
         }
     }
 
@@ -41,7 +40,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         Axios.get(url)
             .then((response) => {
                 console.log(response)
-                if (response.data == "") {
+                if (response.data === "") {
                     this.setState({
                         envData: [],
                         editMode: true,
@@ -78,7 +77,7 @@ export default class ApplicationEnvironmentDetail extends Component {
         }
     }
     render() {
-        const {init, getValue} = this.field
+        const {init} = this.field
         return (
             <div>
 
@@ -126,7 +125,7 @@ export default class ApplicationEnvironmentDetail extends Component {
                 <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 
-                <Button onClick={this.state.toggleEnvDetail.bind(this)} type="primary">返回环境列表</Button>
+                    <Button onClick={this.state.switchPage.bind(this, "envList")} type="primary">返回环境列表</Button>
 
                 </div>
             </div>

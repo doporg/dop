@@ -33,8 +33,9 @@ public class AppVarController {
     @ApiOperation(value = "查询所有变量", notes = "查询所有变量")
     @GetMapping("/app/{appId}/variable")
     public List<AppVarV1> findAppVarByAppId(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId) {
-        return this.appVarService.findAppVarByAppIdOrderByKey(appId).stream().map(l -> BeanUtils.convertType(l, AppVarV1.class)).collect(Collectors.toList());
+        return this.appVarService.findAppVarByAppIdOrderByKey(loginUser, appId).stream().map(l -> BeanUtils.convertType(l, AppVarV1.class)).collect(Collectors.toList());
 
     }
 
@@ -50,28 +51,29 @@ public class AppVarController {
     @ApiOperation(value = "创建变量", notes = "创建变量")
     @PostMapping("/app/{appId}/variable")
     public void createAppVarByAppId(
-            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
             @ApiParam(name = "var", value = "变量", required = true) @RequestBody AppVarCreateV1 appVarCreateV1) {
-        this.appVarService.createAppVarByAppId(cuser, appId, appVarCreateV1.getVarKey(), appVarCreateV1.getVarValue());
+        this.appVarService.createAppVarByAppId(loginUser, appId, appVarCreateV1.getVarKey(), appVarCreateV1.getVarValue());
 
     }
 
     @ApiOperation(value = "删除变量", notes = "删除变量")
     @DeleteMapping("/app/variable/{appVarId}")
     public void deleteAppVarById(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appVarId", value = "应用变量Id", required = true) @PathVariable(value = "appVarId") Long appVarId) {
-        this.appVarService.delteAppVarById(appVarId);
+        this.appVarService.delteAppVarById(loginUser, appVarId);
 
     }
 
     @ApiOperation(value = "更新变量", notes = "更新变量")
     @PutMapping("/app/variable/{appVarId}")
     public void updateAppVarById(
-            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long muser,
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appVarId", value = "应用变量Id", required = true) @PathVariable(value = "appVarId") Long appVarId,
             @ApiParam(name = "var", value = "变量", required = true) @RequestBody AppVarCreateV1 appVarCreateV1) {
-        this.appVarService.updateAppVarById(appVarId, muser, appVarCreateV1.getVarValue());
+        this.appVarService.updateAppVarById(appVarId, loginUser, appVarCreateV1.getVarValue());
     }
 
 

@@ -77,7 +77,7 @@ export default class ClusterInfoForm extends Component {
                             _this.setState({
                                 loading: false
                             })
-                            Toast.error("保存失败")
+
                         }
                     )
             }
@@ -94,9 +94,23 @@ export default class ClusterInfoForm extends Component {
         Axios.get(urlUrl)
             .then((response) => {
                 console.log("cluster", response)
+                if (response.data.targetClusterUrl === "") {
+                    _this.setState({
+                        clusterData: "",
+                        editMode: true,
+                        loading: false
+                    })
+                } else {
+                    _this.setState({
+                        clusterData: response.data.targetClusterUrl,
+                        editMode: false,
+                        loading: false
+                    })
+                }
+
+            })
+            .catch((response) => {
                 _this.setState({
-                    clusterData: response.data.targetClusterUrl,
-                    editMode: false,
                     loading: false
                 })
             })
@@ -143,7 +157,7 @@ export default class ClusterInfoForm extends Component {
                             <div
                                 className={this.state.editMode ? "form-item-text-container hide" : "form-item-text-container"}
                             >
-                                {this.state.clusterData == "" ? "" : this.state.clusterData}
+                                {this.state.clusterData === "" ? "" : this.state.clusterData}
                                 <Icon
                                     className="edit-icon"
                                     type='edit'
@@ -185,7 +199,6 @@ export default class ClusterInfoForm extends Component {
     }
 
     render() {
-        const {init, getError} = this.field
 
         return (
 

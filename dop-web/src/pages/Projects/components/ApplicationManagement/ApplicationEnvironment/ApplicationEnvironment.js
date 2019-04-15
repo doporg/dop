@@ -15,7 +15,7 @@ export default class ApplicationEnvironment extends Component {
         this.state = {
             appId: props.appId,
             appEnvData: [],
-            showEnvDetail: props.showEnvDetail,
+            switchPage: props.switchPage,
             loading: true,
             projectId: props.projectId
         }
@@ -38,8 +38,9 @@ export default class ApplicationEnvironment extends Component {
                 })
             })
             .catch(function (response) {
-
-                console.log(response);
+                _this.setState({
+                    loading: false
+                })
             })
     }
 
@@ -86,9 +87,14 @@ export default class ApplicationEnvironment extends Component {
         )
     }
 
+    showEnvLog(id) {
+        console.log(id)
+        this.state.switchPage("envLog", id)
+    }
+
     showEnvDetailFun(id) {
         console.log(id)
-        this.state.showEnvDetail(id)
+        this.state.showEnvDetail("envDetail", id)
     }
 
     getYaml(id) {
@@ -117,9 +123,9 @@ export default class ApplicationEnvironment extends Component {
                         <Col key={index}>
                             <Card style={{height: "70%"}}>
                                 {this.titleRender(item.title, item.id)}
-                                {/*<Button onClick={this.getYaml.bind(this, item.id)}>*/}
-                                {/*部署主干*/}
-                                {/*</Button>*/}
+                                <Button onClick={this.showEnvLog.bind(this, item.id)}>
+                                    部署历史
+                                </Button>
                                 <Button onClick={this.showEnvDetailFun.bind(this, item.id)}
                                         style={{margin: "20px"}}>
                                     配置部署

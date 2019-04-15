@@ -60,7 +60,7 @@ export default class ProjectList extends Component {
                                       dataIndex="title"/>
 
                         <Table.Column title="创建人"
-                                      dataIndex="cuser"/>
+                                      dataIndex="cuserName"/>
 
                         <Table.Column title="创建时间"
                                       dataIndex="ctime"/>

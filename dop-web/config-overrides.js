@@ -2,6 +2,24 @@ const { injectBabelPlugin } = require('react-app-rewired');
 const WebpackPluginImport = require('webpack-plugin-import');
 const rewireSass = require('./rewire-scss');
 
+const {
+    addLessLoader,
+    fixBabelImports,
+    override
+} = require("customize-cra");
+
+module.exports = {
+    webpack: override(
+        addLessLoader({
+            javascriptEnabled: true
+        }),
+        fixBabelImports("babel-plugin-import", {
+            libraryName: "antd-mobile",
+            style: true
+        })
+    )
+};
+
 module.exports = function override(config) {
   config = injectBabelPlugin(
     ['import', { libraryName: '@icedesign/base' }],
