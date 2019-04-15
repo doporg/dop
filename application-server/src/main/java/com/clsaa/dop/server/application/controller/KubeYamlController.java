@@ -160,10 +160,13 @@ public class KubeYamlController {
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
             @ApiParam(value = "name", name = "name", required = true) @RequestParam(value = "name") String name,
-            @ApiParam(value = "port", name = "port", required = true) @RequestParam(value = "port") Integer port
+            @ApiParam(value = "targetPort", name = "targetPort", required = true) @RequestParam(value = "targetPort") Integer targetPort,
+            @ApiParam(value = "nodePort", name = "nodePort", defaultValue = "") @RequestParam(value = "nodePort") Integer nodePort,
+            @ApiParam(value = "host", name = "host", defaultValue = "") @RequestParam(value = "host") String host
+
     ) {
         try {
-            this.kubeYamlService.createServiceByNameSpace(loginUser, appEnvId, namespace, name, port);
+            this.kubeYamlService.createServiceByNameSpace(loginUser, appEnvId, namespace, name, targetPort, nodePort, host);
         } catch (Exception e) {
             System.out.print(e);
         }

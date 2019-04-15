@@ -20,5 +20,9 @@ public class KubernetesDefaultConfig {
     private String deploymentTimeZoneMountPath;
     private String deploymentTimeZoneMountName;
     private String deploymentDnsPolicy;
+    private String serviceApiVersion;
+    private String serviceKind;
+    private String ingressApiVersion;
+    private String ingressKind;
 
 }

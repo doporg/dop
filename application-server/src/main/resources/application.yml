@@ -80,7 +80,10 @@ k8s:
   deploymentTimeZoneMountPath: "/etc/timezone"
   deploymentTimeZoneMountName: "host-timezone"
   deploymentDnsPolicy: "ClusterFirst"
-
+  serviceApiVersion: "v1"
+  serviceKind: "Service"
+  ingressApiVersion: "extensions/v1beta1"
+  ingressKind: "Ingress"
 permission:
   createProject: "创建项目"
   viewProject: "查看项目"

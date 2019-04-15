@@ -17,6 +17,20 @@
         }
       }
 
+      .form-item-use-ingress {
+        .ingress-input {
+          width: 60%
+        }
+
+        .node-port-input {
+          width: 40%
+        }
+
+        &.hide {
+          display: none;
+        }
+      }
+
       .form-item-release-batch {
         &.hide {
           display: none;

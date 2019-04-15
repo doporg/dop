@@ -40,6 +40,7 @@ export default class K8sInfoPage extends Component {
             deploymentData: [],
             yamlData: [],
             containerData: [],
+            useIngress: "ingress",
             createService: false,
             yamlMode: "profile",
             editDeploymentYaml: false,
@@ -199,6 +200,12 @@ export default class K8sInfoPage extends Component {
         this.getYamlData()
     }
 
+    switchIngress(e, values) {
+        this.setState({
+            useIngress: values
+        })
+    }
+
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.refreshK8sInfo) {
             console.log("will", nextProps)
@@ -356,7 +363,9 @@ export default class K8sInfoPage extends Component {
                     params: {
                         name: this.field.getValue("service"),
                         namespace: this.field.getValue("nameSpace"),
-                        port: this.editField.getValue('port'),
+                        targetPort: this.editField.getValue('targetPort'),
+                        nodePort: this.editField.getValue('nodePort'),
+                        host: this.editField.getValue('host')
                     }
                 })
                     .then(() => {
@@ -587,17 +596,71 @@ export default class K8sInfoPage extends Component {
                             </Combobox>
 
                         </FormItem>
+
+                        <FormItem
+                            className={this.state.editMode && this.state.createService ? "form-item-use-ingress" : "form-item-use-ingress hide"}
+                            label="选择外部访问方式:"
+                            {...formItemLayout}>
+                            <Select
+                                fillProps="label"
+                                onChange={this.switchIngress.bind(this)}>
+                                <Option value="ingress">
+                                    使用Ingress
+                                </Option>
+                                <Option value="nodePort">
+                                    使用NodePort
+                                </Option>
+
+                            </Select>
+                        </FormItem>
+
                         <FormItem
                             className={this.state.editMode && this.state.createService ? "form-item-create-service" : "form-item-create-service hide"}
-                                  label="端口:"
-                                  {...formItemLayout}
-                                  validateStatus={this.editField.getError("port") ? "error" : ""}
-                                  help={this.editField.getError("port") ? "请输入正确的端口" : ""}
+                            label="TargetPort:"
+                            {...formItemLayout}
+                            validateStatus={this.editField.getError("targetPort") ? "error" : ""}
+                            help={this.editField.getError("targetPort") ? "请输入正确的端口" : ""}
                         >
-                            <Input placeholder="开放端口"
+                            <Input placeholder="容器端口"
                                    defaultValue={0}
                                    className="port-input"
-                                   {...this.editField.init("port", {rules: [{required: true, message: "该项不能为空"}]})}/>
+                                   {...this.editField.init("targetPort", {
+                                       rules: [{
+                                           required: true,
+                                           message: "该项不能为空"
+                                       }]
+                                   })}/>
+
+                        </FormItem>
+
+                        <FormItem
+                            className={this.state.editMode && this.state.createService && this.state.useIngress === "ingress" ? "form-item-use-ingress" : "form-item-use-ingress hide"}
+                            label="域名:"
+                            {...formItemLayout}
+                            validateStatus={this.editField.getError("host") ? "error" : ""}
+                            help={this.editField.getError("host") ? "请输入正确的端口" : ""}
+                        >
+                            <Input placeholder="域名"
+                                   className="ingress-input"
+                                   {...this.editField.init("host", {rules: [{required: true, message: "该项不能为空"}]})}/>
+
+                        </FormItem>
+
+                        <FormItem
+                            className={this.state.editMode && this.state.createService && this.state.useIngress === "nodePort" ? "form-item-use-ingress" : "form-item-use-ingress hide"}
+                            label="NodePort:"
+                            {...formItemLayout}
+                            validateStatus={this.editField.getError("nodePort") ? "error" : ""}
+                            help={this.editField.getError("nodePort") ? "请输入正确的端口" : ""}
+                        >
+                            <Input placeholder="对外开放端口"
+                                   className="node-port-input"
+                                   {...this.editField.init("nodePort", {
+                                       rules: [{
+                                           required: true,
+                                           message: "该项不能为空"
+                                       }]
+                                   })}/>
 
                         </FormItem>
 

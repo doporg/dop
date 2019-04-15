@@ -361,7 +361,7 @@ public class KubeYamlService {
      * @param name      服务
      * @param port      容器
      */
-    public void createServiceByNameSpace(Long loginUser, Long id, String namespace, String name, Integer port) throws Exception {
+    public void createServiceByNameSpace(Long loginUser, Long id, String namespace, String name, Integer port, Integer nodePort, String host) throws Exception {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateService(), loginUser)
                 , BizCodes.NO_PERMISSION);
         CoreV1Api coreV1Api = getCoreV1Api(id);
@@ -445,58 +445,82 @@ public class KubeYamlService {
         //                .endSpec()
         //                .build();
 
+        if (host.equals("")) {
+            V1Service service =
+                    new V1ServiceBuilder()
+                            .withApiVersion(kubernetesDefaultConfig.getServiceApiVersion())
+                            .withKind(kubernetesDefaultConfig.getServiceKind())
+                            .withNewMetadata()
+                            .withName(name)
+                            .withNamespace(namespace)
+                            .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
+                            .endMetadata()
+                            .withNewSpec()
+                            .addNewPort()
+                            .withPort(port)
+                            .withTargetPort(new IntOrString(port))
+                            .withProtocol(kubernetesDefaultConfig.getDeploymentContainerPortProtocol())
+                            .withNodePort(nodePort)
+                            .endPort()
+                            .addToSelector(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
+                            .endSpec()
+                            .build();
+            //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
+            //     AppsV1beta1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
+            //AppsV1beta1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
+            coreV1Api.createNamespacedService(namespace, service, false, null, null);
+        } else {
+            V1Service service =
+                    new V1ServiceBuilder()
+                            .withApiVersion(kubernetesDefaultConfig.getServiceApiVersion())
+                            .withKind(kubernetesDefaultConfig.getServiceKind())
+                            .withNewMetadata()
+                            .withName(name)
+                            .withNamespace(namespace)
+                            .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
+                            .endMetadata()
+                            .withNewSpec()
+                            .addNewPort()
+                            .withPort(port)
+                            .withTargetPort(new IntOrString(port))
+                            .withProtocol(kubernetesDefaultConfig.getDeploymentContainerPortProtocol())
+                            .endPort()
+                            .addToSelector(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
+                            .endSpec()
+                            .build();
+            //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
+            //     AppsV1beta1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
+            //AppsV1beta1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
+            coreV1Api.createNamespacedService(namespace, service, false, null, null);
 
-        V1Service service =
-                new V1ServiceBuilder()
-                        .withApiVersion("v1")
-                        .withKind("Service")
-                        .withNewMetadata()
-                        .withName(name)
-                        .withNamespace(namespace)
-                        .addToLabels(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
-                        .endMetadata()
-                        .withNewSpec()
-                        .addNewPort()
-                        .withPort(port)
-                        .withTargetPort(new IntOrString(port))
-                        .withProtocol(kubernetesDefaultConfig.getDeploymentContainerPortProtocol())
-                        .endPort()
-                        .addToSelector(kubernetesDefaultConfig.getDeploymentLabelPrefix(), name)
-                        .endSpec()
-                        .build();
-        //api.createNamespacedReplicationController(namespace,replicationController,null,null,null);
-        //     AppsV1beta1Api.createNamespacedDeployment(namespace,deployment,false,null,null);
-        //AppsV1beta1Api.createNamespacedDeployment(namespace,deployment2,false,null,null);
-        coreV1Api.createNamespacedService(namespace, service, false, null, null);
+            V1beta1Ingress ingress =
+                    new V1beta1IngressBuilder()
+                            .withApiVersion(kubernetesDefaultConfig.getIngressApiVersion())
+                            .withKind(kubernetesDefaultConfig.getIngressKind())
+                            .withNewMetadata()
+                            .withName(name)
+                            .withNamespace(namespace)
+                            .endMetadata()
+                            .withNewSpec()
+                            .addNewRule()
+                            .withHost(host)
+                            .withNewHttp()
+                            .addNewPath()
+                            .withNewBackend()
+                            .withServiceName(name)
+                            .withServicePort(new IntOrString(port))
+                            .endBackend()
+                            .endPath()
+                            .endHttp()
+                            .endRule()
+                            .endSpec()
+                            .build();
 
-        V1beta1Ingress ingress =
-                new V1beta1IngressBuilder()
-                        .withApiVersion(kubernetesDefaultConfig.getDeploymentApiVersion())
-                        .withKind("Ingress")
-                        .withNewMetadata()
-                        .withName(name)
-                        .withNamespace(namespace)
-                        .endMetadata()
-                        .withNewSpec()
-                        .addNewRule()
-                        .withHost("www.dpp.clsaa.com")
-                        .withNewHttp()
-                        .addNewPath()
-                        .withNewBackend()
-                        .withServiceName(name)
-                        .withServicePort(new IntOrString(port))
-                        .endBackend()
-                        .endPath()
-                        .endHttp()
-                        .endRule()
-                        .endSpec()
-                        .build();
-
-        ExtensionsV1beta1Api extensionsV1beta1Api = getExtensionsV1beta1Api(id);
-        extensionsV1beta1Api.createNamespacedIngress(namespace, ingress, false, null, null);
-        //V1NetworkPolicy v1NetworkPolicy=new V1NetworkPolicy(ingress);
-        //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
-
+            ExtensionsV1beta1Api extensionsV1beta1Api = getExtensionsV1beta1Api(id);
+            extensionsV1beta1Api.createNamespacedIngress(namespace, ingress, false, null, null);
+            //V1NetworkPolicy v1NetworkPolicy=new V1NetworkPolicy(ingress);
+            //networkingV1Api.createNamespacedNetworkPolicy(namespace,ingress);
+        }
 
     }
 
