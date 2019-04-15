@@ -14,6 +14,7 @@ import SSH from './SSH';
 import NewSSH from './NewSSH'
 import SSHREADME from './SSHREADME'
 import BranchList from './BranchList'
+import NewBranch from './NewBranch'
 import TagList from './TagList'
 
 const codeConfig = [
@@ -88,6 +89,11 @@ const codeConfig = [
         path: '/code/:username/:projectname/branches',
         layout: CodeProjectLayout,
         component: BranchList
+    },
+    {
+        path: '/code/:username/:projectname/branches/new',
+        layout: CodeProjectLayout,
+        component: NewBranch
     },
     {
         path: '/code/:username/:projectname/tags',
