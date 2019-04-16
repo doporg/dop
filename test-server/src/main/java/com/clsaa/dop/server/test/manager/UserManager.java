@@ -85,6 +85,16 @@ public class UserManager {
         };
     }
 
+    public static <PO extends Po> Function<PO, PO> updateUserAndTime() {
+        return po -> {
+            LocalDateTime current = LocalDateTime.now();
+            po.setMtime(current);
+            Long currentUserId = getCurrentUserId();
+            po.setMuser(currentUserId);
+            return po;
+        };
+    }
+
     public static String getUserName(Long userId) {
         try {
             return userNameCache.get(userId);
