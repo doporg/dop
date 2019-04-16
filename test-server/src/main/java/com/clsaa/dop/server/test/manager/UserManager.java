@@ -46,7 +46,7 @@ public class UserManager {
         userInterface = Services.of(UserInterface.class);
     }
 
-    public static void setUserId(String userId) {
+    public static void setCurrentUserId(String userId) {
         if (StringUtils.isNotEmpty(userId)) {
             try {
                 Long userIdL = Long.valueOf(userId);
@@ -61,7 +61,7 @@ public class UserManager {
         return userThread.get();
     }
 
-    public static void setUserId(Long userId) {
+    public static void setCurrentUserId(Long userId) {
         userThread.set(userId);
     }
 

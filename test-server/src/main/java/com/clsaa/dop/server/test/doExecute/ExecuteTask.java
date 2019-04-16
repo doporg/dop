@@ -35,12 +35,12 @@ public class ExecuteTask implements Runnable {
     public void run() {
         Long threadOldUser = UserManager.getCurrentUserId();
         if (userId != null) {
-            UserManager.setUserId(userId);
+            UserManager.setCurrentUserId(userId);
         }
 
         doExecute();
 
-        UserManager.setUserId(threadOldUser);
+        UserManager.setCurrentUserId(threadOldUser);
     }
 
     private void doExecute() {
