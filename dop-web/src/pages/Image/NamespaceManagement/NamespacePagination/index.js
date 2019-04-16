@@ -55,97 +55,188 @@ export default class NamespacePagination extends Component {
         let countUrl = API.image + '/v1/statistics';
         let url = API.image + '/v1/projects';
         let _this = this;
-        if (select==='private'){
-            Axios.get(countUrl, {})
-                .then(function (response) {
-                    console.log("私有命名空间统计");
-                    console.log(response.data.privateProjectCount)
-                    _this.setState({
-                        totalCount:response.data.privateProjectCount
+        if (searchKey===""){
+            if (select==='private'){
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("私有命名空间统计");
+                        console.log(response.data.privateProjectCount)
+                        _this.setState({
+                            totalCount:response.data.privateProjectCount
+                        })
                     })
-                })
-            //获取数据
-            Axios.get(url, {
-                params:{
-                    page:current,
-                    pageSize: this.state.pageSize,
-                    publicStatus:false
-                }
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:false
+                    }
 
-            })
-                .then(function (response) {
-                    console.log("私有镜像信息");
-                    console.log(response.data);
-                    _this.setState({
-                        currentData: response.data,
-                        loading: false,
-                        current: current
-                    });
                 })
-        } else if (select==='public'){
-            Axios.get(countUrl, {})
-                .then(function (response) {
-                    console.log("公开命名空间统计");
-                    console.log(response.data.publicProjectCount)
-                    _this.setState({
-                        totalCount:response.data.publicProjectCount
+                    .then(function (response) {
+                        console.log("私有镜像信息");
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
                     })
-                }).catch(function (errors) {
+            } else if (select==='public'){
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("公开命名空间统计");
+                        console.log(response.data.publicProjectCount)
+                        _this.setState({
+                            totalCount:response.data.publicProjectCount
+                        })
+                    }).catch(function (errors) {
                     console.log(errors)
                     _this.setState({
                         current:1,
                         currentData:[],
                         loading:false
                     })
-            })
-            //获取数据
-            Axios.get(url, {
-                params:{
-                    page:current,
-                    pageSize: this.state.pageSize,
-                    publicStatus:true
-                }
-
-            })
-                .then(function (response) {
-                    console.log("公开镜像信息");
-                    console.log(response.data);
-                    _this.setState({
-                        currentData: response.data,
-                        loading: false,
-                        current: current
-                    });
                 })
-        }else {
-            //获取数量
-            Axios.get(countUrl, {})
-                .then(function (response) {
-                    console.log("统计信息");
-                    console.log(response.data.publicProjectCount+response.data.privateProjectCount);
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:true
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log("公开命名空间信息");
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
+                    })
+            }else {
+                //获取数量
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("统计信息");
+                        console.log(response.data.publicProjectCount+response.data.privateProjectCount);
+                        _this.setState({
+                            totalCount:response.data.publicProjectCount+response.data.privateProjectCount
+                        })
+                    })
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
+                    })
+            }
+        } else {
+            if (select==='private'){
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("私有命名空间统计");
+                        console.log(response.data.privateProjectCount)
+                        _this.setState({
+                            totalCount:response.data.privateProjectCount
+                        })
+                    })
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:false,
+                        name:_this.state.queryKey
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log("私有镜像信息");
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
+                    })
+            } else if (select==='public'){
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("公开命名空间统计");
+                        console.log(response.data.publicProjectCount)
+                        _this.setState({
+                            totalCount:response.data.publicProjectCount
+                        })
+                    }).catch(function (errors) {
+                    console.log(errors)
                     _this.setState({
-                        totalCount:response.data.publicProjectCount+response.data.privateProjectCount
+                        current:1,
+                        currentData:[],
+                        loading:false
                     })
                 })
-            //获取数据
-            Axios.get(url, {
-                params:{
-                    page:current,
-                    pageSize: this.state.pageSize
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:true,
+                        name:_this.state.queryKey
+                    }
 
-                }
-
-            })
-                .then(function (response) {
-                    console.log("镜像信息");
-                    console.log(response.data);
-                    _this.setState({
-                        currentData: response.data,
-                        loading: false,
-                        current: current
-                    });
                 })
-        }
+                    .then(function (response) {
+                        console.log("公开命名空间信息");
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
+                    })
+            }else {
+                //获取数量
+                Axios.get(countUrl, {})
+                    .then(function (response) {
+                        console.log("统计信息");
+                        console.log(response.data.publicProjectCount+response.data.privateProjectCount);
+                        _this.setState({
+                            totalCount:response.data.publicProjectCount+response.data.privateProjectCount
+                        })
+                    })
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        name:_this.state.queryKey
+                    }
 
+                })
+                    .then(function (response) {
+                        console.log(response.data);
+                        _this.setState({
+                            currentData: response.data,
+                            loading: false,
+                            current: current
+                        });
+                    })
+            }
+        }
 
     }
 
@@ -156,7 +247,10 @@ export default class NamespacePagination extends Component {
 
     //搜索框内容变化
     onSearch(value) {
-        console.log("search ",value)
+        console.log("search ",value);
+        this.setState({
+            queryKey:value
+        })
         this.refreshList(1,value);
     }
 
@@ -242,7 +336,7 @@ export default class NamespacePagination extends Component {
             <div>
                 <IceContainer title={"检索条件"}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"}/>
+                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
                         <Select className={"select"} defaultValue={"all"} onChange={this.changeSelection.bind(this)}>
                             <Select.Option value="all">所有命名空间</Select.Option>
                             <Select.Option value="public">公开命名空间</Select.Option>

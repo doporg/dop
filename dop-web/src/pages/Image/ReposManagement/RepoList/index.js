@@ -53,7 +53,7 @@ export default class RepoList extends Component {
 
     nameRender=(value, index, record)=> {
         //链接到对应的镜像列表
-        return <Link to={"/image/projects/"+record.projectId+"/repos/"+value+"/images"}
+        return <Link to={"/repos/"+value+"/images"}
         >{value}</Link>
     };
 

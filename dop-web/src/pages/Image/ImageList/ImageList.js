@@ -8,12 +8,27 @@ export default class ImageList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            namespaceId: props.location.pathname.match("[0-9]+")[0],
-            repoName:props.location.pathname.split("/")[5]+"/"+props.location.pathname.split("/")[6],
+            namespaceId:"",
+            repoName:props.location.pathname.split("/")[2]+"/"+props.location.pathname.split("/")[3],
             currentData: []
         };
     }
 
+    init(){
+        let url = API.image + '/v1/projects';
+        let _this = this;
+        Axios.get(url,{
+            params:{
+                name:this.props.location.pathname.split("/")[2]
+            }
+        }).then(
+            function (response) {
+                _this.setState({
+                    namespaceId:response.data[0].projectId
+                })
+            }
+        )
+    }
     refreshImageList(){
         let url = API.image + '/v1/repositories/'+this.state.repoName+"/images";
         let _this = this;
@@ -30,6 +45,7 @@ export default class ImageList extends Component {
     }
 
     componentDidMount() {
+        this.init();
         this.refreshImageList();
     }
 
@@ -41,7 +57,6 @@ export default class ImageList extends Component {
                     <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库列表{this.state.repoName}</Breadcrumb.Item>
                 </Breadcrumb>
                 <ImagePagination repoName={this.state.repoName} imageData={this.state.currentData} refreshImageList={this.refreshImageList.bind(this)}/>
-
             </div>
         )
     };
