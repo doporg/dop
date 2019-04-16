@@ -34,6 +34,16 @@ public class ImageInfoController {
         return BeanUtils.convertList(imageService.getImages(projectName,repoName,labels,userId),ImageInfoVO.class);
     }
 
+    @ApiOperation(value = "获取镜像信息")
+    @GetMapping(value = "/v1/repositories/{projectName}/{repoName}/images/{imageName}")
+    public ImageInfoVO getImage(@ApiParam(value = "项目名称",required = true) @PathVariable(value = "projectName")String projectName,
+                                @ApiParam(value = "镜像仓库名称",required = true) @PathVariable(value = "repoName") String repoName,
+                                @ApiParam(value = "镜像名称",required = true) @PathVariable(value = "imageName") String imageName,
+                                @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        return BeanUtils.convertType(imageService.getImage(projectName,repoName,imageName,userId),ImageInfoVO.class);
+    }
+
+
     @ApiOperation(value = "删除对应的镜像")
     @DeleteMapping(value = "/v1/repositories/{projectName}/{repoName}/images/{imageName}")
     public void deleteImage(@ApiParam(value = "项目名称",required = true) @PathVariable(value = "projectName")String projectName,

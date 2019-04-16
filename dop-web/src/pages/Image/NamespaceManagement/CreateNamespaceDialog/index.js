@@ -5,6 +5,7 @@ import {
     from "@icedesign/base";
 import NamespaceForm from "../CreateNamespaceForm/index"
 import React, {Component} from 'react'
+import "../../Style.scss"
 
 export default class CreateNamespaceDialog extends Component {
     constructor(props) {
@@ -70,7 +71,7 @@ export default class CreateNamespaceDialog extends Component {
 
     render() {
         return (
-            <span>
+            <span className={"dialog"}>
                 <Button onClick={this.onOpen} type="primary">
           创建命名空间
         </Button>

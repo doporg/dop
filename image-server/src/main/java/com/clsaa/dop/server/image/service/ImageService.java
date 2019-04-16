@@ -64,4 +64,19 @@ public class ImageService {
         String repo = projectName+"/"+repoName;
         harborRepoFeign.repositoriesRepoNameTagsTagDelete(repo,imageName,auth);
     }
+
+    /**
+     * 通过镜像仓库名和tag名来获取镜像
+     * @param projectName 项目名称
+     * @param repoName 镜像名称
+     * @param imageName 镜像版本
+     * @param userId 用户id
+     * @return {@link ImageInfoBO} 镜像的信息
+     */
+    public ImageInfoBO getImage(String projectName,String repoName,String imageName,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        String repo = projectName+"/"+repoName;
+        return BeanUtils.convertType(harborRepoFeign.repositoriesRepoNameTagsTagGet(repo,imageName,auth),ImageInfoBO.class);
+    }
 }

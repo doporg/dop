@@ -16,7 +16,7 @@ const imageConfig =[
         component: Image,
     },
     {
-        path: '/image/projects/:projectId/repos/:projectName/:repoName/images',
+        path: '/repos/:projectName/:repoName/images',
         layout: BasicLayout,
         component: ImageList
     },

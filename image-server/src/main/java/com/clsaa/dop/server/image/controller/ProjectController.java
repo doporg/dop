@@ -35,7 +35,7 @@ public class ProjectController {
     @ApiOperation(value = "获取项目列表信息",notes = "根据权限的不同访问项目列表信息")
     @GetMapping("/v1/projects")
     public List<ProjectVO> getProjects(@ApiParam(value = "项目名称") @RequestParam(value = "name", required = false) String name,
-                                       @ApiParam(value = "项目的类型") @RequestParam(value = "public", required = false) Boolean publicStatus,
+                                       @ApiParam(value = "项目的类型") @RequestParam(value = "publicStatus", required = false) Boolean publicStatus,
                                        @ApiParam(value = "项目创建人") @RequestParam(value = "owner", required = false) String owner,
                                        @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
                                        @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
