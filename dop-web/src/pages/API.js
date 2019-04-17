@@ -2,7 +2,7 @@
 
 var host = "http://open.dop.clsaa.com";
 // var host = "http://localhost:8888";
-var pipline = "/pipeline-server";
+var pipeline = "/pipeline-server";
 var application = "/application-server";
 var permission = "/permission-server";
 var code = "/code-server";
@@ -12,7 +12,7 @@ var test = "/test-server";
 const API = {
     address: "http://www.dop.clsaa.com/#/",
     gateway: host,
-    pipeline: host + pipline,
+    pipeline: host + pipeline,
     application: host + application,
     permission: host + permission,
     code: host + code,

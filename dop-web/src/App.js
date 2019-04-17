@@ -4,14 +4,12 @@ import router from './router/router'
 import {RSA} from "./pages/Login";
 import Axios from 'axios';
 import {Feedback} from "@icedesign/base";
-import {Route} from 'react-router-dom';
 
 const {toast} = Feedback;
 
 
 class App extends Component {
     componentWillMount() {
-        let self = this;
         if (window.sessionStorage.getItem('Authorization')) {
             Axios.defaults.headers.common['Authorization'] = "Bearer " + window.sessionStorage.getItem('Authorization');
         }

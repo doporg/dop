@@ -91,14 +91,6 @@ export default class PipelineProject extends Component {
     }
 
     buildPipeline() {
-        // if(!this.state.pipeline.appEnvId){
-        //     toast.show({
-        //         type: "error",
-        //         content: "该流水线尚未绑定环境变量，请前往绑定",
-        //         duration: 3000
-        //     });
-        //     this.props.history.push("/application/environment/detail")
-        // }
         let self = this;
         self.setState({
             visible: true,
