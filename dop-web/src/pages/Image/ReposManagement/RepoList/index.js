@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {Input, Loading, Table} from '@icedesign/base';
+import {Input, Loading, Pagination, Table} from '@icedesign/base';
 import {Grid} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from 'react-router-dom';
+import IceContainer from '@icedesign/container';
 import DeleteRepoDialog from "../DeleteRepoDialog";
-import TopBar from "../TopBar"
+import "../../Style.scss"
+import API from "../../../API";
+import Axios from "axios";
 
 const {Row} = Grid;
 
@@ -17,14 +20,38 @@ export default class RepoList extends Component {
         super(props);
         this.state = {
             currentData: [],
+            current:1,
+            totalCount:0,
             rowSelection: {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
             },
-            pageSize :10,
+            pageSize:10,
             loading: true,
-            refreshRepoList:this.props.refreshList
+            id: this.props.projectId
         };
+
+    }
+
+    refreshList(current) {
+        let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
+        let _this = this;
+        Axios.get(url, {
+            params:{
+                page:current,
+                pageSize: this.state.pageSize,
+            }
+        })
+            .then(function (response) {
+                console.log("镜像仓库信息");
+                console.log(response.data);
+                _this.setState({
+                    currentData: response.data.contents,
+                    totalCount:response.data.totalCount,
+                    loading:false
+                });
+
+            })
 
     }
 
@@ -37,14 +64,20 @@ export default class RepoList extends Component {
         this.setState({rowSelection});
     }
 
-
-    //接收父组件的参数
-    componentWillReceiveProps(nextProps, nextContext) {
+    //分页器监听
+    handleChange(current,e){
+        console.log("pagination",current);
         this.setState({
-            currentData: nextProps.currentData,
-            loading :false
+            current:current
         });
+
+        // this.refreshList(current,this.state.queryKey,this.state.select)
     }
+
+    componentWillMount() {
+        this.refreshList(1)
+    }
+
 
 
     onSearch(value){
@@ -60,22 +93,19 @@ export default class RepoList extends Component {
     render() {
         return (
             <div>
-                <TopBar
-                    extraBefore={
-                        <Input
-                            size="large"
-                            placeholder="请输入关键字进行搜索"
-                            style={{width: '240px'}}
-                            // hasClear
-                            onChange={this.onSearch.bind(this)}
-                        />
-                    }
-                    extraAfter={<DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshRepoList}/>
-                    }
-                />
+                <IceContainer title={"检索条件"}>
+                    <Row wrap>
+                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                    </Row>
+                </IceContainer>
 
-                <Row wrap gutter="20">
-                    <Col>
+                <IceContainer title={"镜像仓库列表"}>
+                    <Row wrap className="headRow">
+                        <Col l="12">
+                            <DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshList.bind(this)}/>
+                        </Col>
+                    </Row>
+                    <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                         <Table dataSource={this.state.currentData}
                                rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
@@ -91,8 +121,14 @@ export default class RepoList extends Component {
                             <Table.Column title="下载数"
                                           dataIndex="pullCount"/>
                         </Table>
-                    </Col>
-                </Row>
+                    </Loading>
+
+                    <Pagination className={"body"}
+                                current={this.state.current}
+                                onChange={this.handleChange.bind(this)}
+                                pageSize={this.state.pageSize}
+                                total={this.state.totalCount}/>
+                </IceContainer>
             </div>
         );
     }

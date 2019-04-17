@@ -1,15 +1,15 @@
 package com.clsaa.dop.server.image.controller;
 
+import com.clsaa.dop.server.image.model.bo.RepositoryBO;
 import com.clsaa.dop.server.image.model.vo.RepositoryVO;
 import com.clsaa.dop.server.image.service.RepositoryService;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import io.swagger.annotations.Api;
+import com.clsaa.dop.server.image.util.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * 用于管理镜像仓库的控制类
@@ -28,7 +28,7 @@ public class RepositoryController {
 
     @ApiOperation(value = "获取某个项目的镜像仓库")
     @GetMapping(value = "/v1/projects/{projectId}/repositories")
-    public List<RepositoryVO> getRepositories(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId") Integer projectId,
+    public Pagination<RepositoryVO> getRepositories(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId") Integer projectId,
                                               @ApiParam(value = "搜索条件") @RequestParam(value = "q", required = false) String q,
                                               @ApiParam(value = "排序方式") @RequestParam(value = "sort", required = false) String sort,
                                               @ApiParam(value = "标签id") @RequestParam(value = "labelId", required = false) Integer labelId,
@@ -36,7 +36,11 @@ public class RepositoryController {
                                               @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "page_size", required = false) Integer pageSize,
                                               @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
-            return BeanUtils.convertList(repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId),RepositoryVO.class);
+        Pagination<RepositoryBO> pagination = repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId);
+        Pagination<RepositoryVO> pagination1 = new Pagination<>();
+        pagination1.setTotalCount(pagination.getTotalCount());
+        pagination1.setContents(BeanUtils.convertList(pagination.getContents(),RepositoryVO.class));
+        return pagination1;
     }
 
     @ApiOperation(value = "删除镜像仓库")
@@ -44,7 +48,6 @@ public class RepositoryController {
     public void deleteRepository(@ApiParam(value = "项目名称") @PathVariable(value = "projectName") String projectName,
                                  @ApiParam(value = "镜像仓库名称") @PathVariable(value = "repoName")String repoName,
                                  @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
-        System.out.println(repoName);
         repositoryService.deleteRepository(projectName,repoName,userId);
     }
 

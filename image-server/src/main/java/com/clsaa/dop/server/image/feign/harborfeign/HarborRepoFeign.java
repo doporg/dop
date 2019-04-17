@@ -30,7 +30,7 @@ public interface HarborRepoFeign {
      * @return {@link List<Repository>}  仓库列表
      */
     @GetMapping(value = "/repositories")
-    List<Repository> repositoriesGet(@RequestParam(value = "project_id") Integer projectId,
+    ResponseEntity<List<Repository>> repositoriesGet(@RequestParam(value = "project_id") Integer projectId,
                                      @RequestParam(value = "q", required = false) String q,
                                      @RequestParam(value = "sort", required = false) String sort,
                                      @RequestParam(value = "label_id", required = false) Integer labelId,
@@ -62,7 +62,7 @@ public interface HarborRepoFeign {
      * @return {@link List<Label>} Label的列表
      */
     @GetMapping(value = "/repositories/{repo_name}/labels")
-    List<Label> repositoriesRepoNameLabelsGet(@PathVariable("repo_name") String repoName,@RequestHeader(value = "Authorization") String auth);
+    ResponseEntity<List<Label>> repositoriesRepoNameLabelsGet(@PathVariable("repo_name") String repoName,@RequestHeader(value = "Authorization") String auth);
 
     /**
      * 为仓库添加label
@@ -90,7 +90,7 @@ public interface HarborRepoFeign {
      * @return {@link List<DetailedTag>} 对应的tag列表
      */
     @GetMapping(value = "/repositories/{repo_name}/tags")
-    List<DetailedTag> repositoriesRepoNameTagsGet(@PathVariable("repo_name") String repoName, @RequestParam(value = "label_ids", required = false) String labelIds,@RequestHeader(value = "Authorization") String auth);
+    ResponseEntity<List<DetailedTag>> repositoriesRepoNameTagsGet(@PathVariable("repo_name") String repoName, @RequestParam(value = "label_ids", required = false) String labelIds,@RequestHeader(value = "Authorization") String auth);
 
 
     /**

@@ -17,3 +17,18 @@
 .button{
   margin-left: 10px;
 }
+
+.repoName{
+  margin-bottom: 15px;
+  margin-left: 20px;
+  font-size: x-large;
+  font-weight: 500;
+  color: rgba(0, 0, 0,.85);
+}
+
+.body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

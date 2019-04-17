@@ -53,17 +53,27 @@ public class ProjectService {
 
         Pagination<ProjectBO> pagination = new Pagination<>();
         List<Project> projects = responseEntity.getBody();
-        int count = Integer.parseInt(responseEntity.getHeaders().get("X-Total-Count").get(0));
-        List<ProjectBO> projectBOS = new ArrayList<>();
+        List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");
+        int count = 0;
+        if (httpHeader!=null){
+            count = Integer.parseInt(httpHeader.get(0));
+        }
+
         pagination.setTotalCount(count);
         if (count==0){
             pagination.setContents(Collections.emptyList());
             return  pagination;
         }else {
-            for(Project project:projects){
-                ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
-                projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
-                projectBOS.add(projectBO);
+            List<ProjectBO> projectBOS = new ArrayList<>();
+            if (projects!=null){
+                for(Project project:projects){
+                    ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
+                    projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
+                    if (project.getCurrentUserRoleId()==1) {
+                        projectBO.setCurrentUserRole("命名空间管理员");
+                    }
+                    projectBOS.add(projectBO);
+                }
             }
             pagination.setContents(projectBOS);
             return pagination;

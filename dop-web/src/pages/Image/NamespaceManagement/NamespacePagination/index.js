@@ -31,7 +31,6 @@ export default class NamespacePagination extends Component {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
             },
-            //总页数
             pageSize :10,
             totalCount: 0,
             queryKey: "",
@@ -52,20 +51,12 @@ export default class NamespacePagination extends Component {
 
     //获取最新数据并刷新
     refreshList(current, searchKey,select) {
-        let countUrl = API.image + '/v1/statistics';
+
         let url = API.image + '/v1/projects';
         let _this = this;
+
         if (searchKey===""){
             if (select==='private'){
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("私有命名空间统计");
-                        console.log(response.data.privateProjectCount)
-                        _this.setState({
-                            totalCount:response.data.privateProjectCount
-                        })
-                    })
-                //获取数据
                 Axios.get(url, {
                     params:{
                         page:current,
@@ -78,28 +69,13 @@ export default class NamespacePagination extends Component {
                         console.log("私有镜像信息");
                         console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
                     })
             } else if (select==='public'){
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("公开命名空间统计");
-                        console.log(response.data.publicProjectCount)
-                        _this.setState({
-                            totalCount:response.data.publicProjectCount
-                        })
-                    }).catch(function (errors) {
-                    console.log(errors)
-                    _this.setState({
-                        current:1,
-                        currentData:[],
-                        loading:false
-                    })
-                })
-                //获取数据
                 Axios.get(url, {
                     params:{
                         page:current,
@@ -112,22 +88,14 @@ export default class NamespacePagination extends Component {
                         console.log("公开命名空间信息");
                         console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
                     })
             }else {
-                //获取数量
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("统计信息");
-                        console.log(response.data.publicProjectCount+response.data.privateProjectCount);
-                        _this.setState({
-                            totalCount:response.data.publicProjectCount+response.data.privateProjectCount
-                        })
-                    })
-                //获取数据
+
                 Axios.get(url, {
                     params:{
                         page:current,
@@ -138,7 +106,8 @@ export default class NamespacePagination extends Component {
                     .then(function (response) {
                         console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
@@ -146,21 +115,13 @@ export default class NamespacePagination extends Component {
             }
         } else {
             if (select==='private'){
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("私有命名空间统计");
-                        console.log(response.data.privateProjectCount)
-                        _this.setState({
-                            totalCount:response.data.privateProjectCount
-                        })
-                    })
                 //获取数据
                 Axios.get(url, {
                     params:{
                         page:current,
                         pageSize: this.state.pageSize,
                         publicStatus:false,
-                        name:_this.state.queryKey
+                        name:searchKey
                     }
 
                 })
@@ -168,34 +129,20 @@ export default class NamespacePagination extends Component {
                         console.log("私有镜像信息");
                         console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
                     })
             } else if (select==='public'){
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("公开命名空间统计");
-                        console.log(response.data.publicProjectCount)
-                        _this.setState({
-                            totalCount:response.data.publicProjectCount
-                        })
-                    }).catch(function (errors) {
-                    console.log(errors)
-                    _this.setState({
-                        current:1,
-                        currentData:[],
-                        loading:false
-                    })
-                })
                 //获取数据
                 Axios.get(url, {
                     params:{
                         page:current,
                         pageSize: this.state.pageSize,
                         publicStatus:true,
-                        name:_this.state.queryKey
+                        name:searchKey
                     }
 
                 })
@@ -203,34 +150,26 @@ export default class NamespacePagination extends Component {
                         console.log("公开命名空间信息");
                         console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
                     })
             }else {
-                //获取数量
-                Axios.get(countUrl, {})
-                    .then(function (response) {
-                        console.log("统计信息");
-                        console.log(response.data.publicProjectCount+response.data.privateProjectCount);
-                        _this.setState({
-                            totalCount:response.data.publicProjectCount+response.data.privateProjectCount
-                        })
-                    })
                 //获取数据
                 Axios.get(url, {
                     params:{
                         page:current,
                         pageSize: this.state.pageSize,
-                        name:_this.state.queryKey
+                        name:searchKey
                     }
 
                 })
                     .then(function (response) {
-                        console.log(response.data);
                         _this.setState({
-                            currentData: response.data,
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
                             loading: false,
                             current: current
                         });
@@ -248,17 +187,14 @@ export default class NamespacePagination extends Component {
     //搜索框内容变化
     onSearch(value) {
         console.log("search ",value);
-        this.setState({
-            queryKey:value
-        })
-        this.refreshList(1,value);
+        this.refreshList(1,value,this.state.select);
     }
 
     //分页器监听
     handleChange(current,e){
         this.setState({
             current:current
-        })
+        });
         this.refreshList(current,this.state.queryKey,this.state.select)
     }
 
@@ -266,8 +202,8 @@ export default class NamespacePagination extends Component {
     changeSelection(value){
         this.setState({
             select:value
-        })
-       this.refreshList(this.state.current,"",value)
+        });
+       this.refreshList(1,this.state.queryKey,value)
     }
 
 
@@ -281,7 +217,7 @@ export default class NamespacePagination extends Component {
         if (value==="true"){
             return <Switch onChange={(checked)=>{
                 let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -306,7 +242,7 @@ export default class NamespacePagination extends Component {
             return <Switch onChange={(checked)=>
             {
                 let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -363,6 +299,9 @@ export default class NamespacePagination extends Component {
 
                             <Table.Column title="命名空间名称"
                                           dataIndex="name"/>
+
+                            <Table.Column title="角色"
+                                          dataIndex="currentUserRole"/>
 
                             <Table.Column title="私有/公开"
                                           dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>

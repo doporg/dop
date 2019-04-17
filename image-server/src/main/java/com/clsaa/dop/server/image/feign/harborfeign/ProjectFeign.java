@@ -94,7 +94,7 @@ public interface ProjectFeign {
      * @return 对于项目的访问日志
      */
     @GetMapping(value = "/projects/{project_id}/logs")
-    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
+    ResponseEntity<List<AccessLog>> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
                                              @RequestParam(value = "username", required = false) String username,
                                              @RequestParam(value = "repository", required = false) String repository,
                                              @RequestParam(value = "tag", required = false) String tag,
@@ -168,7 +168,7 @@ public interface ProjectFeign {
      * @return {@link List<ProjectMemberEntity>} 项目人员的列表
      */
     @GetMapping(value = "/projects/{project_id}/members")
-    List<ProjectMemberEntity> projectsProjectIdMembersGet(@PathVariable("project_id") Long projectId,
+    ResponseEntity<List<ProjectMemberEntity>> projectsProjectIdMembersGet(@PathVariable("project_id") Long projectId,
                                                           @RequestParam(value = "entityname", required = false) String entityname,
                                                           @RequestHeader(value = "Authorization") String auth);
 

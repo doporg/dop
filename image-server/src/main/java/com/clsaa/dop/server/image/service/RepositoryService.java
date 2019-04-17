@@ -5,11 +5,16 @@ import com.clsaa.dop.server.image.feign.harborfeign.HarborRepoFeign;
 import com.clsaa.dop.server.image.model.bo.RepositoryBO;
 import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
 import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
+import com.clsaa.dop.server.image.model.po.Repository;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import com.clsaa.dop.server.image.util.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,10 +46,37 @@ public class RepositoryService {
      * @param userId 用户id
      * @return {@link List<RepositoryBO>} 镜像仓库的列表
      */
-    public List<RepositoryBO> getRepositories(Integer projectId, String q, String sort, Integer labelId, Integer page, Integer pageSize, Long userId){
+    public Pagination<RepositoryBO> getRepositories(Integer projectId, String q, String sort, Integer labelId, Integer page, Integer pageSize, Long userId){
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        return BeanUtils.convertList(harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth),RepositoryBO.class);
+
+        ResponseEntity<List<Repository>> responseEntity = harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth);
+        List<Repository> repositories = responseEntity.getBody();
+
+        int count = 0;
+        List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");
+        if (httpHeader!=null){
+            count = Integer.parseInt(httpHeader.get(0));
+        }
+
+        Pagination<RepositoryBO> pagination = new Pagination<>();
+        pagination.setTotalCount(count);
+
+
+        if (count==0){
+            pagination.setContents(Collections.emptyList());
+            return pagination;
+        }else {
+            List<RepositoryBO> repositoryBOS = new ArrayList<>();
+            if (repositories!=null){
+                for (Repository repository:repositories){
+                    RepositoryBO repositoryBO = BeanUtils.convertType(repository,RepositoryBO.class);
+                    repositoryBOS.add(repositoryBO);
+                }
+            }
+            pagination.setContents(repositoryBOS);
+            return pagination;
+        }
     }
 
     /**
