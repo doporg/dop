@@ -51,14 +51,14 @@ class CodeAside extends Component {
                     <span className="ice-menu-item-text">{"项目"}</span>
                 </Link>
             </MenuItem>
-            <MenuItem key={groupsLink}>
-                <Link to={groupsLink} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="fans" >
-                        <Icon size="small" type="fans" />
-                    </FoundationSymbol>
-                    <span className="ice-menu-item-text">{"小组"}</span>
-                </Link>
-            </MenuItem>
+            {/*<MenuItem key={groupsLink}>*/}
+                {/*<Link to={groupsLink} className="ice-menu-link">*/}
+                    {/*<FoundationSymbol size="small" type="fans" >*/}
+                        {/*<Icon size="small" type="fans" />*/}
+                    {/*</FoundationSymbol>*/}
+                    {/*<span className="ice-menu-item-text">{"小组"}</span>*/}
+                {/*</Link>*/}
+            {/*</MenuItem>*/}
             <MenuItem key={sshLink}>
                 <Link to={sshLink} className="ice-menu-link">
                     <FoundationSymbol size="small" type="key" >
