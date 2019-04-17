@@ -1,59 +1,63 @@
-.loading-new-project{
-    width: 100%;
-}
-.new-project-container{
+.new-branch-container{
     background-color: rgb(255, 255, 255);
 }
 
-.div-new-project-top{
+.loading-new-branch{
+    width: 85%;
+}
+
+.creating-new-branch{
+    width: 100%;
+}
+
+.div-new-branch-top{
     font-weight: bold;
     font-size: 17px;
     line-height: 60px;
     height: 60px;
     padding-left: 20px;
     border-bottom: 1px solid #e8e8e8;
-    margin-bottom: 15px;
 }
 
-.div-new-project-input{
-    padding: 15px 50px;
+.div-new-branch-input{
     display: flex;
+    align-items: center;
+    padding: 20px;
     justify-content: center;
 }
 
-.div-new-project-visibility{
+.input-new-branch-name{
+    height: 30px;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
     width: 85%;
 }
 
-.label-new-project-left{
+.text-new-branch-name{
+    text-align: right;
+    padding-right: 30px;
+    line-height: 40px;
     width: 15%;
-    height: 40px;
-    font-size: 15px;
-    text-align: center;
 }
 
-.input-new-project-name{
-    width: 85%;
-    height: 40px;
-    border-radius: 2px;
-    border: 1px solid #e2e2e2;
-
+.text-new-branch-source{
+    text-align: right;
+    padding-right: 30px;
+    line-height: 40px;
+    width: 15%;
 }
 
-.input-new-project-description{
-    width: 85%;
-    height: 80px;
-    border-radius: 2px;
-    border: 1px solid #e2e2e2;
+.select-new-branch{
+    width: 100%;
 }
 
-.div-new-project-submit{
+.div-new-branch-submit{
     height: 80px;
     background-color: #fbfbfb;
     border-top: 1px solid #e8e8e8;
 }
 
-.btn-new-project-create{
+.btn-new-branch-add{
     margin-top: 20px;
     float: left;
     background-color: #31af64;
@@ -66,7 +70,7 @@
     font-size: 13px;
 }
 
-.btn-new-project-cancel{
+.btn-new-branch-cancel{
     margin-top: 20px;
     margin-right: 20px;
     float: right;

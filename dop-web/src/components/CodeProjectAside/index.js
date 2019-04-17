@@ -2,12 +2,21 @@
 import React, { Component } from 'react';
 import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
-import FoundationSymbol from 'foundation-symbol';
 import { Icon } from '@icedesign/base';
 import Axios from 'axios';
 import API from "../../pages/API";
 
 import './index.scss';
+
+
+import imgBack from './imgs/back.png';
+import imgProject from './imgs/project.png';
+import imgFile from './imgs/file.png';
+import imgCommit from './imgs/commit.png';
+import imgBranch from './imgs/branch.png';
+import imgTag from './imgs/tag.png';
+import imgEdit from './imgs/edit.png';
+
 
 // @withRouter
 
@@ -81,9 +90,13 @@ class CodeProjectAside extends Component {
     const { username,projectname} = this.state;
 
 
-    const backLink="/code/projects";
+    const backLink="/code/projects/personal";
 
     const projectLink="/code/"+username+"/"+projectname;
+    const branchLink="/code/"+username+"/"+projectname+"/branches";
+    const tagLink="/code/"+username+"/"+projectname+"/tags";
+
+    const editLink="/code/"+username+"/"+projectname+"/edit";
 
 
 
@@ -91,35 +104,45 @@ class CodeProjectAside extends Component {
         <Menu mode="inline" selectedKeys={[pathname]} className="ice-menu-custom">
             <MenuItem key={backLink}>
                 <Link to={backLink} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="backward" >
-                        <Icon size="small" type="backward" />
-                    </FoundationSymbol>
+                    <img src={imgBack}/>
                     <span className="ice-menu-item-text">{"返回"}</span>
                 </Link>
             </MenuItem>
             <MenuItem key={projectLink}>
                 <Link to={projectLink} className="ice-menu-link">
-                        <FoundationSymbol size="small" type="directory" >
-                            <Icon size="small" type="directory" />
-                        </FoundationSymbol>
+                        <img src={imgProject}/>
                     <span className="ice-menu-item-text">{"项目"}</span>
                 </Link>
             </MenuItem>
             <MenuItem>
                 <a onClick={this.getBranchAndJump.bind(this,this.fileLink.bind(this))} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="copy" >
-                        <Icon size="small" type="copy" />
-                    </FoundationSymbol>
+                    <img src={imgFile}/>
                     <span className="ice-menu-item-text">{"文件"}</span>
                 </a>
             </MenuItem>
             <MenuItem>
                 <a onClick={this.getBranchAndJump.bind(this,this.commitLink.bind(this))} className="ice-menu-link">
-                    <FoundationSymbol size="small" type="edit2" >
-                        <Icon size="small" type="edit2" />
-                    </FoundationSymbol>
+                    <img src={imgCommit}/>
                     <span className="ice-menu-item-text">{"提交"}</span>
                 </a>
+            </MenuItem>
+            <MenuItem key={branchLink}>
+                <Link to={branchLink} className="ice-menu-link">
+                    <img src={imgBranch}/>
+                    <span className="ice-menu-item-text">{"分支"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={tagLink}>
+                <Link to={tagLink} className="ice-menu-link">
+                    <img src={imgTag}/>
+                    <span className="ice-menu-item-text">{"标签"}</span>
+                </Link>
+            </MenuItem>
+            <MenuItem key={editLink}>
+                <Link to={editLink} className="ice-menu-link">
+                    <img src={imgEdit}/>
+                    <span className="ice-menu-item-text">{"设置"}</span>
+                </Link>
             </MenuItem>
         </Menu>
     );

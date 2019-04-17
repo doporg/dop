@@ -5,6 +5,11 @@
     padding-top: 1px;
 }
 
+.loading-project-list{
+    width: 100%;
+    min-height: 400px;
+}
+
 .center-top-menu{
     display: flex;
     justify-content: center;
@@ -104,6 +109,10 @@
 .list-item-intro div{
     height: 20px;
     line-height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .text_description{

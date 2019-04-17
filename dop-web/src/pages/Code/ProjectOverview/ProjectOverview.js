@@ -144,69 +144,69 @@ class ProjectOverview extends React.Component{
         return (
 
             <div className="project-container">
-                <div className="div-intro">
+                <div className="div-project">
                     {
                         (() =>{
                             if(projectInfo.visibility==="public"){
                                 return (
-                                    <button className="btn btn_visibility">
+                                    <button className="btn-project btn-project-visibility">
                                         <img src={imgPublic}/>PUBLIC
                                     </button>
                                 )
                             }else {
                                 return (
-                                    <button className="btn btn_visibility">
+                                    <button className="btn-project btn-project-visibility">
                                         <img src={imgPrivate}/>PRIVATE
                                     </button>
                                 )
                             }
                         })()
                     }
-                    <button className="btn btn_edit" onClick={this.editProjectLink.bind(this)}>
+                    <button className="btn-project btn-project-edit" onClick={this.editProjectLink.bind(this)}>
                         <img src={imgEdit}/>
                     </button>
-                    <div className="project_avatar">
+                    <div className="div-project-avatar">
                         {projectInfo.name.substring(0,1).toUpperCase()}
                     </div>
 
-                    <div>
-                        <p className="text_title">{projectInfo.name}</p>
-                        <p className="text_description">{projectInfo.description}</p>
+                    <div className="div-project-intro">
+                        <p className="text-project-title">{projectInfo.name}</p>
+                        <p className="text-project-description">{projectInfo.description}</p>
                     </div>
 
-                    <div className="div1">
-                        <button className="btn btn_star" onClick={this.star.bind(this)}>
+                    <div className="div-project-1">
+                        <button className="btn-project btn-project-star" onClick={this.star.bind(this)}>
                             <img src={imgStar}/>{projectInfo.star_count}
                         </button>
-                        <button className="btn btn_fork">
+                        <button className="btn-project btn-project-fork">
                             <img src={imgFork}/>{projectInfo.forks_count}
                         </button>
 
-                        <button className="btn btn_ssh" onClick={this.changeSSH.bind(this)}>
+                        <button className="btn-project btn-project-ssh" onClick={this.changeSSH.bind(this)}>
                             SSH
                         </button>
-                        <button className="btn btn_http" onClick={this.changeHttp.bind(this)}>
+                        <button className="btn-project btn-project-http" onClick={this.changeHttp.bind(this)}>
                             HTTP
                         </button>
-                        <input className="input_url" type="text" value={this.state.url}/>
+                        <input className="input-project-url" type="text" value={this.state.url}/>
 
-                        <button className="btn btn_copy" onClick={this.copyUrl.bind(this)}>
+                        <button className="btn-project btn-project-copy" onClick={this.copyUrl.bind(this)}>
                             <img src={imgCopy}/>
                         </button>
-                        <button onClick={this.downLoadZipLink.bind(this)} className="btn btn_download">
+                        <button onClick={this.downLoadZipLink.bind(this)} className="btn-project btn-project-download">
                             <img src={imgDownload}/>
                         </button>
                     </div>
 
-                    <div className="div2">
+                    <div className="div-project-2">
                         <span>{projectInfo.commit_count}次提交</span>
                         <span>{projectInfo.branch_count}个分支</span>
                         <span>{projectInfo.tag_count}个标签</span>
                         <span>{projectInfo.file_size}</span>
                     </div>
                 </div>
-                <Loading className="loading-md" visible={this.state.loadingVisible} tip={spinner}>
-                    <div className="div-md">
+                <Loading className="loading-project-md" visible={this.state.loadingVisible} tip={spinner}>
+                    <div className="div-project-md">
                         {
                             (()=>{
                                 if(this.state.readmeInfo.file_name !== null){

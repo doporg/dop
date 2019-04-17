@@ -55,7 +55,7 @@ const asideMenuConfig = [
 
     {
         name: '代码管理',
-        path: '/code/projects',
+        path: '/code/projects/personal',
         icon: 'code',
     },
     {
