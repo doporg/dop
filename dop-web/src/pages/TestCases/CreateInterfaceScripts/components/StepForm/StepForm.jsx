@@ -25,17 +25,47 @@ class StepForm extends Component {
 
   constructor(props) {
     super(props);
+    const case_Id = this.props.match.params.caseId;
     this.state = {
       step: 0,
-      stages: [],
-      caseId: this.props.match.params.caseId,
+      caseId: case_Id,
+      stages: [
+        {
+          caseId: case_Id,
+          operations: [],
+          stage: 'PREPARE',
+          requestScripts: [],
+          waitOperations: []
+        },
+        {
+          caseId: case_Id,
+          operations: [],
+          stage: 'TEST',
+          requestScripts: [],
+          waitOperations: []
+        },
+        {
+          caseId: case_Id,
+          operations: [],
+          stage: 'DESTROY',
+          requestScripts: [],
+          waitOperations: []
+        }
+      ],
       finish: false
     };
   }
 
   nextStep = (stage) => {
-    this.state.stages.push(stage);
     let newStep = this.state.step + 1;
+    this.setState({
+      step: newStep,
+      stages: this.state.stages
+    });
+  };
+
+  lastStep = (stage) => {
+    let newStep = this.state.step - 1;
     this.setState({
       step: newStep,
       stages: this.state.stages
@@ -65,15 +95,18 @@ class StepForm extends Component {
 
   renderStep = (step) => {
     if (step === 0) {
-      return <RequestStageForm onSubmit={this.nextStep.bind(this)} stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+                               stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 1) {
-      return <RequestStageForm onSubmit={this.nextStep.bind(this)} stage='TEST' caseId={this.state.caseId} sSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+                               stage='TEST' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 2) {
-      return <RequestStageForm onSubmit={this.postToServer.bind(this)} stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.postToServer.bind(this)}  onLast={this.lastStep.bind(this)}
+                               stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
     }
   };
 

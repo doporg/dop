@@ -35,13 +35,8 @@ export default class RequestStageForm extends Component{
         super(props);
         this.state = {
             isSubmit: this.props.isSubmit,
-            value: {
-                caseId: this.props.caseId,
-                operations: [],
-                stage: this.props.stage,
-                requestScripts: [],
-                waitOperations: []
-            }
+            value: this.props.data,
+            stage: this.props.stage
         };
     }
 
@@ -123,35 +118,49 @@ export default class RequestStageForm extends Component{
     };
 
     submit = () => {
-        this.setState({
-            isSubmit: true,
-            value: this.state.value
-        });
-
         this.props.onSubmit(this.state.value);
+    };
 
+    lastStep = () => {
         // this.setState({
-        //     isSubmit: false,
-        //     value: {
-        //         operations: [],
-        //         stage: this.props.stage,
-        //         requestScripts: [],
-        //         waitOperations: []
-        //     }
-        // });
+        //
+        // })
+        this.props.onLast(this.state.value);
+    };
+
+    renderLastStep = (stage) => {
+        if (stage !== 'PREPARE') {
+            return (
+                <Button onClick={this.lastStep.bind(this)} type="primary">
+                    上一步
+                </Button>
+            );
+        }
+    };
+
+    renderNextStep = (stage) => {
+        if (stage !== 'DESTROY') {
+            return (
+                <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
+                    下一步
+                </Button>
+            );
+        }else {
+            return (
+                <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
+                    保存
+                </Button>
+            );
+        }
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        this.setState({
-            isSubmit: nextProps.isSubmit,
-            value: {
-                caseId: this.state.value.caseId,
-                operations: [],
-                stage: nextProps.stage,
-                requestScripts: [],
-                waitOperations: []
-            }
-        });
+        if (nextProps.stage !== this.props.stage) {
+            this.setState({
+                isSubmit: nextProps.isSubmit,
+                value: nextProps.data
+            });
+        }
     }
 
 
@@ -174,10 +183,10 @@ export default class RequestStageForm extends Component{
                 />
 
                 <Row>
-                    <Col offset={3} style={styles.btns}>
-                        <Button onClick={this.submit.bind(this)} type="primary">
-                            下一步
-                        </Button>
+                    <Col offset={9} style={styles.btns}>
+                        {this.renderLastStep(this.props.stage)}
+
+                        {this.renderNextStep(this.props.stage)}
                     </Col>
                 </Row>
             </div>
