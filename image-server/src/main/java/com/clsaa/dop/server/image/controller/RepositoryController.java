@@ -33,7 +33,7 @@ public class RepositoryController {
                                               @ApiParam(value = "排序方式") @RequestParam(value = "sort", required = false) String sort,
                                               @ApiParam(value = "标签id") @RequestParam(value = "labelId", required = false) Integer labelId,
                                               @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
-                                              @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                              @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                               @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
         Pagination<RepositoryBO> pagination = repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId);

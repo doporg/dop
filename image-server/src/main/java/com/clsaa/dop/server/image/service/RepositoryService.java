@@ -52,6 +52,7 @@ public class RepositoryService {
 
         ResponseEntity<List<Repository>> responseEntity = harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth);
         List<Repository> repositories = responseEntity.getBody();
+        System.out.println(repositories.size());
 
         int count = 0;
         List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");
@@ -68,11 +69,9 @@ public class RepositoryService {
             return pagination;
         }else {
             List<RepositoryBO> repositoryBOS = new ArrayList<>();
-            if (repositories!=null){
-                for (Repository repository:repositories){
-                    RepositoryBO repositoryBO = BeanUtils.convertType(repository,RepositoryBO.class);
-                    repositoryBOS.add(repositoryBO);
-                }
+            for (Repository repository:repositories){
+                RepositoryBO repositoryBO = BeanUtils.convertType(repository,RepositoryBO.class);
+                repositoryBOS.add(repositoryBO);
             }
             pagination.setContents(repositoryBOS);
             return pagination;

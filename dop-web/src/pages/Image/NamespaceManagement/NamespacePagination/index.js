@@ -68,12 +68,22 @@ export default class NamespacePagination extends Component {
                     .then(function (response) {
                         console.log("私有镜像信息");
                         console.log(response.data);
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+
                     })
             } else if (select==='public'){
                 Axios.get(url, {
@@ -87,12 +97,22 @@ export default class NamespacePagination extends Component {
                     .then(function (response) {
                         console.log("公开命名空间信息");
                         console.log(response.data);
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+
                     })
             }else {
 
@@ -105,12 +125,21 @@ export default class NamespacePagination extends Component {
                 })
                     .then(function (response) {
                         console.log(response.data);
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
                     })
             }
         } else {
@@ -128,12 +157,21 @@ export default class NamespacePagination extends Component {
                     .then(function (response) {
                         console.log("私有镜像信息");
                         console.log(response.data);
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
                     })
             } else if (select==='public'){
                 //获取数据
@@ -149,12 +187,21 @@ export default class NamespacePagination extends Component {
                     .then(function (response) {
                         console.log("公开命名空间信息");
                         console.log(response.data);
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
                     })
             }else {
                 //获取数据
@@ -167,12 +214,21 @@ export default class NamespacePagination extends Component {
 
                 })
                     .then(function (response) {
-                        _this.setState({
-                            currentData: response.data.contents,
-                            totalCount:response.data.totalCount,
-                            loading: false,
-                            current: current
-                        });
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.contents,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
                     })
             }
         }

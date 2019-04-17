@@ -28,30 +28,64 @@ export default class RepoList extends Component {
             },
             pageSize:10,
             loading: true,
-            id: this.props.projectId
+            id: this.props.projectId,
+            queryKey:""
         };
 
     }
 
-    refreshList(current) {
+    refreshList(current,queryKey) {
         let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
         let _this = this;
-        Axios.get(url, {
-            params:{
-                page:current,
-                pageSize: this.state.pageSize,
-            }
-        })
-            .then(function (response) {
-                console.log("镜像仓库信息");
-                console.log(response.data);
-                _this.setState({
-                    currentData: response.data.contents,
-                    totalCount:response.data.totalCount,
-                    loading:false
-                });
 
+        if (queryKey===""){
+            //不存在搜索条件
+            Axios.get(url, {
+                params:{
+                    page:current,
+                    pageSize: this.state.pageSize,
+                }
             })
+                .then(function (response) {
+                    console.log("镜像仓库信息");
+                    console.log(response.data);
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    } else {
+                        _this.setState({
+                            currentData:[],
+                            totalCount:0,
+                            loading:false,
+                        })
+                    }
+                }).catch(function (errors) {
+                    console.log("error")
+            })
+        } else {
+            //存在搜索条件
+            Axios.get(url, {
+                params:{
+                    page:current,
+                    pageSize: this.state.pageSize,
+                    q:queryKey
+                }
+            })
+                .then(function (response) {
+                    console.log("镜像仓库信息");
+                    console.log(response.data);
+                    _this.setState({
+                        currentData: response.data.contents,
+                        totalCount:response.data.totalCount,
+                        loading:false
+                    });
+
+                })
+        }
+
 
     }
 
@@ -70,18 +104,21 @@ export default class RepoList extends Component {
         this.setState({
             current:current
         });
-
-        // this.refreshList(current,this.state.queryKey,this.state.select)
+        this.refreshList(current,this.state.queryKey)
     }
 
     componentWillMount() {
-        this.refreshList(1)
+        this.refreshList(1,this.state.queryKey)
     }
 
 
 
     onSearch(value){
-
+        console.log("search",value);
+        this.setState({
+            queryKey:value
+        });
+        this.refreshList(this.state.current,value)
     }
 
     nameRender=(value, index, record)=> {
