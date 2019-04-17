@@ -1,19 +1,17 @@
 package com.clsaa.dop.server.image.controller;
 
+import com.clsaa.dop.server.image.model.bo.ProjectBO;
 import com.clsaa.dop.server.image.model.dto.ProjectDto1;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
-import com.clsaa.dop.server.image.model.po.PublicStatus;
 import com.clsaa.dop.server.image.model.vo.ProjectVO;
 import com.clsaa.dop.server.image.service.ProjectService;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import io.swagger.annotations.Api;
+import com.clsaa.dop.server.image.util.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * <p>
@@ -34,13 +32,17 @@ public class ProjectController {
 
     @ApiOperation(value = "获取项目列表信息",notes = "根据权限的不同访问项目列表信息")
     @GetMapping("/v1/projects")
-    public List<ProjectVO> getProjects(@ApiParam(value = "项目名称") @RequestParam(value = "name", required = false) String name,
-                                       @ApiParam(value = "项目的类型") @RequestParam(value = "publicStatus", required = false) Boolean publicStatus,
-                                       @ApiParam(value = "项目创建人") @RequestParam(value = "owner", required = false) String owner,
-                                       @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
-                                       @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                       @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
-        return BeanUtils.convertList(projectService.getProjects(name,publicStatus,owner,page,pageSize,userId),ProjectVO.class);
+    public Pagination<ProjectVO> getProjects(@ApiParam(value = "项目名称") @RequestParam(value = "name", required = false) String name,
+                                             @ApiParam(value = "项目的类型") @RequestParam(value = "publicStatus", required = false) Boolean publicStatus,
+                                             @ApiParam(value = "项目创建人") @RequestParam(value = "owner", required = false) String owner,
+                                             @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
+                                             @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                             @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        Pagination<ProjectBO> projectBOPagination = projectService.getProjects(name,publicStatus,owner,page,pageSize,userId);
+        Pagination<ProjectVO> pagination = new Pagination<>();
+        pagination.setContents(BeanUtils.convertList(projectBOPagination.getContents(),ProjectVO.class));
+        pagination.setTotalCount(projectBOPagination.getTotalCount());
+        return pagination;
     }
 
     @ApiOperation(value = "获取某个项目的基本信息",notes = "需要给出项目的id进行查询，返回项目对象，不存在返回null")

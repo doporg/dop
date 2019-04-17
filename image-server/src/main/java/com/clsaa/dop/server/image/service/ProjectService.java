@@ -10,14 +10,17 @@ import com.clsaa.dop.server.image.model.po.Project;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.po.ProjectReq;
 import com.clsaa.dop.server.image.model.po.PublicStatus;
+import com.clsaa.dop.server.image.model.vo.ProjectVO;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
+import com.clsaa.dop.server.image.util.Pagination;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,20 +46,27 @@ public class ProjectService {
      * @param pageSize 页大小
      * @return {@link List<ProjectBO>} 项目信息列表
      */
-    public List<ProjectBO> getProjects(String name,Boolean publicStatus,String owner,Integer page,Integer pageSize,Long userId){
+    public Pagination<ProjectBO> getProjects(String name, Boolean publicStatus, String owner, Integer page, Integer pageSize, Long userId){
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        List<Project> projects = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
+        ResponseEntity<List<Project>> responseEntity = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
+
+        Pagination<ProjectBO> pagination = new Pagination<>();
+        List<Project> projects = responseEntity.getBody();
+        int count = Integer.parseInt(responseEntity.getHeaders().get("X-Total-Count").get(0));
         List<ProjectBO> projectBOS = new ArrayList<>();
-        if (projects.size()==0){
-            return  null;
+        pagination.setTotalCount(count);
+        if (count==0){
+            pagination.setContents(Collections.emptyList());
+            return  pagination;
         }else {
             for(Project project:projects){
                 ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
                 projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
                 projectBOS.add(projectBO);
             }
-            return projectBOS;
+            pagination.setContents(projectBOS);
+            return pagination;
         }
     }
 

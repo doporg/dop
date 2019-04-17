@@ -3,6 +3,7 @@ package com.clsaa.dop.server.image.feign.harborfeign;
 import com.clsaa.dop.server.image.config.FeignConfig;
 import com.clsaa.dop.server.image.model.po.*;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public interface ProjectFeign {
      * @return {@link List<Project>} 项目的列表类型
      */
     @GetMapping(value = "/projects")
-    List<Project> projectsGet(@RequestParam(value = "name", required = false) String name,
-                              @RequestParam(value = "public", required = false) Boolean publicStatus,
-                              @RequestParam(value = "owner", required = false) String owner,
-                              @RequestParam(value = "page", required = false) Integer page,
-                              @RequestParam(value = "page_size", required = false) Integer pageSize,
-                              @RequestHeader(value = "Authorization") String auth);
+    ResponseEntity<List<Project>> projectsGet(@RequestParam(value = "name", required = false) String name,
+                                             @RequestParam(value = "public", required = false) Boolean publicStatus,
+                                             @RequestParam(value = "owner", required = false) String owner,
+                                             @RequestParam(value = "page", required = false) Integer page,
+                                             @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                             @RequestHeader(value = "Authorization") String auth);
 
     /**
      * 根据项目id返回 Project

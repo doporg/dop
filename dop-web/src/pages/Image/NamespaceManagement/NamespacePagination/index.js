@@ -352,25 +352,28 @@ export default class NamespacePagination extends Component {
                             <DeleteNameSpaceDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshProjectList={this.refreshList.bind(this)}/>
                         </Col>
                     </Row>
-                    <Table dataSource={this.state.currentData}
-                           rowSelection={this.state.rowSelection}
-                           isLoading={this.state.isLoading}
-                           primaryKey='projectId'>
-                        <Table.Column cell={this.idRender}
-                                      title="命名空间ID"
-                                      dataIndex="projectId"/>
+                    <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
+                        <Table dataSource={this.state.currentData}
+                               rowSelection={this.state.rowSelection}
+                               isLoading={this.state.isLoading}
+                               primaryKey='projectId'>
+                            <Table.Column cell={this.idRender}
+                                          title="命名空间ID"
+                                          dataIndex="projectId"/>
 
-                        <Table.Column title="命名空间名称"
-                                      dataIndex="name"/>
+                            <Table.Column title="命名空间名称"
+                                          dataIndex="name"/>
 
-                        <Table.Column title="私有/公开"
-                                      dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>
+                            <Table.Column title="私有/公开"
+                                          dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>
 
-                        <Table.Column title="镜像仓库数量"
-                                      dataIndex="repoCount"/>
-                        <Table.Column title="创建时间"
-                                      dataIndex="creationTime"/>
-                    </Table>
+                            <Table.Column title="镜像仓库数量"
+                                          dataIndex="repoCount"/>
+                            <Table.Column title="创建时间"
+                                          dataIndex="creationTime"/>
+                        </Table>
+                    </Loading>
+
                     <Pagination style={styles.body}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
