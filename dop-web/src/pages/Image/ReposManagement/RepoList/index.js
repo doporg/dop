@@ -77,11 +77,19 @@ export default class RepoList extends Component {
                 .then(function (response) {
                     console.log("镜像仓库信息");
                     console.log(response.data);
-                    _this.setState({
-                        currentData: response.data.contents,
-                        totalCount:response.data.totalCount,
-                        loading:false
-                    });
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            currentData: response.data.contents,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    } else {
+                        _this.setState({
+                            currentData:[],
+                            totalCount:0,
+                            loading:false,
+                        })
+                    }
 
                 })
         }

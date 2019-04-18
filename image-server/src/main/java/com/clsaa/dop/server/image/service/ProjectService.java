@@ -71,6 +71,10 @@ public class ProjectService {
                     projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
                     if (project.getCurrentUserRoleId()==1) {
                         projectBO.setCurrentUserRole("命名空间管理员");
+                    }else if(project.getCurrentUserRoleId()==0){
+                        projectBO.setCurrentUserRole("");
+                    }else {
+                        projectBO.setCurrentUserRole("开发人员");
                     }
                     projectBOS.add(projectBO);
                 }
@@ -89,7 +93,15 @@ public class ProjectService {
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
         Project project = projectFeign.projectsProjectIdGet(id,auth);
-        return BeanUtils.convertType(project,ProjectBO.class);
+        ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
+        if (project.getCurrentUserRoleId()==1) {
+            projectBO.setCurrentUserRole("命名空间管理员");
+        }else if(project.getCurrentUserRoleId()==0){
+            projectBO.setCurrentUserRole("");
+        }else {
+            projectBO.setCurrentUserRole("开发人员");
+        }
+        return projectBO;
     }
 
     /**

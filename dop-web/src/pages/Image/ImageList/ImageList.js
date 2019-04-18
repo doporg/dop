@@ -10,7 +10,7 @@ export default class ImageList extends Component {
         this.state = {
             namespaceId:"",
             repoName:props.location.pathname.split("/")[2]+"/"+props.location.pathname.split("/")[3],
-            currentData: []
+            currentData: [],
         };
     }
 
@@ -23,8 +23,9 @@ export default class ImageList extends Component {
             }
         }).then(
             function (response) {
+                console.log(response.data)
                 _this.setState({
-                    namespaceId:response.data[0].projectId
+                    namespaceId:response.data.contents[0].projectId
                 })
             }
         )
@@ -32,12 +33,17 @@ export default class ImageList extends Component {
     refreshImageList(){
         let url = API.image + '/v1/repositories/'+this.state.repoName+"/images";
         let _this = this;
-        Axios.get(url, {})
+        Axios.get(url, {
+            params:{
+                pageNo:1,
+                pageSize:10
+            }
+        })
             .then(function (response) {
                 console.log("镜像信息");
                 console.log(response.data);
                 _this.setState({
-                    currentData: response.data,
+                    currentData: response.data.pageList,
                 });
 
             })
@@ -53,8 +59,8 @@ export default class ImageList extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">命名空间列表{this.state.namespaceId}</Breadcrumb.Item>
-                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库列表{this.state.repoName}</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">命名空间列表</Breadcrumb.Item>
+                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库列表</Breadcrumb.Item>
                 </Breadcrumb>
                 <ImagePagination repoName={this.state.repoName} imageData={this.state.currentData} refreshImageList={this.refreshImageList.bind(this)}/>
             </div>

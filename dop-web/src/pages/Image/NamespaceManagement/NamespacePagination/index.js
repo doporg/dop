@@ -37,7 +37,6 @@ export default class NamespacePagination extends Component {
             loading: true,
             select: 'all'
         };
-        this.handleChange = this.handleChange.bind(this);
     }
 
     //选择器监听

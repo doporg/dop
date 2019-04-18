@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import RepoList from '../RepoList'
 import {Breadcrumb,Tab} from "@icedesign/base";
+import NamespaceLogList from "../../NamespaceLog/NamespaceLogList";
+import API from "../../../API";
+import Axios from "axios/index";
 
 
 export default class Repos extends Component {
@@ -9,11 +12,28 @@ export default class Repos extends Component {
         this.state = {
             currentData:[],
             totalCount:0,
-            id: props.location.pathname.match("[0-9]+")[0]
+            id: props.location.pathname.match("[0-9]+")[0],
+            projectName:"",
+            userRole:0,
         };
-
     }
 
+    init(){
+        let url = API.image+"/v1/projects/"+this.state.id;
+        let _this = this;
+        Axios.get(url, {})
+            .then(function (response) {
+                console.log(response.data);
+                _this.setState({
+                    projectName:response.data.name,
+                    userRole:response.data.currentUserRole
+                });
+            })
+
+    }
+    componentWillMount() {
+        this.init();
+    }
 
     render() {
         return (
@@ -22,7 +42,7 @@ export default class Repos extends Component {
                         <Breadcrumb.Item style={{color: "#5485F7"}} link="#/image/projects">命名空间</Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={"repoName"}>
-                        Dop
+                        {this.state.projectName}
                     </div>
                     <Tab>
                         <Tab.TabPane key={"image"} tab={"镜像仓库"}>
@@ -35,7 +55,7 @@ export default class Repos extends Component {
 
                         </Tab.TabPane>
                         <Tab.TabPane key={"logs"} tab={"日志"}>
-
+                            <NamespaceLogList projectId={this.state.id} />
                         </Tab.TabPane>
                     </Tab>
                 </div>
