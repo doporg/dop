@@ -1,15 +1,20 @@
 package com.clsaa.dop.server.application.controller;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.service.AppService;
 import com.clsaa.dop.server.application.service.AppUrlInfoService;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.dop.server.application.util.Validator;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
@@ -75,7 +80,14 @@ public class AppController {
                           @ApiParam(name = "productMode", value = "开发模式", required = true) @RequestParam(value = "productMode") String productMode,
                           @ApiParam(name = "gitUrl", value = "Git仓库地址", defaultValue = "") @RequestParam(value = "gitUrl", required = false) String gitUrl,
                           @ApiParam(name = "imageUrl", value = "镜像仓库地址", defaultValue = "") @RequestParam(value = "imageUrl", required = false) String imageUrl) {
-
+        BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
+        BizAssert.validParam(description.length() < 50,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
+        BizAssert.validParam(Validator.isUrl(gitUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
+        BizAssert.validParam(Validator.isUrl(imageUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
         this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl, imageUrl);
         return;
     }
@@ -87,6 +99,10 @@ public class AppController {
                           @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
                           @ApiParam(name = "title", value = "应用标题", required = true) @RequestParam(value = "title") String title,
                           @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", defaultValue = "") String description) {
+        BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
+        BizAssert.validParam(StringUtils.hasText(description) && description.length() < 50,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         this.appService.updateApp(loginUser, appId, title, description);
     }
 

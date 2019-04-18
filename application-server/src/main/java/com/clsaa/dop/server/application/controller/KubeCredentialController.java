@@ -1,12 +1,16 @@
 package com.clsaa.dop.server.application.controller;
 
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.ClusterInfoV1;
 import com.clsaa.dop.server.application.model.vo.ClusterUrlV1;
 import com.clsaa.dop.server.application.model.vo.KubeCredentialWithTokenV1;
 import com.clsaa.dop.server.application.service.KubeCredentialService;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.dop.server.application.util.Validator;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +38,8 @@ public class KubeCredentialController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "clusterInfoV1", name = "clusterInfoV1", required = true) @RequestBody ClusterInfoV1 clusterInfoV1) {
-
+        BizAssert.validParam(Validator.isUrl(clusterInfoV1.getTargetClusterUrl()),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "集群地址格式错误"));
         this.kubeCredentialService.updateClusterInfo(loginUser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
 
     }

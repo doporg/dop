@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -81,10 +84,31 @@ public class AppEnvLogService {
         return pagination;
     }
 
+    public String readFile(String filePath) throws Exception {
+        File file = ResourceUtils.getFile(filePath);
+        InputStreamReader reader = new InputStreamReader(
+                new FileInputStream(file)); // 建立一个输入流对象reader
+        BufferedReader br = new BufferedReader(reader);
+        String content = "";
+        StringBuilder sb = new StringBuilder();
+
+        while (content != null) {
+            content = br.readLine();
+
+            if (content == null) {
+                break;
+            }
+
+            sb.append(content);
+        }
+
+        br.close();
+        return sb.toString();
+    }
+
     public void addLog(Long loginUser, LogInfoV1 logInfoV1, Long appEnvId) throws Exception {
         AppEnvBoV1 appEnvBoV1 = this.appEnvService.findEnvironmentDetailById(loginUser, appEnvId);
-        File file = ResourceUtils.getFile("classpath:log-template.txt");
-        String logTemplate = file.toString();
+        String logTemplate = this.readFile("classpath:log-template.txt");
         logTemplate = logTemplate.replace("<ENV_ID>", appEnvBoV1.getId().toString());
         logTemplate = logTemplate.replace("<ENV_NAME>", appEnvBoV1.getTitle().toString());
         logTemplate = logTemplate.replace("<DEPLOYMENT_STRATEGY>", appEnvBoV1.getDeploymentStrategy().toString());
@@ -92,11 +116,9 @@ public class AppEnvLogService {
 
         if (appEnvBoV1.getDeploymentStrategy() == AppEnv.DeploymentStrategy.KUBERNETES) {
             KubeYamlDataBoV1 kubeYamlDataBoV1 = this.kubeYamlService.findYamlDataByEnvId(loginUser, appEnvBoV1.getId());
-            File yamlFile = ResourceUtils.getFile("classpath:yaml-log-template.txt");
-            String yamlLogTemplate = file.toString();
+            String yamlLogTemplate = this.readFile("classpath:yaml-log-template.txt");
             yamlLogTemplate = yamlLogTemplate.replace("<NAMESPACE>", kubeYamlDataBoV1.getNameSpace());
             yamlLogTemplate = yamlLogTemplate.replace("<SERVICE>", kubeYamlDataBoV1.getService());
-            yamlLogTemplate = yamlLogTemplate.replace("<DEPLOYMENT>", kubeYamlDataBoV1.getDeployment());
             yamlLogTemplate = yamlLogTemplate.replace("<YAML>", kubeYamlDataBoV1.getDeploymentEditableYaml());
             logTemplate = logTemplate + yamlLogTemplate;
         }
