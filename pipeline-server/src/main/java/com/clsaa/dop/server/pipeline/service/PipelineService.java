@@ -237,7 +237,7 @@ public class PipelineService {
         return pipelineV1Projects;
     }
 
-    public PipelineBoV1 setInfo(String pipelineId, String resultOutputId) {
+    public PipelineBoV1 setInfo(String pipelineId, String resultOutputId, Long loginUser) {
         PipelineBoV1 pipelineBoV1 = this.findById(new ObjectId(pipelineId));
         if (pipelineBoV1 != null && pipelineBoV1.getConfig().equals("无Jenkinsfile")) {
             String gitUrl = null;
@@ -251,7 +251,7 @@ public class PipelineService {
             //收集信息
 
             System.out.println(pipelineBoV1.getCuser());
-            UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(pipelineBoV1.getCuser(), UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
+            UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
 
             dockerUserName = userCredentialV1.getIdentifier();
             dockerPassword = userCredentialV1.getCredential();
@@ -265,11 +265,11 @@ public class PipelineService {
             }
 
             if(pipelineBoV1.getAppEnvId() != null){
-                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
+                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
             }
 
             if(repositoryVersion != null){
-                deploy = this.applicationFeign.createYamlFileForDeploy(pipelineBoV1.getCuser(), pipelineBoV1.getAppEnvId(), resultOutputId);
+                deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
                 if(deploy == null){
                     deploy = "apiVersion: extensions/v1beta1\n" +
                             "kind: Deployment\n" +

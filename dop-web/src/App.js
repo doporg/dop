@@ -36,7 +36,7 @@ class App extends Component {
                     case 500: {
                         if (error.response.data.message === 'pre:AccessTokenZuulFilter') {
                             window.sessionStorage.clear();
-                            RSA()
+                            RSA();
                             toast.show({
                                 type: "error",
                                 content: "Token失效, 请重新登陆",

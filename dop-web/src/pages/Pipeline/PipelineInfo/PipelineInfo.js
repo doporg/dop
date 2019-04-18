@@ -145,6 +145,7 @@ export default class PipelineInfo extends Component {
             });
         })
     }
+    
     save() {
         let self = this;
         let url = API.pipeline + '/v1/pipeline';

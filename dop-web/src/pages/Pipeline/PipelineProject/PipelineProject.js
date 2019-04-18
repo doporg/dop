@@ -8,6 +8,7 @@ import {Button, Icon, Loading, Feedback} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
+import {FormattedMessage} from 'react-intl';
 import './PipelineProject.scss'
 
 const {toast} = Feedback;
@@ -69,10 +70,24 @@ export default class PipelineProject extends Component {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
+                            self.setResult();
                         }
                     }
                 }
                 reject()
+            }).catch((error)=>{
+                let self = this;
+                if(error.response.status === 500 && error.response.data.message === "404 Not Found"){
+                    toast.show({
+                        type: "prompt",
+                        content: "该流水线尚未运行",
+                        duration: 3000
+                    });
+                    self.clear();
+                    self.setState({
+                        visible: false
+                    });
+                }
             })
         })
     }
@@ -92,10 +107,7 @@ export default class PipelineProject extends Component {
 
     buildPipeline() {
         let self = this;
-        self.setState({
-            visible: true,
-            resultStatus: "build"
-        });
+        self.setState({visible: true});
         let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
@@ -116,9 +128,6 @@ export default class PipelineProject extends Component {
     }
     clear() {
         clearInterval(this.state.time);
-        if(this.state.resultStatus === "build"){
-            this.setResult()
-        }
     }
 
     setResult() {
@@ -181,16 +190,25 @@ export default class PipelineProject extends Component {
                     <div className="operate">
                         <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
                             <Icon type="play"/>
-                            运行流水线
+                            <FormattedMessage
+                                id="pipeline.project.runPipeline"
+                                defaultMessage="运行流水线"
+                            />
                         </Button>
                         <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
                             <Icon type="edit"/>
-                            编辑流水线
+                            <FormattedMessage
+                                id="pipeline.project.editPipeline"
+                                defaultMessage=" 编辑流水线"
+                            />
                         </Button>
                         <Button type="secondary" shape="warning" className="button"
                                 onClick={this.deletePipeline.bind(this)}>
                             <Icon type="ashbin"/>
-                            删除流水线
+                            <FormattedMessage
+                                id="pipeline.project.deletePipeline"
+                                defaultMessage="删除流水线"
+                            />
                         </Button>
                     </div>
 

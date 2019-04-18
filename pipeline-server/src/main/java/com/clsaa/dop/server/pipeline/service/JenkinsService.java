@@ -89,7 +89,7 @@ public class JenkinsService {
     }
 
     /**
-     * 根据流水线的名字的到运行结果
+     * 根据流水线的名字的到运行日志
      */
     public String getBuildOutputText(String name) {
         try {
@@ -97,6 +97,20 @@ public class JenkinsService {
             JobWithDetails job = jobs.get(name).details();
             Build builds = job.getLastBuild();
             return builds.details().getConsoleOutputText();
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+
+    /**
+     * 根据流水线的名字的到运行结果
+     */
+    public String getBuildResult(String name) {
+        try {
+            Map<String, Job> jobs = jenkins.getJobs();
+            JobWithDetails job = jobs.get(name).details();
+            Build builds = job.getLastBuild();
+            return builds.details().getResult().toString();
         } catch (Exception e) {
             return e.toString();
         }
