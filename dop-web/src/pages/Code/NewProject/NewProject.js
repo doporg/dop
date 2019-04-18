@@ -59,7 +59,7 @@ export default class NewProject extends React.Component {
             headers: {'Content-type': 'application/json',}
         }).then(response => {
             toast.success("创建项目成功");
-            this.props.history.push("/code/"+sessionStorage.getItem("user-name")+"/"+this.state.name.toLowerCase());
+            this.props.history.push("/code/"+sessionStorage.getItem("user-name")+"/"+this.state.name.toLowerCase().trim().replace(/\s/g,"-"));
         }).catch(error => {
             toast.error("创建失败");
         })
@@ -77,26 +77,30 @@ export default class NewProject extends React.Component {
         })
     }
 
+    cancel(){
+        this.props.history.push("/code/projects");
+    }
+
 
     render() {
 
         return (
             <Loading className="loading-new-project" visible={this.state.loadingVisible} tip={spinner}>
-                <div className="new-container">
-                    <div className="div_title">
+                <div className="new-project-container">
+                    <div className="div-new-project-top">
                         新建项目
                     </div>
-                    <div className="div_input">
-                        <label className="label_left">名称</label>
-                        <input className="input_name" onChange={this.setName.bind(this)}/>
+                    <div className="div-new-project-input">
+                        <label className="label-new-project-left">名称</label>
+                        <input className="input-new-project-name" onChange={this.setName.bind(this)}/>
                     </div>
-                    <div className="div_input">
-                        <label className="label_left">描述</label>
-                        <textarea className="input_description" onChange={this.setDescription.bind(this)}/>
+                    <div className="div-new-project-input">
+                        <label className="label-new-project-left">描述</label>
+                        <textarea className="input-new-project-description" onChange={this.setDescription.bind(this)}/>
                     </div>
-                    <div className="div_input">
-                        <label className="label_left">可见等级</label>
-                        <div className="div_visibility">
+                    <div className="div-new-project-input">
+                        <label className="label-new-project-left">可见等级</label>
+                        <div className="div-new-project-visibility">
                             <RadioGroup value={this.state.visibility} onChange={this.changeVisibility.bind(this)}>
                                 <Radio id="private" value="private">
                                     PRIVATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -107,13 +111,17 @@ export default class NewProject extends React.Component {
                             </RadioGroup>
                         </div>
                     </div>
-                    <div className="div_input">
-                        <label className="label_left">其他</label>
-                        <div className="div_visibility">
+                    <div className="div-new-project-input">
+                        <label className="label-new-project-left">其他</label>
+                        <div className="div-new-project-visibility">
                             <Checkbox defaultChecked onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
                         </div>
                     </div>
-                    <button onClick={this.createProject.bind(this)} className="btn_create">创建项目</button>
+                    <div className="div-new-project-submit">
+                        <button onClick={this.createProject.bind(this)} className="btn-new-project-create">创建项目</button>
+                        <button onClick={this.cancel.bind(this)} className="btn-new-project-cancel">取消</button>
+                    </div>
+
                 </div>
             </Loading>
         );

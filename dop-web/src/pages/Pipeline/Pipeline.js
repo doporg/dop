@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@icedesign/base';
 import PipelineTable  from './components/Table'
+import {FormattedMessage} from 'react-intl';
 
 
 export default class Pipeline extends Component {
@@ -27,7 +28,15 @@ export default class Pipeline extends Component {
         return (
             <div>
                 <Link to='/pipeline/new'>
-                    <Button type="primary">新建流水线</Button><br /><br/>
+                    <Button type="primary">
+                        新建流水线
+                    </Button>
+                    <FormattedMessage
+                        id="pipeline.hello"
+                        defaultMessage="你好"
+                    />
+                    <br />
+                    <br />
                 </Link>
 
                 <PipelineTable/>

@@ -1,42 +1,38 @@
 .loading-new-project{
     width: 100%;
 }
-.new-container{
+.new-project-container{
     background-color: rgb(255, 255, 255);
-    height: 500px;
-    position: relative;
-    padding-top: 1px;
 }
 
-.div_title{
-    border-bottom: 1px solid #d1d1d1;
-    height: 50px;
-    font-size: 20px;
-    font-weight: bolder;
-    line-height: 50px;
-    margin-bottom: 20px;
-    padding-left: 10px;
-
+.div-new-project-top{
+    font-weight: bold;
+    font-size: 17px;
+    line-height: 60px;
+    height: 60px;
+    padding-left: 20px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 15px;
 }
 
-.div_input{
+.div-new-project-input{
     padding: 15px 50px;
     display: flex;
     justify-content: center;
 }
 
-.div_visibility{
+.div-new-project-visibility{
     width: 85%;
 }
 
-.label_left{
+.label-new-project-left{
     width: 15%;
     height: 40px;
     font-size: 15px;
     text-align: center;
 }
 
-.input_name{
+.input-new-project-name{
     width: 85%;
     height: 40px;
     border-radius: 2px;
@@ -44,19 +40,42 @@
 
 }
 
-.input_description{
+.input-new-project-description{
     width: 85%;
     height: 80px;
     border-radius: 2px;
     border: 1px solid #e2e2e2;
 }
 
-.btn_create{
+.div-new-project-submit{
+    height: 80px;
+    background-color: #fbfbfb;
+    border-top: 1px solid #e8e8e8;
+}
+
+.btn-new-project-create{
+    margin-top: 20px;
+    float: left;
     background-color: #31af64;
     border-color: #2faa60;
     color: white;
-    width: 150px;
+    width: 100px;
     height: 40px;
-    border-radius: 5px;
-    margin-left: 120px;
+    border-radius: 2px;
+    margin-left: 20px;
+    font-size: 13px;
+}
+
+.btn-new-project-cancel{
+    margin-top: 20px;
+    margin-right: 20px;
+    float: right;
+    background-color: rgb(255, 255, 255);
+    border-color: #e2e2e2;
+    color: black;
+    width: 60px;
+    height: 40px;
+    border-radius: 2px;
+    margin-left: 15px;
+    font-size: 13px;
 }

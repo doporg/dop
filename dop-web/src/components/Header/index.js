@@ -20,7 +20,8 @@ class Header extends Component {
         this.state = {
             user: {
                 name: "loading",
-            }
+            },
+            language: "简体中文"
         };
     }
 
@@ -28,8 +29,28 @@ class Header extends Component {
         let user = {
             name: window.sessionStorage.getItem('user-name')
         };
+
         this.setState({
-            user: user
+            user: user,
+            language: window.sessionStorage.getItem('language') === 'zh-CN' ? '简体中文' : 'English'
+        });
+    }
+
+    changeLanguage(language) {
+        let rlanguage;
+        switch (language) {
+            case "简体中文":
+                rlanguage = 'zh-CN';
+                break;
+            case "English":
+                rlanguage = 'en-US';
+                break;
+            default:
+                rlanguage = 'zh-CN';
+        }
+        window.sessionStorage.setItem('language', rlanguage);
+        this.setState({
+            language: window.sessionStorage.getItem('language') === 'zh-CN' ? '简体中文' : 'English'
         });
     }
 
@@ -131,6 +152,42 @@ class Header extends Component {
                                 );
                             })}
                         </Menu>
+                        <Balloon
+                            triggerType="hover"
+                            trigger={
+                                <div
+                                    className="ice-design-header-userpannel"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        fontSize: 12,
+                                    }}
+                                >
+                                    <div className="user-profile">
+                                        <span className="user-name" style={{fontSize: '13px'}}>
+                                            {this.state.language}
+                                        </span>
+                                    </div>
+                                    <Icon
+                                        type="arrow-down-filling"
+                                        size="xxs"
+                                        className="icon-down"
+                                    />
+                                </div>
+                            }
+                            closable={false}
+                            className="user-profile-menu"
+                        >
+                            <ul>
+                                <li className="user-profile-menu-item" onClick={this.changeLanguage.bind(this, "简体中文")}>
+                                    简体中文
+                                </li>
+                                <li className="user-profile-menu-item"
+                                    onClick={this.changeLanguage.bind(this, "English")}>
+                                    English
+                                </li>
+                            </ul>
+                        </Balloon>
                         <Balloon
                             triggerType="hover"
                             trigger={
