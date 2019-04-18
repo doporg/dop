@@ -4,6 +4,7 @@ import {Breadcrumb,Tab} from "@icedesign/base";
 import NamespaceLogList from "../../NamespaceLog/NamespaceLogList";
 import API from "../../../API";
 import Axios from "axios/index";
+import MemberList from "../MemberList";
 
 
 export default class Repos extends Component {
@@ -49,7 +50,7 @@ export default class Repos extends Component {
                             <RepoList projectId={this.state.id} />
                         </Tab.TabPane>
                         <Tab.TabPane key={"member"} tab={"成员"}>
-
+                            <MemberList projectId={this.state.id}/>
                         </Tab.TabPane>
                         <Tab.TabPane key={"labels"} tab={"标签"}>
 

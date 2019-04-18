@@ -1,9 +1,9 @@
-import {Dialog,Button,} from "@icedesign/base";
-import NamespaceForm from "../CreateNamespaceForm/index"
-import React, {Component} from 'react'
-import "../../Style.scss"
+import React,{Component} from 'react';
+import {Button,Dialog} from "@icedesign/base";
+import ProjectMemberForm from "../ProjectMemberForm"
 
-export default class CreateNamespaceDialog extends Component {
+export default class AddMemberDialog extends Component{
+
     constructor(props) {
         super(props);
 
@@ -19,7 +19,8 @@ export default class CreateNamespaceDialog extends Component {
                 width: "10%"
             },
             createDialogVisible: false,
-            refreshProjectList: props.refreshProjectList
+            refreshMemberList: this.props.refreshList,
+            projectId : this.props.projectId
         }
     };
 
@@ -42,18 +43,13 @@ export default class CreateNamespaceDialog extends Component {
             visible: true
         });
     };
+
     onCreateDialogClose = () => {
         this.setState({
             createDialogVisible: false
         });
     };
 
-
-
-    /**
-     *    回调函数传给子组件表单用于创建完成后修改提交状态和关闭弹窗
-     *
-     * */
     finished() {
         this.setState({
             visible: false,
@@ -61,28 +57,27 @@ export default class CreateNamespaceDialog extends Component {
             isSubmit: false
         })
 
-        this.state.refreshProjectList();
+        this.state.refreshMemberList();
         console.log("finished");
     }
+
 
     render() {
         return (
             <span className={"dialog"}>
-                <Button onClick={this.onOpen} type="primary">
-          创建命名空间
-        </Button>
+                <Button onClick={this.onOpen} type="primary">添加用户</Button>
         <Dialog
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="创建命名空间"
+            title="新建成员"
             style={this.state.style}
             footerAlign={this.state.footerAlign}
         >
-          <NamespaceForm
+          <ProjectMemberForm
               isSubmit={this.state.isSubmit}
-              finished={this.finished.bind(this)}/>
+              finished={this.finished.bind(this)} projectId={this.state.projectId}/>
         </Dialog>
 
 <Dialog visible={this.state.createDialogVisible}
@@ -97,6 +92,4 @@ export default class CreateNamespaceDialog extends Component {
       </span>
         );
     }
-
-
 }

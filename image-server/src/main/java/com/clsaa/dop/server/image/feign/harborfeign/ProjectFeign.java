@@ -179,7 +179,7 @@ public interface ProjectFeign {
      * @param auth harbor的权限参数
      */
     @PostMapping(value = "/projects/{project_id}/members")
-    void  projectsProjectIdMembersPost(@PathVariable("project_id") Long projectId,
+    void  projectsProjectIdMembersPost(@PathVariable("project_id") Integer projectId,
                                        @RequestBody ProjectMember projectMember,
                                        @RequestHeader(value = "Authorization") String auth);
     /**
