@@ -2,6 +2,7 @@ package com.clsaa.dop.server.pipeline.service;
 
 
 import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
+import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 public class ResultOutputService {
+
     @Autowired
     private ResultOutputRepository resultOutputRepository;
 
@@ -46,6 +48,18 @@ public class ResultOutputService {
         running.setStatus(ResultOutput.Status.FINISHED);
         running.setResult(output);
         this.resultOutputRepository.save(running);
+    }
+
+    public ResultOutput findByRunningId(String runningId) {
+        Optional<ResultOutput> optionalResultOutput = this.resultOutputRepository.findById(new ObjectId(runningId));
+        if(optionalResultOutput.isPresent()){
+            ResultOutput resultOutput = optionalResultOutput.get();
+            System.out.println(resultOutput.getStatus());
+            System.out.println(resultOutput.getResult());
+            return resultOutput;
+        }else{
+            return null;
+        }
     }
 
 }

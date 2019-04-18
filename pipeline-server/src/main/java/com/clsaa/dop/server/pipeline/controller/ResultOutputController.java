@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
+import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
 import com.clsaa.dop.server.pipeline.service.ResultOutputService;
 import io.kubernetes.client.ApiClient;
@@ -39,6 +40,12 @@ public class ResultOutputController {
     public void notify(@PathVariable(value = "id") String id) {
         String output = this.jenkinsService.getBuildOutputText(id);
         this.resultOutputService.setResult(id, output);
+    }
+
+    @ApiOperation(value = "根据runningId拿日志")
+    @GetMapping("/v1/resultOutput/{runningId}")
+    public ResultOutput findByRunningId(@PathVariable(value = "runningId") String runningId) {
+        return this.resultOutputService.findByRunningId(runningId);
     }
 }
 

@@ -29,12 +29,11 @@ export default class Pipeline extends Component {
             <div>
                 <Link to='/pipeline/new'>
                     <Button type="primary">
-                        新建流水线
+                        <FormattedMessage
+                            id="pipeline.newPipeline"
+                            defaultMessage="新建流水线"
+                        />
                     </Button>
-                    <FormattedMessage
-                        id="pipeline.hello"
-                        defaultMessage="你好"
-                    />
                     <br />
                     <br />
                 </Link>

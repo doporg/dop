@@ -145,24 +145,7 @@ export default class PipelineInfo extends Component {
             });
         })
     }
-    buildPipeline(pipelineId) {
-        let self = this;
-        let url = API.pipeline + '/v1/jenkins/build?id=' + pipelineId;
-        Axios.post(url).then((response) => {
-            if (response.status === 200) {
-                self.props.history.push('/pipeline/project/' + pipelineId)
-            }
-        }).catch((error)=>{
-            console.log(error);
-            toast.show({
-                type: "error",
-                content: "请检查您环境信息的完整性"+error,
-                duration: 3000
-            });
-        })
-    }
     save() {
-        console.log(this.state.pipeline)
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
         Axios({
@@ -176,7 +159,7 @@ export default class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
-                self.buildPipeline(response.data);
+                self.props.history.push('/pipeline')
             }
         })
     }
