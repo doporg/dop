@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,8 +52,10 @@ public class InterfaceStageDto {
     private boolean deleted;
 
     public boolean isSuccess() {
-        return operations.stream().
-                noneMatch(operation -> operation.result().equals(FAIL_RESULT));
+        return CollectionUtils.isEmpty(operations) ?
+                false :
+                operations.stream().
+                        noneMatch(operation -> operation.result().equals(FAIL_RESULT));
     }
 
     public boolean fail() {

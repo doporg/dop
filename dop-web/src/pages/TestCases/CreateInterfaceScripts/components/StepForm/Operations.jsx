@@ -74,7 +74,7 @@ export default class Operations extends Component{
                     </Col>
                 </Row>
                 <hr/>
-                {this.props.operations.map((operation, index, key) => {
+                {this.state.operations.map((operation, index, key) => {
                     if (operation.operationType === 'REQUEST') {
                         return (
                             <div>
@@ -94,7 +94,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <RequestScriptForm currentScript={this.props.requestScripts[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
+                                                <RequestScriptForm currentScript={this.state.requestScripts[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 
@@ -123,7 +123,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <WaitOperation currentOperation={this.props.waitOperations[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
+                                                <WaitOperation currentOperation={this.state.waitOperations[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 

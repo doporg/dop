@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.enums.Stage;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.CaseParamDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,7 +47,9 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
         return super.convert(source)
                 .map(fillStages(source))
                 .map(fillUser())
-                .map(fillParams(source));
+                .map(fillParams(source))
+                .map(fillEmptyStagesIfNeeded())
+                ;
     }
 
     private Function<InterfaceCaseDto, InterfaceCaseDto> fillStages(InterfaceCase interfaceCase) {
@@ -64,6 +64,30 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
         return interfaceCaseDto -> {
             Long cuserId = interfaceCaseDto.getCuser();
             interfaceCaseDto.setCreateUserName(UserManager.getUserName(cuserId));
+            return interfaceCaseDto;
+        };
+    }
+
+    private Function<InterfaceCaseDto, InterfaceCaseDto> fillEmptyStagesIfNeeded() {
+        return interfaceCaseDto -> {
+            if (CollectionUtils.isEmpty(interfaceCaseDto.getStages())) {
+                // 填充空数据 方便展示
+                List<InterfaceStageDto> stageDtos = Arrays.asList(
+                        InterfaceStageDto.builder().stage(Stage.PREPARE)
+                                .operations(new ArrayList<>())
+                                .requestScripts(new ArrayList<>())
+                                .waitOperations(new ArrayList<>()).build(),
+                        InterfaceStageDto.builder().stage(Stage.TEST)
+                                .operations(new ArrayList<>())
+                                .requestScripts(new ArrayList<>())
+                                .waitOperations(new ArrayList<>()).build(),
+                        InterfaceStageDto.builder().stage(Stage.DESTROY)
+                                .operations(new ArrayList<>())
+                                .requestScripts(new ArrayList<>())
+                                .waitOperations(new ArrayList<>()).build()
+                );
+                interfaceCaseDto.setStages(stageDtos);
+            }
             return interfaceCaseDto;
         };
     }
