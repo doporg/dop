@@ -1,0 +1,122 @@
+package com.clsaa.dop.server.application.service;
+
+import com.clsaa.dop.server.application.dao.AppEnvLogRepository;
+import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
+import com.clsaa.dop.server.application.model.bo.KubeYamlDataBoV1;
+import com.clsaa.dop.server.application.model.po.AppEnv;
+import com.clsaa.dop.server.application.model.po.AppEnvLog;
+import com.clsaa.dop.server.application.model.vo.AppEnvLogV1;
+import com.clsaa.dop.server.application.model.vo.LogInfoV1;
+import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.rest.result.Pagination;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.util.*;
+
+@Service(value = "AppEnvLogService")
+public class AppEnvLogService {
+    @Autowired
+    private AppEnvService appEnvService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private KubeYamlService kubeYamlService;
+    @Autowired
+    private AppEnvLogRepository appEnvLogRepository;
+    @Autowired
+    private BuildTagRunningIdMappingService buildTagRunningIdMappingService;
+    @Autowired
+    private PipelineService pipelineService;
+
+    public Pagination<AppEnvLogV1> getLogByAppEnvId(Long loginUser, Integer pageNo, Integer pageSize, Long appEnvId) {
+        Pagination<AppEnvLogV1> pagination = new Pagination<>();
+
+        //List<LogInfoV1> logInfoV1List=this.pipelineService.findPipelineLogByEnvId(appEnvId);
+        List<String> runningIdList = this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);
+        List<AppEnvLogV1> appEnvLogV1List = new ArrayList<>();
+        Set userIdList = new HashSet();
+        Map<Long, String> idNameMap = new HashMap<>();
+        for (String runningId : runningIdList) {
+
+            AppEnvLog appEnvLog = this.appEnvLogRepository.findByRunningId(runningId).orElse(null);
+            AppEnvLogV1 appEnvLogV1 = BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
+            Long id = appEnvLog.getRuser();
+
+            if (!userIdList.contains(id)) {
+                userIdList.add(id);
+                try {
+                    String userName = this.userService.findUserNameById(id);
+                    idNameMap.put(id, userName);
+                } catch (Exception e) {
+                    System.out.print(e);
+                    throw e;
+                }
+
+            }
+
+
+            String ruserName = idNameMap.get(id);
+            // String log = logInfoV1List.get(i).getLog();
+            //String result =  log.matches("docker push [a-z]+.[a-z]+.[a-z]+.[a-z]+/([a-z]+)/([a-z]+):([0-9]+)");
+
+            appEnvLogV1.setRuserName(ruserName);
+            appEnvLogV1List.add(appEnvLogV1);
+        }
+        //List<String> runningIdList= this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);
+        //
+        //for(String runningId:runningIdList) {
+        //
+        //
+        //}
+
+
+        pagination.setPageNo(pageNo);
+        pagination.setPageSize(pageSize);
+        pagination.setTotalCount(appEnvLogV1List.size());
+        pagination.setPageList(appEnvLogV1List);
+        return pagination;
+    }
+
+    public void addLog(Long loginUser, LogInfoV1 logInfoV1, Long appEnvId) throws Exception {
+        AppEnvBoV1 appEnvBoV1 = this.appEnvService.findEnvironmentDetailById(loginUser, appEnvId);
+        File file = ResourceUtils.getFile("classpath:log-template.txt");
+        String logTemplate = file.toString();
+        logTemplate = logTemplate.replace("<ENV_ID>", appEnvBoV1.getId().toString());
+        logTemplate = logTemplate.replace("<ENV_NAME>", appEnvBoV1.getTitle().toString());
+        logTemplate = logTemplate.replace("<DEPLOYMENT_STRATEGY>", appEnvBoV1.getDeploymentStrategy().toString());
+        logTemplate = logTemplate.replace("<ENV_LEVEL>", appEnvBoV1.getEnvironmentLevel().toString());
+
+        if (appEnvBoV1.getDeploymentStrategy() == AppEnv.DeploymentStrategy.KUBERNETES) {
+            KubeYamlDataBoV1 kubeYamlDataBoV1 = this.kubeYamlService.findYamlDataByEnvId(loginUser, appEnvBoV1.getId());
+            File yamlFile = ResourceUtils.getFile("classpath:yaml-log-template.txt");
+            String yamlLogTemplate = file.toString();
+            yamlLogTemplate = yamlLogTemplate.replace("<NAMESPACE>", kubeYamlDataBoV1.getNameSpace());
+            yamlLogTemplate = yamlLogTemplate.replace("<SERVICE>", kubeYamlDataBoV1.getService());
+            yamlLogTemplate = yamlLogTemplate.replace("<DEPLOYMENT>", kubeYamlDataBoV1.getDeployment());
+            yamlLogTemplate = yamlLogTemplate.replace("<YAML>", kubeYamlDataBoV1.getDeploymentEditableYaml());
+            logTemplate = logTemplate + yamlLogTemplate;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        AppEnvLog appEnvLog = AppEnvLog.builder()
+                .commitUrl(logInfoV1.getCommitUrl())
+                .imageUrl(logInfoV1.getImageUrl())
+                .rtime(logInfoV1.getRtime())
+                .ruser(logInfoV1.getRuser())
+                .status(logInfoV1.getStatus())
+                .is_deleted(false)
+                .ctime(now)
+                .mtime(now)
+                .cuser(loginUser)
+                .muser(loginUser)
+                .runningId(logInfoV1.getRunningId())
+                .appEnvLog(logTemplate)
+                .build();
+
+
+        appEnvLogRepository.saveAndFlush(appEnvLog);
+    }
+}

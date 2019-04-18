@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service(value = "BuildTagRunningIdMappingService")
 public class BuildTagRunningIdMappingService {
@@ -19,6 +21,17 @@ public class BuildTagRunningIdMappingService {
         } else {
             return buildTagRunningIdMapping.getBuildTag();
         }
+    }
+
+    public List<String> findRunningIdByAppEnvId(Long appEnvId) {
+        List<BuildTagRunningIdMapping> buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findAllByAppEnvId(appEnvId);
+        List<String> runningIdList = buildTagRunningIdMapping.stream().map(l -> l.getRunningId()).collect(Collectors.toList());
+        return runningIdList;
+    }
+
+    public Long findAppEnvIdByRunningId(String runningId) {
+        BuildTagRunningIdMapping buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findByRunningId(runningId).orElse(null);
+        return buildTagRunningIdMapping.getAppEnvId();
     }
 
     public String createMapping(Long cuser, Long appEnvId, String runningId) {

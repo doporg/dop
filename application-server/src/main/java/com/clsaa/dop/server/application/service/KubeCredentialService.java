@@ -7,6 +7,10 @@ import com.clsaa.dop.server.application.model.bo.KubeCredentialBoV1;
 import com.clsaa.dop.server.application.model.po.KubeCredential;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
+import io.kubernetes.client.ApiClient;
+import io.kubernetes.client.ApiException;
+import io.kubernetes.client.apis.CoreV1Api;
+import io.kubernetes.client.util.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +22,8 @@ public class KubeCredentialService {
     KubeCredentialRepository kubeCredentialRepository;
     @Autowired
     private PermissionConfig permissionConfig;
-
+    @Autowired
+    private KubeYamlService kubeYamlService;
     @Autowired
     private PermissionService permissionService;
     @Autowired
@@ -34,6 +39,18 @@ public class KubeCredentialService {
     public void updateClusterInfo(Long loginUser, Long appEnvId, String url, String token) {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditCluster(), loginUser)
                 , BizCodes.NO_PERMISSION);
+
+
+        ApiClient client = Config.fromToken(url,
+                token,
+                false);
+        CoreV1Api api = new CoreV1Api(client);
+        try {
+            api.listNamespace(false, null, null, null, null, Integer.MAX_VALUE, null, null, false);
+        } catch (ApiException e) {
+            BizAssert.justNotFound(BizCodes.ERROR_ACCESS);
+        }
+
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential kubeCredential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
         kubeCredential.setMtime(LocalDateTime.now());

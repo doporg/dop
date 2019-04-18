@@ -3,7 +3,6 @@ package com.clsaa.dop.server.application.service;
 import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
-import com.clsaa.dop.server.application.feign.PipelineFeign;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
 import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
@@ -24,7 +23,7 @@ public class AppEnvService {
     @Autowired
     AppEnvRepository appEnvRepository;
     @Autowired
-    PipelineFeign pipelineFeign;
+    PipelineService pipelineService;
     @Autowired
     private PermissionConfig permissionConfig;
 
@@ -97,7 +96,7 @@ public class AppEnvService {
      * 创建环境
      *
      * @param appId              appId
-     * @param cuser              创建者
+     * @param loginUser              创建者
      * @param title              名称
      * @param environmentLever   环境级别
      * @param deploymentStrategy 发布策略
@@ -126,7 +125,7 @@ public class AppEnvService {
     public PipelineIdAndNameV1 findPipelineByAppEnvId(Long loginUser, Long appEnvId) {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewPipeline(), loginUser)
                 , BizCodes.NO_PERMISSION);
-        return this.pipelineFeign.findPipelineByAppEnvId(appEnvId);
+        return this.pipelineService.findPipelineByAppEnvId(appEnvId);
     }
 
     /**

@@ -44,11 +44,12 @@ public class KubeYamlService {
     AppUrlInfoService appUrlInfoService;
     @Autowired
     private PermissionConfig permissionConfig;
-
+    @Autowired
+    private AppEnvLogService appEnvLogService;
     @Autowired
     private PermissionService permissionService;
 
-    public String createYamlFileForDeploy(Long loginUser, Long appEnvId, String runningId) {
+    public String createYamlFileForDeploy(Long loginUser, Long appEnvId, String runningId) throws Exception {
 
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(loginUser, appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
@@ -288,6 +289,7 @@ public class KubeYamlService {
                 , BizCodes.NO_PERMISSION);
         return BeanUtils.convertType(this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null), KubeYamlDataBoV1.class);
     }
+
 
     public void updateDeploymentYaml(Long loginUser, Long appEnvId, String deploymentYaml) {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditDeploymentYaml(), loginUser)

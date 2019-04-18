@@ -4,7 +4,6 @@ package com.clsaa.dop.server.application.service;
 import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppRepository;
-import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
 import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
 import com.clsaa.dop.server.application.model.po.App;
@@ -40,7 +39,7 @@ public class AppService {
     @Autowired
     private PermissionService permissionService;
     @Autowired
-    private UserFeign userFeign;
+    private UserService userService;
 
     /**
      * 通过projectId分页查询应用
@@ -92,7 +91,7 @@ public class AppService {
             if (!userIdList.contains(id)) {
                 userIdList.add(id);
                 try {
-                    String userName = this.userFeign.findUserNameById(id).getName();
+                    String userName = this.userService.findUserNameById(id);
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
                     System.out.print(e);

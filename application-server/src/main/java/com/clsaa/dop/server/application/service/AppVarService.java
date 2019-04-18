@@ -28,7 +28,7 @@ public class AppVarService {
     /**
      * 创建变量
      *
-     * @param cuser 创建者
+     * @param loginUser 创建者
      * @param appId 应用id
      * @param key   键
      * @param value 值

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 @Component
 @FeignClient(value = "pipeline-server", configuration = FeignConfig.class)
 public interface PipelineFeign {
@@ -17,5 +19,13 @@ public interface PipelineFeign {
      * @return {@link UserNameV1}
      */
     @GetMapping("/v1/pipeline/envId/{envId}")
-    PipelineIdAndNameV1 findPipelineByAppEnvId(@PathVariable("envId") Long envId);
+    List<PipelineIdAndNameV1> findPipelineByAppEnvId(@PathVariable("envId") Long envId);
+
+    ///**
+    // * 通过环境id获取日志列表
+    // *
+    // * @return {@link List<LogInfoV1>}
+    // */
+    //@GetMapping("/v1/pipeline/runningId/{runningId}")
+    //List<LogInfoV1> findPipelineLogByEnvId(@PathVariable("envId") Long envId);
 }
