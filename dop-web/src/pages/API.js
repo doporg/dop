@@ -1,7 +1,7 @@
 // 配置所有接口的API文件
 
 var host = "http://open.dop.clsaa.com";
-// var host = "http://localhost:8888";
+// var host = "http://localhost:13600";
 var pipeline = "/pipeline-server";
 var application = "/application-server";
 var permission = "/permission-server";
@@ -12,7 +12,7 @@ var test = "/test-server";
 const API = {
     address: "http://www.dop.clsaa.com/#/",
     gateway: host,
-    pipeline: host + pipeline,
+    pipeline: "http://localhost:13600",
     application: host + application,
     permission: host + permission,
     code: host + code,

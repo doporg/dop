@@ -43,8 +43,8 @@ public class ResultOutputController {
     }
 
     @ApiOperation(value = "根据runningId拿日志")
-    @GetMapping("/v1/resultOutput/{runningId}")
-    public ResultOutput findByRunningId(@PathVariable(value = "runningId") String runningId) {
+    @GetMapping("/v1/resultOutput")
+    public ResultOutput findByRunningId(String runningId) {
         return this.resultOutputService.findByRunningId(runningId);
     }
 }

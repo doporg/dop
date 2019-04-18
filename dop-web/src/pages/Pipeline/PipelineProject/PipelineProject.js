@@ -73,6 +73,19 @@ export default class PipelineProject extends Component {
                     }
                 }
                 reject()
+            }).catch((error)=>{
+                let self = this;
+                if(error.response.status === 500 && error.response.data.message === "404 Not Found"){
+                    toast.show({
+                        type: "prompt",
+                        content: "该流水线尚未运行",
+                        duration: 3000
+                    });
+                    self.clear();
+                    self.setState({
+                        visible: false
+                    });
+                }
             })
         })
     }
