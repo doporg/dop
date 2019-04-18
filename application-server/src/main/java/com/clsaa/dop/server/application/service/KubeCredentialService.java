@@ -65,6 +65,7 @@ public class KubeCredentialService {
                 , BizCodes.NO_PERMISSION);
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
+        //credential.setTargetClusterToken(this.DecryptValue(credential.getTargetClusterToken()));
         return BeanUtils.convertType(this.kubeCredentialRepository.findById(credentialId).orElse(null), KubeCredentialBoV1.class);
     }
 
@@ -72,9 +73,17 @@ public class KubeCredentialService {
 
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
+        //credential.setTargetClusterToken(this.DecryptValue(credential.getTargetClusterToken()));
         return BeanUtils.convertType(this.kubeCredentialRepository.findById(credentialId).orElse(null), KubeCredentialBoV1.class);
     }
 
+    //public String EncryptValue(String value) {
+    //    return DESUtil.getEncryptString(value);
+    //}
+    //
+    //public String DecryptValue(String value) {
+    //    return DESUtil.getDecryptString(value);
+    //}
 
     public void createCredentialByAppEnvId(Long loginUser, Long appEnvId) {
         KubeCredential kubeCredential = KubeCredential.builder()

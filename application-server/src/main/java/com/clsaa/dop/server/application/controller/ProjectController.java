@@ -1,9 +1,12 @@
 package com.clsaa.dop.server.application.controller;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.ProjectV1;
 import com.clsaa.dop.server.application.service.ProjectService;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +50,8 @@ public class ProjectController {
                               @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId,
                               @ApiParam(name = "projectDescription", value = "项目描述", defaultValue = "") @RequestParam(value = "projectDescription", required = false) String projectDescription) {
 
-
+        BizAssert.validParam(projectDescription.length() < 50,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         this.projectService.createProjects(loginUser, title, organizationId, projectDescription);
 
     }

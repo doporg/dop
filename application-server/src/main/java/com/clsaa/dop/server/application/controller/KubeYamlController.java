@@ -1,10 +1,14 @@
 package com.clsaa.dop.server.application.controller;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.DeploymentYamlV1;
 import com.clsaa.dop.server.application.model.vo.KubeYamlDataV1;
 import com.clsaa.dop.server.application.service.KubeYamlService;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.dop.server.application.util.Validator;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +82,12 @@ public class KubeYamlController {
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
             @ApiParam(name = "yamlFilePath", value = "yaml文件地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
+        BizAssert.validParam(Validator.isServiceName(service),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "服务名格式错误"));
+        if (!yamlFilePath.equals("")) {
+            BizAssert.validParam(Validator.isRelativePath(yamlFilePath),
+                    new BizCode(BizCodes.INVALID_PARAM.getCode(), "相对路径格式错误"));
+        }
         this.kubeYamlService.updateYamlData(appEnvId, loginUser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, yamlFilePath);
     }
@@ -145,6 +155,7 @@ public class KubeYamlController {
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
             @ApiParam(value = "service", name = "service", required = true) @RequestParam(value = "service") String service
     ) {
+
         try {
             return this.kubeYamlService.getDeploymentByNameSpaceAndService(loginUser, appEnvId, namespace, service);
         } catch (Exception e) {
@@ -165,6 +176,8 @@ public class KubeYamlController {
             @ApiParam(value = "host", name = "host", defaultValue = "") @RequestParam(value = "host", required = false) String host
 
     ) {
+        BizAssert.validParam(Validator.isServiceName(name),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "服务名格式错误"));
         try {
             this.kubeYamlService.createServiceByNameSpace(loginUser, appEnvId, namespace, name, targetPort, nodePort, host);
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.application.controller;
 
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.AppEnvV1;
 import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
@@ -9,9 +10,12 @@ import com.clsaa.dop.server.application.service.BuildTagRunningIdMappingService;
 import com.clsaa.dop.server.application.service.KubeCredentialService;
 import com.clsaa.dop.server.application.service.KubeYamlService;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
@@ -101,6 +105,8 @@ public class AppEnvController {
             @ApiParam(name = "title", value = "环境名称", required = true) @RequestParam(value = "title") String title,
             @ApiParam(name = "environmentLevel", value = "环境级别", required = true) @RequestParam(value = "environmentLevel") String environmentLevel,
             @ApiParam(name = "deploymentStrategy", value = "部署方式", required = true) @RequestParam(value = "deploymentStrategy") String deploymentStrategy) {
+        BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
         this.appEnvService.createEnvironmentByAppId(appId, loginUser, title, environmentLevel, deploymentStrategy);
     }
 

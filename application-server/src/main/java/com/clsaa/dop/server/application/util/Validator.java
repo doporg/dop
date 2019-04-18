@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.user.util;
+package com.clsaa.dop.server.application.util;
 
 import java.util.regex.Pattern;
 
@@ -36,12 +36,26 @@ public class Validator {
     /**
      * 正则表达式：验证URL
      */
-    public static final String REGEX_URL = "http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?";
+    public static final String REGEX_URL = "(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
 
     /**
      * 正则表达式：验证IP地址
      */
     public static final String REGEX_IP_ADDR = "(25[0-5]|2[0-4]\\d|[0-1]\\d{2}|[1-9]?\\d)";
+
+    /**
+     * 正则表达式：验证服务名称
+     */
+    public static final String REGEX_SERVICE_NAME = "^([a-z]+-?)*[a-z]+$";
+    /**
+     * 正则表达式：验证域名
+     */
+    public static final String REGEX_DOMAIN = "^([a-z0-9]+.?)+[a-z]+$";
+    /**
+     * 正则表达式：验证相对路径
+     */
+    public static final String REGEX_RELATIVE_PATH = "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$";
+
 
     /**
      * 校验用户名
@@ -113,6 +127,35 @@ public class Validator {
         return Pattern.matches(REGEX_IP_ADDR, ipAddr);
     }
 
+    /**
+     * 校验服务名字
+     *
+     * @param serviceName 服务名字
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isServiceName(String serviceName) {
+        return Pattern.matches(REGEX_SERVICE_NAME, serviceName);
+    }
+
+    /**
+     * 校验域名
+     *
+     * @param domain 域名
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isDomain(String domain) {
+        return Pattern.matches(REGEX_DOMAIN, domain);
+    }
+
+    /**
+     * 校验域名
+     *
+     * @param relativePath 相对路径
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isRelativePath(String relativePath) {
+        return Pattern.matches(REGEX_RELATIVE_PATH, relativePath);
+    }
 
     public static void main(String[] args) {
         System.out.println(Validator.isPassword("RENguijie1996."));

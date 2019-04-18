@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 /**
@@ -78,8 +80,7 @@ public class AppVariable {
     /**
      * 值
      */
-    @Column(nullable = false, columnDefinition = "BLOB", name = "var_value")
-    @ColumnTransformer(read = "CAST(AES_DECRYPT(var_value, '$*^@!#dop_aes') as char(1000))", write = "AES_ENCRYPT(?, '$*^@!#dop_aes')")
+    @Column(nullable = false, name = "var_value")
     private String varValue;
 
 

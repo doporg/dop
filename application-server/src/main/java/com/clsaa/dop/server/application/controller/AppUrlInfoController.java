@@ -1,7 +1,11 @@
 package com.clsaa.dop.server.application.controller;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.service.AppUrlInfoService;
+import com.clsaa.dop.server.application.util.Validator;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +44,19 @@ public class AppUrlInfoController {
             @ApiParam(name = "testDbUrl", value = "测试数据库Url", defaultValue = "") @RequestParam(value = "testDbUrl", required = false, defaultValue = "") String testDbUrl,
             @ApiParam(name = "productionDomain", value = "开发域名", defaultValue = "") @RequestParam(value = "productionDomain", required = false, defaultValue = "") String productionDomain,
             @ApiParam(name = "testDomain", value = "测试域名", defaultValue = "") @RequestParam(value = "testDomain", required = false, defaultValue = "") String testDomain) {
+
+        BizAssert.validParam(Validator.isUrl(warehouseUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
+        BizAssert.validParam(Validator.isUrl(imageUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
+        BizAssert.validParam(Validator.isUrl(productionDbUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发数据库Url格式错误"));
+        BizAssert.validParam(Validator.isUrl(testDbUrl),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "测试数据库Url格式错误"));
+        BizAssert.validParam(Validator.isDomain(productionDomain),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发域名格式错误"));
+        BizAssert.validParam(Validator.isDomain(testDomain),
+                new BizCode(BizCodes.INVALID_PARAM.getCode(), "测试域名格式错误"));
         this.appUrlInfoService.updateAppUrlInfoByAppId(appId, loginUser, warehouseUrl, imageUrl, productionDbUrl, testDbUrl, productionDomain, testDomain);
     }
 
