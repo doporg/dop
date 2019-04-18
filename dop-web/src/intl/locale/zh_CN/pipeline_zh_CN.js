@@ -14,5 +14,9 @@ const PIPELINE_ZH_CN = {
     'pipeline.table.operation.language': 'zh-cn',
     'pipeline.table.operation.deleteSuccess': '删除成功',
     'pipeline.table.operation.deleteFailure': '删除失败',
+
+    'pipeline.project.runPipeline': '运行流水线',
+    'pipeline.project.editPipeline': '编辑流水线',
+    'pipeline.project.deletePipeline': '删除流水线',
 };
 export default PIPELINE_ZH_CN;
