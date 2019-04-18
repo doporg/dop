@@ -25,35 +25,21 @@ class StepForm extends Component {
 
   constructor(props) {
     super(props);
-    const case_Id = this.props.match.params.caseId;
+    const case_Id = this.props.caseId;
     this.state = {
       step: 0,
       caseId: case_Id,
-      stages: [
-        {
-          caseId: case_Id,
-          operations: [],
-          stage: 'PREPARE',
-          requestScripts: [],
-          waitOperations: []
-        },
-        {
-          caseId: case_Id,
-          operations: [],
-          stage: 'TEST',
-          requestScripts: [],
-          waitOperations: []
-        },
-        {
-          caseId: case_Id,
-          operations: [],
-          stage: 'DESTROY',
-          requestScripts: [],
-          waitOperations: []
-        }
-      ],
+      stages: this.props.stages,
       finish: false
     };
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.caseId !== this.props.caseId) {
+      this.setState({
+        stages: nextProps.stages
+      });
+    }
   }
 
   nextStep = (stage) => {
