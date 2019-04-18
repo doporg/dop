@@ -1,9 +1,13 @@
 package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.commit.CommitBo;
+import com.clsaa.dop.server.code.model.bo.commit.DiffBo;
 import com.clsaa.dop.server.code.model.vo.commit.CommitVo;
+import com.clsaa.dop.server.code.model.vo.commit.DiffVo;
 import com.clsaa.dop.server.code.service.CommitService;
 import com.clsaa.dop.server.code.util.BeanUtils;
+import com.clsaa.dop.server.code.util.RequestUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +49,22 @@ public class CommitController {
 
         return commitVos;
     }
+
+
+    @ApiOperation(value = "查看项目的某一次具体提交",notes = "根据项目的id和提交的commit sha查看commit的git diff内容")
+    @GetMapping("/projects/{username}/{projectname}/repository/commit")
+    public List<DiffVo> findDiff(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                 @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                 @ApiParam(value = "commit sha") @RequestParam("sha") String sha,
+                                 @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        List<DiffBo> diffBos=commitService.findDiff(id,sha,userId);
+        List<DiffVo> diffVos=new ArrayList<>();
+        for(DiffBo diffBo:diffBos){
+            diffVos.add(BeanUtils.convertType(diffBo,DiffVo.class));
+        }
+        return diffVos;
+    }
+
+
 }

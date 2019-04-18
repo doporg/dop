@@ -1,5 +1,34 @@
 .commit-container{
     background-color: rgb(255, 255, 255);
-    min-height: 600px;
-    position: relative;
 }
+
+.div-diff-file{
+    border-bottom:1px solid #e1e1e1;
+}
+
+.div-diff-file-title{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    background-color: #fafafa;
+    border-bottom: 1px solid #e5e5e5;
+
+
+}
+
+.text-diff-file-name{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.text-diff-file-change{
+    font-size: 12px;
+}
+
+.img-diff-file-title{
+    height: 15px;
+    width: 15px;
+    margin-right: 10px;
+}
+

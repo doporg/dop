@@ -1,55 +1,117 @@
 import React from 'react'
+import Axios from 'axios';
+import API from "../../API";
+import {parseDiff, Diff, Hunk,Decoration} from 'react-diff-view';
 
 import './Commit.css';
+import './ReactDiffView.css'
+
+import imgFile from './imgs/file.png';
 
 
-import {parseDiff, Diff, Hunk} from 'react-diff-view';
-
-const App = ({diffText}) => {
+//diff,new_path,old_path,a_mode,b_mode,new_file,renamed_file,deleted_file
+const DiffFile = ({diffItem}) => {
+    const diffText=diffItem.diff;
     const files = parseDiff(diffText);
 
-    const renderFile = ({oldRevision, newRevision, type, hunks}) => (
-        <Diff key={oldRevision + '-' + newRevision} viewType="split" diffType={type} hunks={hunks}>
-            {hunks => hunks.map(hunk => <Hunk key={hunk.content} hunk={hunk} />)}
-        </Diff>
-    );
+    const renderFile = ({oldRevision, newRevision, type, hunks}) => {
+
+        let res=[];
+        if(diffItem.new_file){
+            res.push(
+                <div className="div-diff-file-title">
+                    <img className="img-diff-file-title" src={imgFile}/>
+                    <span className="text-diff-file-name">{diffItem.new_path}</span>
+                    <span className="text-diff-file-change">&nbsp;&nbsp;new&nbsp;{diffItem.a_mode}&nbsp;->&nbsp;{diffItem.b_mode}</span>
+                </div>
+            )
+        }else if(diffItem.deleted_file){
+            res.push(
+                <div className="div-diff-file-title">
+                    <img className="img-diff-file-title" src={imgFile}/>
+                    <span className="text-diff-file-name">{diffItem.new_path}</span>
+                    <span className="text-diff-file-change">&nbsp;&nbsp;deleted&nbsp;{diffItem.a_mode}&nbsp;->&nbsp;{diffItem.b_mode}</span>
+                </div>
+            )
+        }else if(diffItem.renamed_file){
+            res.push(
+                <div className="div-diff-file-title">
+                    <img className="img-diff-file-title" src={imgFile}/>
+                    <span className="text-diff-file-name">{diffItem.old_path}&nbsp;->&nbsp;{diffItem.new_path}</span>
+                    <span className="text-diff-file-change">&nbsp;&nbsp;renamed</span>
+                </div>
+            )
+        }else{
+            res.push(
+                <div className="div-diff-file-title">
+                    <img className="img-diff-file-title" src={imgFile}/>
+                    <span className="text-diff-file-name">{diffItem.new_path}</span>
+                    <span className="text-diff-file-change">&nbsp;&nbsp;modified</span>
+                </div>
+            )
+        }
+
+        res.push(
+            <Diff key={oldRevision + '-' + newRevision} viewType="unified" diffType={type} hunks={hunks}>
+                {
+                    hunks => hunks.map(hunk => [
+                        <Decoration key={'decoration-' + hunk.content}>
+                            {hunk.content}
+                        </Decoration>,
+                        <Hunk key={hunk.content} hunk={hunk}/>
+                    ])
+                }
+            </Diff>
+        );
+
+        return res;
+
+    };
 
     return (
-        <div>
+        <div className="div-diff-file">
             {files.map(renderFile)}
         </div>
     );
 };
 
-const diffText="diff --git a/3.txt b/3.txt\n" +
-    "index dc80e08..06775fd 100644\n" +
-    "--- a/3.txt\n" +
-    "+++ b/3.txt\n" +
-    "@@ -6,4 +6,5 @@ fdsf\n" +
-    " ds\n" +
-    " fdsfdsfdsfdsfsdfdsfdsf\n" +
-    " fdsfdsfsdfsdfsdfsdfsdfs\n" +
-    "-wwwwwwwwwwwwwww\n" +
-    "\\ No newline at end of file\n" +
-    "+wwwwwwwwwwwwwww\n" +
-    "+fdsfsdfdsfdsfsd\n" +
-    "\\ No newline at end of file\n";
 
-
-export default class Commit extends React.Component{
+class Commit extends React.Component{
 
     constructor(props){
         super(props);
+        let {projectname,username,sha}=this.props.match.params;
+        sha=decodeURIComponent(sha);
         this.state={
+            username:username,
+            projectname:projectname,
+            projectid:username+"/"+projectname,
+            sha:sha,
+            diffInfo:[],//diff,new_path,old_path,a_mode,b_mode,new_file,renamed_file,deleted_file
         }
+    }
+
+    componentWillMount(){
+        let url=API.code+"/projects/"+this.state.projectid+"/repository/commit?sha="+this.state.sha;
+        Axios.get(url).then(response=>{
+            this.setState({
+                diffInfo:response.data
+            })
+        })
     }
 
     render(){
         return (
-            <App diffText={diffText}/>
-            // <div className="commit-container">
-            //
-            //  </div>
+            <div className="commit-container">
+                {
+                    this.state.diffInfo.map(item=>{
+                        return <DiffFile diffItem={item}/>;
+                    })
+                }
+             </div>
         )
     }
 }
+
+export default (props)=><Commit {...props} key={props.location.pathname} />
+

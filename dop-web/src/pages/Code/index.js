@@ -77,7 +77,7 @@ const codeConfig = [
         component: FilePathList
     },
     {
-        path: '/code/:username/:projectname/commit/:commitid',
+        path: '/code/:username/:projectname/commit/:sha',
         layout: CodeProjectLayout,
         component: Commit
     },

@@ -61,7 +61,7 @@ public class RequestUtil {
 
         String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
 
-        String path="/projects/3/repository/branches";
+        String path="/projects/3/repository/commits/7d7af930607584479c33f2e6be4813d0e7c8f0e9/diff";
 
         String url=api+path+"?access_token="+access_token;
 //        String url=api+"/projects/13"+"?access_token="+access_token;

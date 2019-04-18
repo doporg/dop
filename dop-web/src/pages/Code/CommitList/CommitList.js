@@ -115,6 +115,11 @@ class CommitList extends React.Component{
         this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/"));
     }
 
+    commitLink(sha){
+        let {username,projectname}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/commit/"+encodeURIComponent(sha));
+    }
+
 
     render(){
         return (
@@ -151,7 +156,7 @@ class CommitList extends React.Component{
                                             <div className="div-commit-item">
                                                 <div className="div-commit-item-avatar">{commitList[j].author_name.substring(0,1).toUpperCase()}</div>
                                                 <div className="div-commit-item-content">
-                                                    <div className="div-commit-item-content-up">{commitList[j].message}</div>
+                                                    <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[j].id)}>{commitList[j].message}</a></div>
                                                     <div className="div-commit-item-content-down">
                                                         {commitList[j].author_name+" 提交在"+commitList[j].authored_time}
                                                     </div>
@@ -187,7 +192,7 @@ class CommitList extends React.Component{
                                     <div className="div-commit-item">
                                         <div className="div-commit-item-avatar">{commitList[i].author_name.substring(0,1).toUpperCase()}</div>
                                         <div className="div-commit-item-content">
-                                            <div className="div-commit-item-content-up">{commitList[i].message}</div>
+                                            <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[i].id)}>{commitList[i].message}</a></div>
                                             <div className="div-commit-item-content-down">
                                                 {commitList[i].author_name+" 提交在"+commitList[i].authored_time}
                                             </div>

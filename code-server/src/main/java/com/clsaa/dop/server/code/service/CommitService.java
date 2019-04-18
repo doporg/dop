@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.code.service;
 
 import com.clsaa.dop.server.code.model.bo.commit.CommitBo;
+import com.clsaa.dop.server.code.model.bo.commit.DiffBo;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
 import com.clsaa.dop.server.code.util.URLUtil;
@@ -48,6 +49,24 @@ public class CommitService {
         }
 
         return commitBos;
+
+    }
+
+    /**
+     * 查询某次commit的git diff内容
+     * @param id 项目id
+     * @param sha commit sha
+     * @param userId 用户id
+     * @return 每个改动文件的git diff信息
+     */
+    public List<DiffBo> findDiff(String id,String sha,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+        sha=URLUtil.encodeURIComponent(sha);
+
+        String path="/projects/"+id+"/repository/commits/"+sha+"/diff";
+
+        return RequestUtil.getList(path,userId,DiffBo.class);
 
     }
 
