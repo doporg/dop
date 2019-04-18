@@ -27,7 +27,12 @@ public interface BizCodes {
      */
     BizCode ERROR_UPDATE = new BizCode(1012, "更新失败");
     /**
-     * 数据库更新失败
+     * 没有操作权限
      */
     BizCode NO_PERMISSION = new BizCode(1013, "没有权限");
+
+    /**
+     * 数据库更新失败
+     */
+    BizCode ERROR_ACCESS = new BizCode(1014, "连接失败");
 }

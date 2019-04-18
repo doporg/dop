@@ -161,8 +161,8 @@ public class KubeYamlController {
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace,
             @ApiParam(value = "name", name = "name", required = true) @RequestParam(value = "name") String name,
             @ApiParam(value = "targetPort", name = "targetPort", required = true) @RequestParam(value = "targetPort") Integer targetPort,
-            @ApiParam(value = "nodePort", name = "nodePort", defaultValue = "") @RequestParam(value = "nodePort") Integer nodePort,
-            @ApiParam(value = "host", name = "host", defaultValue = "") @RequestParam(value = "host") String host
+            @ApiParam(value = "nodePort", name = "nodePort", defaultValue = "") @RequestParam(value = "nodePort", required = false) Integer nodePort,
+            @ApiParam(value = "host", name = "host", defaultValue = "") @RequestParam(value = "host", required = false) String host
 
     ) {
         try {

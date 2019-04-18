@@ -3,7 +3,6 @@ package com.clsaa.dop.server.application.service;
 import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.ProjectRepository;
-import com.clsaa.dop.server.application.feign.UserFeign;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
 import com.clsaa.dop.server.application.model.po.Project;
 import com.clsaa.dop.server.application.model.vo.ProjectV1;
@@ -27,7 +26,7 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
-    private UserFeign userFeign;
+    private UserService userService;
 
     @Autowired
     private PermissionConfig permissionConfig;
@@ -85,7 +84,7 @@ public class ProjectService {
             }
         }
 
-        projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
+        //projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
         List<ProjectV1> projectV1List = projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
 
         Set userIdList = new HashSet();
@@ -96,7 +95,7 @@ public class ProjectService {
             if (!userIdList.contains(id)) {
                 userIdList.add(id);
                 try {
-                    String userName = this.userFeign.findUserNameById(id).getName();
+                    String userName = this.userService.findUserNameById(id);
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
                     System.out.print(e);
