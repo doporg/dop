@@ -89,11 +89,5 @@
     "node": ">=8.0.0"
   },
   "templateType": "react",
-  "title": "Devops Platform",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "title": "Devops Platform"
 }
