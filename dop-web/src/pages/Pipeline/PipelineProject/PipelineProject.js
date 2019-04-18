@@ -70,6 +70,7 @@ export default class PipelineProject extends Component {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
+                            self.setResult();
                         }
                     }
                 }
@@ -106,10 +107,7 @@ export default class PipelineProject extends Component {
 
     buildPipeline() {
         let self = this;
-        self.setState({
-            visible: true,
-            resultStatus: "build"
-        });
+        self.setState({visible: true});
         let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
@@ -130,9 +128,6 @@ export default class PipelineProject extends Component {
     }
     clear() {
         clearInterval(this.state.time);
-        if(this.state.resultStatus === "build"){
-            this.setResult()
-        }
     }
 
     setResult() {

@@ -1,13 +1,20 @@
 package com.clsaa.dop.server.pipeline.controller;
 
+import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
+import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
+import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
+import com.clsaa.dop.server.pipeline.model.dto.LogInfoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
+import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.dop.server.pipeline.service.ResultOutputService;
 import io.kubernetes.client.ApiClient;
 import io.kubernetes.client.Configuration;
 import io.kubernetes.client.util.Config;
 import io.swagger.annotations.ApiOperation;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +35,7 @@ public class ResultOutputController {
     @Autowired
     JenkinsService jenkinsService;
 
+
     @ApiOperation(value = "新建一个用户的流水线运行结果")
     @PostMapping("/v1/resultOutput")
     public void create(String id) {
@@ -37,9 +45,11 @@ public class ResultOutputController {
     @Async
     @ApiOperation(value = "通知变更result")
     @PostMapping("/v1/resultOutput/notify/{id}")
-    public void notify(@PathVariable(value = "id") String id) {
+    public void notify(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @PathVariable(value = "id") String id) {
         String output = this.jenkinsService.getBuildOutputText(id);
-        this.resultOutputService.setResult(id, output);
+        this.resultOutputService.setResult(id, output, loginUser);
     }
 
     @ApiOperation(value = "根据runningId拿日志")
