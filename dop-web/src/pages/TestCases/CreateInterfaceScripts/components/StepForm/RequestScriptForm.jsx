@@ -113,9 +113,10 @@ export default class RequestScriptForm extends Component{
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        // console.log("[Request Script] Operation props change!");
-        if (nextProps.isSubmit) {
-            this.validateFormAndPost();
+        if (nextProps.currentScript !== this.props.currentScript) {
+            this.setState({
+                value: nextProps.currentScript
+            })
         }
     }
 

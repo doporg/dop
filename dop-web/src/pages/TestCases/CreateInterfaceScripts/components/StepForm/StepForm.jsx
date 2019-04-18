@@ -46,7 +46,7 @@ class StepForm extends Component {
     let newStep = this.state.step + 1;
     this.setState({
       step: newStep,
-      stages: this.state.stages
+      stages: this.props.stages
     });
   };
 
@@ -54,7 +54,7 @@ class StepForm extends Component {
     let newStep = this.state.step - 1;
     this.setState({
       step: newStep,
-      stages: this.state.stages
+      stages: this.props.stages
     });
   };
 
@@ -81,17 +81,17 @@ class StepForm extends Component {
 
   renderStep = (step) => {
     if (step === 0) {
-      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+      return <RequestStageForm data={this.props.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
                                stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 1) {
-      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+      return <RequestStageForm data={this.props.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
                                stage='TEST' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 2) {
-      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.postToServer.bind(this)}  onLast={this.lastStep.bind(this)}
+      return <RequestStageForm data={this.props.stages[step]} onSubmit={this.postToServer.bind(this)}  onLast={this.lastStep.bind(this)}
                                stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
     }
   };

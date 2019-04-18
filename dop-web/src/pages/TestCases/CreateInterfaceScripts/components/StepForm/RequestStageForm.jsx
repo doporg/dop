@@ -180,6 +180,7 @@ export default class RequestStageForm extends Component{
                     addWaitTime={this.addWaitTime.bind(this)}
                     removeOperation={this.removeOperation.bind(this)}
                     cancel={this.cancel.bind(this)}
+                    stage={this.props.stage}
                 />
 
                 <Row>

@@ -1,10 +1,10 @@
 import BasicLayout from "../../layouts/BasicLayout";
 import TestCases from "./TestCases";
 import CreateInterfaceCase from "./CreateInterfaceCase";
-import CreateInterfaceScripts from "./CreateInterfaceScripts";
 import {Feedback} from "@icedesign/base";
 import CreateManualCaseFrom from "./components/CreateTestCases/CreateManualCaseForm";
 import AuthorityTable from "./ExecuteLogs/components/AuthorityTable";
+import CreateInterfaceScripts from "./CreateInterfaceScripts";
 
 const Toast = Feedback.toast;
 

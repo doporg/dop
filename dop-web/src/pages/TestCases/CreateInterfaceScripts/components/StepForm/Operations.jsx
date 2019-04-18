@@ -40,18 +40,19 @@ export default class Operations extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            isSubmit: false
+            isSubmit: false,
+            requestScripts: this.props.requestScripts,
+            waitOperations: this.props.waitOperations,
+            operations: this.props.operations
         }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.isSubmit) {
+        if (nextProps.stage !== this.props.stage) {
             this.setState({
-                isSubmit: true
-            })
-        }else {
-            this.setState({
-                isSubmit: false
+                requestScripts: nextProps.requestScripts,
+                waitOperations: nextProps.waitOperations,
+                operations: nextProps.operations
             })
         }
     }
@@ -73,7 +74,7 @@ export default class Operations extends Component{
                     </Col>
                 </Row>
                 <hr/>
-                {this.props.operations.map((operation, index) => {
+                {this.props.operations.map((operation, index, key) => {
                     if (operation.operationType === 'REQUEST') {
                         return (
                             <div>
