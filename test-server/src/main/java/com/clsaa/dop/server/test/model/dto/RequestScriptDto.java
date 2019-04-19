@@ -15,6 +15,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.io.output.WriterOutputStream;
@@ -27,6 +28,7 @@ import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +42,7 @@ import static com.clsaa.dop.server.test.enums.OperationType.REQUEST;
  * @since 18/03/2019
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestScriptDto implements Operation {
@@ -84,6 +87,15 @@ public class RequestScriptDto implements Operation {
     private Long muser;
 
     private boolean deleted;
+
+    public static RequestScriptDto emptyScript() {
+        return RequestScriptDto.builder()
+                .requestHeaders(new ArrayList<>())
+                .requestCheckPoints(new ArrayList<>())
+                .resultParams(new ArrayList<>())
+                .order(-1)
+                .build();
+    }
 
     @Override
     public void run(ExecuteContext executeContext) {

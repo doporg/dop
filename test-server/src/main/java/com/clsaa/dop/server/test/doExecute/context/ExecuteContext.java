@@ -8,7 +8,6 @@ import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import com.clsaa.dop.server.test.util.ExecutionLogUtils;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.util.CollectionUtils;
 
 import java.io.StringWriter;
 import java.time.LocalDateTime;
@@ -35,7 +34,7 @@ public class ExecuteContext {
 
     public void logAfterExecution() {
         interfaceExecuteLog.setEnd(LocalDateTime.now());
-        interfaceExecuteLog.setSuccess(interfaceCaseDto.isExecuteSuccess());
+        interfaceExecuteLog.setSuccess(interfaceCaseDto.executeSuccess());
         // persist log
         ExecutionLogUtils.saveLog(interfaceExecuteLog);
     }

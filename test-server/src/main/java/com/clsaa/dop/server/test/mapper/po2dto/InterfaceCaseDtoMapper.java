@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.doExecute.StageSorter;
 import com.clsaa.dop.server.test.enums.Stage;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.CaseParamDto;
@@ -55,6 +56,7 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
     private Function<InterfaceCaseDto, InterfaceCaseDto> fillStages(InterfaceCase interfaceCase) {
         return dto -> {
             List<InterfaceStageDto> interfaceStageDtos = interfaceStageDtoMapper.convert(interfaceCase.getStages());
+            interfaceStageDtos.sort(new StageSorter());
             dto.setStages(interfaceStageDtos);
             return dto;
         };
@@ -73,18 +75,9 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
             if (CollectionUtils.isEmpty(interfaceCaseDto.getStages())) {
                 // 填充空数据 方便展示
                 List<InterfaceStageDto> stageDtos = Arrays.asList(
-                        InterfaceStageDto.builder().stage(Stage.PREPARE)
-                                .operations(new ArrayList<>())
-                                .requestScripts(new ArrayList<>())
-                                .waitOperations(new ArrayList<>()).build(),
-                        InterfaceStageDto.builder().stage(Stage.TEST)
-                                .operations(new ArrayList<>())
-                                .requestScripts(new ArrayList<>())
-                                .waitOperations(new ArrayList<>()).build(),
-                        InterfaceStageDto.builder().stage(Stage.DESTROY)
-                                .operations(new ArrayList<>())
-                                .requestScripts(new ArrayList<>())
-                                .waitOperations(new ArrayList<>()).build()
+                        InterfaceStageDto.emptyStage(Stage.PREPARE),
+                        InterfaceStageDto.emptyStage(Stage.TEST),
+                        InterfaceStageDto.emptyStage(Stage.DESTROY)
                 );
                 interfaceCaseDto.setStages(stageDtos);
             }
