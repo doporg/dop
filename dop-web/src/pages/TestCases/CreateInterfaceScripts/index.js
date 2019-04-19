@@ -36,7 +36,7 @@ export default class CreateInterfaceScripts extends Component {
   render() {
     return (
       <div className="create-interface-scripts-page">
-        <StepForm caseId={this.state.caseId} stages={this.state.stages}/>
+        <StepForm caseId={this.state.caseId} stages={this.state.stages} operation='INSERT'/>
       </div>
     );
   }

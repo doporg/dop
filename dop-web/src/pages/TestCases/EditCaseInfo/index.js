@@ -76,7 +76,7 @@ export default class EditCaseInfo extends Component {
     return (
         <div className="edit-case-info-page">
           <DetailTable/>
-          <StepForm caseId={this.state.caseId} stages={this.state.stages}/>
+          <StepForm caseId={this.state.caseId} stages={this.state.stages} operation='UPDATE'/>
         </div>
     );
   }

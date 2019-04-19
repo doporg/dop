@@ -48,13 +48,14 @@ export default class Operations extends Component{
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.stage !== this.props.stage) {
-            this.setState({
-                requestScripts: nextProps.requestScripts,
-                waitOperations: nextProps.waitOperations,
-                operations: nextProps.operations
-            })
-        }
+        /*if (nextProps.stage !== this.props.stage) {
+
+        }*/
+        this.setState({
+            requestScripts: nextProps.requestScripts,
+            waitOperations: nextProps.waitOperations,
+            operations: nextProps.operations
+        })
     }
 
     render() {
@@ -74,7 +75,7 @@ export default class Operations extends Component{
                     </Col>
                 </Row>
                 <hr/>
-                {this.state.operations.map((operation, index, key) => {
+                {this.state.operations.map((operation, index) => {
                     if (operation.operationType === 'REQUEST') {
                         return (
                             <div>
@@ -94,7 +95,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <RequestScriptForm currentScript={this.state.requestScripts[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
+                                                <RequestScriptForm currentScript={this.props.requestScripts[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 
@@ -123,7 +124,7 @@ export default class Operations extends Component{
                                     <IcePanel.Body>
                                         <Row>
                                             <Col span="22">
-                                                <WaitOperation currentOperation={this.state.waitOperations[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
+                                                <WaitOperation currentOperation={this.props.waitOperations[index]} isSubmit={this.state.isSubmit} cancel={this.props.cancel} order={index}/>
                                             </Col>
                                             <Col span="2">
 

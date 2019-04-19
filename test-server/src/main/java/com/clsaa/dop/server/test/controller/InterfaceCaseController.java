@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.clsaa.dop.server.test.config.BizCodes;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceExecuteLogDto;
+import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
@@ -51,6 +52,9 @@ public class InterfaceCaseController {
     @Autowired
     private InterfaceCaseUpdateServiceImpl interfaceCaseUpdateService;
 
+    @Autowired
+    private InterfaceStageUpdateServiceImpl interfaceStageUpdateService;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping
     public Long createCase(@RequestBody @Valid InterfaceCaseParam interfaceCase) {
@@ -63,6 +67,15 @@ public class InterfaceCaseController {
         List<InterfaceStageParam> stageParams = jsonArray.toJavaList(InterfaceStageParam.class);
         validate(stageParams);
         return interfaceStageCreateService.create(stageParams);
+    }
+
+    @ApiOperation(value = "修改接口测试用例测试脚本", notes = "创建失败500，message为错误信息")
+    @PutMapping("/{caseId}/stages")
+    public Boolean updateStages(@RequestBody JSONArray jsonArray, @PathVariable("caseId") Long caseId) {
+        List<InterfaceStageDto> stageDtos = jsonArray.toJavaList(InterfaceStageDto.class);
+//        validate(stageParams);
+        interfaceStageUpdateService.batchUpdate(stageDtos);
+        return true;
     }
 
     @ApiOperation(value = "新增接口测试用例全局参数", notes = "创建失败500，message为错误信息")
@@ -82,7 +95,7 @@ public class InterfaceCaseController {
 
     @ApiOperation(value = "根据id执行脚本测试用例", notes = "参数为需要执行的接口测试用例ID")
     @GetMapping("/execute/{id}")
-    public InterfaceCaseDto getExecuteResult(@RequestHeader("x-login-user")Long userId, @PathVariable("id") Long id) {
+    public InterfaceCaseDto getExecuteResult(@PathVariable("id") Long id) {
         BizAssert.validParam(id >= 0, BizCodes.INVALID_PARAM.getCode(), "请求执行的测试用例id不合法");
         InterfaceCaseDto interfaceCaseDto = interfaceCaseQueryService.selectByIds(id).orElse(null);
         return execute(requireNonNull(interfaceCaseDto));

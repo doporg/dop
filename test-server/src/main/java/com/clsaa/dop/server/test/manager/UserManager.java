@@ -95,6 +95,19 @@ public class UserManager {
         };
     }
 
+    public static <PO extends Po> Function<PO, PO> newInfoIfNotExists() {
+        return po -> {
+            if (po.getId() == null) {
+                // new
+                dateAndUser().apply(po);
+            }else {
+                // update
+                updateUserAndTime().apply(po);
+            }
+            return po;
+        };
+    }
+
     public static String getUserName(Long userId) {
         try {
             return userNameCache.get(userId);

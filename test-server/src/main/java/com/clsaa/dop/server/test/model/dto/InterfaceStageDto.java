@@ -36,6 +36,8 @@ public class InterfaceStageDto {
 
     private boolean success = true;
 
+    private Long caseId;
+
     // ----------- common property ---------
     private Long id;
 
@@ -59,8 +61,9 @@ public class InterfaceStageDto {
         return !executeSuccess();
     }
 
-    public static InterfaceStageDto emptyStage(Stage stage) {
+    public static InterfaceStageDto emptyStage(Stage stage, Long caseId) {
         return InterfaceStageDto.builder().stage(stage)
+                .caseId(caseId)
                 .operations(new ArrayList<>())
                 .requestScripts(new ArrayList<>())
                 .waitOperations(new ArrayList<>()).build();

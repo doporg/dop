@@ -23,19 +23,8 @@ export default class RequestScriptForm extends Component{
 
     constructor(props) {
         super(props);
+        console.log(this.props);
         this.state = {
-            // value: {
-            //     rawUrl: '',
-            //     httpMethod: 'GET',
-            //     requestHeaders: [{}],
-            //     requestBody: '',
-            //     requestCheckPoints: [{}],
-            //     retryTimes: '',
-            //     retryInterval: '',
-            //     resultParams: '',
-            //     operationType: 'REQUEST',
-            //     order: this.props.order
-            // },
             value: this.props.currentScript
         };
     }
@@ -89,6 +78,7 @@ export default class RequestScriptForm extends Component{
     };
 
     renderTab = (tab) => {
+        console.log(this.state.value);
         if (tab === '请求头') {
             return <RequestHeader
                 requestHeaders={this.state.value.requestHeaders}
@@ -113,11 +103,13 @@ export default class RequestScriptForm extends Component{
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.currentScript !== this.props.currentScript) {
-            this.setState({
-                value: nextProps.currentScript
-            })
-        }
+        // if (nextProps.currentScript !== this.props.currentScript) {
+        //
+        // }
+        console.log(nextProps.currentScript);
+        this.setState({
+            value: nextProps.currentScript
+        })
     }
 
     render() {

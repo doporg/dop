@@ -155,12 +155,11 @@ export default class RequestStageForm extends Component{
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.stage !== this.props.stage) {
-            this.setState({
-                isSubmit: nextProps.isSubmit,
-                value: nextProps.data
-            });
-        }
+        this.setState({
+            isSubmit: nextProps.isSubmit,
+            value: nextProps.data,
+            stage: nextProps.stage
+        });
     }
 
 
@@ -172,7 +171,7 @@ export default class RequestStageForm extends Component{
         return (
             <div>
                 <Operations
-                    requestScripts={this.state.value.requestScripts ? this.state.value.requestScripts : []}
+                    requestScripts={this.state.value.requestScripts}
                     waitOperations={this.state.value.waitOperations}
                     isSubmit={this.state.isSubmit}
                     operations={this.state.value.operations}

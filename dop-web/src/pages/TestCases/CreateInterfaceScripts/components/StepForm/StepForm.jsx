@@ -30,13 +30,11 @@ class StepForm extends Component {
       step: 0,
       caseId: case_Id,
       stages: this.props.stages,
+      operation: this.props.operation
     };
-    console.log(this.props.stages);
-    this.nextStep.bind(this);
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log(nextProps);
     /*if (nextProps.caseId !== this.props.caseId) {
       this.setState({
         stages: nextProps.stages
@@ -45,7 +43,8 @@ class StepForm extends Component {
     this.setState({
       step: 0,
       caseId: this.state.caseId,
-      stages: nextProps.stages
+      stages: nextProps.stages,
+      operation: nextProps.operation
     }, this.nextStep);
   }
 
@@ -70,21 +69,37 @@ class StepForm extends Component {
     if (this.state.stages.length < 3) {
       this.state.stages.push(stage);
     }
-    let url = API.test + '/interfaceCases/stages';
     let _this = this;
     let stages = this.state.stages;
-    Axios.post(url, stages, {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    })
-      .then(function (response) {
-        Toast.success("添加测试脚本成功！");
-        _this.props.history.push('/testCases');
-      }).catch(function (error) {
+    if (this.state.operation === 'UPDATE') {
+      let url = API.test + '/interfaceCases/' + this.state.caseId + '/stages';
+      Axios.put(url, stages, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      })
+          .then(function (response) {
+            Toast.success("修改测试脚本成功！");
+            _this.props.history.push('/testCases');
+          }).catch(function (error) {
         console.log(error);
         Toast.error(error);
       });
+    }else if (this.state.operation === 'INSERT') {
+      let url = API.test + '/interfaceCases/stages';
+      Axios.post(url, stages, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      })
+          .then(function (response) {
+            Toast.success("添加测试脚本成功！");
+            _this.props.history.push('/testCases');
+          }).catch(function (error) {
+        console.log(error);
+        Toast.error(error);
+      });
+    }
   };
 
   renderStep = (step) => {
