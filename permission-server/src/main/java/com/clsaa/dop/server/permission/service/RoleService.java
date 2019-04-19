@@ -1,21 +1,17 @@
 package com.clsaa.dop.server.permission.service;
 
 import com.clsaa.dop.server.permission.config.BizCodes;
-import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.dao.RoleRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
-import com.clsaa.dop.server.permission.model.po.Permission;
 import com.clsaa.dop.server.permission.model.po.Role;
 import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
 import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
-import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.model.vo.RoleV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -150,7 +146,7 @@ public class RoleService {
         }
         else
         {
-             roleList = this.roleRepository.findAllByNameLikeAndIdIn("%"+key+"%",idList,pageRequest).getContent();
+             roleList = this.roleRepository.findAllByNameLikeAndIdIn(key+"%",idList,pageRequest).getContent();
         }
         int count=roleList.size();
         pagination.setTotalCount(count);

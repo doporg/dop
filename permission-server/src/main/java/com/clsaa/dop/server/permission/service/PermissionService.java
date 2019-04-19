@@ -12,7 +12,6 @@ import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,8 +124,8 @@ public class PermissionService {
 
         Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
-
-        //可以查看的ID列表
+//
+//        可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
         List<Permission> permissionList=new ArrayList<>();
@@ -137,7 +135,7 @@ public class PermissionService {
         }
         else
         {
-            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn("%"+key+"%",idList,pageRequest).getContent();
+            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn(key+"%",idList,pageRequest).getContent();
         }
 
         int count=permissionList.size();
