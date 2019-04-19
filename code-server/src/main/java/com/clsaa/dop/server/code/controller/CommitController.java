@@ -37,18 +37,11 @@ public class CommitController {
                                          @ApiParam(value = "分支名或tag名")@RequestParam("ref_name")String ref_name,
                                          @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
-        List<CommitBo> commitBos;
         List<CommitVo> commitVos=new ArrayList<>();
-
-        try {
-            commitBos = commitService.findCommitList(id,path,ref_name,userId);
-            for(CommitBo commitBo:commitBos){
-                commitVos.add(BeanUtils.convertType(commitBo,CommitVo.class));
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        List<CommitBo> commitBos = commitService.findCommitList(id,path,ref_name,userId);
+        for(CommitBo commitBo:commitBos){
+            commitVos.add(BeanUtils.convertType(commitBo,CommitVo.class));
         }
-
         return commitVos;
     }
 
