@@ -133,7 +133,8 @@ export default class NamespaceLogList extends Component{
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
-                                total={this.state.totalCount}/>
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
                 </IceContainer>
             </div>
         )

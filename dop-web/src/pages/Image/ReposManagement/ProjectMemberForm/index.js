@@ -1,11 +1,11 @@
-import {Field, Form, Input, Loading} from "@icedesign/base";
+import {Field, Form, Input, Loading,Select,Grid} from "@icedesign/base";
 import API from "../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
-
-import PrivateController from "../PrivateController"
+import RoleController from '../RoleController'
 
 const FormItem = Form.Item;
+const {Col} = Grid
 const style = {
     padding: "20px",
     background: "#F7F8FA",
@@ -41,17 +41,13 @@ export default class NamespaceForm extends Component {
         this.field.validate((errors, values) => {
             console.log(errors, values);
             let _this = this;
-
-            this.setState({
-                loading: true
-            })
             // 没有异常则提交表单
             if (errors == null) {
                 let url = API.image + '/v1/projects/'+_this.state.projectId+"/members";
                 Axios.post(url, {}, {
                         params: {
-                            name: values.title,
-                            status: values.role
+                            userName: values.userName,
+                            roleId: values.role
                         }
                     }
                 )
@@ -89,23 +85,25 @@ export default class NamespaceForm extends Component {
                         labelAlign={"left"}
                         style={style}
                     >
-                        <FormItem {...formItemLayout}
-                                  validateStatus={this.field.getError("title") ? "error" : ""}
-                                  help={this.field.getError("title") ? "请输入名称" : ""}
-                                  label="用户名称："
-                                  required>
-                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                                   placeholder="请输入用户名称"/>
-                        </FormItem>
-                        <FormItem {...formItemLayout}
-                                  validateStatus={this.field.getError("role") ? "error" : ""}
-                                  help={this.field.getError("role") ? "请选择用户角色" : ""}
-                                  label="角色："
-                                  required>
-                            <PrivateController   {...init('role', {
-                                rules: [{required: true, initValue: "guest"}]
-                            })}/>
-                        </FormItem>
+                        <Col>
+                            <FormItem {...formItemLayout}
+                                      validateStatus={this.field.getError("title") ? "error" : ""}
+                                      help={this.field.getError("title") ? "请输入名称" : ""}
+                                      label="用户名称："
+                                      required>
+                                <Input {...init('userName', {rules: [{required: true, message: "该项不能为空"}]})}
+                                       placeholder="请输入用户名称"/>
+                            </FormItem>
+                            <FormItem {...formItemLayout}
+                                      validateStatus={this.field.getError("role") ? "error" : ""}
+                                      help={this.field.getError("role") ? "请选择用户角色" : ""}
+                                      label="角色："
+                                      required>
+                                <RoleController   {...init('role', {
+                                    rules: [{required: true}],initValue:"0"
+                                })}/>
+                            </FormItem>
+                        </Col>
                     </Form>
                 </div>
             </Loading>

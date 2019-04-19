@@ -36,7 +36,7 @@ export default class MemberList extends Component{
             //不存在搜索条件
             Axios.get(url, {
                 params:{
-                    pageNo:current,
+                    pageNo:this.state.current,
                     pageSize: this.state.pageSize,
                 }
             })
@@ -63,7 +63,7 @@ export default class MemberList extends Component{
             //存在搜索条件
             Axios.get(url, {
                 params:{
-                    pageNo:current,
+                    pageNo:this.state.current,
                     pageSize: this.state.pageSize,
                     entityName:queryKey
                 }
@@ -158,7 +158,8 @@ export default class MemberList extends Component{
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
-                                total={this.state.totalCount}/>
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
                 </IceContainer>
             </div>
         );

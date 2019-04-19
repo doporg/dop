@@ -52,7 +52,6 @@ public class RepositoryService {
 
         ResponseEntity<List<Repository>> responseEntity = harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth);
         List<Repository> repositories = responseEntity.getBody();
-        System.out.println(repositories.size());
 
         int count = 0;
         List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");

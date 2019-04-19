@@ -15,7 +15,7 @@ export default class ImagePagination extends Component{
         super(props);
         this.state={
             imageData:[],
-            current:0,
+            current:1,
             pageSize:10,
             totalCount:0,
             rowSelection: {
@@ -24,6 +24,7 @@ export default class ImagePagination extends Component{
             },
             loading: true,
             repoName: this.props.repoName,
+            queryKey:""
         }
     }
 
@@ -33,36 +34,51 @@ export default class ImagePagination extends Component{
         if (queryKey!==""){
             Axios.get(url, {
                 params:{
-                    pageNo:1,
+                    pageNo:current,
                     pageSize:10,
-
                 }
             })
                 .then(function (response) {
                     console.log("镜像信息");
                     console.log(response.data);
-                    _this.setState({
-                        imageData: response.data.pageList,
-                        totalCount:response.data.totalCount,
-                        loading:false
-                    });
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            imageData: response.data.pageList,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    }else {
+                        _this.setState({
+                            imageData: [],
+                            totalCount:0,
+                            loading:false
+                        });
+                    }
 
                 })
         } else {
             Axios.get(url, {
                 params:{
-                    pageNo:1,
-                    pageSize:10
+                    pageNo:current,
+                    pageSize:10,
                 }
             })
                 .then(function (response) {
                     console.log("镜像信息");
                     console.log(response.data);
-                    _this.setState({
-                        imageData: response.data.pageList,
-                        totalCount:response.data.totalCount,
-                        loading:false
-                    });
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            imageData: response.data.pageList,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    } else {
+                        _this.setState({
+                            imageData: [],
+                            totalCount:0,
+                            loading:false
+                        });
+                    }
 
                 })
         }
@@ -72,7 +88,7 @@ export default class ImagePagination extends Component{
 
 
     componentWillMount() {
-        this.refreshImageList(1,"")
+        this.refreshImageList(1,this.state.queryKey)
     }
 
     onChange(names, records){
@@ -84,12 +100,15 @@ export default class ImagePagination extends Component{
 
     onSearch(value){
         this.setState({
-            searchKey: value
+            queryKey: value
         })
-        console.log("search",value)
+        this.refreshImageList(this.state.current,value);
     }
-    handleChange(){
-
+    handleChange(current,e){
+        this.setState({
+            current:current
+        });
+        this.refreshImageList(current,this.state.queryKey)
     }
     //image列表
     render() {
@@ -138,7 +157,8 @@ export default class ImagePagination extends Component{
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
-                                total={this.state.totalCount}/>
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
                 </IceContainer>
             </div>
         )

@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import {Radio} from "@icedesign/base";
+import "../../Style.scss"
 
 const {Group: RadioGroup} = Radio;
 const list = [
     {
-        value: "developer",
+        value: "2",
         label: "开发人员"
     },
     {
-        value: 'guest',
+        value: '0',
         label: "游客"
     },
     {
-        value: 'projectAdmin',
+        value: '1',
         label: "项目管理员"
     }
 ];

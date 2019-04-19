@@ -55,6 +55,13 @@ public class ImageService {
         pagination.setTotalCount(count);
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
+        int beginIndex = (pageNo-1)*pageSize;
+        int endIndex;
+        if (pagination.isLastPage()){
+            endIndex = count;
+        }else {
+            endIndex = pageNo*pageSize;
+        }
 
         if (count==0){
             pagination.setPageList(Collections.emptyList());
@@ -67,7 +74,7 @@ public class ImageService {
                 imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
                 imageInfoBOS.add(imageInfo);
             }
-            pagination.setPageList(imageInfoBOS);
+            pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
             return pagination;
         }
     }

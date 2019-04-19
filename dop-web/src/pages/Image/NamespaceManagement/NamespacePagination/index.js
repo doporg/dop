@@ -236,12 +236,14 @@ export default class NamespacePagination extends Component {
 
     //初始化
     componentWillMount() {
-        this.refreshList(1,this.state.queryKey,'all');
+        this.refreshList(this.state.current,this.state.queryKey,'all');
     }
 
     //搜索框内容变化
     onSearch(value) {
-        console.log("search ",value);
+        this.setState({
+            queryKey:value
+        })
         this.refreshList(1,value,this.state.select);
     }
 
@@ -372,7 +374,8 @@ export default class NamespacePagination extends Component {
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
-                                total={this.state.totalCount}/>
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
                 </IceContainer>
             </div>
         )

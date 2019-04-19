@@ -41,9 +41,6 @@ export default class NamespaceForm extends Component {
             console.log(errors, values);
             let _this = this;
 
-            this.setState({
-                loading: true
-            })
             // 没有异常则提交表单
             if (errors == null) {
                 let url = API.image + '/v1/projects';
@@ -93,7 +90,7 @@ export default class NamespaceForm extends Component {
                                   help={this.field.getError("title") ? "请输入名称" : ""}
                                   label="命名空间名称："
                                   required>
-                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
+                            <Input {...init('title', {rules: [{required: true,whiteSpace:true,trigger:["onBlur","onChange"]}]})}
                                    placeholder="请输入命名空间名称"/>
                         </FormItem>
                         <FormItem {...formItemLayout}
@@ -101,8 +98,8 @@ export default class NamespaceForm extends Component {
                                   help={this.field.getError("private") ? "请选择公开性" : ""}
                                   label="公开性："
                                   required>
-                            <PrivateController   {...init('private', {
-                                rules: [{required: true, initValue: "public"}]
+                            <PrivateController {...init('private', {
+                                rules: [{required: true}],initValue:"true"
                             })}/>
                         </FormItem>
                     </Form>

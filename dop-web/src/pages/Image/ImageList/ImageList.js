@@ -39,9 +39,12 @@ export default class ImageList extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">命名空间列表</Breadcrumb.Item>
-                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库列表</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">命名空间</Breadcrumb.Item>
+                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库</Breadcrumb.Item>
                 </Breadcrumb>
+                <div className={"repoName"}>
+                    {this.state.repoName}
+                </div>
                 <ImagePagination repoName={this.state.repoName}/>
             </div>
         )

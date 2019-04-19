@@ -84,10 +84,10 @@ export default class AddMemberDialog extends Component{
         onOk={this.onCreateDialogClose}
         onCancel={this.onCreateDialogClose}
         onClose={this.onCreateDialogClose}
-        title="创建成功"
+        title="添加成功"
         style={this.state.createDialogStyle}
         footerAlign={this.state.footerAlign}>
-命名空间创建成功！
+成功添加成员到命名空间！
 </Dialog>
       </span>
         );

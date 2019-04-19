@@ -42,7 +42,7 @@ export default class DeleteImageDialog extends Component{
             Axios.delete(url, {})
                 .then(function (response) {
                     Toast.success("删除成功");
-                    _this.state.refreshImageList();
+                    _this.state.refreshImageList(1,"");
                     console.log("删除镜像");
                     console.log(response.status);
                 }).catch(function (error) {

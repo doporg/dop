@@ -52,14 +52,5 @@ public class ProjectMemberController {
         projectMemberService.addMember(projectId,userName,roleId,userId);
     }
 
-    @PostMapping(value = "/v1/test/{projectId}")
-    public void test(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId")Integer projectId,
-                          @ApiParam(value = "用户名称",required = true) @RequestParam(value = "userName") String userName,
-                          @ApiParam(value = "角色id",required = true) @RequestParam(value = "roleId") Integer roleId,
-                          @ApiParam(value = "登录用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
-
-        System.out.println(projectId);
-        projectMemberService.test(projectId,userName,roleId,userId);
-    }
-
 }
+
