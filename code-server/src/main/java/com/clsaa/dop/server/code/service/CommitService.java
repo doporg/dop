@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.code.service;
 
 import com.clsaa.dop.server.code.model.bo.commit.CommitBo;
+import com.clsaa.dop.server.code.model.bo.commit.CommitInfoBo;
 import com.clsaa.dop.server.code.model.bo.commit.DiffBo;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
@@ -29,7 +30,7 @@ public class CommitService {
      * @param path     路径(需要urlencode)
      * @return 提交列表
      */
-    public List<CommitBo> findCommitList(String id, String path, String ref_name, Long userId) throws UnsupportedEncodingException {
+    public List<CommitBo> findCommitList(String id, String path, String ref_name, Long userId){
 
         id = URLUtil.encodeURIComponent(id);
 
@@ -68,6 +69,29 @@ public class CommitService {
 
         return RequestUtil.getList(path,userId,DiffBo.class);
 
+    }
+
+    /**
+     * 查询commit的统计信息
+     * @param id 项目id
+     * @param sha commit sha
+     * @param userId 用户id
+     * @return 统计信息
+     */
+    public CommitInfoBo findCommitInfo(String id,String sha,Long userId) {
+
+        id = URLUtil.encodeURIComponent(id);
+        sha = URLUtil.encodeURIComponent(sha);
+
+        String path = "/projects/" + id + "/repository/commits/" + sha;
+        CommitInfoBo commitInfoBo = RequestUtil.get(path, userId, CommitInfoBo.class);
+        List<String> strs = TimeUtil.natureTime(commitInfoBo.getAuthored_date());
+        commitInfoBo.setAuthored_date(strs.get(0));
+        commitInfoBo.setAuthored_time(strs.get(1));
+        commitInfoBo.setAdditions(commitInfoBo.getStats().getAdditions());
+        commitInfoBo.setDeletions(commitInfoBo.getStats().getDeletions());
+
+        return commitInfoBo;
     }
 
 }

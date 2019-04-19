@@ -99,6 +99,10 @@ class BranchList extends React.Component{
         this.props.history.push("/code/"+this.state.projectid+"/branches/new");
     }
 
+    commitLink(sha){
+        this.props.history.push("/code/"+this.state.projectid+"/commit/"+sha);
+    }
+
     render(){
         return (
             <div className="branch-list-container">
@@ -138,8 +142,8 @@ class BranchList extends React.Component{
                                             </div>
                                             <div className="div-branch-item-commit">
                                                 <img className="img-branch-item-intro" src={imgCommit}/>
-                                                <label>{item.commit_short_id}</label>
-                                                <label>&nbsp;·&nbsp;{item.commit_msg}&nbsp;·&nbsp;</label>
+                                                <a onClick={this.commitLink.bind(this,item.commit_id)}>{item.commit_short_id}</a>
+                                                <a onClick={this.commitLink.bind(this,item.commit_id)}>&nbsp;·&nbsp;{item.commit_msg}&nbsp;·&nbsp;</a>
                                                 <label>{item.commit_time}</label>
                                             </div>
                                         </div>

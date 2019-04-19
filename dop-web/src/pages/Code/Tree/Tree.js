@@ -146,6 +146,11 @@ class Tree extends React.Component{
     }
 
 
+    commitLink(sha){
+        this.props.history.push("/code/"+this.state.projectid+"/commit/"+sha);
+    }
+
+
     render(){
 
         return (
@@ -249,17 +254,28 @@ class Tree extends React.Component{
                                             }>{treeNode.name}</a>
                                         </span>
 
-                                        <span className="text-tree-commit">
-                                            {
-                                                (()=>{
-                                                    if(treeCommitInfo.length===0){
-                                                        return "";
-                                                    }else {
-                                                        return treeCommitInfo[index].commit_msg;
-                                                    }
-                                                })()
-                                            }
-                                        </span>
+                                        {/*<span className="text-tree-commit">*/}
+                                            {/*{*/}
+                                                {/*(()=>{*/}
+                                                    {/*if(treeCommitInfo.length===0){*/}
+                                                        {/*return "";*/}
+                                                    {/*}else {*/}
+                                                        {/*return treeCommitInfo[index].commit_msg;*/}
+                                                    {/*}*/}
+                                                {/*})()*/}
+                                            {/*}*/}
+                                        {/*</span>*/}
+
+
+                                        {
+                                            (()=>{
+                                                if(treeCommitInfo.length===0){
+                                                    return <span className="text-tree-commit"/>;
+                                                }else {
+                                                    return <a onClick={this.commitLink.bind(this,treeCommitInfo[index].commit_id)} className="text-tree-commit">{treeCommitInfo[index].commit_msg}</a> ;
+                                                }
+                                            })()
+                                        }
 
 
                                         {

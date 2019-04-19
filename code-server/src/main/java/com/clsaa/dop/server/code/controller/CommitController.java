@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.code.controller;
 
 import com.clsaa.dop.server.code.model.bo.commit.CommitBo;
+import com.clsaa.dop.server.code.model.bo.commit.CommitInfoBo;
 import com.clsaa.dop.server.code.model.bo.commit.DiffBo;
+import com.clsaa.dop.server.code.model.vo.commit.CommitInfoVo;
 import com.clsaa.dop.server.code.model.vo.commit.CommitVo;
 import com.clsaa.dop.server.code.model.vo.commit.DiffVo;
 import com.clsaa.dop.server.code.service.CommitService;
@@ -51,8 +53,8 @@ public class CommitController {
     }
 
 
-    @ApiOperation(value = "查看项目的某一次具体提交",notes = "根据项目的id和提交的commit sha查看commit的git diff内容")
-    @GetMapping("/projects/{username}/{projectname}/repository/commit")
+    @ApiOperation(value = "查看项目的某一次具体提交git diff",notes = "根据项目的id和提交的commit sha查看commit的git diff内容")
+    @GetMapping("/projects/{username}/{projectname}/repository/commit/diff")
     public List<DiffVo> findDiff(@ApiParam(value = "用户名") @PathVariable("username") String username,
                                  @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
                                  @ApiParam(value = "commit sha") @RequestParam("sha") String sha,
@@ -64,6 +66,17 @@ public class CommitController {
             diffVos.add(BeanUtils.convertType(diffBo,DiffVo.class));
         }
         return diffVos;
+    }
+
+    @ApiOperation(value = "查看项目的某一次具体提交统计信息",notes = "根据项目的id和提交的commit sha查看commit的统计信息")
+    @GetMapping("/projects/{username}/{projectname}/repository/commit")
+    public CommitInfoVo findCommitInfo(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                       @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                       @ApiParam(value = "commit sha") @RequestParam("sha") String sha,
+                                       @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        return BeanUtils.convertType(commitService.findCommitInfo(id,sha,userId),CommitInfoVo.class);
+
     }
 
 
