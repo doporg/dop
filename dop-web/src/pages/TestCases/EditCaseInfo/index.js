@@ -36,6 +36,7 @@ export default class EditCaseInfo extends Component {
           waitOperations: []
         }
       ],
+      caseDto: {}
     };
 
     this.doGetCase(case_Id);
@@ -56,14 +57,13 @@ export default class EditCaseInfo extends Component {
       if (caseDto) {
         let newStages = _this.doTrans(caseDto);
         _this.setState({
-          stages: newStages
+          stages: newStages,
+          caseDto: caseDto
         });
-        console.log(newStages);
       }else {
         Toast.error("No interface case info!");
       }
     }).catch(function (error) {
-      console.log(error);
       Toast.error(error);
     });
   }
@@ -75,7 +75,7 @@ export default class EditCaseInfo extends Component {
   render() {
     return (
         <div className="edit-case-info-page">
-          <DetailTable/>
+          <DetailTable caseDto={this.state.caseDto}/>
           <StepForm caseId={this.state.caseId} stages={this.state.stages} operation='UPDATE'/>
         </div>
     );

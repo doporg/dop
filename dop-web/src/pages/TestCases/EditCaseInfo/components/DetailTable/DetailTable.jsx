@@ -1,59 +1,41 @@
 import React, { Component } from 'react';
 import IceContainer from '@icedesign/container/lib/index';
+import {
+  FormBinder as IceFormBinder,
+  FormBinder,
+  FormBinderWrapper,
+  FormError as IceFormError,
+  FormError
+} from "@icedesign/form-binder";
+import {Feedback, Grid, Input} from "@icedesign/base";
+import {TestSteps} from "../../../components/CreateTestCases/TestStep";
 
-export default class DetailTable extends Component {
-  static displayName = 'DetailTable';
-
-  static propTypes = {};
-
-  static defaultProps = {};
-
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <div className="detail-table">
-        <IceContainer title="任务详情">
-          <ul style={styles.detailTable}>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>任务标题：</div>
-              <div style={styles.detailBody}>集盒家居旗舰店双十一活动</div>
-            </li>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>单个任务金额：</div>
-              <div style={styles.detailBody}>¥ 1000.00</div>
-            </li>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>接单时间：</div>
-              <div style={styles.detailBody}>2017-10-18 12:20:07</div>
-            </li>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>商家联系方式：</div>
-              <div style={styles.detailBody}>15112111213</div>
-            </li>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>任务状态：</div>
-              <div style={styles.detailBody}>
-                <span style={styles.statusProcessing}>进行中</span>
-              </div>
-            </li>
-            <li style={styles.detailItem}>
-              <div style={styles.detailTitle}>收货地址：</div>
-              <div style={styles.detailBody}>
-                浙江省杭州市余杭区文一西路969号淘宝城
-              </div>
-            </li>
-          </ul>
-        </IceContainer>
-      </div>
-    );
-  }
-}
+const { Row, Col } = Grid;
 
 const styles = {
+  formItem: {
+    marginBottom: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    color: '#999999'
+  },
+  formItemLabel: {
+    width: '70px',
+    mariginRight: '10px',
+    display: 'inline-block',
+    textAlign: 'right',
+  },
+  formItemError: {
+    marginLeft: '10px',
+  },
+  preview: {
+    border: '1px solid #eee',
+    marginTop: 20,
+    padding: 10
+  },
+  formCommonWidth: {
+    width: "550px"
+  },
   detailItem: {
     padding: '15px 0px',
     display: 'flex',
@@ -72,3 +54,93 @@ const styles = {
     color: '#64D874',
   },
 };
+
+const Toast = Feedback.toast;
+
+export default class DetailTable extends Component {
+  static displayName = 'DetailTable';
+
+  static propTypes = {};
+
+  static defaultProps = {};
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      caseDto: this.props.caseDto
+    };
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setState({
+      caseDto: nextProps.caseDto
+    })
+  }
+
+  render() {
+    return (
+      <div className="detail-table">
+        <IceContainer title="测试接口详情">
+          <FormBinderWrapper
+              value={this.state.caseDto}
+              ref="form"
+          >
+            <div style={styles.content}>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>用例名称：</span>
+                <FormBinder name="caseName" required message="请输入正确的用例名称" >
+                  <Input placeholder="case name" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="caseName" />
+              </div>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>应用ID：</span>
+                <FormBinder name="applicationId" required format="number" message="请绑定用例对应的应用id" >
+                  <Input placeholder="application id" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="application id" />
+              </div>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>用例描述：</span>
+                <FormBinder name="caseDesc" required  message="用例描述必须填写" >
+                  <Input multiple placeholder="用例描述" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="caseDesc" />
+              </div>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>前置条件：</span>
+                <FormBinder name="preCondition" required  message="前置条件必须填写" >
+                  <Input multiple placeholder="前置条件" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="preCondition" />
+              </div>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>测试步骤：</span>
+                <FormBinder name="steps" required format="number" message="测试步骤必须填写" >
+                  <Input multiple placeholder="测试步骤" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="steps" />
+              </div>
+
+              <div style={styles.formItem}>
+                <span style={styles.formItemLabel}>预期结果：</span>
+                <FormBinder name="predicateResult" required format="number" message="预期结果必须填写" >
+                  <Input multiple placeholder="预期结果" style={styles.formCommonWidth}/>
+                </FormBinder>
+                <FormError style={styles.formItemError} name="predicateResult" />
+              </div>
+
+            </div>
+          </FormBinderWrapper>
+
+        </IceContainer>
+      </div>
+    );
+  }
+}
+
