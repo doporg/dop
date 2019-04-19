@@ -17,6 +17,7 @@ import SSHREADME from './SSHREADME'
 import BranchList from './BranchList'
 import NewBranch from './NewBranch'
 import TagList from './TagList'
+import NewTag from './NewTag'
 
 const codeConfig = [
 
@@ -95,6 +96,11 @@ const codeConfig = [
         path: '/code/:username/:projectname/tags',
         layout: CodeProjectLayout,
         component: TagList
+    },
+    {
+        path: '/code/:username/:projectname/tags/new',
+        layout: CodeProjectLayout,
+        component: NewTag
     },
     {
         path: '/code/:username/:projectname/edit',
