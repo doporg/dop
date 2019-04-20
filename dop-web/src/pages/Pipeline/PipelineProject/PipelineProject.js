@@ -132,7 +132,7 @@ export default class PipelineProject extends Component {
         }).catch((error)=>{
             toast.show({
                 type: "error",
-                content: "运行失败请重新编写您的流水线阶段",
+                content: "启动运行失败",
                 duration: 3000
             });
             self.setState({

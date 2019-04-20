@@ -174,6 +174,12 @@ export default class EditPipelineInfo extends Component {
                     self.props.history.push('/pipeline')
                 })
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "保存失败",
+                duration: 1000
+            });
         })
     }
     createJenkins(){

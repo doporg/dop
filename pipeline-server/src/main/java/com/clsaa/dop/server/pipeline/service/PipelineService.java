@@ -51,7 +51,7 @@ public class PipelineService {
     /**
      * 添加流水线信息
      */
-    public String addPipeline(PipelineVoV1 pipelineV1) {
+    public String addPipeline(PipelineVoV1 pipelineV1, Long loginUser) {
         ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
                 .id(id)
@@ -68,6 +68,12 @@ public class PipelineService {
                 .build();
 
         pipelineRepository.insert(pipeline);
+
+        //拿到 result output id
+        String resultOutputId = this.resultOutputService.create(id.toString());
+        //拿到 校验流水线信息完整
+        PipelineBoV1 pipelineBoV1 = this.setInfo(id.toString(), resultOutputId, loginUser);
+        this.jenkinsService.createJob(pipelineBoV1, "1.0");
         return id.toString();
     }
 
@@ -258,20 +264,20 @@ public class PipelineService {
             dockerPassword = userCredentialV1.getCredential();
 
 
-            if(pipelineBoV1.getAppId() != null){
+            if (pipelineBoV1.getAppId() != null) {
 
                 AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
             }
 
-            if(pipelineBoV1.getAppEnvId() != null){
+            if (pipelineBoV1.getAppEnvId() != null) {
                 repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
             }
 
-            if(repositoryVersion != null){
+            if (repositoryVersion != null) {
                 deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
-                if(deploy == null){
+                if (deploy == null) {
                     deploy = "apiVersion: extensions/v1beta1\n" +
                             "kind: Deployment\n" +
                             "metadata:\n" +
@@ -311,10 +317,10 @@ public class PipelineService {
                             "            path: /etc/timezone";
                 }
                 KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipelineBoV1.getAppEnvId());
-                if(kubeCredentialWithTokenV1 == null){
+                if (kubeCredentialWithTokenV1 == null) {
                     ip = "https://121.43.191.226:6443";
                     token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1sY25kOCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImIyZDBlYTQzLTA5MzAtMTFlOS1hYmM3LTAwMTYzZTBlYzFjZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.KlrkaUDeoyWngUwbmGS2C7gpSixEYJYRgv52w9v_YVLe_uDO_SdHAaQanxG8W23RbKxYPRt_0S7haFy-gU5ngbuYPxHVvPMoB8gVrPX8dGOvYpxvs26eOEjibgnfJTmegWBgylSP9ULKqLTgJ3feFiUyMtd_metvaCSJInPDonDFlvNTzLIn8sOxE3Qxq3fAApNgkxNeuHT8vygznoLysv0I3Tzobhn5R78q5D1QL01AxRlAIKm57i6h5X7utoXrnt8JbuLlMk2ZERa8ANTlhTDhFOj4ODiAqWgN2gtDUmX9ACGHr7kbU8HW_COj4QMS6gLNdnI4bBxTCWVSL-er9Q";
-                }else{
+                } else {
                     ip = kubeCredentialWithTokenV1.getTargetClusterUrl();
                     token = kubeCredentialWithTokenV1.getTargetClusterToken();
                 }
