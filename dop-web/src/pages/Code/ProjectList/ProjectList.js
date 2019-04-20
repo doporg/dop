@@ -64,7 +64,7 @@ class ProjectList extends React.Component {
 
     componentWillMount() {
 
-        let url = API.code + "/projectlist?sort=" + this.state.sort + "&userId=" + sessionStorage.getItem("user-id");
+        let url = API.code + "/projects?sort=" + this.state.sort + "&userId=" + sessionStorage.getItem("user-id");
         let self = this;
         Axios.get(url).then((response) => {
             const pageTotal = Math.ceil(response.data.length / this.state.pageSize);

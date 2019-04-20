@@ -18,6 +18,7 @@ import BranchList from './BranchList'
 import NewBranch from './NewBranch'
 import TagList from './TagList'
 import NewTag from './NewTag'
+import ProtectBranch from './ProtectBranch'
 
 const codeConfig = [
 
@@ -107,6 +108,11 @@ const codeConfig = [
         layout: CodeSettingLayout,
         component: EditProject
     },
+    {
+        path: '/code/:username/:projectname/protected_branches',
+        layout: CodeSettingLayout,
+        component: ProtectBranch
+    }
 
 
 ];

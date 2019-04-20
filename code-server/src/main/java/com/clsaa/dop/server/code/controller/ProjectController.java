@@ -46,7 +46,7 @@ public class ProjectController {
     }
 
     @ApiOperation(value = "查找用户参与的项目",notes = "根据用户名查找用户参与的项目")
-    @GetMapping("/projectlist")
+    @GetMapping("/projects")
     public List<ProjectListVo> findProjectList(@ApiParam(value = "分类")@RequestParam("sort")String sort,
                                                @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
         List<ProjectListBo> listBos= projectService.findProjectList(sort,userId);
@@ -123,6 +123,11 @@ public class ProjectController {
         String id=username+"/"+projectname;
         return projectService.findProjectDefaultBranch(id,userId);
     }
+
+
+
+
+
 
 
 
