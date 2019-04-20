@@ -7,7 +7,7 @@ import {
   FormError as IceFormError,
   FormError
 } from "@icedesign/form-binder";
-import {Feedback, Grid, Input} from "@icedesign/base";
+import {Button, Feedback, Grid, Input, Icon} from "@icedesign/base";
 import {TestSteps} from "../../../components/CreateTestCases/TestStep";
 
 const { Row, Col } = Grid;
@@ -80,11 +80,7 @@ export default class DetailTable extends Component {
   render() {
     return (
       <div className="detail-table">
-        <IceContainer title="测试接口详情">
-          <FormBinderWrapper
-              value={this.state.caseDto}
-              ref="form"
-          >
+
             <div style={styles.content}>
 
               <div style={styles.formItem}>
@@ -134,11 +130,7 @@ export default class DetailTable extends Component {
                 </FormBinder>
                 <FormError style={styles.formItemError} name="predicateResult" />
               </div>
-
             </div>
-          </FormBinderWrapper>
-
-        </IceContainer>
       </div>
     );
   }

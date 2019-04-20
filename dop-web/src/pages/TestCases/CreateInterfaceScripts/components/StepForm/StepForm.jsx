@@ -3,7 +3,7 @@ import IceContainer from '@icedesign/container';
 import {
   Grid,
   Step,
-  Feedback, Icon
+  Feedback, Icon, Button
 } from '@icedesign/base';
 
 import RequestStageForm from "./RequestStageForm";
@@ -35,21 +35,15 @@ class StepForm extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    /*if (nextProps.caseId !== this.props.caseId) {
-      this.setState({
-        stages: nextProps.stages
-      });
-    }*/
     this.setState({
       step: 0,
-      caseId: this.state.caseId,
+      caseId: nextProps.caseId,
       stages: nextProps.stages,
       operation: nextProps.operation
     }, this.nextStep);
   }
 
   nextStep = (stage) => {
-    console.log("Next Step!");
     let newStep = this.state.step + 1;
     this.setState({
       step: newStep,
@@ -66,9 +60,6 @@ class StepForm extends Component {
   };
 
   postToServer = (stage) => {
-    if (this.state.stages.length < 3) {
-      this.state.stages.push(stage);
-    }
     let _this = this;
     let stages = this.state.stages;
     if (this.state.operation === 'UPDATE') {
@@ -86,20 +77,14 @@ class StepForm extends Component {
         Toast.error(error);
       });
     }else if (this.state.operation === 'INSERT') {
-      let url = API.test + '/interfaceCases/stages';
-      Axios.post(url, stages, {
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8'
-        }
-      })
-          .then(function (response) {
-            Toast.success("添加测试脚本成功！");
-            _this.props.history.push('/testCases');
-          }).catch(function (error) {
-        console.log(error);
-        Toast.error(error);
-      });
+      this.props.saveParams();
     }
+  };
+
+  clickStep = (index) =>{
+    this.setState({
+      step: index
+    })
   };
 
   renderStep = (step) => {
@@ -122,7 +107,7 @@ class StepForm extends Component {
   render() {
     return (
       <div className="step-form">
-        <IceContainer>
+        <IceContainer title='测试脚本'>
           <Row wrap>
             <Col xxs="24" s="5" l="5" style={styles.formLabel}>
               <Step
@@ -132,14 +117,23 @@ class StepForm extends Component {
                 animation={false}
                 style={styles.step}
               >
-                <Step.Item title="准备" content="" />
-                <Step.Item title="测试" content="" />
-                <Step.Item title="测试后" content="" />
+                <Step.Item title="准备" content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title="测试" content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title="测试后" content="" onClick={this.clickStep.bind(this)}/>
               </Step>
             </Col>
 
             <Col xxs="24" s="18" l="18">
               {this.renderStep(this.state.step)}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Button type="secondary" onClick={this.postToServer}>
+                <Icon type="success" size='xxl'/>
+                {this.props.btnText}
+              </Button>
             </Col>
           </Row>
         </IceContainer>

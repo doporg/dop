@@ -67,9 +67,6 @@ export default class RequestStageForm extends Component{
     };
 
     removeOperation = (index) => {
-        this.state.value.operations.splice(index, 1);
-        this.state.value.requestScripts.splice(index, 1);
-        this.state.value.waitOperations.splice(index, 1);
         this.state.value.operations.map((operation,i) => {
             if (i > index) {
                 operation.order -= 1;
@@ -85,7 +82,9 @@ export default class RequestStageForm extends Component{
                 wait.order -= 1;
             }
         });
-
+        this.state.value.operations.splice(index, 1);
+        this.state.value.requestScripts.splice(index, 1);
+        this.state.value.waitOperations.splice(index, 1);
         this.setState({
             value: this.state.value
         });

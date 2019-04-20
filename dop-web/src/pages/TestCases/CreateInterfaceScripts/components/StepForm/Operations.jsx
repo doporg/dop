@@ -78,7 +78,7 @@ export default class Operations extends Component{
                 {this.state.operations.map((operation, index) => {
                     if (operation.operationType === 'REQUEST') {
                         return (
-                            <div>
+                            <div key={Math.random()}>
                                 <IcePanel status='primary' style={{marginBottom: '10px'}}>
                                     <IcePanel.Header>
                                         <Row>
@@ -107,7 +107,7 @@ export default class Operations extends Component{
                     );
                     }else if (operation.operationType === 'WAIT') {
                         return(
-                            <div>
+                            <div key={Math.random()}>
                                 <IcePanel status='danger' style={{marginBottom: '10px'}}>
                                     <IcePanel.Header>
                                         <Row>
