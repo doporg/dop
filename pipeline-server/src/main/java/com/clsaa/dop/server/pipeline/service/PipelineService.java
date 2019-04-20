@@ -39,6 +39,8 @@ public class PipelineService {
     @Autowired
     private JenkinsService jenkinsService;
 
+    @Autowired
+    private ResultOutputService resultOutputService;
 
     @Autowired
     private ApplicationFeign applicationFeign;
@@ -67,7 +69,6 @@ public class PipelineService {
 
         pipelineRepository.insert(pipeline);
         return id.toString();
-
     }
 
     public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {

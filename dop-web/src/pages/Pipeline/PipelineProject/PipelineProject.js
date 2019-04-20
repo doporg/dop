@@ -85,10 +85,10 @@ export default class PipelineProject extends Component {
                         content: "该流水线尚未运行",
                         duration: 3000
                     });
-                    self.clear();
                     self.setState({
                         visible: false
                     });
+                    self.clear();
                 }
             })
         })
@@ -129,6 +129,16 @@ export default class PipelineProject extends Component {
                     time: time
                 });
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "运行失败请重新编写您的流水线阶段",
+                duration: 3000
+            });
+            self.setState({
+                visible: false,
+                resultStatus: "RUN"
+            });
         })
     }
 
@@ -137,7 +147,6 @@ export default class PipelineProject extends Component {
     }
 
     setResult() {
-        console.log(1111)
         this.setState({
             resultStatus: "RUN"
         });

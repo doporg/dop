@@ -53,7 +53,7 @@ export default class PipelineInfo extends Component {
     getApplication() {
         let url = API.application + "/app?ouser=" + window.sessionStorage.getItem('user-id');
         let self = this;
-        let applications = self.state.applications
+        let applications = self.state.applications;
         Axios.get(url).then((response) => {
             if (response.status === 200) {
                 for (let i = 0; i < response.data.length; i++) {
@@ -145,10 +145,15 @@ export default class PipelineInfo extends Component {
             });
         })
     }
-    
+
     save() {
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
+        toast.show({
+            type: "loading",
+            content: "正在提交请稍后",
+            duration: 4000
+        });
         Axios({
             method: 'post',
             url: url,
@@ -162,6 +167,12 @@ export default class PipelineInfo extends Component {
                 });
                 self.props.history.push('/pipeline')
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "保存失败",
+                duration: 1000
+            });
         })
     }
 
