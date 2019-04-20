@@ -85,11 +85,11 @@ export default class PipelineProject extends Component {
                         content: "该流水线尚未运行",
                         duration: 3000
                     });
-                    self.setState({
-                        visible: false
-                    });
-                    self.clear();
                 }
+                self.setState({
+                    visible: false
+                });
+                self.clear();
             })
         })
     }
