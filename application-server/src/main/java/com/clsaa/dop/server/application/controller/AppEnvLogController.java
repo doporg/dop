@@ -41,7 +41,7 @@ public class AppEnvLogController {
     @PostMapping("/app/env/{appEnvId}/log")
     public void addLog(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
-            @PathVariable Long appEnvId,
+            @PathVariable(value = "appEnvId") Long appEnvId,
             @RequestBody LogInfoV1 logInfoV1) throws Exception {
         this.appEnvLogService.addLog(loginUser, logInfoV1, appEnvId);
     }

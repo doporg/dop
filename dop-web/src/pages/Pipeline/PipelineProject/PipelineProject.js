@@ -19,7 +19,7 @@ export default class PipelineProject extends Component {
         this.state = {
             visible: false,
             pipelineId: this.props.match.params.id,
-            pipeline:{},
+            pipeline: {},
             runs: {
                 _links: {
                     self: {
@@ -29,7 +29,7 @@ export default class PipelineProject extends Component {
             },
             queue: [],
             time: "",
-            resultStatus: "run"
+            resultStatus: "RUN"
         }
     }
 
@@ -70,14 +70,16 @@ export default class PipelineProject extends Component {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
-                            self.setResult();
+                            if (self.state.resultStatus === "BUILD") {
+                                self.setResult();
+                            }
                         }
                     }
                 }
                 reject()
-            }).catch((error)=>{
+            }).catch((error) => {
                 let self = this;
-                if(error.response.status === 500 && error.response.data.message === "404 Not Found"){
+                if (error.response.status === 500 && error.response.data.message === "404 Not Found") {
                     toast.show({
                         type: "prompt",
                         content: "该流水线尚未运行",
@@ -92,7 +94,7 @@ export default class PipelineProject extends Component {
         })
     }
 
-    getPipelineInfo(){
+    getPipelineInfo() {
         let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
         let self = this;
 
@@ -107,7 +109,10 @@ export default class PipelineProject extends Component {
 
     buildPipeline() {
         let self = this;
-        self.setState({visible: true});
+        self.setState({
+            visible: true,
+            resultStatus: "BUILD"
+        });
         let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
@@ -126,14 +131,19 @@ export default class PipelineProject extends Component {
             }
         })
     }
+
     clear() {
         clearInterval(this.state.time);
     }
 
     setResult() {
-        let url = API.pipeline + '/v1/resultOutput/notify/'+ this.state.pipelineId;
+        console.log(1111)
+        this.setState({
+            resultStatus: "RUN"
+        });
+        let url = API.pipeline + '/v1/resultOutput/notify/' + this.state.pipelineId;
         Axios.post(url).then((response) => {
-        }).catch(()=>{
+        }).catch(() => {
             toast.show({
                 type: "error",
                 content: "此次执行信息丢失",
