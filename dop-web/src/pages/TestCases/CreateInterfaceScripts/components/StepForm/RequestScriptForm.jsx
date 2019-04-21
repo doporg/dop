@@ -8,7 +8,7 @@ import {
     Input,
     Button,
     Checkbox,
-    Grid,
+    Grid, Icon,Balloon
 } from '@icedesign/base';
 import {TabPane} from "@icedesign/base/lib/tab";
 import Tab from "@icedesign/base/lib/tab";
@@ -19,6 +19,42 @@ import Select from "@icedesign/base/lib/select";
 import ResultParam from "./ResultParam";
 
 const { Row, Col } = Grid;
+const demo = JSON.stringify({
+    "a": "1",
+    "b": "2"
+});
+
+const paramTab = (
+    <div>
+        添加参数&nbsp;
+        <Balloon trigger={
+            <Icon type="help" size='xs'/>
+        } triggerType="hover" align='r'>
+            选择当前请求的响应数据作为后续请求的参数, 对于形如
+            <code>
+                {demo}
+            </code>
+            的JSON响应体数据，添加参数名:paramA ， 值:a ，在后续请求中用$&#123;paramA&#125;引用参数即可.
+        </Balloon>
+    </div>
+);
+
+
+const checkPointTab = (
+    <div>
+        检查点&nbsp;
+        <Balloon trigger={
+            <Icon type="help" size='xs'/>
+        } triggerType="hover" align='r'>
+            自动校验响应体的JSON数据, 对于形如
+            <code>
+                {demo}
+            </code>
+            的JSON响应体数据，可设置属性a等于1，作为测试用例是否执行成功的依据。
+        </Balloon>
+    </div>
+);
+
 
 export default class RequestScriptForm extends Component{
 
@@ -93,14 +129,14 @@ export default class RequestScriptForm extends Component{
         });
     };
 
-    renderTab = (tab) => {
-        if (tab === '请求头') {
+    renderTab = (key) => {
+        if (key === 'header') {
             return <RequestHeader
                 requestHeaders={this.state.value.requestHeaders}
                 addItem={this.addItem.bind(this)}
                 removeItem={this.removeItem.bind(this)}/>;
         }
-        if (tab === '请求体') {
+        if (key === 'body') {
             return <Row>
                 <Col>
                     <FormBinder name="requestBody" >
@@ -109,13 +145,13 @@ export default class RequestScriptForm extends Component{
                 </Col>
             </Row>;
         }
-        if (tab === '检查点') {
+        if (key === 'checkPoint') {
             return <RequestCheckPoint
                 requestCheckPoints={this.state.value.requestCheckPoints}
                 addItem={this.addCheckPoint.bind(this)}
                 removeItem={this.removeCheckPoint.bind(this)}/>;
         }
-        if (tab === '添加参数') {
+        if (key === 'requestParam') {
             return <ResultParam
                 resultParams={this.state.value.resultParams}
                 addItem={this.addResultParam.bind(this)}
@@ -134,12 +170,13 @@ export default class RequestScriptForm extends Component{
         })
     }
 
+
     render() {
         const tabs = [
             { tab: "请求头", key: "header", content: "这里是首页内容" },
             { tab: "请求体", key: "body", content: "这里是文档内容" },
-            { tab: "检查点", key: "checkPoint", content: "这里是 API 内容" },
-            { tab: "添加参数", key: "requestParam", content: "这里是 API 内容" }
+            { tab: checkPointTab, key: "checkPoint", content: "这里是 API 内容" },
+            { tab: paramTab, key: "requestParam", content: "这里是 API 内容" }
         ];
 
         return (
@@ -174,7 +211,7 @@ export default class RequestScriptForm extends Component{
                                 value={this.state.value}
                                 ref="form"
                             >
-                                {this.renderTab(item.tab)}
+                                {this.renderTab(item.key)}
                             </FormBinderWrapper>
                         </TabPane>
                     ))}
