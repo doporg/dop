@@ -234,5 +234,69 @@ public class ProjectService {
 
     }
 
+    /**
+     * 查询项目的成员列表
+     * @param id 项目id
+     * @param userId 用户id
+     * @return 成员列表
+     */
+    public List<MemberBo> findProjectMemberList(String id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+
+        String path="/projects/"+id+"/members";
+        return RequestUtil.getList(path,userId,MemberBo.class);
+
+    }
+
+    /**
+     * 增加一个项目成员
+     * @param id 项目id
+     * @param user_id gitlab用户id
+     * @param access_level 权限等级
+     * @param userId dop用户id
+     */
+    public void addProjectMember(String id,int user_id,int access_level,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/members";
+
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("user_id",""+user_id));
+        params.add(new BasicNameValuePair("access_level",""+access_level));
+        RequestUtil.post(path,userId,params);
+
+    }
+
+    /**
+     * 修改项目成员的权限等级
+     * @param id 项目id
+     * @param user_id gitlab用户id
+     * @param access_level 权限等级
+     * @param userId dop用户id
+     */
+    public void changeProjectMemberAccessLevel(String id,int user_id,int access_level,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/members/"+user_id;
+
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("access_level",""+access_level));
+        RequestUtil.put(path,userId,params);
+    }
+
+    /**
+     * 删除一个项目成员
+     * @param user_id gitlab用户id
+     * @param userId dop用户id
+     */
+    public void deleteProjectMember(String id,int user_id,Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/members/"+user_id;
+
+        RequestUtil.delete(path,userId);
+    }
+
 
 }
