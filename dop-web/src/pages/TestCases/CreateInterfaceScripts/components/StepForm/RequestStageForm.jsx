@@ -54,7 +54,7 @@ export default class RequestStageForm extends Component{
             requestCheckPoints: [],
             retryTimes: '',
             retryInterval: '',
-            resultParams: '',
+            resultParams: [],
             operationType: 'REQUEST',
             order: index
         });
@@ -104,7 +104,7 @@ export default class RequestStageForm extends Component{
             requestCheckPoints: [],
             retryTimes: 2,
             retryInterval: 2000,
-            resultParams: '',
+            resultParams: [],
             operationType: 'REQUEST',
             order: -1
         });

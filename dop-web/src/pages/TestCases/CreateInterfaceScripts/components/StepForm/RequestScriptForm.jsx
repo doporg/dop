@@ -16,6 +16,7 @@ import RequestHeader from "./RequestHeader";
 import RequestCheckPoint from "./RequestCheckPoint";
 import {Option} from "@icedesign/base/lib/select";
 import Select from "@icedesign/base/lib/select";
+import ResultParam from "./ResultParam";
 
 const { Row, Col } = Grid;
 
@@ -76,6 +77,22 @@ export default class RequestScriptForm extends Component{
         });
     };
 
+    addResultParam = () => {
+        this.state.value.resultParams.push({
+            name: '',
+            rawValue: '',
+            paramType: 'STRING'
+        });
+        this.setState({ value: this.state.value });
+    };
+
+    removeResultParam = (index) => {
+        this.state.value.resultParams.splice(index, 1);
+        this.setState({
+            value: this.state.value
+        });
+    };
+
     renderTab = (tab) => {
         if (tab === '请求头') {
             return <RequestHeader
@@ -98,6 +115,13 @@ export default class RequestScriptForm extends Component{
                 addItem={this.addCheckPoint.bind(this)}
                 removeItem={this.removeCheckPoint.bind(this)}/>;
         }
+        if (tab === '添加参数') {
+            return <ResultParam
+                resultParams={this.state.value.resultParams}
+                addItem={this.addResultParam.bind(this)}
+                removeItem={this.removeResultParam.bind(this)}
+            />
+        }
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
@@ -114,7 +138,8 @@ export default class RequestScriptForm extends Component{
         const tabs = [
             { tab: "请求头", key: "header", content: "这里是首页内容" },
             { tab: "请求体", key: "body", content: "这里是文档内容" },
-            { tab: "检查点", key: "checkPoint", content: "这里是 API 内容" }
+            { tab: "检查点", key: "checkPoint", content: "这里是 API 内容" },
+            { tab: "添加参数", key: "requestParam", content: "这里是 API 内容" }
         ];
 
         return (

@@ -6,7 +6,6 @@ import {
 } from '@icedesign/base';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
-import Select, {Option} from "@icedesign/base/lib/select";
 
 const { Row, Col } = Grid;
 
@@ -32,37 +31,28 @@ const styles = {
     }
 };
 
-export default class RequestCheckPoint extends Component{
+export default class ResultParam extends Component{
 
     render() {
         return (
             <div>
-                {this.props.requestCheckPoints.map((requestCheckPoint, index) => {
+                {this.props.resultParams.map((resultParam, index) => {
                     return (
-                        <Row key={index} >
+                        <Row key={index} style={{marginBottom: '10px'}}>
                             <Col>
-                                <FormBinder required message="属性必填" name={`requestCheckPoints[${index}].property`} >
-                                    <Input placeholder="属性" style={{width: '100%'}} />
+                                <span style={styles.formItemLabel}>名称：</span>
+                                <FormBinder required message="参数名称必填" name={`resultParams[${index}].name`} >
+                                    <Input />
                                 </FormBinder>
-                                <FormError name={`requestCheckPoints[${index}].property`} />
+                                <FormError name={`resultParams[${index}].name`} />
                             </Col>
                             &nbsp;
                             <Col>
-                                <FormBinder required message='比较选项必选' name={`requestCheckPoints[${index}].operation`}>
-                                    <Select style={{width: '100%'}}
-                                        placeholder="选择比较选项"
-                                    >
-                                        <Option value="EQUALS">等于</Option>
-                                        <Option value="NOTEQUALS">不等于</Option>
-                                    </Select>
+                                <span style={styles.formItemLabel}>值：</span>
+                                <FormBinder name={`resultParams[${index}].rawValue`} required message="参数表达式必填" >
+                                    <Input/>
                                 </FormBinder>
-                            </Col>
-                            &nbsp;
-                            <Col>
-                                <FormBinder name={`requestCheckPoints[${index}].value`} required message="请输入预测值" >
-                                    <Input placeholder="值" style={{width: '100%'}}/>
-                                </FormBinder>
-                                <FormError name={`requestCheckPoints[${index}].value`} />
+                                <FormError name={`resultParams[${index}].rawValue`} />
                             </Col>
                             <Col>
                                 <Button type="secondary" onClick={this.props.removeItem.bind(this, index)}>
