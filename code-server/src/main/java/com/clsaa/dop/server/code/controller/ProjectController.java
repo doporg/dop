@@ -115,7 +115,7 @@ public class ProjectController {
         projectService.deleteProject(id,userId);
     }
 
-    @ApiOperation(value = "获得项目的默认分支名",nickname = "根据项目id")
+    @ApiOperation(value = "获得项目的默认分支名",notes = "根据项目id")
     @GetMapping("/projects/{username}/{projectname}/defaultbranch")
     public String findProjectDefaultBranch(@ApiParam(value = "用户名") @PathVariable("username") String username,
                                            @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
@@ -124,7 +124,11 @@ public class ProjectController {
         return projectService.findProjectDefaultBranch(id,userId);
     }
 
-
+    @ApiOperation(value = "获得用户可以拉取代码的所有项目地址",notes = "根据用户的id获得可以拉取代码的所有项目地址，包括所有的public项目，和权限在guest以上的项目" )
+    @GetMapping("/project_url_list")
+    public List<String> findProjectUrlList(@ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        return projectService.findProjectUrlList(userId);
+    }
 
 
 

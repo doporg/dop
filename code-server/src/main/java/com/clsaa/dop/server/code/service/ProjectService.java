@@ -213,4 +213,26 @@ public class ProjectService {
     }
 
 
+    /**
+     * 查询用户可以拉取代码的所有仓库地址(http)
+     * 包括所有的public项目和当前作为成员并且权限在guest以上(不包括guest)的项目
+     *
+     * @param userId 用户id
+     * @return 地址列表
+     */
+    public List<String> findProjectUrlList(Long userId) {
+
+        String path = "/projects";
+        List<ProjectUrlBo> projectUrlBos = RequestUtil.getList(path, userId, ProjectUrlBo.class);
+        List<String> res = new ArrayList<>();
+        for (ProjectUrlBo projectUrlBo : projectUrlBos) {
+            if (projectUrlBo.getVisibility().equals("public") || projectUrlBo.getPermissions().getProject_access().getAccess_level() > 10) {
+                res.add(projectUrlBo.getHttp_url_to_repo());
+            }
+        }
+        return res;
+
+    }
+
+
 }
