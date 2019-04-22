@@ -8,8 +8,8 @@ import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.AccessLog;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import com.clsaa.dop.server.image.util.Pagination;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -70,9 +70,11 @@ public class ProjectLogsService {
             count = Integer.parseInt(httpHeader.get(0));
         }
         pagination.setTotalCount(count);
+        pagination.setPageNo(page);
+        pagination.setPageSize(pageSize);
 
         if (count==0){
-            pagination.setContents(Collections.emptyList());
+            pagination.setPageList(Collections.emptyList());
             return pagination;
         }else {
             List<AccessLogBO> accessLogBOS = new ArrayList<>();
@@ -82,7 +84,7 @@ public class ProjectLogsService {
                 accessLogBO.setOpTime(TimeConvertUtil.convertTime(accessLog.getOpTime()));
                 accessLogBOS.add(accessLogBO);
             }
-            pagination.setContents(accessLogBOS);
+            pagination.setPageList(accessLogBOS);
             return pagination;
         }
     }

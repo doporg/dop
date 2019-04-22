@@ -10,11 +10,10 @@ import com.clsaa.dop.server.image.model.po.Project;
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.po.ProjectReq;
 import com.clsaa.dop.server.image.model.po.PublicStatus;
-import com.clsaa.dop.server.image.model.vo.ProjectVO;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import com.clsaa.dop.server.image.util.Pagination;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,10 +31,14 @@ import java.util.List;
  */
 @Service
 public class ProjectService {
+    private final ProjectFeign projectFeign;
+    private final UserFeign userFeign;
+
     @Autowired
-    private ProjectFeign projectFeign;
-    @Autowired
-    private UserFeign userFeign;
+    public ProjectService(ProjectFeign projectFeign, UserFeign userFeign) {
+        this.projectFeign = projectFeign;
+        this.userFeign = userFeign;
+    }
 
     /**
      * 返回对应条件的项目列表
@@ -59,9 +62,11 @@ public class ProjectService {
             count = Integer.parseInt(httpHeader.get(0));
         }
 
+        pagination.setPageSize(pageSize);
+        pagination.setPageNo(page);
         pagination.setTotalCount(count);
         if (count==0){
-            pagination.setContents(Collections.emptyList());
+            pagination.setPageList(Collections.emptyList());
             return  pagination;
         }else {
             List<ProjectBO> projectBOS = new ArrayList<>();
@@ -79,7 +84,7 @@ public class ProjectService {
                     projectBOS.add(projectBO);
                 }
             }
-            pagination.setContents(projectBOS);
+            pagination.setPageList(projectBOS);
             return pagination;
         }
     }

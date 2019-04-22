@@ -2,13 +2,14 @@ package com.clsaa.dop.server.image.service;
 
 import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.HarborRepoFeign;
+import com.clsaa.dop.server.image.model.bo.ProjectBO;
 import com.clsaa.dop.server.image.model.bo.RepositoryBO;
 import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
 import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.Repository;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import com.clsaa.dop.server.image.util.Pagination;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,13 @@ public class RepositoryService {
 
     private final UserFeign userFeign;
 
+    private final ProjectService projectService;
+
     @Autowired
-    public RepositoryService(HarborRepoFeign harborRepoFeign, UserFeign userFeign) {
+    public RepositoryService(HarborRepoFeign harborRepoFeign, UserFeign userFeign,ProjectService projectService) {
         this.harborRepoFeign = harborRepoFeign;
         this.userFeign = userFeign;
+        this.projectService = projectService;
     }
 
     /**
@@ -61,10 +65,12 @@ public class RepositoryService {
 
         Pagination<RepositoryBO> pagination = new Pagination<>();
         pagination.setTotalCount(count);
+        pagination.setPageSize(pageSize);
+        pagination.setPageNo(page);
 
 
         if (count==0){
-            pagination.setContents(Collections.emptyList());
+            pagination.setPageList(Collections.emptyList());
             return pagination;
         }else {
             List<RepositoryBO> repositoryBOS = new ArrayList<>();
@@ -72,7 +78,7 @@ public class RepositoryService {
                 RepositoryBO repositoryBO = BeanUtils.convertType(repository,RepositoryBO.class);
                 repositoryBOS.add(repositoryBO);
             }
-            pagination.setContents(repositoryBOS);
+            pagination.setPageList(repositoryBOS);
             return pagination;
         }
     }
@@ -89,5 +95,30 @@ public class RepositoryService {
         String repo = projectName+"/"+repoName;
         System.out.println(repo);
         harborRepoFeign.repositoriesRepoNameDelete(repo,auth);
+    }
+
+    public List<String> getRepoAddress(String projectName,Long userId){
+        List<String> list = new ArrayList<>();
+        String beginAddress = "registry.dop.clsaa.com/";
+        //通过项目名称获取项目id
+        Pagination<ProjectBO> pagination = projectService.getProjects(projectName,null,null,1,10,userId);
+        Integer projectId = pagination.getPageList().get(0).getProjectId();
+        Pagination<RepositoryBO> pagination1 = getRepositories(projectId,"","",null,1,10,userId);
+        int totalCount = pagination1.getTotalCount();
+        //不是最后一页的处理
+        while (!pagination1.isLastPage()){
+            for (int begin =0;begin<pagination1.getPageSize();begin++){
+                String address = beginAddress+pagination1.getPageList().get(begin).getName();
+                list.add(address);
+            }
+            pagination1 = getRepositories(projectId,"","",null,pagination1.getNextPage(),10,userId);
+        }
+        //对于最后一页的处理
+        int lastCount = totalCount - (pagination1.getPageNo()-1)*pagination1.getPageSize();
+        for (int begin=0;begin<lastCount;begin++){
+            String address = beginAddress+pagination1.getPageList().get(begin).getName();
+            list.add(address);
+        }
+        return  list;
     }
 }

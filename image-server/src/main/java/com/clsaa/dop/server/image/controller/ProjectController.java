@@ -6,7 +6,7 @@ import com.clsaa.dop.server.image.model.po.ProjectMetadata;
 import com.clsaa.dop.server.image.model.vo.ProjectVO;
 import com.clsaa.dop.server.image.service.ProjectService;
 import com.clsaa.dop.server.image.util.BeanUtils;
-import com.clsaa.dop.server.image.util.Pagination;
+import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,9 @@ public class ProjectController {
                                              @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
         Pagination<ProjectBO> projectBOPagination = projectService.getProjects(name,publicStatus,owner,page,pageSize,userId);
         Pagination<ProjectVO> pagination = new Pagination<>();
-        pagination.setContents(BeanUtils.convertList(projectBOPagination.getContents(),ProjectVO.class));
+        pagination.setPageNo(page);
+        pagination.setPageSize(pageSize);
+        pagination.setPageList(BeanUtils.convertList(projectBOPagination.getPageList(),ProjectVO.class));
         pagination.setTotalCount(projectBOPagination.getTotalCount());
         return pagination;
     }
