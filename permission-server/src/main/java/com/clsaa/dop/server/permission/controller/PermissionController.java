@@ -1,9 +1,6 @@
 package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
-import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
-import com.clsaa.dop.server.permission.model.po.Permission;
-
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.service.PermissionService;
 import com.clsaa.dop.server.permission.util.BeanUtils;
@@ -12,11 +9,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -62,8 +57,8 @@ public class PermissionController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
         )
     {
-        permissionService.createPermission(parentId,name,isPrivate,
-                description,loginUser,loginUser);
+        permissionService.createPermission(loginUser,parentId,name,isPrivate,
+                description,loginUser);
     }
 
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
@@ -102,7 +97,7 @@ public class PermissionController {
                            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
                            )
     {
-        permissionService.deleteById(id,loginUser);
+        permissionService.deleteById(loginUser,id);
     }
 
     @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")

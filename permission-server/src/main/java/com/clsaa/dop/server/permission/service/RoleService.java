@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.permission.service;
 
+import com.clsaa.dop.server.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.RoleRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -20,10 +21,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -79,11 +77,9 @@ public class RoleService {
 
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-
-    public Long createRole(Long parentId,String name, Long cuser,Long muser)
+    @PermissionName(name = "创建角色")
+    public Long createRole(Long cuser,Long parentId,String name,Long muser)
     {
-            if(authenticationService.checkUserPermission("创建角色",cuser))
-            {
                 Role existRole=this.roleRepository.findByName(name);
                 BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
                 Role role= Role.builder()
@@ -105,8 +101,6 @@ public class RoleService {
                                 authenticationService.findByName("权限管理员").getId()).getId(),
                         cuser,role.getId(),cuser);
                 return role.getId();
-            }
-            return null;
 
     }
 
@@ -126,7 +120,9 @@ public class RoleService {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //分页查询所有角色
-    public Pagination<RoleV1> getRoleV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
+
+    @PermissionName(name = "查询角色")
+    public Pagination<RoleV1> getRoleV1Pagination(Long userId,Integer pageNo, Integer pageSize,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
@@ -158,10 +154,23 @@ public class RoleService {
         //类型转换
         List<RoleV1> roleV1List=roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
 
-        for(RoleV1 roleV1 :roleV1List)
+
+        //获取每条数据的创建人
+        Map<Long,String> userMap=new HashMap<>();
+        for(RoleV1 roleV1 : roleV1List)
         {
-            roleV1.setUserName(userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
+            if(!userMap.containsKey(roleV1.getMuser()))
+            {
+                userMap.put(
+                        roleV1.getMuser(),
+                        userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
+            }
         }
+        for(RoleV1 roleV1 : roleV1List)
+        {
+            roleV1.setUserName(userMap.get(roleV1.getMuser()));
+        }
+
         pagination.setPageList(roleV1List);
         return pagination;
     }
@@ -171,18 +180,16 @@ public class RoleService {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //根据ID删除角色,并删除关联关系和数据规则
-    @Transactional
-    public void deleteById(Long id ,Long userId)
+
+    @PermissionName(name="删除角色")
+    public void deleteById(Long userId,Long id)
     {
-        if(permissionService.checkUserPermission("删除角色",userId))
-        {
             if(authenticationService.check("删除角色",userId,"roleId",id))
             {
                 rolePermissionMappingService.deleteByRoleId(id);
                 userRuleService.deleteByRoleId(id);
                 roleRepository.deleteById(id);
             }
-        }
     }
 
     //查询所有权限的ID和名称
