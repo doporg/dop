@@ -18,13 +18,15 @@ export default class ImageList extends Component {
         let _this = this;
         Axios.get(url,{
             params:{
-                name:this.props.location.pathname.split("/")[2]
+                name:this.props.location.pathname.split("/")[2],
+                page:1,
+                pageSize:10
             }
         }).then(
             function (response) {
-                console.log(response.data)
+                console.log("目前命名空间",response.data)
                 _this.setState({
-                    namespaceId:response.data.contents[0].projectId
+                    namespaceId:response.data.pageList[0].projectId
                 })
             }
         )

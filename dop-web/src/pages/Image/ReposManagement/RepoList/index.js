@@ -51,7 +51,7 @@ export default class RepoList extends Component {
                     console.log(response.data);
                     if (response.data.totalCount!==0){
                         _this.setState({
-                            currentData: response.data.contents,
+                            currentData: response.data.pageList,
                             totalCount:response.data.totalCount,
                             loading:false
                         });
@@ -79,7 +79,7 @@ export default class RepoList extends Component {
                     console.log(response.data);
                     if (response.data.totalCount!==0){
                         _this.setState({
-                            currentData: response.data.contents,
+                            currentData: response.data.pageList,
                             totalCount:response.data.totalCount,
                             loading:false
                         });
