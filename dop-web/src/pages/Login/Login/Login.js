@@ -144,7 +144,7 @@ export default class Login extends Component {
 
     }
     submit(data){
-        let self = this
+        let self = this;
         this.login(data).then(()=>{
             self.getUser()
         }).then(()=>{
