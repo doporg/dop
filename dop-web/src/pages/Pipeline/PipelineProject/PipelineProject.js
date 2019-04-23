@@ -8,6 +8,7 @@ import {Button, Icon, Loading, Feedback} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
+import {NotPermission} from '../../NotFound'
 import {FormattedMessage} from 'react-intl';
 import './PipelineProject.scss'
 
@@ -29,7 +30,8 @@ export default class PipelineProject extends Component {
             },
             queue: [],
             time: "",
-            resultStatus: "RUN"
+            resultStatus: "RUN",
+            notRunning: true
         }
     }
 
@@ -64,9 +66,15 @@ export default class PipelineProject extends Component {
                             content: "该流水线尚未运行",
                             duration: 3000
                         });
+                        self.setState({
+                            notRunning: true
+                        });
                         resolve(response.data[0]);
                         self.clear();
                     } else {
+                        self.setState({
+                            notRunning: false
+                        });
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
@@ -111,7 +119,8 @@ export default class PipelineProject extends Component {
         let self = this;
         self.setState({
             visible: true,
-            resultStatus: "BUILD"
+            resultStatus: "BUILD",
+            notRunning: false
         });
         let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
@@ -231,7 +240,13 @@ export default class PipelineProject extends Component {
                         </Button>
                     </div>
 
-                    <RunResult runs={this.state.runs}/>
+                    {(()=>{
+                        if(this.state.notRunning){
+                            return <NotPermission />
+                        }else{
+                            return  <RunResult runs={this.state.runs}/>
+                        }
+                    })()}
                 </Loading>
             </div>
 
