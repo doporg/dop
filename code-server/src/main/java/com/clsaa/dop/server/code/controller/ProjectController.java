@@ -144,15 +144,15 @@ public class ProjectController {
         return memberVos;
     }
 
-    @ApiOperation(value = "增加一个项目成员",notes = "根据项目id，用户id增加一个项目成员并设置权限等级")
+    @ApiOperation(value = "增加一个项目成员",notes = "根据项目id，用户名增加一个项目成员并设置权限等级")
     @PostMapping("/projects/{username}/{projectname}/members")
     public void addProjectMember(@ApiParam(value = "用户名") @PathVariable("username") String username,
                                  @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
-                                 @ApiParam(value = "gitlab用户id") @RequestParam("user_id") int user_id,
+                                 @ApiParam(value = "gitlab用户名") @RequestParam("user_name") String user_name,
                                  @ApiParam(value = "权限等级") @RequestParam("access_level") int access_level,
                                  @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
-        projectService.addProjectMember(id,user_id,access_level,userId);
+        projectService.addProjectMember(id,user_name,access_level,userId);
     }
 
     @ApiOperation(value = "修改项目成员的权限等级",notes = "根据项目id，用户id设置权限等级")

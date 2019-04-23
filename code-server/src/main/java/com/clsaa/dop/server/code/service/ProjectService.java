@@ -252,14 +252,20 @@ public class ProjectService {
     /**
      * 增加一个项目成员
      * @param id 项目id
-     * @param user_id gitlab用户id
+     * @param user_name gitlab用户名
      * @param access_level 权限等级
      * @param userId dop用户id
      */
-    public void addProjectMember(String id,int user_id,int access_level,Long userId){
+    public void addProjectMember(String id,String user_name,int access_level,Long userId){
 
         id=URLUtil.encodeURIComponent(id);
-        String path="/projects/"+id+"/members";
+        String path="/users?username="+user_name;
+        List<UserIdBo> userIdBos=RequestUtil.getList(path,userId,UserIdBo.class);
+        if(userIdBos.size()==0) return;
+        int user_id=userIdBos.get(0).getId();
+
+
+        path="/projects/"+id+"/members";
 
         List<NameValuePair> params=new ArrayList<>();
         params.add(new BasicNameValuePair("user_id",""+user_id));

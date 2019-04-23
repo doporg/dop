@@ -19,6 +19,7 @@ import NewBranch from './NewBranch'
 import TagList from './TagList'
 import NewTag from './NewTag'
 import ProtectBranch from './ProtectBranch'
+import MemberList from './MemberList'
 
 const codeConfig = [
 
@@ -112,6 +113,10 @@ const codeConfig = [
         path: '/code/:username/:projectname/protected_branches',
         layout: CodeSettingLayout,
         component: ProtectBranch
+    },{
+        path: '/code/:username/:projectname/project_members',
+        layout: CodeSettingLayout,
+        component: MemberList
     }
 
 
