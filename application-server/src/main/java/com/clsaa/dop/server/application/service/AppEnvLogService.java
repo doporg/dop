@@ -44,9 +44,8 @@ public class AppEnvLogService {
         Set userIdList = new HashSet();
         Map<Long, String> idNameMap = new HashMap<>();
         for (String runningId : runningIdList) {
-
             AppEnvLog appEnvLog = this.appEnvLogRepository.findByRunningId(runningId).orElse(null);
-            AppEnvLogV1 appEnvLogV1 = BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
+            BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
             Long id = appEnvLog.getRuser();
 
             if (!userIdList.contains(id)) {
@@ -63,10 +62,20 @@ public class AppEnvLogService {
 
 
             String ruserName = idNameMap.get(id);
+
+            AppEnvLogV1 appEnvLogV1 = AppEnvLogV1.builder()
+                    .status(appEnvLog.getStatus())
+                    .imageUrl(appEnvLog.getImageUrl())
+                    .commitUrl(appEnvLog.getCommitUrl())
+                    .appEnvLog(appEnvLog.getAppEnvLog())
+                    .runningId(appEnvLog.getRunningId())
+                    .rtime(appEnvLog.getRtime())
+                    .ruserName(ruserName)
+                    .build();
             // String log = logInfoV1List.get(i).getLog();
             //String result =  log.matches("docker push [a-z]+.[a-z]+.[a-z]+.[a-z]+/([a-z]+)/([a-z]+):([0-9]+)");
 
-            appEnvLogV1.setRuserName(ruserName);
+            //appEnvLogV1.setRuserName(ruserName);
             appEnvLogV1List.add(appEnvLogV1);
         }
         //List<String> runningIdList= this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);

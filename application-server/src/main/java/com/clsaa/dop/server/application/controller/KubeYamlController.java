@@ -50,6 +50,23 @@ public class KubeYamlController {
         }
     }
 
+    //@ApiOperation(value = "获取传输的yaml文件", notes = "获取传输的yaml文件")
+    //@GetMapping(value = "/app/env/{appEnvId}/test")
+    //public String test(
+    //        //@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
+    //        //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
+    //        @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId)
+    //        //@ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") String runningId) {{
+    //{
+    //    try {
+    //        return this.kubeYamlService.test(appEnvId);
+    //
+    //    } catch (Exception e) {
+    //        System.out.print(e);
+    //        return null;
+    //    }
+    //}
+
     @ApiOperation(value = "创建yaml信息", notes = "创建yaml信息")
     @PostMapping(value = "/app/env/{appEnvId}/yaml")
     public void CreateYamlInfoByAppEnvId(
