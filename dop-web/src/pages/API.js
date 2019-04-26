@@ -12,14 +12,13 @@ const test = "/test-server";
 const API = {
     address: "http://www.dop.clsaa.com/#/",
     gateway: host,
-    pipeline: "http://localhost:13600",
+    pipeline: host + pipeline,
     application: host + application,
     permission: host + permission,
     code: host + code,
     user: host + user,
     image: host + image,
     test: host + test
-    // test: "http://localhost:13700"
 };
 
 export default API;
