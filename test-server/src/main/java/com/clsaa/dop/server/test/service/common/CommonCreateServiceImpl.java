@@ -4,6 +4,7 @@ import com.clsaa.dop.server.test.mapper.ServiceMapper;
 import com.clsaa.dop.server.test.model.po.Po;
 import com.google.common.collect.Lists;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class CommonCreateServiceImpl<PARAM, PO extends Po, ID> implements Create
     }
 
     @Override
+    @Transactional
     public Optional<Long> create(PARAM param) {
         Optional<PO> toCreate = serviceMapper.convert(param);
         Optional<PO> created = toCreate.map(po -> jpaRepository.save(po));
@@ -35,6 +37,7 @@ public class CommonCreateServiceImpl<PARAM, PO extends Po, ID> implements Create
     }
 
     @Override
+    @Transactional
     public List<Long> create(List<PARAM> params) {
         return isEmpty(params) ?
                 Lists.newArrayList() :

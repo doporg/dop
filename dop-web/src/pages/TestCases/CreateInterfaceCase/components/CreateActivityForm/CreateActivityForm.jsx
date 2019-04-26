@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import IceContainer from '@icedesign/container';
 import {
-  FormBinderWrapper as IceFormBinderWrapper,
-  FormBinder as IceFormBinder,
-  FormError as IceFormError,
-} from '@icedesign/form-binder';
-import {
   Input,
   Button,
   Checkbox,
@@ -18,6 +13,7 @@ import {
 import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
 import API from "../../../../API";
+import {FormBinder, FormBinderWrapper, FormError} from '@icedesign/form-binder';
 
 const { Row, Col } = Grid;
 
@@ -89,37 +85,36 @@ class CreateActivityForm extends Component {
 
   submit = () => {
     let _this = this;
-    this.formRef.validateAll((error, value) => {
-      console.log('error', error, 'value', value);
-      if (error) {
-        Toast.error(error);
-      }else {
-        let url = API.test + '/interfaceCases';
-        Axios.post(url, this.state.value)
-            .then(function (response) {
-              console.log(response);
-              Toast.success("添加接口测试用例成功！");
-              let route = '/test/createInterfaceScripts/' + response.data;
-              _this.props.history.push(route);
-            }).catch(function (error) {
-          console.log(error);
-          Toast.error("创建用例失败!\n请确保相同应用下的测试用例名称是唯一的");
-        });
+    let noError = true;
+
+    this.refs.form.validateAll((error, value) => {
+      if (error != null) {
+        noError = false;
       }
     });
+
+    if (noError) {
+      let url = API.test + '/interfaceCases';
+      Axios.post(url, this.state.value)
+          .then(function (response) {
+            Toast.success("添加接口测试用例成功！");
+            let route = '/test/createInterfaceScripts/' + response.data;
+            _this.props.history.push(route);
+          }).catch(function (error) {
+        console.log(error);
+        Toast.error("创建用例失败!\n请确保相同应用下的测试用例名称是唯一的");
+      });
+    }
   };
 
   render() {
     return (
       <div className="create-activity-form">
         <IceContainer title="创建接口测试用例" style={styles.container}>
-          <IceFormBinderWrapper
-            ref={(formRef) => {
-              this.formRef = formRef;
-            }}
-            value={this.state.value}
-            onChange={this.onFormChange}
-          >
+            <FormBinderWrapper
+                value={this.state.value}
+                ref="form"
+            >
             <div>
               <Row style={styles.formItem}>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
@@ -127,14 +122,14 @@ class CreateActivityForm extends Component {
                 </Col>
 
                 <Col s="12" l="10">
-                  <IceFormBinder
+                  <FormBinder
                     name="caseName"
                     required
                     message="用例名称必须填写"
                   >
                     <Input style={{ width: '100%' }} />
-                  </IceFormBinder>
-                  <IceFormError name="caseName" />
+                  </FormBinder>
+                  <FormError name="caseName" />
                 </Col>
               </Row>
 
@@ -144,14 +139,14 @@ class CreateActivityForm extends Component {
                 </Col>
 
                 <Col s="12" l="10">
-                  <IceFormBinder
+                  <FormBinder
                       name="applicationId"
                       required
                       message="必须输入关联的应用ID"
                   >
                     <Input style={{ width: '100%' }} />
-                  </IceFormBinder>
-                  <IceFormError name="applicationId" />
+                  </FormBinder>
+                  <FormError name="applicationId" />
                 </Col>
               </Row>
 
@@ -160,10 +155,10 @@ class CreateActivityForm extends Component {
                   用例描述：
                 </Col>
                 <Col s="12" l="10">
-                  <IceFormBinder name="caseDesc" require message="用例描述必须填写">
+                  <FormBinder name="caseDesc" required message="用例描述必须填写">
                     <Input multiple style={{ width: '100%' }} />
-                  </IceFormBinder>
-                  <IceFormError name="caseDesc" />
+                  </FormBinder>
+                  <FormError name="caseDesc" />
                 </Col>
               </Row>
 
@@ -172,9 +167,9 @@ class CreateActivityForm extends Component {
                   前置条件：
                 </Col>
                 <Col s="12" l="10">
-                  <IceFormBinder name="preCondition">
+                  <FormBinder name="preCondition">
                     <Input multiple style={{ width: '100%' }} placeholder="执行当前用例的测试步骤的必备前提条件，如部署被测服务系统" />
-                  </IceFormBinder>
+                  </FormBinder>
                 </Col>
               </Row>
 
@@ -183,9 +178,9 @@ class CreateActivityForm extends Component {
                   测试步骤：
                 </Col>
                 <Col s="12" l="10">
-                  <IceFormBinder name="steps">
+                  <FormBinder name="steps">
                     <Input multiple style={{ width: '100%' }} />
-                  </IceFormBinder>
+                  </FormBinder>
                 </Col>
               </Row>
 
@@ -194,9 +189,9 @@ class CreateActivityForm extends Component {
                   预期结果：
                 </Col>
                 <Col s="12" l="10">
-                  <IceFormBinder name="predicateResult">
+                  <FormBinder name="predicateResult">
                     <Input multiple style={{ width: '100%' }} />
-                  </IceFormBinder>
+                  </FormBinder>
                 </Col>
               </Row>
 
@@ -220,7 +215,7 @@ class CreateActivityForm extends Component {
                 </Col>
               </Row>
             </div>
-          </IceFormBinderWrapper>
+            </FormBinderWrapper>
         </IceContainer>
       </div>
     );

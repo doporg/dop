@@ -37,8 +37,11 @@ export default class WaitOperation extends Component{
 
     componentWillReceiveProps(nextProps, nextContext) {
         // console.log("[Wait Operation] Operation props change!");
-        if (nextProps.isSubmit) {
-            this.validateFormAndPost();
+        if (nextProps.currentOperation !== this.props.currentOperation) {
+            // this.validateFormAndPost();
+            this.setState({
+                value: nextProps.currentOperation
+            })
         }
     }
 

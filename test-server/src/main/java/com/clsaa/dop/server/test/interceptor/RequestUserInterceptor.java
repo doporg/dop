@@ -29,7 +29,7 @@ public class RequestUserInterceptor implements HandlerInterceptor {
         if (isEmpty(userId) && loginNeeded) {
             BizAssert.justUnauthorized("You should login first before accessing the system!");
         }
-        UserManager.setUserId(userId);
+        UserManager.setCurrentUserId(userId);
         return true;
     }
 

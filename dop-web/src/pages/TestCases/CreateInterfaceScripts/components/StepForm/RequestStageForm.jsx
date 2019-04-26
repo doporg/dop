@@ -35,13 +35,8 @@ export default class RequestStageForm extends Component{
         super(props);
         this.state = {
             isSubmit: this.props.isSubmit,
-            value: {
-                caseId: this.props.caseId,
-                operations: [],
-                stage: this.props.stage,
-                requestScripts: [],
-                waitOperations: []
-            }
+            value: this.props.data,
+            stage: this.props.stage
         };
     }
 
@@ -59,7 +54,7 @@ export default class RequestStageForm extends Component{
             requestCheckPoints: [],
             retryTimes: '',
             retryInterval: '',
-            resultParams: '',
+            resultParams: [],
             operationType: 'REQUEST',
             order: index
         });
@@ -72,9 +67,6 @@ export default class RequestStageForm extends Component{
     };
 
     removeOperation = (index) => {
-        this.state.value.operations.splice(index, 1);
-        this.state.value.requestScripts.splice(index, 1);
-        this.state.value.waitOperations.splice(index, 1);
         this.state.value.operations.map((operation,i) => {
             if (i > index) {
                 operation.order -= 1;
@@ -90,7 +82,9 @@ export default class RequestStageForm extends Component{
                 wait.order -= 1;
             }
         });
-
+        this.state.value.operations.splice(index, 1);
+        this.state.value.requestScripts.splice(index, 1);
+        this.state.value.waitOperations.splice(index, 1);
         this.setState({
             value: this.state.value
         });
@@ -110,7 +104,7 @@ export default class RequestStageForm extends Component{
             requestCheckPoints: [],
             retryTimes: 2,
             retryInterval: 2000,
-            resultParams: '',
+            resultParams: [],
             operationType: 'REQUEST',
             order: -1
         });
@@ -123,34 +117,47 @@ export default class RequestStageForm extends Component{
     };
 
     submit = () => {
-        this.setState({
-            isSubmit: true,
-            value: this.state.value
-        });
-
         this.props.onSubmit(this.state.value);
+    };
 
+    lastStep = () => {
         // this.setState({
-        //     isSubmit: false,
-        //     value: {
-        //         operations: [],
-        //         stage: this.props.stage,
-        //         requestScripts: [],
-        //         waitOperations: []
-        //     }
-        // });
+        //
+        // })
+        this.props.onLast(this.state.value);
+    };
+
+    renderLastStep = (stage) => {
+        if (stage !== 'PREPARE') {
+            return (
+                <Button onClick={this.lastStep.bind(this)} type="primary">
+                    上一步
+                </Button>
+            );
+        }
+    };
+
+    renderNextStep = (stage) => {
+        if (stage !== 'DESTROY') {
+            return (
+                <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
+                    下一步
+                </Button>
+            );
+        }else {
+            return (
+                <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
+                    保存
+                </Button>
+            );
+        }
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
         this.setState({
             isSubmit: nextProps.isSubmit,
-            value: {
-                caseId: this.state.value.caseId,
-                operations: [],
-                stage: nextProps.stage,
-                requestScripts: [],
-                waitOperations: []
-            }
+            value: nextProps.data,
+            stage: nextProps.stage
         });
     }
 
@@ -171,13 +178,14 @@ export default class RequestStageForm extends Component{
                     addWaitTime={this.addWaitTime.bind(this)}
                     removeOperation={this.removeOperation.bind(this)}
                     cancel={this.cancel.bind(this)}
+                    stage={this.props.stage}
                 />
 
                 <Row>
-                    <Col offset={3} style={styles.btns}>
-                        <Button onClick={this.submit.bind(this)} type="primary">
-                            下一步
-                        </Button>
+                    <Col offset={9} style={styles.btns}>
+                        {this.renderLastStep(this.props.stage)}
+
+                        {this.renderNextStep(this.props.stage)}
                     </Col>
                 </Row>
             </div>

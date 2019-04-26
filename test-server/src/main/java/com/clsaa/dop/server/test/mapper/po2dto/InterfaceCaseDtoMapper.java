@@ -1,20 +1,20 @@
 package com.clsaa.dop.server.test.mapper.po2dto;
 
+import com.clsaa.dop.server.test.doExecute.StageSorter;
+import com.clsaa.dop.server.test.enums.Stage;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.CaseParamDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
 import com.clsaa.dop.server.test.manager.UserManager;
+import com.clsaa.dop.server.test.model.po.InterfaceStage;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,12 +49,33 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
         return super.convert(source)
                 .map(fillStages(source))
                 .map(fillUser())
-                .map(fillParams(source));
+                .map(fillParams(source))
+                .map(fillEmptyStagesIfNeeded())
+                ;
+    }
+
+    @Override
+    public Optional<InterfaceCase> inverseConvert(InterfaceCaseDto interfaceCaseDto) {
+        return super.inverseConvert(interfaceCaseDto)
+                .map(UserManager.newInfoIfNotExists())
+                .map(fillProperties(interfaceCaseDto));
+    }
+
+    private Function<InterfaceCase,InterfaceCase> fillProperties(InterfaceCaseDto interfaceCaseDto) {
+        return interfaceCase -> {
+            List<InterfaceStage> stages = interfaceStageDtoMapper.inverseConvert(interfaceCaseDto.getStages());
+
+            interfaceCase.setStages(stages);
+            stages.forEach(interfaceStage -> interfaceStage.setInterfaceCase(interfaceCase));
+
+            return interfaceCase;
+        };
     }
 
     private Function<InterfaceCaseDto, InterfaceCaseDto> fillStages(InterfaceCase interfaceCase) {
         return dto -> {
             List<InterfaceStageDto> interfaceStageDtos = interfaceStageDtoMapper.convert(interfaceCase.getStages());
+            interfaceStageDtos.sort(new StageSorter());
             dto.setStages(interfaceStageDtos);
             return dto;
         };
@@ -64,6 +85,22 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
         return interfaceCaseDto -> {
             Long cuserId = interfaceCaseDto.getCuser();
             interfaceCaseDto.setCreateUserName(UserManager.getUserName(cuserId));
+            return interfaceCaseDto;
+        };
+    }
+
+    private Function<InterfaceCaseDto, InterfaceCaseDto> fillEmptyStagesIfNeeded() {
+        return interfaceCaseDto -> {
+            if (CollectionUtils.isEmpty(interfaceCaseDto.getStages())) {
+                // 填充空数据 方便展示
+                Long caseId = interfaceCaseDto.getId();
+                List<InterfaceStageDto> stageDtos = Arrays.asList(
+                        InterfaceStageDto.emptyStage(Stage.PREPARE, caseId),
+                        InterfaceStageDto.emptyStage(Stage.TEST, caseId),
+                        InterfaceStageDto.emptyStage(Stage.DESTROY, caseId)
+                );
+                interfaceCaseDto.setStages(stageDtos);
+            }
             return interfaceCaseDto;
         };
     }

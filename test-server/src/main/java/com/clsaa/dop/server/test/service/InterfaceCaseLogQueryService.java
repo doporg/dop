@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @since 31/03/2019
  */
 @Component
-public class InterfaceCaseLogQueryService extends CommonQueryServiceImpl<InterfaceExecuteLog, InterfaceExecuteLogDto,Long> {
+public class InterfaceCaseLogQueryService extends CommonQueryServiceImpl<InterfaceExecuteLog, InterfaceExecuteLogDto, Long> {
 
     private InterfaceCaseLogRepository repository;
 

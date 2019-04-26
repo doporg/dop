@@ -40,20 +40,22 @@ export default class Operations extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            isSubmit: false
+            isSubmit: false,
+            requestScripts: this.props.requestScripts,
+            waitOperations: this.props.waitOperations,
+            operations: this.props.operations
         }
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (nextProps.isSubmit) {
-            this.setState({
-                isSubmit: true
-            })
-        }else {
-            this.setState({
-                isSubmit: false
-            })
-        }
+        /*if (nextProps.stage !== this.props.stage) {
+
+        }*/
+        this.setState({
+            requestScripts: nextProps.requestScripts,
+            waitOperations: nextProps.waitOperations,
+            operations: nextProps.operations
+        })
     }
 
     render() {
@@ -73,10 +75,10 @@ export default class Operations extends Component{
                     </Col>
                 </Row>
                 <hr/>
-                {this.props.operations.map((operation, index) => {
+                {this.state.operations.map((operation, index) => {
                     if (operation.operationType === 'REQUEST') {
                         return (
-                            <div>
+                            <div key={Math.random()}>
                                 <IcePanel status='primary' style={{marginBottom: '10px'}}>
                                     <IcePanel.Header>
                                         <Row>
@@ -105,7 +107,7 @@ export default class Operations extends Component{
                     );
                     }else if (operation.operationType === 'WAIT') {
                         return(
-                            <div>
+                            <div key={Math.random()}>
                                 <IcePanel status='danger' style={{marginBottom: '10px'}}>
                                     <IcePanel.Header>
                                         <Row>
