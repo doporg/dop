@@ -13,6 +13,8 @@ import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -113,48 +115,40 @@ public class PermissionService {
         }
         return null;
     }
-    //分页查询所有功能点
+    //分页查询所有功能点带数据权限
     public Pagination<PermissionV1> getPermissionV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
-        int count = 0;
 
         Pagination<PermissionV1> pagination = new Pagination<>();
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        List<Permission> permissionList=new ArrayList<>();
-        //未填写搜索关键字，则查询全部
-        if(key.equals(""))
-        {
-            permissionList = this.permissionRepository.findAll(sort);
-        }
-        //填写了搜索关键字，带条件查询
-        else {
-            permissionList = this.permissionRepository.findByNameLike("%"+key+"%");
-        }
+        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
+
+        //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
-        List<Permission> permissionList1=new ArrayList<>();
-        for(Permission permission :permissionList)
+        List<Permission> permissionList=new ArrayList<>();
+        if(key.equals(""))
         {
-            for(Long id :idList)
-            {
-                if(permission.getId()==id)
-                {permissionList1.add(permission);count++;}
-            }
+            permissionList=this.permissionRepository.findByIdIn(idList,pageRequest).getContent();
         }
+        else
+        {
+            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn("%"+key+"%",idList,pageRequest).getContent();
+        }
+
+        int count=permissionList.size();
         pagination.setTotalCount(count);
-        if (count == 0) {
+        if (count== 0) {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }
 
-        //分页
-        permissionList1=permissionList1.subList((pageNo-1)*pageSize, (pageNo*pageSize<count)? pageNo*pageSize:count);
         //类型转换
-        List<PermissionV1> permissionV1List=permissionList1.stream().
+        List<PermissionV1> permissionV1List=permissionList.stream().
                 map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
 
         for(PermissionV1 permissionV1 : permissionV1List)
@@ -186,9 +180,11 @@ public class PermissionService {
     }
 
     //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点
-    public List<PermissionBoV1> findAll()
+    public List<PermissionBoV1> findAll(Long userId)
     {
-        return permissionRepository.findAll().stream().map(p ->
+        //可以查看的ID列表
+        List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
+        return permissionRepository.findByIdIn(idList).stream().map(p ->
                 BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
     }
 
