@@ -1,5 +1,8 @@
 package com.clsaa.dop.server.permission.service;
 
+
+import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
+import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -12,7 +15,6 @@ import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,7 +23,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class PermissionService {
 
     @Autowired
     //权限管理服务
-    private AuthenticationService authenticationService;
+    private AuthenticService authenticationService;
 
     @Autowired
     //用户服务
@@ -71,13 +72,12 @@ public class PermissionService {
  * since :2019.3.1
  */
 
+
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     //创建一个功能点
-    public void createPermission(Long parentId,String name,Integer isPrivate,String description,
-                                       Long cuser,Long muser)
+    @PermissionName(name = "创建功能点")
+    public void createPermission(Long cuser,Long parentId,String name,Integer isPrivate,String description, Long muser)
     {
-        if(authenticationService.checkUserPermission("创建功能点",cuser))
-        {
             Permission existPermission=this.permissionRepository.findByName(name);
             BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
             Permission permission= Permission.builder()
@@ -100,9 +100,6 @@ public class PermissionService {
                     authenticationService.findUniqueRule("equals","permissionId",
                             authenticationService.findByName("权限管理员").getId()).getId(),
                     cuser,permission.getId(),cuser);
-        }
-
-
     }
 
     //根据ID查询功能点
@@ -116,7 +113,9 @@ public class PermissionService {
         return null;
     }
     //分页查询所有功能点带数据权限
-    public Pagination<PermissionV1> getPermissionV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
+
+    @PermissionName(name = "查询功能点")
+    public Pagination<PermissionV1> getPermissionV1Pagination(Long userId,Integer pageNo, Integer pageSize, String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
@@ -126,8 +125,8 @@ public class PermissionService {
 
         Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
-
-        //可以查看的ID列表
+//
+//        可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
         List<Permission> permissionList=new ArrayList<>();
@@ -137,7 +136,7 @@ public class PermissionService {
         }
         else
         {
-            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn("%"+key+"%",idList,pageRequest).getContent();
+            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn(key+"%",idList,pageRequest).getContent();
         }
 
         int count=permissionList.size();
@@ -151,9 +150,20 @@ public class PermissionService {
         List<PermissionV1> permissionV1List=permissionList.stream().
                 map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
 
+        //获取每条数据的创建人
+        Map<Long,String> userMap=new HashMap<>();
         for(PermissionV1 permissionV1 : permissionV1List)
         {
-            permissionV1.setUserName(userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
+            if(!userMap.containsKey(permissionV1.getCuser()))
+            {
+                userMap.put(
+                        permissionV1.getCuser(),
+                        userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
+            }
+        }
+        for(PermissionV1 permissionV1 : permissionV1List)
+        {
+            permissionV1.setUserName(userMap.get(permissionV1.getCuser()));
         }
         pagination.setPageList(permissionV1List);
         return pagination;
@@ -162,24 +172,23 @@ public class PermissionService {
     //根据name查询功能点
     public PermissionBoV1 findByName(String name)
     {
+
        return BeanUtils.convertType(this.permissionRepository.findByName(name), PermissionBoV1.class);
     }
 
     //根据ID删除功能点,并删除关联关系
     @Transactional
-    public void deleteById(Long id,Long userId)
+    public void deleteById(Long userId,Long id)
     {
-        if(authenticationService.checkUserPermission("删除功能点",userId))
-        {
             if(authenticationService.check("删除功能点",userId,"permissionId",id))
             {
                 rolePermissionMappingService.deleteByPermissionId(id);
                 permissionRepository.deleteById(id);
             }
-        }
     }
 
     //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点
+    @PermissionName(name = "查询功能点")
     public List<PermissionBoV1> findAll(Long userId)
     {
         //可以查看的ID列表
@@ -227,9 +236,12 @@ public class PermissionService {
     //判断用户是否拥有特定功能点
     public boolean checkUserPermission(String permissionName,Long userId)
     {
+
+       if(permissionRepository.findByName(permissionName)==null)
+            return false;
         Long permissionId=permissionRepository.findByName(permissionName).getId();
-        System.out.println(permissionId);
         List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
+        if(userRoleMappingList==null)return false;
         for (UserRoleMapping userRoleMapping : userRoleMappingList) {
             if (rolePermissionMappingService.findByRoleIdAndPermissionId(userRoleMapping.getRoleId(), permissionId) != null) {
                 return true;

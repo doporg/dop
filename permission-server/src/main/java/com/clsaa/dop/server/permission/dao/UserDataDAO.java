@@ -52,4 +52,12 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
      */
      void deleteByRuleId(Long ruleId);
 
+    /**
+     * 根据作用域值查询数据
+     *
+     * @param fieldValue  作用域值
+     * @return {@link List<UserData>}
+     */
+    List<UserData> findByFieldValue(Long fieldValue);
+
 }
