@@ -13,11 +13,13 @@ import com.clsaa.dop.server.image.model.po.PublicStatus;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
-import org.checkerframework.checker.units.qual.A;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,10 +31,14 @@ import java.util.List;
  */
 @Service
 public class ProjectService {
+    private final ProjectFeign projectFeign;
+    private final UserFeign userFeign;
+
     @Autowired
-    private ProjectFeign projectFeign;
-    @Autowired
-    private UserFeign userFeign;
+    public ProjectService(ProjectFeign projectFeign, UserFeign userFeign) {
+        this.projectFeign = projectFeign;
+        this.userFeign = userFeign;
+    }
 
     /**
      * 返回对应条件的项目列表
@@ -43,20 +49,43 @@ public class ProjectService {
      * @param pageSize 页大小
      * @return {@link List<ProjectBO>} 项目信息列表
      */
-    public List<ProjectBO> getProjects(String name,Boolean publicStatus,String owner,Integer page,Integer pageSize,Long userId){
+    public Pagination<ProjectBO> getProjects(String name, Boolean publicStatus, String owner, Integer page, Integer pageSize, Long userId){
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        List<Project> projects = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
-        List<ProjectBO> projectBOS = new ArrayList<>();
-        if (projects.size()==0){
-            return  null;
+        ResponseEntity<List<Project>> responseEntity = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
+
+        Pagination<ProjectBO> pagination = new Pagination<>();
+        List<Project> projects = responseEntity.getBody();
+        List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");
+        int count = 0;
+        if (httpHeader!=null){
+            count = Integer.parseInt(httpHeader.get(0));
+        }
+
+        pagination.setPageSize(pageSize);
+        pagination.setPageNo(page);
+        pagination.setTotalCount(count);
+        if (count==0){
+            pagination.setPageList(Collections.emptyList());
+            return  pagination;
         }else {
-            for(Project project:projects){
-                ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
-                projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
-                projectBOS.add(projectBO);
+            List<ProjectBO> projectBOS = new ArrayList<>();
+            if (projects!=null){
+                for(Project project:projects){
+                    ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
+                    projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
+                    if (project.getCurrentUserRoleId()==1) {
+                        projectBO.setCurrentUserRole("命名空间管理员");
+                    }else if(project.getCurrentUserRoleId()==0){
+                        projectBO.setCurrentUserRole("");
+                    }else {
+                        projectBO.setCurrentUserRole("开发人员");
+                    }
+                    projectBOS.add(projectBO);
+                }
             }
-            return projectBOS;
+            pagination.setPageList(projectBOS);
+            return pagination;
         }
     }
 
@@ -69,7 +98,15 @@ public class ProjectService {
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
         Project project = projectFeign.projectsProjectIdGet(id,auth);
-        return BeanUtils.convertType(project,ProjectBO.class);
+        ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
+        if (project.getCurrentUserRoleId()==1) {
+            projectBO.setCurrentUserRole("命名空间管理员");
+        }else if(project.getCurrentUserRoleId()==0){
+            projectBO.setCurrentUserRole("");
+        }else {
+            projectBO.setCurrentUserRole("开发人员");
+        }
+        return projectBO;
     }
 
     /**

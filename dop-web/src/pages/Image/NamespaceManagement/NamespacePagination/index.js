@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import API from "../../../API"
 import Axios from "axios";
-import {Input,Table,Grid,Pagination,Loading,Switch,Feedback} from '@icedesign/base';
+import {Input,Table,Grid,Pagination,Loading,Switch,Feedback,Select} from '@icedesign/base';
 import {Link} from 'react-router-dom';
-import TopBar from '../TopBar';
-import DeleteNamespaceDialog from '../DeleteNameSpaceDialog';
-import CreateNamespaceDialog from '../CreateNamespaceDialog';
+import IceContainer from '@icedesign/container';
+import DeleteNameSpaceDialog from "../DeleteNameSpaceDialog";
+import CreateNamespaceDialog from "../CreateNamespaceDialog";
+import "../../Style.scss"
 
-
-const {Row} = Grid;
+const {Row,Col} = Grid;
 const Toast = Feedback.toast;
 
 const styles = {
@@ -25,19 +25,18 @@ export default class NamespacePagination extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            current: 0,
+            current: 1,
             currentData: [],
             rowSelection: {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
             },
-            //总页数
             pageSize :10,
             totalCount: 0,
-            queryKey: props.searchKey,
-            loading: true
+            queryKey: "",
+            loading: true,
+            select: 'all'
         };
-        this.handleChange = this.handleChange.bind(this);
     }
 
     //选择器监听
@@ -50,55 +49,218 @@ export default class NamespacePagination extends Component {
 
 
     //获取最新数据并刷新
-    refreshList(current, searchKey) {
-        console.log(this.state.current);
-        let countUrl = API.image + '/v1/statistics';
+    refreshList(current, searchKey,select) {
+
         let url = API.image + '/v1/projects';
         let _this = this;
-        //获取数量
-        Axios.get(countUrl, {})
-            .then(function (response) {
-                console.log("统计信息");
-                console.log(response.data.publicProjectCount+response.data.privateProjectCount);
-                _this.setState({
-                    totalCount:response.data.publicProjectCount+response.data.privateProjectCount
+
+        if (searchKey===""){
+            if (select==='private'){
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:false
+                    }
+
                 })
-            })
-        //获取数据
-        Axios.get(url, {
-            params:{
-                page:current,
-                pageSize: this.state.pageSize
+                    .then(function (response) {
+                        console.log("私有镜像信息");
+                        console.log(response.data);
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
 
+                    })
+            } else if (select==='public'){
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:true
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log("公开命名空间信息");
+                        console.log(response.data);
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+
+                    })
+            }else {
+
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log(response.data);
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+                    })
             }
+        } else {
+            if (select==='private'){
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:false,
+                        name:searchKey
+                    }
 
-        })
-            .then(function (response) {
-                console.log("镜像信息");
-                console.log(response.data.length);
-                _this.setState({
-                    currentData: response.data,
-                    loading: false,
-                    current: current
-                });
-            })
+                })
+                    .then(function (response) {
+                        console.log("私有镜像信息");
+                        console.log(response.data);
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+                    })
+            } else if (select==='public'){
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        publicStatus:true,
+                        name:searchKey
+                    }
+
+                })
+                    .then(function (response) {
+                        console.log("公开命名空间信息");
+                        console.log(response.data);
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+                    })
+            }else {
+                //获取数据
+                Axios.get(url, {
+                    params:{
+                        page:current,
+                        pageSize: this.state.pageSize,
+                        name:searchKey
+                    }
+
+                })
+                    .then(function (response) {
+                        if (response.data.totalCount!==0){
+                            _this.setState({
+                                currentData: response.data.pageList,
+                                totalCount:response.data.totalCount,
+                                loading: false,
+                                current: current
+                            });
+                        } else {
+                            _this.setState({
+                                currentData: [],
+                                totalCount:0,
+                                loading: false,
+                                current: current
+                            });
+                        }
+                    })
+            }
+        }
 
     }
 
     //初始化
     componentWillMount() {
-        this.refreshList();
+        this.refreshList(this.state.current,this.state.queryKey,'all');
     }
 
     //搜索框内容变化
     onSearch(value) {
-        console.log("search ",value)
-        this.refreshList(1,value);
+        this.setState({
+            queryKey:value
+        })
+        this.refreshList(1,value,this.state.select);
     }
 
     //分页器监听
     handleChange(current,e){
-        this.refreshList(current,this.state.pageSize)
+        this.setState({
+            current:current
+        });
+        this.refreshList(current,this.state.queryKey,this.state.select)
+    }
+
+    //选择器
+    changeSelection(value){
+        this.setState({
+            select:value
+        });
+       this.refreshList(1,this.state.queryKey,value)
     }
 
 
@@ -112,7 +274,7 @@ export default class NamespacePagination extends Component {
         if (value==="true"){
             return <Switch onChange={(checked)=>{
                 let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -137,7 +299,7 @@ export default class NamespacePagination extends Component {
             return <Switch onChange={(checked)=>
             {
                 let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public"
+                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
                 //修改命名空间状态
                 let temp = "";
                 if (checked){
@@ -165,25 +327,25 @@ export default class NamespacePagination extends Component {
     render() {
         return (
             <div>
-                <TopBar
-                    extraBefore={
-                        <Input
-                            size="large"
-                            placeholder="请输入关键字进行搜索"
-                            style={{width: '240px'}}
-                            // hasClear
-                            onChange={this.onSearch.bind(this)}
-                        />
-                    }
-                    extraDelete={
-                        <DeleteNamespaceDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshProjectList={this.refreshList.bind(this)}/>
-                    }
-                    extraAfter={< CreateNamespaceDialog refreshProjectList={this.refreshList.bind(this)}/>
-                    }
-                />
-                <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
+                <IceContainer title={"检索条件"}>
+                    <Row wrap>
+                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Select className={"select"} defaultValue={"all"} onChange={this.changeSelection.bind(this)}>
+                            <Select.Option value="all">所有命名空间</Select.Option>
+                            <Select.Option value="public">公开命名空间</Select.Option>
+                            <Select.Option value="private">私有命名空间</Select.Option>
+                        </Select>
+                    </Row>
+                </IceContainer>
 
-                    <Row wrap gutter="20">
+                <IceContainer title={"命名空间列表"}>
+                    <Row wrap className="headRow">
+                        <Col l="12">
+                            <CreateNamespaceDialog refreshProjectList={this.refreshList.bind(this)}/>
+                            <DeleteNameSpaceDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshProjectList={this.refreshList.bind(this)}/>
+                        </Col>
+                    </Row>
+                    <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                         <Table dataSource={this.state.currentData}
                                rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
@@ -195,6 +357,9 @@ export default class NamespacePagination extends Component {
                             <Table.Column title="命名空间名称"
                                           dataIndex="name"/>
 
+                            <Table.Column title="角色"
+                                          dataIndex="currentUserRole"/>
+
                             <Table.Column title="私有/公开"
                                           dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>
 
@@ -203,16 +368,15 @@ export default class NamespacePagination extends Component {
                             <Table.Column title="创建时间"
                                           dataIndex="creationTime"/>
                         </Table>
-                    </Row>
+                    </Loading>
+
                     <Pagination style={styles.body}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
-                                total={this.state.totalCount}/>
-                </Loading>
-
-
-
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
+                </IceContainer>
             </div>
         )
     }

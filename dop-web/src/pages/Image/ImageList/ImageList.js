@@ -8,40 +8,46 @@ export default class ImageList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            namespaceId: props.location.pathname.match("[0-9]+")[0],
-            repoName:props.location.pathname.split("/")[5]+"/"+props.location.pathname.split("/")[6],
-            currentData: []
+            namespaceId:"",
+            repoName:props.location.pathname.split("/")[2]+"/"+props.location.pathname.split("/")[3]
         };
     }
 
-    refreshImageList(){
-        let url = API.image + '/v1/repositories/'+this.state.repoName+"/images";
+    init(){
+        let url = API.image + '/v1/projects';
         let _this = this;
-        Axios.get(url, {})
-            .then(function (response) {
-                console.log("镜像信息");
-                console.log(response.data);
+        Axios.get(url,{
+            params:{
+                name:this.props.location.pathname.split("/")[2],
+                page:1,
+                pageSize:10
+            }
+        }).then(
+            function (response) {
+                console.log("目前命名空间",response.data)
                 _this.setState({
-                    currentData: response.data,
-                });
-
-            })
-
+                    namespaceId:response.data.pageList[0].projectId
+                })
+            }
+        )
     }
 
+
     componentDidMount() {
-        this.refreshImageList();
+        this.init();
     }
 
     render() {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">命名空间列表{this.state.namespaceId}</Breadcrumb.Item>
-                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库列表{this.state.repoName}</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">命名空间</Breadcrumb.Item>
+                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库</Breadcrumb.Item>
                 </Breadcrumb>
-                <ImagePagination repoName={this.state.repoName} imageData={this.state.currentData} refreshImageList={this.refreshImageList.bind(this)}/>
-
+                <div className={"repoName"}>
+                    {this.state.repoName}
+                </div>
+                <ImagePagination repoName={this.state.repoName}/>
             </div>
         )
     };

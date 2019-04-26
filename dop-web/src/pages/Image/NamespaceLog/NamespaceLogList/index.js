@@ -1,20 +1,13 @@
-import React, {Component} from 'react';
+import React,{Component} from 'react';
 import {Input, Loading, Pagination, Table} from '@icedesign/base';
-import {Grid} from '@icedesign/base';
-import {Col} from "@alifd/next/lib/grid";
-import {Link} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
-import DeleteRepoDialog from "../DeleteRepoDialog";
-import "../../Style.scss"
+import {Grid} from "@icedesign/base/index";
 import API from "../../../API";
-import Axios from "axios";
+import Axios from "axios/index";
 
 const {Row} = Grid;
-
-export default class RepoList extends Component {
-
-    static displayName = 'RepoList';
-
+export default class NamespaceLogList extends Component{
+    static displayName = "NamespaceLogList";
 
     constructor(props) {
         super(props);
@@ -22,10 +15,6 @@ export default class RepoList extends Component {
             currentData: [],
             current:1,
             totalCount:0,
-            rowSelection: {
-                onChange: this.onChange.bind(this),
-                selectedRowKeys: []
-            },
             pageSize:10,
             loading: true,
             id: this.props.projectId,
@@ -34,20 +23,19 @@ export default class RepoList extends Component {
 
     }
 
-    refreshList(current,queryKey) {
-        let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
+    refreshList(current,queryKey){
+        let url = API.image+"/v1/projects/"+this.state.id+"/logs"
         let _this = this;
-
-        if (queryKey===""){
-            //不存在搜索条件
+        if(queryKey!==""){
             Axios.get(url, {
                 params:{
                     page:current,
                     pageSize: this.state.pageSize,
+                    username:queryKey
                 }
             })
                 .then(function (response) {
-                    console.log("镜像仓库信息");
+                    console.log("日志信息");
                     console.log(response.data);
                     if (response.data.totalCount!==0){
                         _this.setState({
@@ -62,20 +50,16 @@ export default class RepoList extends Component {
                             loading:false,
                         })
                     }
-                }).catch(function (errors) {
-                    console.log("error")
-            })
-        } else {
-            //存在搜索条件
+                })
+        }else {
             Axios.get(url, {
                 params:{
                     page:current,
-                    pageSize: this.state.pageSize,
-                    q:queryKey
+                    pageSize: this.state.pageSize
                 }
             })
                 .then(function (response) {
-                    console.log("镜像仓库信息");
+                    console.log("日志信息");
                     console.log(response.data);
                     if (response.data.totalCount!==0){
                         _this.setState({
@@ -90,50 +74,29 @@ export default class RepoList extends Component {
                             loading:false,
                         })
                     }
-
                 })
         }
-
-
     }
-
-
-    //选择器监听
-    onChange(names, records) {
-        let {rowSelection} = this.state;
-        rowSelection.selectedRowKeys = names;
-        console.log("onChange",rowSelection.selectedRowKeys, records);
-        this.setState({rowSelection});
-    }
-
-    //分页器监听
-    handleChange(current,e){
-        console.log("pagination",current);
-        this.setState({
-            current:current
-        });
-        this.refreshList(current,this.state.queryKey)
-    }
-
-    componentWillMount() {
-        this.refreshList(1,this.state.queryKey)
-    }
-
-
 
     onSearch(value){
-        console.log("search",value);
         this.setState({
             queryKey:value
         });
         this.refreshList(this.state.current,value)
     }
 
-    nameRender=(value, index, record)=> {
-        //链接到对应的镜像列表
-        return <Link to={"/repos/"+value+"/images"}
-        >{value}</Link>
-    };
+
+    handleChange(current,e){
+        this.setState({
+            current:current
+        });
+        this.refreshList(current,this.state.queryKey)
+    }
+
+
+    componentWillMount() {
+        this.refreshList(this.state.current,this.state.queryKey)
+    }
 
     render() {
         return (
@@ -144,27 +107,25 @@ export default class RepoList extends Component {
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"镜像仓库列表"}>
-                    <Row wrap className="headRow">
-                        <Col l="12">
-                            <DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshList.bind(this)}/>
-                        </Col>
-                    </Row>
+                <IceContainer title={"日志信息"}>
                     <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                         <Table dataSource={this.state.currentData}
-                               rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
-                               primaryKey="name"
+                               primaryKey="logId"
                         >
 
-                            <Table.Column title="镜像仓库名称" cell={this.nameRender}
-                                          dataIndex="name"/>
+                            <Table.Column title="用户名称"
+                                          dataIndex="username"/>
 
-                            <Table.Column title="标签数"
-                                          dataIndex="tagsCount"/>
+                            <Table.Column title="镜像名称"
+                                          dataIndex="repoName"/>
 
-                            <Table.Column title="下载数"
-                                          dataIndex="pullCount"/>
+                            <Table.Column title="标签"
+                                          dataIndex="repoTag"/>
+                            <Table.Column title="操作"
+                                          dataIndex="operation"/>
+                            <Table.Column title="时间戳"
+                                          dataIndex="opTime"/>
                         </Table>
                     </Loading>
 
@@ -176,7 +137,6 @@ export default class RepoList extends Component {
                                 hideOnlyOnePage={true}/>
                 </IceContainer>
             </div>
-        );
-    }
-
+        )
+    };
 }

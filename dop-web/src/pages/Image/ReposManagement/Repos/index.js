@@ -1,58 +1,65 @@
 import React, {Component} from 'react';
-import API from "../../../API"
-import Axios from "axios";
 import RepoList from '../RepoList'
-import {Breadcrumb} from "@icedesign/base";
+import {Breadcrumb,Tab} from "@icedesign/base";
+import NamespaceLogList from "../../NamespaceLog/NamespaceLogList";
+import API from "../../../API";
+import Axios from "axios/index";
+import MemberList from "../MemberList";
 
 
 export default class Repos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentData: [],
-            //总页数
-            totalPage: 1,
-            queryKey: props.searchKey,
-            loading: true,
-            id: props.location.pathname.match("[0-9]+")[0]
+            currentData:[],
+            totalCount:0,
+            id: props.location.pathname.match("[0-9]+")[0],
+            projectName:"",
+            userRole:0,
         };
-
-        this.handleChange = this.handleChange.bind(this);
     }
 
-    refreshList() {
-        let url = API.image + '/v1/projects/'+this.state.id+'/repositories';
+    init(){
+        let url = API.image+"/v1/projects/"+this.state.id;
         let _this = this;
         Axios.get(url, {})
             .then(function (response) {
-                console.log("镜像仓库信息");
                 console.log(response.data);
                 _this.setState({
-                    currentData: response.data
+                    projectName:response.data.name,
+                    userRole:response.data.currentUserRole
                 });
-
             })
 
     }
-
-    handleChange(current) {
-        this.refreshList(current, this.state.searchKey);
-    }
-
-
-
-    componentDidMount() {
-        this.refreshList(1, "");
+    componentWillMount() {
+        this.init();
     }
 
     render() {
         return (
-            <div>
-                <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">所有命名空间</Breadcrumb.Item>
-                </Breadcrumb>
-                <RepoList currentData={this.state.currentData} projectId={this.state.id} refreshList={this.refreshList.bind(this)}/>
-            </div>
+                <div>
+                    <Breadcrumb style={{marginBottom: "10px"}}>
+                        <Breadcrumb.Item style={{color: "#5485F7"}} link="#/image/projects">命名空间</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className={"repoName"}>
+                        {this.state.projectName}
+                    </div>
+                    <Tab>
+                        <Tab.TabPane key={"image"} tab={"镜像仓库"}>
+                            <RepoList projectId={this.state.id} />
+                        </Tab.TabPane>
+                        <Tab.TabPane key={"member"} tab={"成员"}>
+                            <MemberList projectId={this.state.id}/>
+                        </Tab.TabPane>
+                        <Tab.TabPane key={"labels"} tab={"标签"}>
+
+                        </Tab.TabPane>
+                        <Tab.TabPane key={"logs"} tab={"日志"}>
+                            <NamespaceLogList projectId={this.state.id} />
+                        </Tab.TabPane>
+                    </Tab>
+                </div>
         )
     }
 

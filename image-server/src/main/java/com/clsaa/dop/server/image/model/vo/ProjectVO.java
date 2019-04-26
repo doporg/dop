@@ -49,7 +49,7 @@ public class ProjectVO {
     /**
      *  当前用户的用户类型
      */
-    private Integer currentUserRoleId;
+    private String currentUserRole;
     /**
      *  镜像仓库数
      */

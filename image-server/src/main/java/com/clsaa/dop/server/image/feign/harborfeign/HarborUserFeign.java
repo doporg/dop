@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * harbor用户管理类
+ * @author  xzt
+ * @since 2019-4-5
+ */
 @Component
 @FeignClient(value = "user",url = "${feign.url}",configuration = FeignConfig.class)
 public interface HarborUserFeign {

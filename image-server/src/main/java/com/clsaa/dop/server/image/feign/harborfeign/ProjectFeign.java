@@ -3,6 +3,7 @@ package com.clsaa.dop.server.image.feign.harborfeign;
 import com.clsaa.dop.server.image.config.FeignConfig;
 import com.clsaa.dop.server.image.model.po.*;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public interface ProjectFeign {
      * @return {@link List<Project>} 项目的列表类型
      */
     @GetMapping(value = "/projects")
-    List<Project> projectsGet(@RequestParam(value = "name", required = false) String name,
-                              @RequestParam(value = "public", required = false) Boolean publicStatus,
-                              @RequestParam(value = "owner", required = false) String owner,
-                              @RequestParam(value = "page", required = false) Integer page,
-                              @RequestParam(value = "page_size", required = false) Integer pageSize,
-                              @RequestHeader(value = "Authorization") String auth);
+    ResponseEntity<List<Project>> projectsGet(@RequestParam(value = "name", required = false) String name,
+                                             @RequestParam(value = "public", required = false) Boolean publicStatus,
+                                             @RequestParam(value = "owner", required = false) String owner,
+                                             @RequestParam(value = "page", required = false) Integer page,
+                                             @RequestParam(value = "page_size", required = false) Integer pageSize,
+                                             @RequestHeader(value = "Authorization") String auth);
 
     /**
      * 根据项目id返回 Project
@@ -93,7 +94,7 @@ public interface ProjectFeign {
      * @return 对于项目的访问日志
      */
     @GetMapping(value = "/projects/{project_id}/logs")
-    List<AccessLog> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
+    ResponseEntity<List<AccessLog>> projectsProjectIdLogsGet(@PathVariable("project_id") Integer projectId,
                                              @RequestParam(value = "username", required = false) String username,
                                              @RequestParam(value = "repository", required = false) String repository,
                                              @RequestParam(value = "tag", required = false) String tag,
@@ -167,7 +168,7 @@ public interface ProjectFeign {
      * @return {@link List<ProjectMemberEntity>} 项目人员的列表
      */
     @GetMapping(value = "/projects/{project_id}/members")
-    List<ProjectMemberEntity> projectsProjectIdMembersGet(@PathVariable("project_id") Long projectId,
+    ResponseEntity<List<ProjectMemberEntity>> projectsProjectIdMembersGet(@PathVariable("project_id") Long projectId,
                                                           @RequestParam(value = "entityname", required = false) String entityname,
                                                           @RequestHeader(value = "Authorization") String auth);
 
@@ -178,7 +179,7 @@ public interface ProjectFeign {
      * @param auth harbor的权限参数
      */
     @PostMapping(value = "/projects/{project_id}/members")
-    void  projectsProjectIdMembersPost(@PathVariable("project_id") Long projectId,
+    void  projectsProjectIdMembersPost(@PathVariable("project_id") Integer projectId,
                                        @RequestBody ProjectMember projectMember,
                                        @RequestHeader(value = "Authorization") String auth);
     /**
