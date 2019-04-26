@@ -46,11 +46,47 @@ class CommitList extends React.Component{
 
     }
 
+    isCommit(ref,refOptions){
+
+        let branches=refOptions[0].children;
+        let tags=refOptions[1].children;
+
+        for(let i=0;i<branches.length;i++){
+            if(branches[i].value===ref)
+                return false;
+        }
+
+        for(let i=0;i<tags.length;i++){
+            if(tags[i].value===ref)
+                return false;
+        }
+
+        return true;
+
+    }
+
     loadData(projectid,ref){
 
         let url=API.code+"/projects/"+projectid+"/repository/branchandtag?userId="+sessionStorage.getItem("user-id");
         let self=this;
         Axios.get(url).then(response=>{
+
+            let refOptions=response.data;
+
+            if(this.isCommit(ref,refOptions)){
+                refOptions.push(
+                    {
+                        value:"commit",
+                        label:"commit",
+                        children:[
+                            {
+                                value:ref,
+                                label:ref
+                            }
+                        ]
+                    }
+                )
+            }
             self.setState({
                 refOptions:response.data,
                 loadingVisible:false,
@@ -115,6 +151,11 @@ class CommitList extends React.Component{
         this.props.history.push("/code/"+username+"/"+projectname+"/tree/"+ref+"/"+encodeURIComponent("/"));
     }
 
+    commitLink(sha){
+        let {username,projectname}=this.state;
+        this.props.history.push("/code/"+username+"/"+projectname+"/commit/"+encodeURIComponent(sha));
+    }
+
 
     render(){
         return (
@@ -151,7 +192,7 @@ class CommitList extends React.Component{
                                             <div className="div-commit-item">
                                                 <div className="div-commit-item-avatar">{commitList[j].author_name.substring(0,1).toUpperCase()}</div>
                                                 <div className="div-commit-item-content">
-                                                    <div className="div-commit-item-content-up">{commitList[j].message}</div>
+                                                    <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[j].id)}>{commitList[j].message}</a></div>
                                                     <div className="div-commit-item-content-down">
                                                         {commitList[j].author_name+" 提交在"+commitList[j].authored_time}
                                                     </div>
@@ -187,7 +228,7 @@ class CommitList extends React.Component{
                                     <div className="div-commit-item">
                                         <div className="div-commit-item-avatar">{commitList[i].author_name.substring(0,1).toUpperCase()}</div>
                                         <div className="div-commit-item-content">
-                                            <div className="div-commit-item-content-up">{commitList[i].message}</div>
+                                            <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[i].id)}>{commitList[i].message}</a></div>
                                             <div className="div-commit-item-content-down">
                                                 {commitList[i].author_name+" 提交在"+commitList[i].authored_time}
                                             </div>

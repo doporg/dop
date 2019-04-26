@@ -17,6 +17,9 @@ import SSHREADME from './SSHREADME'
 import BranchList from './BranchList'
 import NewBranch from './NewBranch'
 import TagList from './TagList'
+import NewTag from './NewTag'
+import ProtectBranch from './ProtectBranch'
+import MemberList from './MemberList'
 
 const codeConfig = [
 
@@ -77,7 +80,7 @@ const codeConfig = [
         component: FilePathList
     },
     {
-        path: '/code/:username/:projectname/commit/:commitid',
+        path: '/code/:username/:projectname/commit/:sha',
         layout: CodeProjectLayout,
         component: Commit
     },
@@ -97,10 +100,24 @@ const codeConfig = [
         component: TagList
     },
     {
+        path: '/code/:username/:projectname/tags/new',
+        layout: CodeProjectLayout,
+        component: NewTag
+    },
+    {
         path: '/code/:username/:projectname/edit',
         layout: CodeSettingLayout,
         component: EditProject
     },
+    {
+        path: '/code/:username/:projectname/protected_branches',
+        layout: CodeSettingLayout,
+        component: ProtectBranch
+    },{
+        path: '/code/:username/:projectname/project_members',
+        layout: CodeSettingLayout,
+        component: MemberList
+    }
 
 
 ];
