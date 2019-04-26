@@ -1,3 +1,4 @@
 import NotFound from './NotFound';
+import NotPermission from './NotPermission';
 
-export default NotFound;
+export {NotFound, NotPermission};

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
@@ -61,34 +63,41 @@ public class ResultOutputService {
         this.resultOutputRepository.save(running);
 
         PipelineBoV1 pipelineBoV1 = this.pipelineService.findById(new ObjectId(pipelineId));
-        String gitUrl = null;
-        String repository = null;
-        List<Stage> stages = pipelineBoV1.getStages();
-        for (int i = 0; i < stages.size(); i++) {
-            List<Step> steps = stages.get(i).getSteps();
-            for (int j = 0; j < steps.size(); j++) {
-                Step task = steps.get(j);
-                String taskName = task.getTaskName();
-                switch (taskName) {
-                    case ("拉取代码"):
-                        gitUrl = task.getGitUrl();
-                        break;
-                    case ("构建docker镜像"):
-                    case ("推送docker镜像"):
-                        repository = task.getRepository();
-                        break;
-                }
-            }
-            LogInfoV1 logInfoV1 = LogInfoV1.builder()
-                    .runningId(running.getId().toString())
-                    .commitUrl(gitUrl)
-                    .imageUrl(repository)
-                    .rtime(running.getCtime())
-                    .ruser(pipelineBoV1.getCuser())
-                    .Status(this.jenkinsService.getBuildResult(pipelineBoV1.getId()))
-                    .build();
-//            this.applicationFeign.addLog(loginUser, pipelineBoV1.getAppEnvId(), logInfoV1);
+
+        String git = null;
+        Pattern patternGit = Pattern.compile("http(?:s)://(.*)+.git");
+        Matcher matcherGit = patternGit.matcher(output);
+        if (matcherGit.find()) {
+            git = matcherGit.group();
+            git = git.split("\\.git")[0];
         }
+
+        String commitId = null;
+        Pattern patternCommitId = Pattern.compile("git\\s+checkout\\s+-f\\s+[a-z0-9]+");
+        Matcher matcherCommitId = patternCommitId.matcher(output);
+        if (matcherCommitId.find()) {
+            commitId = matcherCommitId.group().split("\\s+")[3];
+            System.out.println(commitId);
+        }
+
+        String repository= null;
+        Pattern patternRepository = Pattern.compile("Successfully\\s+tagged(.*)+");
+        Matcher matcherRepository = patternRepository.matcher(output);
+        if (matcherRepository.find()) {
+            repository = matcherRepository.group();
+            repository = repository.split("\\s+")[2];
+            System.out.println(repository);
+        }
+
+        LogInfoV1 logInfoV1 = LogInfoV1.builder()
+                .runningId(running.getId().toString())
+                .commitUrl(git + "/" + commitId)
+                .imageUrl(repository)
+                .rtime(running.getCtime())
+                .ruser(pipelineBoV1.getCuser())
+                .Status(this.jenkinsService.getBuildResult(pipelineBoV1.getId()))
+                .build();
+        this.applicationFeign.addLog(loginUser, pipelineBoV1.getAppEnvId(), logInfoV1);
     }
 
     public ResultOutput findByRunningId(String runningId) {

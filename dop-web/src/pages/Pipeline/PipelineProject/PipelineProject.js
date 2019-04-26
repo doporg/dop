@@ -8,6 +8,7 @@ import {Button, Icon, Loading, Feedback} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
+import {NotPermission} from '../../NotFound'
 import {FormattedMessage} from 'react-intl';
 import './PipelineProject.scss'
 
@@ -19,7 +20,7 @@ export default class PipelineProject extends Component {
         this.state = {
             visible: false,
             pipelineId: this.props.match.params.id,
-            pipeline:{},
+            pipeline: {},
             runs: {
                 _links: {
                     self: {
@@ -29,7 +30,8 @@ export default class PipelineProject extends Component {
             },
             queue: [],
             time: "",
-            resultStatus: "run"
+            resultStatus: "RUN",
+            notRunning: true
         }
     }
 
@@ -64,35 +66,43 @@ export default class PipelineProject extends Component {
                             content: "该流水线尚未运行",
                             duration: 3000
                         });
+                        self.setState({
+                            notRunning: true
+                        });
                         resolve(response.data[0]);
                         self.clear();
                     } else {
+                        self.setState({
+                            notRunning: false
+                        });
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
-                            self.setResult();
+                            if (self.state.resultStatus === "BUILD") {
+                                self.setResult();
+                            }
                         }
                     }
                 }
                 reject()
-            }).catch((error)=>{
+            }).catch((error) => {
                 let self = this;
-                if(error.response.status === 500 && error.response.data.message === "404 Not Found"){
+                if (error.response.status === 500 && error.response.data.message === "404 Not Found") {
                     toast.show({
                         type: "prompt",
                         content: "该流水线尚未运行",
                         duration: 3000
                     });
-                    self.clear();
-                    self.setState({
-                        visible: false
-                    });
                 }
+                self.setState({
+                    visible: false
+                });
+                self.clear();
             })
         })
     }
 
-    getPipelineInfo(){
+    getPipelineInfo() {
         let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
         let self = this;
 
@@ -107,7 +117,11 @@ export default class PipelineProject extends Component {
 
     buildPipeline() {
         let self = this;
-        self.setState({visible: true});
+        self.setState({
+            visible: true,
+            resultStatus: "BUILD",
+            notRunning: false
+        });
         let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
@@ -124,16 +138,30 @@ export default class PipelineProject extends Component {
                     time: time
                 });
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "启动运行失败",
+                duration: 3000
+            });
+            self.setState({
+                visible: false,
+                resultStatus: "RUN"
+            });
         })
     }
+
     clear() {
         clearInterval(this.state.time);
     }
 
     setResult() {
-        let url = API.pipeline + '/v1/resultOutput/notify/'+ this.state.pipelineId;
+        this.setState({
+            resultStatus: "RUN"
+        });
+        let url = API.pipeline + '/v1/resultOutput/notify/' + this.state.pipelineId;
         Axios.post(url).then((response) => {
-        }).catch(()=>{
+        }).catch(() => {
             toast.show({
                 type: "error",
                 content: "此次执行信息丢失",
@@ -212,7 +240,13 @@ export default class PipelineProject extends Component {
                         </Button>
                     </div>
 
-                    <RunResult runs={this.state.runs}/>
+                    {(()=>{
+                        if(this.state.notRunning){
+                            return <NotPermission />
+                        }else{
+                            return  <RunResult runs={this.state.runs}/>
+                        }
+                    })()}
                 </Loading>
             </div>
 

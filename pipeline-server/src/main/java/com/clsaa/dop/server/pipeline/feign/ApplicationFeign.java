@@ -54,8 +54,8 @@ public interface ApplicationFeign {
      * */
     @PostMapping("/app/env/{appEnvId}/log")
     void addLog(
-//            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
-//            @PathVariable Long appEnvId,
-//            @RequestBody LogInfoV1 logInfoV1
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @PathVariable(value = "appEnvId") Long appEnvId,
+            @RequestBody LogInfoV1 logInfoV1
     );
 }
