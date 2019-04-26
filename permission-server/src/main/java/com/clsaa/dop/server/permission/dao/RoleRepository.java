@@ -48,4 +48,6 @@ public interface RoleRepository extends JpaRepository<Role, Long>
      */
 
     Page<Role> findAllByNameLikeAndIdIn(String key, List<Long> idList, Pageable pageable);
+
+    List<Role> findByIdIn(List<Long> idList);
 }

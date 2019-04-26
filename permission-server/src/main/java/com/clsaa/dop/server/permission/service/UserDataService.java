@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -161,6 +162,24 @@ public class UserDataService {
         userDataDAO.deleteById(id);
     }
 
+    //根据字段值查找用户ID列表
+    public List<Long> findUserByField(Long fieldValue,String fieldName)
+    {
+        HashSet<Long> hashSet=new HashSet<>();
+        List<Long> userList=new ArrayList<>();
+        List<UserData> userDataList=userDataDAO.findByFieldValue(fieldValue);
+        if(userDataList==null)return null;
+        for(UserData userData :userDataList)
+        {
+            UserRule userRule=userRuleService.findById(userData.getRuleId());
+            if(userRule!=null&&userRule.getFieldName().equals(fieldName))
+            {
+                hashSet.add(userData.getUserId());
+            }
+        }
 
+        userList.addAll(hashSet);
+        return userList;
+    }
 
 }

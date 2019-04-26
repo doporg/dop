@@ -1,11 +1,14 @@
-package com.clsaa.dop.client.permission.service;
+package com.clsaa.dop.client.permission.FeignClient;
 
-import com.clsaa.dop.client.permission.config.FeignConfig;
-import com.clsaa.dop.client.permission.config.HttpHeaders;
+
+/**
+ * 权限管理的Feign调用服务接口
+ *
+ * @author lzy
+ */
 import com.clsaa.dop.client.permission.model.dto.RoleDtoV1;
 import com.clsaa.dop.client.permission.model.dto.UserRuleDtoV1;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,16 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-/**
- *  权限管理的接口调用
- *
- * @author lzy
- *
- */
 
-@Component
-@FeignClient(value = "permission-server", configuration = FeignConfig.class)
-public interface AuthenticationService {
+@FeignClient(value = "permission-server")
+public interface AuthenticService {
+
 
     /* *
      *
@@ -34,11 +31,11 @@ public interface AuthenticationService {
      *
      */
     @PostMapping("/v1/userData")
-    void addData(
+     void addData(
             @RequestParam(value = "ruleId")Long ruleId,
             @RequestParam(value = "userId")Long userId,
             @RequestParam(value = "fieldValue")Long fieldValue,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser
+            @RequestHeader("x-login-user")Long loginUser
     );
 
     /* *
@@ -50,9 +47,9 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/users/permissionmaps")
-    boolean checkUserPermission(
-            @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam("userId") Long loginUser);
+     boolean checkUserPermission(
+             @RequestParam(value = "permissionName", required = true) String permissionName,
+             @RequestParam("userId") Long loginUser);
 
     /* *
      *
@@ -79,7 +76,7 @@ public interface AuthenticationService {
 
     @GetMapping("/v1/roles/byName")
     RoleDtoV1 findByName(
-            @RequestParam(value = "name")String name
+             @RequestParam(value = "name")String name
     );
 
     /* *
@@ -109,11 +106,26 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/userData")
-    boolean check(
+     boolean check(
             @RequestParam(value = "permissionName", required = true) String permissionName,
             @RequestParam(value = "userId", required = true)Long userId,
             @RequestParam(value = "fieldName", required = true)String fieldName,
             @RequestParam(value = "fieldValue", required = true)Long fieldValue
     );
+
+    /* *
+     *
+     *  根据字段值查找用户ID列表
+     *  * @param fieldValue 作用域参数值
+     *  * @param fieldName 作用域参数名
+     *
+     */
+
+    @GetMapping("/v1/userData/byField")
+    List<Long> findUserByField(
+            @RequestParam(value = "fieldValue") Long fieldValue,
+            @RequestParam(value = "fieldName") String fieldName
+    );
 }
+
 

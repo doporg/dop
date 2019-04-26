@@ -1,6 +1,8 @@
 package com.clsaa.dop.server.permission.service;
 
-import com.clsaa.dop.server.permission.annotation.PermissionName;
+
+import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
+import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -48,7 +50,7 @@ public class PermissionService {
 
     @Autowired
     //权限管理服务
-    private AuthenticationService authenticationService;
+    private AuthenticService authenticationService;
 
     @Autowired
     //用户服务
@@ -111,7 +113,9 @@ public class PermissionService {
         return null;
     }
     //分页查询所有功能点带数据权限
-    public Pagination<PermissionV1> getPermissionV1Pagination(Integer pageNo, Integer pageSize,Long userId,String key)
+
+    @PermissionName(name = "查询功能点")
+    public Pagination<PermissionV1> getPermissionV1Pagination(Long userId,Integer pageNo, Integer pageSize, String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
@@ -168,12 +172,12 @@ public class PermissionService {
     //根据name查询功能点
     public PermissionBoV1 findByName(String name)
     {
+
        return BeanUtils.convertType(this.permissionRepository.findByName(name), PermissionBoV1.class);
     }
 
     //根据ID删除功能点,并删除关联关系
     @Transactional
-    @PermissionName(name = "删除功能点")
     public void deleteById(Long userId,Long id)
     {
             if(authenticationService.check("删除功能点",userId,"permissionId",id))
@@ -184,6 +188,7 @@ public class PermissionService {
     }
 
     //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点
+    @PermissionName(name = "查询功能点")
     public List<PermissionBoV1> findAll(Long userId)
     {
         //可以查看的ID列表
@@ -231,9 +236,12 @@ public class PermissionService {
     //判断用户是否拥有特定功能点
     public boolean checkUserPermission(String permissionName,Long userId)
     {
+
+       if(permissionRepository.findByName(permissionName)==null)
+            return false;
         Long permissionId=permissionRepository.findByName(permissionName).getId();
-        System.out.println(permissionId);
         List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
+        if(userRoleMappingList==null)return false;
         for (UserRoleMapping userRoleMapping : userRoleMappingList) {
             if (rolePermissionMappingService.findByRoleIdAndPermissionId(userRoleMapping.getRoleId(), permissionId) != null) {
                 return true;

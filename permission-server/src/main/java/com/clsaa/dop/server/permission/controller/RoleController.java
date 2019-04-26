@@ -101,9 +101,9 @@ public class RoleController {
     }
     @ApiOperation(value="查询所有角色",notes = "查询所有角色")
     @GetMapping("v1/roles/roles")
-    public List<RoleV1> findAllRole()
+    public List<RoleV1> findAllRole(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        return roleService.findAllRole().stream().map(p ->
+        return roleService.findAllRole(loginUser).stream().map(p ->
                 BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
     }
 

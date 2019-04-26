@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.permission.service;
 
-import com.clsaa.dop.server.permission.annotation.PermissionName;
+import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
+import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.RoleRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -54,7 +55,7 @@ public class RoleService {
 
     @Autowired
     //权限管理服务
-    private AuthenticationService authenticationService;
+    private AuthenticService authenticationService;
 
     @Autowired
     //用户服务
@@ -80,27 +81,27 @@ public class RoleService {
     @PermissionName(name = "创建角色")
     public Long createRole(Long cuser,Long parentId,String name,Long muser)
     {
-                Role existRole=this.roleRepository.findByName(name);
-                BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
-                Role role= Role.builder()
-                        .parentId(parentId)
-                        .name(name)
-                        .cuser(cuser)
-                        .muser(muser)
-                        .ctime(LocalDateTime.now())
-                        .mtime(LocalDateTime.now())
-                        .deleted(false)
-                        .build();
-                roleRepository.saveAndFlush(role);
-                authenticationService.addData(
-                        authenticationService.findUniqueRule("in","roleId",
-                                authenticationService.findByName("权限管理员").getId()).getId(),
-                        cuser,role.getId(),cuser);
-                authenticationService.addData(
-                        authenticationService.findUniqueRule("equals","roleId",
-                                authenticationService.findByName("权限管理员").getId()).getId(),
-                        cuser,role.getId(),cuser);
-                return role.getId();
+            Role existRole=this.roleRepository.findByName(name);
+            BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
+            Role role= Role.builder()
+                    .parentId(parentId)
+                    .name(name)
+                    .cuser(cuser)
+                    .muser(muser)
+                    .ctime(LocalDateTime.now())
+                    .mtime(LocalDateTime.now())
+                    .deleted(false)
+                    .build();
+            roleRepository.saveAndFlush(role);
+            authenticationService.addData(
+                    authenticationService.findUniqueRule("in","roleId",
+                            authenticationService.findByName("权限管理员").getId()).getId(),
+                    cuser,role.getId(),cuser);
+            authenticationService.addData(
+                    authenticationService.findUniqueRule("equals","roleId",
+                            authenticationService.findByName("权限管理员").getId()).getId(),
+                    cuser,role.getId(),cuser);
+            return role.getId();
 
     }
 
@@ -229,9 +230,11 @@ public class RoleService {
     }
 
     //查询所有角色，为用户绑定时使用
-    public List<RoleBoV1> findAllRole()
+    public List<RoleBoV1> findAllRole(Long userId)
     {
-        return roleRepository.findAll().stream().map(p ->
+        //可以查看的ID列表
+        List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
+        return roleRepository.findByIdIn(idList).stream().map(p ->
                 BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
     }
 

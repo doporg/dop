@@ -80,7 +80,7 @@ public class PermissionController {
             @ApiParam(name = "key",value = "搜索关键字",defaultValue = "")
             @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return this.permissionService.getPermissionV1Pagination(page,size,loginUser,key);
+        return this.permissionService.getPermissionV1Pagination(loginUser,page,size,key);
     }
     @ApiOperation(value = "根据名称查询功能点", notes = "根据名称查询功能点")
     @GetMapping("/v1/permissions/byName")
@@ -128,5 +128,7 @@ public class PermissionController {
     {
         return permissionService.checkUserPermission(permissionName,loginUser);
     }
+
+
 
 }

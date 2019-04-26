@@ -1,64 +1,6 @@
 Manifest-Version: 1.0
-Class-Path: tomcat-embed-el-9.0.17.jar rxnetty-servo-0.4.9.jar stringt
- emplate-3.2.1.jar httpclient-4.5.8.jar feign-form-3.5.0.jar hystrix-c
- ore-1.5.18.jar archaius-core-0.7.6.jar commons-fileupload-1.3.3.jar c
- ommons-lang-2.6.jar spring-boot-starter-logging-2.1.4.RELEASE.jar jav
- ax.inject-1.jar stax-api-1.0.1.jar netty-codec-socks-4.1.34.Final.jar
-  feign-hystrix-10.1.0.jar classmate-1.4.0.jar spring-jcl-5.1.6.RELEAS
- E.jar spring-core-5.1.6.RELEASE.jar jackson-datatype-jsr310-2.9.8.jar
-  logback-classic-1.2.3.jar fastjson-1.2.49.jar netflix-statistics-0.1
- .1.jar spring-cloud-netflix-archaius-2.1.1.RELEASE.jar log4j-api-2.11
- .2.jar jul-to-slf4j-1.7.26.jar aspectjweaver-1.9.2.jar reactor-netty-
- 0.8.6.RELEASE.jar tomcat-embed-core-9.0.17.jar reactive-streams-1.0.2
- .jar woodstox-core-asl-4.4.1.jar spring-beans-5.1.6.RELEASE.jar guava
- -16.0.jar commons-configuration-1.8.jar compactmap-1.2.1.jar rxjava-1
- .3.8.jar aopalliance-1.0.jar feign-form-spring-3.5.0.jar spring-boot-
- starter-reactor-netty-2.1.4.RELEASE.jar rxnetty-contexts-0.4.9.jar fe
- ign-core-10.1.0.jar spring-retry-1.2.4.RELEASE.jar netty-resolver-4.1
- .34.Final.jar log4j-to-slf4j-2.11.2.jar nio-stream-storage-1.1.3.jar 
- spring-cloud-starter-netflix-archaius-2.1.1.RELEASE.jar spring-cloud-
- context-2.1.1.RELEASE.jar eureka-client-1.9.8.jar spring-cloud-netfli
- x-eureka-client-2.1.1.RELEASE.jar feign-slf4j-10.1.0.jar netty-buffer
- -4.1.34.Final.jar netty-handler-proxy-4.1.34.Final.jar lombok-1.18.6.
- jar snakeyaml-1.23.jar ribbon-httpclient-2.3.0.jar netty-transport-na
- tive-epoll-4.1.34.Final-linux-x86_64.jar commons-io-2.2.jar spring-bo
- ot-starter-tomcat-2.1.4.RELEASE.jar spring-boot-starter-2.1.4.RELEASE
- .jar servo-core-0.12.21.jar netflix-commons-util-0.3.0.jar ribbon-eur
- eka-2.3.0.jar guice-4.1.0.jar netty-codec-http2-4.1.34.Final.jar comm
- ons-collections-3.2.2.jar javax.annotation-api-1.3.2.jar slf4j-api-1.
- 7.26.jar dexx-collections-0.2.jar protobuf-java-3.4.0.jar tomcat-embe
- d-websocket-9.0.17.jar netty-codec-http-4.1.34.Final.jar jackson-data
- type-jdk8-2.9.8.jar jettison-1.3.7.jar jackson-module-parameter-names
- -2.9.8.jar netflix-eventbus-0.3.0.jar ribbon-core-2.3.0.jar spring-cl
- oud-starter-2.1.1.RELEASE.jar spring-cloud-starter-openfeign-2.1.1.RE
- LEASE.jar hibernate-validator-6.0.16.Final.jar spring-security-crypto
- -5.1.5.RELEASE.jar netty-codec-4.1.34.Final.jar spring-cloud-netflix-
- hystrix-2.1.1.RELEASE.jar bcprov-jdk15on-1.60.jar spring-expression-5
- .1.6.RELEASE.jar spring-boot-starter-json-2.1.4.RELEASE.jar spring-co
- ntext-5.1.6.RELEASE.jar ribbon-loadbalancer-2.3.0.jar spring-cloud-st
- arter-netflix-ribbon-2.1.1.RELEASE.jar spring-boot-starter-aop-2.1.4.
- RELEASE.jar spring-boot-autoconfigure-2.1.4.RELEASE.jar spring-webmvc
- -5.1.6.RELEASE.jar xpp3_min-1.1.4c.jar reactor-core-3.2.8.RELEASE.jar
-  jersey-apache-client4-1.19.1.jar ribbon-transport-2.3.0.jar netty-tr
- ansport-native-unix-common-4.1.34.Final.jar commons-jxpath-1.3.jar sp
- ring-boot-2.1.4.RELEASE.jar jsr311-api-1.1.1.jar spring-cloud-commons
- -2.1.1.RELEASE.jar jersey-core-1.19.1.jar validation-api-2.0.1.Final.
- jar commons-codec-1.11.jar stax-api-1.0-2.jar commons-math-2.2.jar st
- andard-result-0.0.1.jar rxnetty-0.4.9.jar stax2-api-3.1.4.jar spring-
- aop-5.1.6.RELEASE.jar xstream-1.4.10.jar spring-cloud-openfeign-core-
- 2.1.1.RELEASE.jar netty-transport-4.1.34.Final.jar jackson-core-2.9.8
- .jar spring-cloud-starter-netflix-eureka-client-2.1.1.RELEASE.jar bcp
- kix-jdk15on-1.60.jar jackson-databind-2.9.8.jar jersey-client-1.19.1.
- jar spring-web-5.1.6.RELEASE.jar netty-handler-4.1.34.Final.jar netfl
- ix-infix-0.3.0.jar antlr-2.7.7.jar eureka-core-1.9.8.jar netty-common
- -4.1.34.Final.jar spring-boot-starter-webflux-2.1.4.RELEASE.jar xmlpu
- ll-1.1.3.1.jar nio-multipart-parser-1.1.0.jar antlr-runtime-3.4.jar s
- pring-boot-devtools-2.1.4.RELEASE.jar ribbon-2.3.0.jar joda-time-2.10
- .1.jar spring-cloud-netflix-ribbon-2.1.1.RELEASE.jar jboss-logging-3.
- 3.2.Final.jar HdrHistogram-2.1.9.jar spring-boot-starter-web-2.1.4.RE
- LEASE.jar spring-security-rsa-1.0.7.RELEASE.jar logback-core-1.2.3.ja
- r httpcore-4.4.11.jar jackson-annotations-2.9.0.jar gson-2.8.5.jar sp
- ring-webflux-5.1.6.RELEASE.jar
-Main-Class: com.clsaa.dop.client.permission.PermissionClientApplicatio
- n
+Class-Path: spring-beans-5.1.6.RELEASE.jar aspectjweaver-1.9.2.jar spr
+ ing-jcl-5.1.6.RELEASE.jar aspectjrt-1.9.2.jar spring-expression-5.1.6
+ .RELEASE.jar spring-context-5.1.6.RELEASE.jar spring-aop-5.1.6.RELEAS
+ E.jar spring-core-5.1.6.RELEASE.jar
 
