@@ -18,5 +18,8 @@ const PIPELINE_EN_US = {
     'pipeline.project.runPipeline': 'Run Pipeline',
     'pipeline.project.editPipeline': 'Edit Pipeline',
     'pipeline.project.deletePipeline': 'Delete Pipeline',
+
+    'pipeline.info.hasJenkinsfile': 'Have Jenkinsfile',
+    'pipeline.info.noJenkinsfile': 'No Jenkinsfile',
 };
 export default PIPELINE_EN_US;

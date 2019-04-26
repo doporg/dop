@@ -18,5 +18,8 @@ const PIPELINE_ZH_CN = {
     'pipeline.project.runPipeline': '运行流水线',
     'pipeline.project.editPipeline': '编辑流水线',
     'pipeline.project.deletePipeline': '删除流水线',
+
+    'pipeline.info.hasJenkinsfile': '自带Jenkinsfile',
+    'pipeline.info.noJenkinsfile': '无Jenkinsfile',
 };
 export default PIPELINE_ZH_CN;

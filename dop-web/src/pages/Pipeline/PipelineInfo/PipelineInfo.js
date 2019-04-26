@@ -14,11 +14,12 @@ import './PipelineInfo.scss';
 import Axios from 'axios';
 import API from '../../API';
 import {Feedback} from "@icedesign/base/index";
+import {injectIntl} from "react-intl";
 
 const {Combobox} = Select;
 const {toast} = Feedback;
 
-export default class PipelineInfo extends Component {
+class PipelineInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,12 +31,15 @@ export default class PipelineInfo extends Component {
                 monitor: "",
                 appId: null,
                 appEnvId: null,
-                config: "无Jenkinsfile",
+                config:  this.props.intl.messages["pipeline.info.noJenkinsfile"],
                 stages: [],
                 jenkinsfile: {}
             },
             monitor: ["自动触发"],
-            jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
+            jenkinsFile: [
+                this.props.intl.messages["pipeline.info.hasJenkinsfile"],
+                this.props.intl.messages["pipeline.info.noJenkinsfile"]
+            ],
             haveJenkinsFile: null,
             jenkinsFileInfo: {
                 git: "",
@@ -98,7 +102,7 @@ export default class PipelineInfo extends Component {
 
     selectJenkinsFile(value) {
         this.setState({
-            haveJenkinsFile: value
+            haveJenkinsFile: this.state.jenkinsFile.indexOf(value)
         })
     }
 
@@ -154,6 +158,7 @@ export default class PipelineInfo extends Component {
             content: "正在提交请稍后",
             duration: 4000
         });
+        console.log(self.state.pipeline);
         Axios({
             method: 'post',
             url: url,
@@ -227,6 +232,7 @@ export default class PipelineInfo extends Component {
                             <FormBinder name="config" required message="配置设置">
                                 <Combobox
                                     onChange={this.selectJenkinsFile.bind(this)}
+
                                     dataSource={this.state.jenkinsFile}
                                     placeholder="配置设置"
                                     className="combobox"
@@ -237,7 +243,7 @@ export default class PipelineInfo extends Component {
                         </div>
 
                         {(() => {
-                            if (this.state.haveJenkinsFile === '自带Jenkinsfile') {
+                            if (this.state.haveJenkinsFile ===  0) {
                                 return (
                                     <Jenkinsfile
                                         jenkinsfile={this.state.jenkinsFileInfo}
@@ -267,7 +273,7 @@ export default class PipelineInfo extends Component {
                         <Button type="primary"
                                 className="button"
                                 onClick={
-                                    this.state.haveJenkinsFile === "自带Jenkinsfile" ?
+                                    this.state.haveJenkinsFile === 0 ?
                                         this.saveJenkinsfile.bind(this) : this.save.bind(this)
                                 }
                         >保存</Button>
@@ -283,3 +289,4 @@ export default class PipelineInfo extends Component {
         );
     }
 }
+export default injectIntl(PipelineInfo)
