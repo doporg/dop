@@ -2,6 +2,7 @@ package com.clsaa.dop.server.permission.service;
 
 
 import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
+import com.clsaa.dop.client.permission.annotation.GetUserId;
 import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
@@ -76,7 +77,8 @@ public class PermissionService {
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     //创建一个功能点
     @PermissionName(name = "创建功能点")
-    public void createPermission(Long cuser,Long parentId,String name,Integer isPrivate,String description, Long muser)
+
+    public void createPermission(@GetUserId Long cuser, Long parentId, String name, Integer isPrivate, String description, Long muser)
     {
             Permission existPermission=this.permissionRepository.findByName(name);
             BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
@@ -115,7 +117,7 @@ public class PermissionService {
     //分页查询所有功能点带数据权限
 
     @PermissionName(name = "查询功能点")
-    public Pagination<PermissionV1> getPermissionV1Pagination(Long userId,Integer pageNo, Integer pageSize, String key)
+    public Pagination<PermissionV1> getPermissionV1Pagination(@GetUserId Long userId, Integer pageNo, Integer pageSize, String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
@@ -178,7 +180,8 @@ public class PermissionService {
 
     //根据ID删除功能点,并删除关联关系
     @Transactional
-    public void deleteById(Long userId,Long id)
+    @PermissionName(name = "删除功能点")
+    public void deleteById(@GetUserId Long userId,Long id)
     {
             if(authenticationService.check("删除功能点",userId,"permissionId",id))
             {
@@ -189,7 +192,7 @@ public class PermissionService {
 
     //创建或编辑角色时，需要勾选该角色对应的功能点，所以要返回全部功能点
     @PermissionName(name = "查询功能点")
-    public List<PermissionBoV1> findAll(Long userId)
+    public List<PermissionBoV1> findAll(@GetUserId Long userId)
     {
         //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
