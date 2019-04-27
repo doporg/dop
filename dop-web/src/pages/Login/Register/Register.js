@@ -183,7 +183,7 @@ export default class Register extends Component {
                                 htmlType="password"
                                 {...init("passwd", {
                                     rules: [
-                                        {required: true, whitespace: true, min: 6, message: "密码用至少为 6 个字符"},
+                                        {required: true, whitespace: true, min: 6, message: "密码至少为 8 个字符"},
                                         {validator: this.checkPass.bind(this)}
                                     ]
                                 })}
