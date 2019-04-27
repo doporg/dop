@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.UserProperties;
 import com.clsaa.dop.server.user.dao.UserRepository;
+import com.clsaa.dop.server.user.model.bo.OrgUserMappingBoV1;
 import com.clsaa.dop.server.user.model.bo.UserBoV1;
 import com.clsaa.dop.server.user.model.bo.UserCredentialBoV1;
 import com.clsaa.dop.server.user.model.po.User;
 import com.clsaa.dop.server.user.model.po.UserCredential;
+import com.clsaa.dop.server.user.model.vo.UserV1;
 import com.clsaa.dop.server.user.mq.MessageQueueException;
 import com.clsaa.dop.server.user.mq.MessageSender;
 import com.clsaa.dop.server.user.util.BeanUtils;
@@ -15,19 +17,26 @@ import com.clsaa.dop.server.user.util.Validator;
 import com.clsaa.dop.server.user.util.crypt.CryptoResult;
 import com.clsaa.dop.server.user.util.crypt.RSA;
 import com.clsaa.dop.server.user.util.crypt.StrongPassword;
+import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -55,6 +64,8 @@ public class UserService {
     private String updateAccountTopic;
     @Autowired
     private MessageSender messageSender;
+    @Autowired
+    private OrgUserMappingService orgUserMappingService;
 
     /**
      * <p>
@@ -205,5 +216,57 @@ public class UserService {
         boolean verifyResult = StrongPassword.verify(realPassword.getContent(), userCredentialBoV1.getCredential());
         BizAssert.pass(verifyResult, BizCodes.INVALID_PASSWORD);
         return BeanUtils.convertType(user, UserBoV1.class);
+    }
+
+    /**
+     * 根据关键字查询用户
+     *
+     * @param key 邮箱或密码前缀
+     * @return {@link Pagination<UserV1>}
+     */
+    public Pagination<UserV1> searchUserByEmailOrPassword(String key, Long organizationId, Integer pageNo, Integer pageSize) {
+        if (StringUtils.isEmpty(organizationId)) {
+            int count = this.userRepository.selectCountByEmailOrPassword(key);
+            Pagination<UserV1> pagination = new Pagination<>();
+            pagination.setPageNo(pageNo);
+            pagination.setPageSize(pageSize);
+            pagination.setTotalCount(count);
+            if (count == 0) {
+                pagination.setPageList(Collections.emptyList());
+                return pagination;
+            }
+            List<UserV1> users = this.userRepository
+                    .searchUserByEmailOrPassword(key, pagination.getRowOffset(), pagination.getPageSize())
+                    .stream()
+                    .map(u -> BeanUtils.convertType(u, UserV1.class))
+                    .collect(Collectors.toList());
+            pagination.setPageList(users);
+            return pagination;
+        } else {
+            List<Long> userIds = this.orgUserMappingService.findOrgUserMappingByOrganizationId(organizationId)
+                    .stream()
+                    .map(OrgUserMappingBoV1::getUserId)
+                    .collect(Collectors.toList());
+            Pagination<UserV1> pagination = new Pagination<>();
+            pagination.setPageNo(pageNo);
+            pagination.setPageSize(pageSize);
+            if (userIds.isEmpty()) {
+                pagination.setTotalCount(0);
+                return pagination;
+            }
+            int count = this.userRepository.selectCountByIdsAndEmailOrPassword(userIds, key);
+            pagination.setTotalCount(count);
+            if (count == 0) {
+                pagination.setPageList(Collections.emptyList());
+                return pagination;
+            }
+            List<UserV1> users = this.userRepository
+                    .searchUserByIdsAndEmailOrPassword(userIds, key, pagination.getRowOffset(), pagination.getPageSize())
+                    .stream()
+                    .map(u -> BeanUtils.convertType(u, UserV1.class))
+                    .collect(Collectors.toList());
+            pagination.setPageList(users);
+            return pagination;
+        }
     }
 }

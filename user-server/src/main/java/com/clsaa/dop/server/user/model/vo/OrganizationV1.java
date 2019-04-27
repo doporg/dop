@@ -1,9 +1,7 @@
 package com.clsaa.dop.server.user.model.vo;
 
-import com.clsaa.dop.server.user.model.po.Group;
 import lombok.*;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
