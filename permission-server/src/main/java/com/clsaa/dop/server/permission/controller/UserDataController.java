@@ -110,5 +110,18 @@ public class UserDataController {
         userDataService.deleteById(id);
     }
 
+    //根据字段值查找用户ID列表
+    @ApiOperation(value = "根据字段值查找用户ID列表", notes = "根据字段值查找用户ID列表")
+    @GetMapping("/v1/userData/byField")
+    public List<Long> findUserByField(
+            @ApiParam(name = "fieldValue",value = "作用域值",required = true)
+            @RequestParam(value = "fieldValue") Long fieldValue,
+            @ApiParam(name = "fieldName",value = "作用域名称",required = true)
+            @RequestParam(value = "fieldName") String fieldName
+    )
+    {
+       return userDataService.findUserByField(fieldValue,fieldName);
+    }
+
 
 }

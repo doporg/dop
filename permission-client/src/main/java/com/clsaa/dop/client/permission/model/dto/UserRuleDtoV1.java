@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.permission.model.dto;
+package com.clsaa.dop.client.permission.model.dto;
 
 
 /**

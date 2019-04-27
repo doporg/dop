@@ -3,6 +3,8 @@ package com.clsaa.dop.server.permission.dao;
 import com.clsaa.dop.server.permission.model.po.Permission;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -19,8 +21,6 @@ import java.util.List;
 
 public interface PermissionRepository extends JpaRepository<Permission, Long>
 {
-
-
     /**
      * 根据name查询功能点
      *
@@ -32,9 +32,31 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
     /**
      * 根据关键字key过滤查询
      *
-     * @param key 关键字
+     * @param   key 关键字
+     * @param  {List <Long> idList}
+     * @param  pageable 分页
      * @return {@link List < Permission >}
      */
 
-    List<Permission> findByNameLike(String key);
+    Page<Permission> findAllByNameLikeAndIdIn(String key, List<Long> idList, Pageable pageable);
+
+    /**
+     * 查询全部
+     *
+     * @param  {List <Long> idList}
+     * @return {@link List < Permission >}
+     */
+
+    List<Permission> findByIdIn(List<Long> idList);
+
+    /**
+     * 分页查询全部
+     *
+     * @param  {List <Long> idList}
+     * @param  pageable 分页
+     * @return {@link List < Permission >}
+     */
+
+    Page<Permission> findByIdIn(List<Long> idList,Pageable pageable);
+
 }
