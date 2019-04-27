@@ -2,6 +2,7 @@ package com.clsaa.dop.server.user.service;
 
 import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.dao.OrganizationRepository;
+import com.clsaa.dop.server.user.model.bo.OrgUserMappingBoV1;
 import com.clsaa.dop.server.user.model.bo.OrganizationBoV1;
 import com.clsaa.dop.server.user.model.po.Organization;
 import com.clsaa.dop.server.user.model.vo.OrganizationV1;
@@ -11,9 +12,11 @@ import com.clsaa.rest.result.bizassert.BizCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * 组织，业务实现类
@@ -24,6 +27,8 @@ import java.util.UUID;
 public class OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
+    @Autowired
+    private OrgUserMappingService orgUserMappingService;
 
     /**
      * 添加一个组织
@@ -34,6 +39,7 @@ public class OrganizationService {
      * @param cuser       创建人
      * @param muser       修改人
      */
+    @Transactional(rollbackOn = Exception.class)
     public void addOrganization(String name, String description, Long ouser, Long cuser, Long muser) {
         Organization organization = Organization.builder()
                 .name(name)
@@ -48,6 +54,7 @@ public class OrganizationService {
                 .ctime(LocalDateTime.now())
                 .build();
         this.organizationRepository.saveAndFlush(organization);
+        this.orgUserMappingService.addOrgUserMapping(organization.getId(), ouser, ouser);
     }
 
     /**
@@ -85,10 +92,17 @@ public class OrganizationService {
      * 查询一个人全部所属组织
      *
      * @param userId 用户id
-     * @return {@link List<OrganizationV1>}
+     * @return {@link List<OrganizationBoV1>}
      */
-    public List<OrganizationV1> findOrganizationByUser(Long userId) {
-        return null;
+    public List<OrganizationBoV1> findOrganizationByUser(Long userId) {
+        List<Long> orgIds = this.orgUserMappingService.findOrgUserMappingByUserId(userId)
+                .stream()
+                .map(OrgUserMappingBoV1::getOrganizationId)
+                .collect(Collectors.toList());
+        return this.organizationRepository.findOrganizationByIdIn(orgIds)
+                .stream()
+                .map(o-> BeanUtils.convertType(o, OrganizationBoV1.class))
+                .collect(Collectors.toList());
     }
 
     /**

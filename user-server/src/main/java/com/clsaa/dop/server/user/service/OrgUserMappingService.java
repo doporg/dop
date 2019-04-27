@@ -30,7 +30,7 @@ public class OrgUserMappingService {
         OrganizationBoV1 existOrganization = this.organizationService.findOrganizationById(organizationId);
         BizAssert.found(existOrganization != null, new BizCode(BizCodes.ERROR_DELETE.getCode(),
                 "组织不存在"));
-        BizAssert.pass(existOrganization.getOuser().equals(organizationId), "只能由组织拥有者可以添加人员");
+        BizAssert.pass(existOrganization.getOuser().equals(operateUserId), "只能由组织拥有者可以添加人员");
         OrgUserMapping orgUserMapping = OrgUserMapping.builder()
                 .organizationId(organizationId)
                 .userId(userId)
@@ -53,6 +53,13 @@ public class OrgUserMappingService {
 
     public List<OrgUserMappingBoV1> findOrgUserMappingByOrganizationId(Long organizationId) {
         return this.orgUserMappingRepository.findOrgUserMappingsByOrganizationId(organizationId)
+                .stream()
+                .map(m -> BeanUtils.convertType(m, OrgUserMappingBoV1.class))
+                .collect(Collectors.toList());
+    }
+
+    public List<OrgUserMappingBoV1> findOrgUserMappingByUserId(Long userId) {
+        return this.orgUserMappingRepository.findOrgUserMappingsByUserId(userId)
                 .stream()
                 .map(m -> BeanUtils.convertType(m, OrgUserMappingBoV1.class))
                 .collect(Collectors.toList());

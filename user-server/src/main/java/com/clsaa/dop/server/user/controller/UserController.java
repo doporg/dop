@@ -68,11 +68,10 @@ public class UserController {
 
     @ApiOperation(value = "根据邮箱或账户名模糊匹配用户", notes = "根据邮箱和账户名模糊匹配用户, 仅支持前缀匹配, ")
     @GetMapping("/v1/users/search")
-    public List<UserV1> searchUserByOrganizationIdAndEmailOrPassword(@RequestParam(value = "key", required = false) String key,
-                                                                     @RequestParam(value = "organizationId", required = false) String organizationId) {
-        return this.userService.searchUserByEmailOrPassword(key, organizationId)
-                .stream()
-                .map(u -> BeanUtils.convertType(u, UserV1.class))
-                .collect(Collectors.toList());
+    public Pagination<UserV1> searchUserByOrganizationIdAndEmailOrPassword(@ApiParam(value = "关键字，姓名或邮箱") @RequestParam(value = "key", required = false) String key,
+                                                                           @ApiParam(value = "关键字，姓名或邮箱") @RequestParam(value = "organizationId", required = false) Long organizationId,
+                                                                           @ApiParam(value = "页号") @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+                                                                           @ApiParam(value = "页大小") @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return this.userService.searchUserByEmailOrPassword(key, organizationId, pageNo, pageSize);
     }
 }

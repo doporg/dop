@@ -16,6 +16,8 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrgUserMappingBoV1 implements Serializable {
 
     private static final long serialVersionUID = 6906097418517272171L;

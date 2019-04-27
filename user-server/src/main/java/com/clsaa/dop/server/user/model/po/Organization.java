@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 组织持久层对象，用户组织是组织架构中的顶层结构，组织包含多个组{@link Group}
+ * 组织持久层对象，用户组织是组织架构中的顶层结构
  *
  * @author joyren
  */

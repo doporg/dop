@@ -2,6 +2,7 @@ package com.clsaa.dop.server.user.controller;
 
 import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.HttpHeaders;
+import com.clsaa.dop.server.user.model.bo.OrganizationBoV1;
 import com.clsaa.dop.server.user.model.vo.OrganizationV1;
 import com.clsaa.dop.server.user.service.OrganizationService;
 import com.clsaa.dop.server.user.util.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 组织接口实现类
@@ -55,7 +57,7 @@ public class OrganizationController {
     }
 
     @ApiOperation(value = "修改组织信息", notes = "修改组织信息")
-    @PostMapping("/v1/organizations/{id}")
+    @PutMapping("/v1/organizations/{id}")
     public void updateOrganizationV1(@ApiParam("组织id") @PathVariable("id") Long id,
                                      @ApiParam("组织名称,长度大于等于4小于等于20") @RequestParam("name") String name,
                                      @ApiParam("组织描述,长度大于等于10小于等于180") @RequestParam("description") String description,
@@ -78,7 +80,10 @@ public class OrganizationController {
     public List<OrganizationV1> findOrganizationV1ByUser(@ApiParam("登录用户id") @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUserId) {
         BizAssert.validParam(loginUserId != null && loginUserId != 0,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户未登录"));
-        return this.organizationService.findOrganizationByUser(loginUserId);
+        return this.organizationService.findOrganizationByUser(loginUserId)
+                .stream()
+                .map(o -> BeanUtils.convertType(o, OrganizationV1.class))
+                .collect(Collectors.toList());
     }
 
     @ApiOperation(value = "查询组织详情", notes = "查询组织详情")

@@ -27,4 +27,12 @@ public interface OrgUserMappingRepository extends JpaRepository<OrgUserMapping, 
      * @return {@link List<OrgUserMapping>}
      */
     List<OrgUserMapping> findOrgUserMappingsByOrganizationId(Long organizationId);
+
+    /**
+     * 根据用户id查询所有用户关联关系
+     *
+     * @param userId 用户id
+     * @return {@link List<OrgUserMapping>}
+     */
+    List<OrgUserMapping> findOrgUserMappingsByUserId(Long userId);
 }
