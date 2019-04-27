@@ -140,4 +140,11 @@ public class UserRuleService {
         }
         return null;
     }
+
+//    根据fieldName查询规则
+     public List<UserRule> findByFieldName(String fieldName)
+    {
+
+        return userRuleDAO.findByFieldName(fieldName);
+    }
 }

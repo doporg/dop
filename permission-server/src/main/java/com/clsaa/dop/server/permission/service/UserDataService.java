@@ -182,4 +182,19 @@ public class UserDataService {
         return userList;
     }
 
+    //根据作用域名称、值和用户ID删除用户数据
+    public void deleteByFieldAndUserId(Long fieldValue,String fieldName,Long userId)
+    {
+        List<UserRule> userRuleList=userRuleService.findByFieldName(fieldName);
+        if(!userRuleList.isEmpty())
+        {
+            for(UserRule userRule:userRuleList)
+            {
+                Long userRuleId=userRule.getId();
+                userDataDAO.deleteByUserIdAndFieldValueAndRuleId(userId,fieldValue,userRuleId);
+            }
+        }
+    }
+
+
 }

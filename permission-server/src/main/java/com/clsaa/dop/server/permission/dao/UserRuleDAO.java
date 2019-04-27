@@ -41,5 +41,13 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
      */
     void deleteByRoleId(Long roleId);
 
+    /**
+     * 根据fieldName查询规则
+     *
+     * @param fieldName  作用域名称
+     * @return
+     */
+    List<UserRule> findByFieldName(String fieldName);
+
 
 }

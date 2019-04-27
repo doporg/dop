@@ -123,5 +123,20 @@ public class UserDataController {
        return userDataService.findUserByField(fieldValue,fieldName);
     }
 
+    //根据字段和用户ID删除用户可操作的数据
+    @ApiOperation(value = "根据字段和用户ID删除用户可操作的数据", notes = "根据字段和用户ID删除用户可操作的数据")
+    @DeleteMapping("/v1/userData/byFieldAndUserId")
+    public void deleteByFieldAndUserId(
+            @ApiParam(name = "fieldValue",value = "作用域值",required = true)
+            @RequestParam(value = "fieldValue") Long fieldValue,
+            @ApiParam(name = "fieldName",value = "作用域名称",required = true)
+            @RequestParam(value = "fieldName") String fieldName,
+            @ApiParam(name = "userId",value = "用户ID",required = true)
+            @RequestParam(value = "userId") Long userId
+    )
+    {
+       userDataService.deleteByFieldAndUserId(fieldValue,fieldName,userId);
+    }
+
 
 }
