@@ -43,8 +43,8 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
 
     @Override
     public Optional<RequestScript> convert(RequestScriptParam requestScriptParam) {
-        if (requestScriptParam.getOrder() == -1) {
-            // 无效的请求脚本 【前端参数有order=-1的无效数据】
+        if (requestScriptParam.getOrder() < 0) {
+            // 无效的请求脚本 【前端参数有order<0的无效数据】
             return Optional.empty();
         }
 

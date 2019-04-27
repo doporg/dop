@@ -73,7 +73,6 @@ class CustomTable extends Component {
         pageNo: current
       }
     }).then(function (response) {
-      console.log(response);
       _this.setState({
         current: current,
         total: response.data.totalCount,
@@ -98,6 +97,9 @@ class CustomTable extends Component {
         type="edit"
         size="small"
         style={{...styles.icon, ...styles.editIcon}}
+        onClick={() => {
+          this.props.history.push('/test/editCases/' + record.id);
+        }}
     />;
     return (
         <div style={styles.oper}>

@@ -43,8 +43,6 @@ public class InterfaceCaseDto {
 
     private Map<String, String> paramsMap;
 
-    private boolean executeSuccess;
-
     private String createUserName;
 
     // ----------- common property ---------
@@ -58,7 +56,7 @@ public class InterfaceCaseDto {
 
     private boolean deleted;
 
-    public boolean isExecuteSuccess() {
+    public boolean executeSuccess() {
         return stages.stream().noneMatch(InterfaceStageDto::fail);
     }
 }

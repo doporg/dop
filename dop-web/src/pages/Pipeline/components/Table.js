@@ -4,10 +4,11 @@ import {Link} from 'react-router-dom';
 import API from "../../API";
 import Axios from "axios/index";
 import './Styles.scss'
+import {injectIntl,FormattedMessage} from "react-intl";
 
 const {toast} = Feedback;
 
-export default class PipelineTable extends Component {
+class PipelineTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,7 +30,7 @@ export default class PipelineTable extends Component {
         let url = API.pipeline + '/v1/pipelines';
         let self = this;
         Axios.get(url).then((response) => {
-            let dataSource = []
+            let dataSource = [];
             let data = response.data.sort();
             for (let i = 0; i < data.length; i++) {
                 if (!data[i].isDeleted) {
@@ -58,7 +59,7 @@ export default class PipelineTable extends Component {
                 });
                 toast.show({
                     type: "success",
-                    content: "删除成功",
+                    content: self.props.intl.messages["pipeline.table.operation.deleteSuccess"],
                     duration: 1000
                 });
             }
@@ -81,7 +82,7 @@ export default class PipelineTable extends Component {
             } else {
                 toast.show({
                     type: "error",
-                    content: "删除失败",
+                    content: self.props.intl.messages["pipeline.table.operation.deleteFailure"],
                     duration: 1000
                 });
             }
@@ -95,7 +96,7 @@ export default class PipelineTable extends Component {
         return index + 1;
     };
 
-    renderCuser(){
+    renderCuser() {
         return window.sessionStorage.getItem('user-name');
     }
 
@@ -108,14 +109,24 @@ export default class PipelineTable extends Component {
         return (
             <div>
                 <Link to={router}>
-                    <Button type="primary" size="small">查看</Button>
+                    <Button type="primary" size="small">
+                        <FormattedMessage
+                            id="pipeline.table.operation.check"
+                            defaultMessage="查看"
+                        />
+                    </Button>
                 </Link>
                 <Link to={edit}>
                     <Button
                         type="normal"
                         size="small"
                         className="button"
-                    >编辑</Button>
+                    >
+                        <FormattedMessage
+                            id="pipeline.table.operation.edit"
+                            defaultMessage="编辑"
+                        />
+                    </Button>
                 </Link>
 
                 <Button
@@ -124,32 +135,37 @@ export default class PipelineTable extends Component {
                     size="small"
                     className="button"
                     onClick={this.deletePipeline.bind(this, record)}
-                >删除</Button>
+                >
+                    <FormattedMessage
+                        id="pipeline.table.operation.delete"
+                        defaultMessage="删除"
+                    />
+                </Button>
             </div>
         );
     };
 
     render() {
         const columns = [{
-            title: '序号',
+            title: this.props.intl.messages["pipeline.table.index"],
             width: 5,
             dataIndex: 'index',
             cell: this.renderIndex
         }, {
-            title: '流水线名称',
+            title: this.props.intl.messages["pipeline.table.name"],
             width: 10,
             dataIndex: 'name',
         }, {
-            title: '创建时间',
+            title: this.props.intl.messages["pipeline.table.createTime"],
             width: 10,
             dataIndex: 'ctime'
         }, {
-            title: '创建人',
+            title: this.props.intl.messages["pipeline.table.creator"],
             width: 8,
             dataIndex: 'cuser',
             cell: this.renderCuser
         }, {
-            title: '操作',
+            title: this.props.intl.messages["pipeline.table.operation"],
             width: 10,
             dataIndex: 'operation',
             cell: this.renderOperation.bind(this)
@@ -158,9 +174,8 @@ export default class PipelineTable extends Component {
             <div>
                 <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
                     <Table
-                        loading={this.state.isLoading}
                         dataSource={this.state.dataSource}
-                        hasBorder={false}
+                        language={window.sessionStorage.getItem('language').toLocaleLowerCase()}
                     >
                         {columns.map((item, index) => {
                             return (
@@ -179,3 +194,5 @@ export default class PipelineTable extends Component {
         )
     }
 }
+
+export default injectIntl(PipelineTable)

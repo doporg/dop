@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.config.BizCodes;
+import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
@@ -38,8 +39,11 @@ public class PipelineController {
 
     @ApiOperation(value = "添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline")
-    public String addUserV1(@RequestBody PipelineVoV1 pipelineV1) {
-        return this.pipelineService.addPipeline(pipelineV1);
+    public String addUserV1(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @RequestBody PipelineVoV1 pipelineV1
+    ){
+        return this.pipelineService.addPipeline(pipelineV1, loginUser);
     }
 
     @ApiOperation(value = "通过jenkinsfile添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")

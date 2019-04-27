@@ -46,14 +46,23 @@ public class UserManager {
         userInterface = Services.of(UserInterface.class);
     }
 
-    public static void setUserId(String userId) {
+    public static void setCurrentUserId(String userId) {
         if (StringUtils.isNotEmpty(userId)) {
-            userThread.set(Long.valueOf(userId));
+            try {
+                Long userIdL = Long.valueOf(userId);
+                userThread.set(userIdL);
+            } catch (NumberFormatException n) {
+                log.error("Invalid user id: {}", userId);
+            }
         }
     }
 
     public static Long getCurrentUserId() {
         return userThread.get();
+    }
+
+    public static void setCurrentUserId(Long userId) {
+        userThread.set(userId);
     }
 
     public static void removeThreadUserId() {
@@ -72,6 +81,29 @@ public class UserManager {
             Long currentUserId = getCurrentUserId();
             po.setCuser(currentUserId);
             po.setMuser(currentUserId);
+            return po;
+        };
+    }
+
+    public static <PO extends Po> Function<PO, PO> updateUserAndTime() {
+        return po -> {
+            LocalDateTime current = LocalDateTime.now();
+            po.setMtime(current);
+            Long currentUserId = getCurrentUserId();
+            po.setMuser(currentUserId);
+            return po;
+        };
+    }
+
+    public static <PO extends Po> Function<PO, PO> newInfoIfNotExists() {
+        return po -> {
+            if (po.getId() == null) {
+                // new
+                dateAndUser().apply(po);
+            }else {
+                // update
+                updateUserAndTime().apply(po);
+            }
             return po;
         };
     }

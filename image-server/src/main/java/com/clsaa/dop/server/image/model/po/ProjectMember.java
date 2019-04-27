@@ -1,14 +1,10 @@
 package com.clsaa.dop.server.image.model.po;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import java.util.Objects;
-
 /**
  * ProjectMember的harbor对应实体类
  * @author  xzt
@@ -17,6 +13,8 @@ import java.util.Objects;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectMember   {
   @JsonProperty("role_id")
   private Integer roleId;

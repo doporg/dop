@@ -29,8 +29,8 @@ public class WaitOperationPoMapper extends AbstractCommonServiceMapper<WaitOpera
 
     @Override
     public Optional<WaitOperation> convert(WaitOperationParam waitOperationParam) {
-        if (waitOperationParam.getOrder() == -1) {
-            // 无效的请求脚本 【前端参数有order=-1的无效数据】
+        if (waitOperationParam.getOrder() < 0) {
+            // 无效的请求脚本 【前端参数有order<0的无效数据】
             return Optional.empty();
         }
         return super.convert(waitOperationParam).map(dateAndUser());

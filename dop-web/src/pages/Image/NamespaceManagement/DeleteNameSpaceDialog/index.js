@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
-import {Dialog,Feedback} from '@icedesign/base';
-import {Button} from "@alifd/next";
+import {Dialog,Feedback,Button} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../API";
+import '../../Style.scss'
 
 
 const Toast = Feedback.toast;
@@ -13,9 +13,6 @@ export default class DeleteNameSpaceDialog extends Component{
         super(props);
         this.state={
             footerAlign: "center",
-            style: {
-                width: "30%"
-            },
             deleteDialogStyle: {
                 width: "10%"
             },
@@ -72,18 +69,18 @@ export default class DeleteNameSpaceDialog extends Component{
 
     render() {
         return (
-            <span>
-                <Button onClick={this.onOpen} type="primary" warning>删除命名空间</Button>
+           <span>
+                <Button className="button" onClick={this.onOpen} type="primary" shape={"warning"}>删除命名空间</Button>
 
                 <Dialog visible={this.state.deleteDialogVisible}
                         onOk={this.onDeleteNamespace}
                         onCancel={this.onDeleteLogClose}
                         onClose={this.onDeleteLogClose}
-                        style={this.state.createDialogStyle}
+                        style={this.state.deleteDialogStyle}
                         footerAlign={this.state.footerAlign}>
                 确定要删除命名空间？
                 </Dialog>
-            </span>
+           </span>
         );
     }
 

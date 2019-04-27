@@ -1,8 +1,8 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
-import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
+import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,6 +54,12 @@ public class WaitOperationDto implements Operation {
     private Long muser;
 
     private boolean deleted;
+
+    public static WaitOperationDto emptyWait() {
+        return WaitOperationDto.builder()
+                .order(-1)
+                .build();
+    }
 
     @Override
     public OperationType type() {

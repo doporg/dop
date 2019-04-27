@@ -3,7 +3,7 @@ import IceContainer from '@icedesign/container';
 import {
   Grid,
   Step,
-  Feedback, Icon
+  Feedback, Icon, Button
 } from '@icedesign/base';
 
 import RequestStageForm from "./RequestStageForm";
@@ -25,62 +25,89 @@ class StepForm extends Component {
 
   constructor(props) {
     super(props);
+    const case_Id = this.props.caseId;
     this.state = {
       step: 0,
-      stages: [],
-      caseId: this.props.match.params.caseId,
-      finish: false
+      caseId: case_Id,
+      stages: this.props.stages,
+      operation: this.props.operation
     };
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setState({
+      step: 0,
+      caseId: nextProps.caseId,
+      stages: nextProps.stages,
+      operation: nextProps.operation
+    }, this.nextStep);
+  }
+
   nextStep = (stage) => {
-    this.state.stages.push(stage);
     let newStep = this.state.step + 1;
     this.setState({
       step: newStep,
-      stages: this.state.stages
+      stages: this.props.stages
+    });
+  };
+
+  lastStep = (stage) => {
+    let newStep = this.state.step - 1;
+    this.setState({
+      step: newStep,
+      stages: this.props.stages
     });
   };
 
   postToServer = (stage) => {
-    if (this.state.stages.length < 3) {
-      this.state.stages.push(stage);
-    }
-    let url = API.test + '/interfaceCases/stages';
     let _this = this;
     let stages = this.state.stages;
-    Axios.post(url, stages, {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    })
-      .then(function (response) {
-        Toast.success("添加测试脚本成功！");
-        _this.props.history.push('/testCases');
-      }).catch(function (error) {
+    if (this.state.operation === 'UPDATE') {
+      let url = API.test + '/interfaceCases/' + this.state.caseId + '/stages';
+      Axios.put(url, stages, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      })
+          .then(function (response) {
+            Toast.success("修改测试脚本成功！");
+            _this.props.history.push('/testCases');
+          }).catch(function (error) {
         console.log(error);
         Toast.error(error);
       });
+    }else if (this.state.operation === 'INSERT') {
+      this.props.saveParams();
+    }
+  };
+
+  clickStep = (index) =>{
+    this.setState({
+      step: index
+    })
   };
 
   renderStep = (step) => {
     if (step === 0) {
-      return <RequestStageForm onSubmit={this.nextStep.bind(this)} stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+                               stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 1) {
-      return <RequestStageForm onSubmit={this.nextStep.bind(this)} stage='TEST' caseId={this.state.caseId} sSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+                               stage='TEST' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 2) {
-      return <RequestStageForm onSubmit={this.postToServer.bind(this)} stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.postToServer.bind(this)}  onLast={this.lastStep.bind(this)}
+                               stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
     }
   };
 
   render() {
     return (
       <div className="step-form">
-        <IceContainer>
+        <IceContainer title='测试脚本'>
           <Row wrap>
             <Col xxs="24" s="5" l="5" style={styles.formLabel}>
               <Step
@@ -90,14 +117,23 @@ class StepForm extends Component {
                 animation={false}
                 style={styles.step}
               >
-                <Step.Item title="准备" content="" />
-                <Step.Item title="测试" content="" />
-                <Step.Item title="测试后" content="" />
+                <Step.Item title="准备" content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title="测试" content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title="测试后" content="" onClick={this.clickStep.bind(this)}/>
               </Step>
             </Col>
 
             <Col xxs="24" s="18" l="18">
               {this.renderStep(this.state.step)}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <Button type="secondary" onClick={this.postToServer}>
+                <Icon type="success" size='xxl'/>
+                {this.props.btnText}
+              </Button>
             </Col>
           </Row>
         </IceContainer>

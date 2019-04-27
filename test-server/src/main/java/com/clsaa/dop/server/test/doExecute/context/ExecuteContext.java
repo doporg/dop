@@ -34,7 +34,7 @@ public class ExecuteContext {
 
     public void logAfterExecution() {
         interfaceExecuteLog.setEnd(LocalDateTime.now());
-        interfaceExecuteLog.setSuccess(interfaceCaseDto.isExecuteSuccess());
+        interfaceExecuteLog.setSuccess(interfaceCaseDto.executeSuccess());
         // persist log
         ExecutionLogUtils.saveLog(interfaceExecuteLog);
     }
@@ -96,5 +96,11 @@ public class ExecuteContext {
                 .append(nextLine)
                 .append(writer.toString().trim());
         return origin;
+    }
+
+    public void addParam(String key, String value) {
+        if (nonNull(caseParams)) {
+            caseParams.put(key, value);
+        }
     }
 }

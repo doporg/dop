@@ -9,10 +9,13 @@ import com.clsaa.dop.server.image.model.po.AccessLog;
 import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
+import com.clsaa.rest.result.Pagination;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,10 +28,14 @@ import java.util.List;
 @Service
 public class ProjectLogsService {
 
+    private final ProjectFeign projectFeign;
+    private final UserFeign userFeign;
+
     @Autowired
-    private ProjectFeign projectFeign;
-    @Autowired
-    private UserFeign userFeign;
+    public ProjectLogsService(ProjectFeign projectFeign, UserFeign userFeign) {
+        this.projectFeign = projectFeign;
+        this.userFeign = userFeign;
+    }
 
     /**
      * 通过参数来对项目的日志进行检索
@@ -41,21 +48,45 @@ public class ProjectLogsService {
      * @param endTime 结束时间
      * @param page 页号
      * @param pageSize 页大小
-     * @return {@link List<AccessLogBO>}根据参数检索项目日志
+     * @return {@link Pagination<AccessLogBO>}根据参数检索项目日志
      */
-    public List<AccessLogBO> getProjectLogs(Integer projectId,String userName,String repo,String tag,
-                                            String operation,String beginTime,String endTime,Integer page,Integer pageSize,Long userId){
+    public Pagination<AccessLogBO> getProjectLogs(Integer projectId, String userName, String repo, String tag,
+                                                  String operation, String beginTime, String endTime, Integer page, Integer pageSize, Long userId){
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        List<AccessLog> accessLogs = projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,
+
+        ResponseEntity<List<AccessLog>> responseEntity = projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,
                 endTime,page,pageSize,auth);
-        List<AccessLogBO> accessLogBOS = new ArrayList<>();
-        for (AccessLog accessLog:accessLogs){
-            AccessLogBO accessLogBO = BeanUtils.convertType(accessLog,AccessLogBO.class);
-            accessLogBO.setOpTime(TimeConvertUtil.convertTime(accessLog.getOpTime()));
-            accessLogBOS.add(accessLogBO);
+        List<AccessLog> accessLogs = responseEntity.getBody();
+        Pagination<AccessLogBO> pagination = new Pagination<>();
+
+
+
+        List<String> httpHeader = responseEntity.getHeaders().get("X-Total-Count");
+
+
+        int count = 0;
+        if (!(httpHeader==null)){
+            count = Integer.parseInt(httpHeader.get(0));
         }
-        return accessLogBOS;
+        pagination.setTotalCount(count);
+        pagination.setPageNo(page);
+        pagination.setPageSize(pageSize);
+
+        if (count==0){
+            pagination.setPageList(Collections.emptyList());
+            return pagination;
+        }else {
+            List<AccessLogBO> accessLogBOS = new ArrayList<>();
+            if (accessLogs!=null)
+            for (AccessLog accessLog:accessLogs){
+                AccessLogBO accessLogBO = BeanUtils.convertType(accessLog,AccessLogBO.class);
+                accessLogBO.setOpTime(TimeConvertUtil.convertTime(accessLog.getOpTime()));
+                accessLogBOS.add(accessLogBO);
+            }
+            pagination.setPageList(accessLogBOS);
+            return pagination;
+        }
     }
 
 }

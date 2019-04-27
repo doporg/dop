@@ -2,19 +2,18 @@ package com.clsaa.dop.server.permission.service;
 
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.UserDataDAO;
-import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.UserData;
 import com.clsaa.dop.server.permission.model.po.UserRule;
 import com.clsaa.dop.server.permission.model.vo.UserDataV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
-import org.bouncycastle.math.ec.ScaleYPointMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,9 +96,7 @@ public class UserDataService {
             }
         }
         if(ruleId==0L)return false;
-        if(userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId)!=null)
-        {return true;}
-        return false;
+        return userDataDAO.findByUserIdAndFieldValueAndRuleId(userId, fieldValue, ruleId) != null;
     }
 
     //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
@@ -163,6 +160,26 @@ public class UserDataService {
     public void deleteById(Long id)
     {
         userDataDAO.deleteById(id);
+    }
+
+    //根据字段值查找用户ID列表
+    public List<Long> findUserByField(Long fieldValue,String fieldName)
+    {
+        HashSet<Long> hashSet=new HashSet<>();
+        List<Long> userList=new ArrayList<>();
+        List<UserData> userDataList=userDataDAO.findByFieldValue(fieldValue);
+        if(userDataList==null)return null;
+        for(UserData userData :userDataList)
+        {
+            UserRule userRule=userRuleService.findById(userData.getRuleId());
+            if(userRule!=null&&userRule.getFieldName().equals(fieldName))
+            {
+                hashSet.add(userData.getUserId());
+            }
+        }
+
+        userList.addAll(hashSet);
+        return userList;
     }
 
 }

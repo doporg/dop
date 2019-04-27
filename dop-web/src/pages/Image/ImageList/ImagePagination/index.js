@@ -1,19 +1,13 @@
 import React,{Component} from 'react';
-import TopBar from '../TopBar'
 import {Grid, Input, Loading, Pagination, Table} from "@icedesign/base";
 import DeleteImageDialog from "../deleteImageDialog";
 import {Col} from "@alifd/next/lib/grid";
+import API from "../../../API";
+import Axios from "axios";
+import IceContainer from '@icedesign/container';
 
 
 const {Row} = Grid;
-const styles = {
-    body: {
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    }
-};
 
 export default class ImagePagination extends Component{
 
@@ -21,24 +15,80 @@ export default class ImagePagination extends Component{
         super(props);
         this.state={
             imageData:[],
-            current:0,
+            current:1,
             pageSize:10,
-            totalCount:12,
+            totalCount:0,
             rowSelection: {
                 onChange: this.onChange.bind(this),
                 selectedRowKeys: []
             },
             loading: true,
             repoName: this.props.repoName,
-            refreshImageList: this.props.refreshImageList
+            queryKey:""
         }
     }
 
-    //接收父组件的参数
-    componentWillReceiveProps(nextProps, nextContext) {
-        this.setState({
-            imageData: nextProps.imageData
-        });
+    refreshImageList(current,queryKey){
+        let url = API.image + '/v1/repositories/'+this.state.repoName+"/images";
+        let _this = this;
+        if (queryKey!==""){
+            Axios.get(url, {
+                params:{
+                    pageNo:current,
+                    pageSize:10,
+                }
+            })
+                .then(function (response) {
+                    console.log("镜像信息");
+                    console.log(response.data);
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            imageData: response.data.pageList,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    }else {
+                        _this.setState({
+                            imageData: [],
+                            totalCount:0,
+                            loading:false
+                        });
+                    }
+
+                })
+        } else {
+            Axios.get(url, {
+                params:{
+                    pageNo:current,
+                    pageSize:10,
+                }
+            })
+                .then(function (response) {
+                    console.log("镜像信息");
+                    console.log(response.data);
+                    if (response.data.totalCount!==0){
+                        _this.setState({
+                            imageData: response.data.pageList,
+                            totalCount:response.data.totalCount,
+                            loading:false
+                        });
+                    } else {
+                        _this.setState({
+                            imageData: [],
+                            totalCount:0,
+                            loading:false
+                        });
+                    }
+
+                })
+        }
+
+
+    }
+
+
+    componentWillMount() {
+        this.refreshImageList(1,this.state.queryKey)
     }
 
     onChange(names, records){
@@ -50,32 +100,33 @@ export default class ImagePagination extends Component{
 
     onSearch(value){
         this.setState({
-            searchKey: value
+            queryKey: value
         })
-        console.log("search",value)
+        this.refreshImageList(this.state.current,value);
     }
-    handleChange(){
-
+    handleChange(current,e){
+        this.setState({
+            current:current
+        });
+        this.refreshImageList(current,this.state.queryKey)
     }
     //image列表
     render() {
         return (
             <div>
-                <TopBar
-                    extraBefore={
-                        <Input
-                            size="large"
-                            placeholder="请输入关键字进行搜索"
-                            style={{width: '240px'}}
-                            // hasClear
-                            onChange={this.onSearch.bind(this)}
-                        />
-                    }
-                    extraAfter={<DeleteImageDialog repoName={this.state.repoName} deleteKeys={this.state.rowSelection.selectedRowKeys} refreshImageList={this.state.refreshImageList}/>
-                    }
-                />
-                <Row wrap gutter="20">
-                    <Col>
+                <IceContainer title={"检索条件"}>
+                    <Row wrap>
+                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                    </Row>
+                </IceContainer>
+
+                <IceContainer title={"镜像版本列表"}>
+                    <Row wrap className="headRow">
+                        <Col l="12">
+                            <DeleteImageDialog repoName={this.state.repoName} deleteKeys={this.state.rowSelection.selectedRowKeys} refreshImageList={this.refreshImageList.bind(this)}/>
+                        </Col>
+                    </Row>
+                    <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                         <Table dataSource={this.state.imageData}
                                rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
@@ -100,13 +151,15 @@ export default class ImagePagination extends Component{
                             <Table.Column title="摘要"
                                           dataIndex="digest"/>
                         </Table>
-                    </Col>
-                </Row>
-                <Pagination style={styles.body}
-                            current={this.state.current}
-                            onChange={this.handleChange.bind(this)}
-                            pageSize={this.state.pageSize}
-                            total={this.state.totalCount}/>
+                    </Loading>
+
+                    <Pagination className={"body"}
+                                current={this.state.current}
+                                onChange={this.handleChange.bind(this)}
+                                pageSize={this.state.pageSize}
+                                total={this.state.totalCount}
+                                hideOnlyOnePage={true}/>
+                </IceContainer>
             </div>
         )
     }

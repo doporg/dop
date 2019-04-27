@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Input,
     Button,
-    Grid,
+    Grid, Icon,
 } from '@icedesign/base';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
@@ -55,13 +55,17 @@ export default class RequestHeader extends Component{
                                 <FormError name={`requestHeaders[${index}].value`} />
                             </Col>
                             <Col>
-                                <Button type="secondary" onClick={this.props.removeItem.bind(this, index)}>删除</Button>
+                                <Button type="secondary" onClick={this.props.removeItem.bind(this, index)}>
+                                    <Icon type="ashbin" size='xxxl'/>
+                                </Button>
                             </Col>
                         </Row>
                     );
                 })}
                 <div style={styles.buttons}>
-                    <Button type="secondary" onClick={this.props.addItem}>添加请求头</Button>
+                    <Button type="secondary" onClick={this.props.addItem}>
+                        <Icon type="add" size='xxl'/>
+                    </Button>
                 </div>
             </div>
         );

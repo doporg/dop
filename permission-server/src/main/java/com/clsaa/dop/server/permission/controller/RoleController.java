@@ -2,10 +2,8 @@ package com.clsaa.dop.server.permission.controller;
 
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
-import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.model.vo.RoleV1;
-import com.clsaa.dop.server.permission.service.PermissionService;
 import com.clsaa.dop.server.permission.service.RoleService;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
@@ -53,7 +51,7 @@ public class RoleController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
     )
     {
-        return roleService.createRole(parentId,name,loginUser,loginUser);
+        return roleService.createRole(loginUser,parentId,name,loginUser);
     }
 
     @ApiOperation(value = "根据ID查询角色", notes = "根据ID查询角色")
@@ -75,7 +73,7 @@ public class RoleController {
             @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
             @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return this.roleService.getRoleV1Pagination(page,size,loginUser,key);
+        return this.roleService.getRoleV1Pagination(loginUser,page,size,key);
     }
     @ApiOperation(value = "根据名称查询角色", notes = "根据名称查询角色")
     @GetMapping("/v1/roles/byName")
@@ -91,21 +89,21 @@ public class RoleController {
                            @RequestParam(value = "id", required = true)Long id,
                            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        roleService.deleteById(id,loginUser);
+        roleService.deleteById(loginUser,id);
     }
 
     @ApiOperation(value="查询所有功能点ID和名称",notes = "查询所有功能点ID和名称")
     @GetMapping("v1/roles/permissions")
-    public List<PermissionV1> findAllPermission()
+    public List<PermissionV1> findAllPermission(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        return roleService.findAllPermission().stream().map(p ->
+        return roleService.findAllPermission(loginUser).stream().map(p ->
             BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
     @ApiOperation(value="查询所有角色",notes = "查询所有角色")
     @GetMapping("v1/roles/roles")
-    public List<RoleV1> findAllRole()
+    public List<RoleV1> findAllRole(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
     {
-        return roleService.findAllRole().stream().map(p ->
+        return roleService.findAllRole(loginUser).stream().map(p ->
                 BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
     }
 

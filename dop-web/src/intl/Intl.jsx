@@ -14,12 +14,9 @@ export default class Intl extends Component {
             language: 'zh-CN'
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         let self = this;
         window.sessionStorage.setItem('language', navigator.language);
-        self.setState({
-            language: navigator.language
-        });
         window.addEventListener('setItemEvent', function(event) {
             let rlanguage;
             switch (event.newValue) {
@@ -35,6 +32,9 @@ export default class Intl extends Component {
             self.setState({
                 language: rlanguage
             });
+        });
+        self.setState({
+            language: navigator.language
         });
     }
 

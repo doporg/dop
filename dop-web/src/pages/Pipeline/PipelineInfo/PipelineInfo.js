@@ -53,7 +53,7 @@ export default class PipelineInfo extends Component {
     getApplication() {
         let url = API.application + "/app?ouser=" + window.sessionStorage.getItem('user-id');
         let self = this;
-        let applications = self.state.applications
+        let applications = self.state.applications;
         Axios.get(url).then((response) => {
             if (response.status === 200) {
                 for (let i = 0; i < response.data.length; i++) {
@@ -145,26 +145,15 @@ export default class PipelineInfo extends Component {
             });
         })
     }
-    buildPipeline(pipelineId) {
-        let self = this;
-        let url = API.pipeline + '/v1/jenkins/build?id=' + pipelineId;
-        Axios.post(url).then((response) => {
-            if (response.status === 200) {
-                self.props.history.push('/pipeline/project/' + pipelineId)
-            }
-        }).catch((error)=>{
-            console.log(error);
-            toast.show({
-                type: "error",
-                content: "请检查您环境信息的完整性"+error,
-                duration: 3000
-            });
-        })
-    }
+
     save() {
-        console.log(this.state.pipeline)
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
+        toast.show({
+            type: "loading",
+            content: "正在提交请稍后",
+            duration: 4000
+        });
         Axios({
             method: 'post',
             url: url,
@@ -176,8 +165,14 @@ export default class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
-                self.buildPipeline(response.data);
+                self.props.history.push('/pipeline')
             }
+        }).catch((error)=>{
+            toast.show({
+                type: "error",
+                content: "保存失败",
+                duration: 1000
+            });
         })
     }
 

@@ -16,6 +16,8 @@ public class BranchVo {
     private String default_;
     private String protected_;
     private String merged;
+    private boolean developers_can_push;
+    private boolean developers_can_merge;
     private String commit_id;
     private String commit_short_id;
     private String commit_msg;

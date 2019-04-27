@@ -13,22 +13,22 @@ import lombok.Setter;
 @Setter
 public class ProjectMemberEntity   {
     @JsonProperty("id")
-    private Integer id = null;
+    private Integer id;
 
     @JsonProperty("project_id")
-    private Integer projectId = null;
+    private Integer projectId;
 
     @JsonProperty("entity_name")
-    private String entityName = null;
+    private String entityName;
 
     @JsonProperty("role_name")
-    private String roleName = null;
+    private String roleName;
 
     @JsonProperty("role_id")
-    private Integer roleId = null;
+    private Integer roleId;
 
     @JsonProperty("entity_id")
-    private Integer entityId = null;
+    private Integer entityId;
 
     @JsonProperty("entity_type")
     private String entityType;

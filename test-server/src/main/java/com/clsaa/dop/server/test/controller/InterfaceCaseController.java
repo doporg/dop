@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.clsaa.dop.server.test.config.BizCodes;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceExecuteLogDto;
+import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
+import com.clsaa.dop.server.test.model.param.update.UpdatedInterfaceCase;
 import com.clsaa.dop.server.test.service.*;
-import com.clsaa.dop.server.test.util.ValidateUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import io.swagger.annotations.ApiOperation;
@@ -48,6 +49,12 @@ public class InterfaceCaseController {
     @Autowired
     private CaseParamCreateService caseParamCreateService;
 
+    @Autowired
+    private InterfaceCaseUpdateServiceImpl interfaceCaseUpdateService;
+
+    @Autowired
+    private InterfaceStageUpdateServiceImpl interfaceStageUpdateService;
+
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping
     public Long createCase(@RequestBody @Valid InterfaceCaseParam interfaceCase) {
@@ -60,6 +67,15 @@ public class InterfaceCaseController {
         List<InterfaceStageParam> stageParams = jsonArray.toJavaList(InterfaceStageParam.class);
         validate(stageParams);
         return interfaceStageCreateService.create(stageParams);
+    }
+
+    @ApiOperation(value = "修改接口测试用例测试脚本", notes = "创建失败500，message为错误信息")
+    @PutMapping("/{caseId}/stages")
+    public Boolean updateStages(@RequestBody JSONArray jsonArray, @PathVariable("caseId") Long caseId) {
+        List<InterfaceStageDto> stageDtos = jsonArray.toJavaList(InterfaceStageDto.class);
+//        validate(stageParams);
+        interfaceStageUpdateService.batchUpdate(stageDtos);
+        return true;
     }
 
     @ApiOperation(value = "新增接口测试用例全局参数", notes = "创建失败500，message为错误信息")
@@ -99,5 +115,11 @@ public class InterfaceCaseController {
         return logQueryService.getExecuteLogs(caseId, pageNo, pageSize);
     }
 
+    @ApiOperation(value = "更新接口测试用例数据")
+    @PutMapping
+    public UpdatedInterfaceCase updatedInterfaceCase(@RequestBody UpdatedInterfaceCase updatedInterfaceCase) {
+        interfaceCaseUpdateService.update(updatedInterfaceCase);
+        return updatedInterfaceCase;
+    }
 
 }

@@ -5,13 +5,12 @@ import com.clsaa.dop.server.pipeline.config.FeignConfig;
 import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
 import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
 import com.clsaa.dop.server.pipeline.model.dto.KubeCredentialWithTokenV1;
+import com.clsaa.dop.server.pipeline.model.dto.LogInfoV1;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Component
 @FeignClient(value = "application-server", configuration = FeignConfig.class)
@@ -50,4 +49,13 @@ public interface ApplicationFeign {
     KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId);
 
+    /**
+     * 添加日志
+     * */
+    @PostMapping("/app/env/{appEnvId}/log")
+    void addLog(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @PathVariable(value = "appEnvId") Long appEnvId,
+            @RequestBody LogInfoV1 logInfoV1
+    );
 }

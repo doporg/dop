@@ -6,6 +6,7 @@ import Intl from './intl/Intl'
 import registerServiceWorker from './registerServiceWorker';
 
 let originalSetItem = window.sessionStorage.setItem;
+
 window.sessionStorage.setItem = function(key,newValue){
     let setItemEvent = new Event("setItemEvent");
     setItemEvent.newValue = newValue;
