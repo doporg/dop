@@ -68,10 +68,14 @@ public class UserController {
 
     @ApiOperation(value = "根据邮箱或账户名模糊匹配用户", notes = "根据邮箱和账户名模糊匹配用户, 仅支持前缀匹配, ")
     @GetMapping("/v1/users/search")
-    public Pagination<UserV1> searchUserByOrganizationIdAndEmailOrPassword(@ApiParam(value = "关键字，姓名或邮箱") @RequestParam(value = "key", required = false) String key,
-                                                                           @ApiParam(value = "关键字，姓名或邮箱") @RequestParam(value = "organizationId", required = false) Long organizationId,
-                                                                           @ApiParam(value = "页号") @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
-                                                                           @ApiParam(value = "页大小") @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+    public Pagination<UserV1> searchUserByOrganizationIdAndEmailOrPassword(@ApiParam(value = "关键字，姓名或邮箱")
+                                                                               @RequestParam(value = "key", required = false) String key,
+                                                                           @ApiParam(value = "组织id，若为空则不限制，若填写则搜索对应组织下的用户")
+                                                                           @RequestParam(value = "organizationId", required = false) Long organizationId,
+                                                                           @ApiParam(value = "页号")
+                                                                               @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+                                                                           @ApiParam(value = "页大小")
+                                                                               @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         return this.userService.searchUserByEmailOrPassword(key, organizationId, pageNo, pageSize);
     }
 }

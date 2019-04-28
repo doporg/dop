@@ -225,7 +225,8 @@ public class UserService {
      * @return {@link Pagination<UserV1>}
      */
     public Pagination<UserV1> searchUserByEmailOrPassword(String key, Long organizationId, Integer pageNo, Integer pageSize) {
-        if (StringUtils.isEmpty(organizationId)) {
+        key = StringUtils.hasText(key) ? key : "";
+        if (organizationId == null) {
             int count = this.userRepository.selectCountByEmailOrPassword(key);
             Pagination<UserV1> pagination = new Pagination<>();
             pagination.setPageNo(pageNo);
