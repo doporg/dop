@@ -14,4 +14,8 @@ public interface HttpHeaders {
      * 登录用户id
      */
     String X_LOGIN_USER = "x-login-user";
+    /**
+     * 组织id
+     */
+    String X_LOGIN_ORGANIZATION = "x-login-organization";
 }

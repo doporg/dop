@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.permission.service;
 
 import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
+import com.clsaa.dop.client.permission.annotation.GetUserId;
 import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.RoleRepository;
@@ -79,7 +80,7 @@ public class RoleService {
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     @PermissionName(name = "创建角色")
-    public Long createRole(Long cuser,Long parentId,String name,Long muser)
+    public Long createRole(@GetUserId Long cuser, Long parentId, String name, Long muser)
     {
             Role existRole=this.roleRepository.findByName(name);
             BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
@@ -123,7 +124,7 @@ public class RoleService {
     //分页查询所有角色
 
     @PermissionName(name = "查询角色")
-    public Pagination<RoleV1> getRoleV1Pagination(Long userId,Integer pageNo, Integer pageSize,String key)
+    public Pagination<RoleV1> getRoleV1Pagination(@GetUserId Long userId,Integer pageNo, Integer pageSize,String key)
     {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
@@ -183,7 +184,7 @@ public class RoleService {
     //根据ID删除角色,并删除关联关系和数据规则
 
     @PermissionName(name="删除角色")
-    public void deleteById(Long userId,Long id)
+    public void deleteById(@GetUserId Long userId,Long id)
     {
             if(authenticationService.check("删除角色",userId,"roleId",id))
             {
@@ -230,7 +231,8 @@ public class RoleService {
     }
 
     //查询所有角色，为用户绑定时使用
-    public List<RoleBoV1> findAllRole(Long userId)
+    @PermissionName(name = "查询角色")
+    public List<RoleBoV1> findAllRole(@GetUserId Long userId)
     {
         //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
