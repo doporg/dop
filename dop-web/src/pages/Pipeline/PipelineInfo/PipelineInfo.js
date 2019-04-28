@@ -195,7 +195,7 @@ class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
-                self.props.history.push('/pipeline')
+                // self.props.history.push('/pipeline')
             }
         }).catch((error) => {
             toast.show({

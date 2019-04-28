@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.model.bo;
 
 import com.clsaa.dop.server.pipeline.model.po.Jenkinsfile;
+import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
@@ -38,13 +39,20 @@ public class PipelineBoV1 {
      * 监听方式
      */
     @SerializedName("monitor")
-    private String monitor;
+    private Pipeline.Monitor monitor;
 
+    /**
+     * 定时触发时间间隔
+     */
+    @Field("timing")
+    @SerializedName("timing")
+    private Long timing;
     /**
      *  配置方式
      * */
+    @Field("config")
     @SerializedName("config")
-    private String config;
+    private Pipeline.Config config;
 
     /**
      *  Jenkinsfile

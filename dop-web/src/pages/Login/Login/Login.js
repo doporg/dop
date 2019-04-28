@@ -24,6 +24,7 @@ export default class Login extends Component {
     componentWillMount() {
         let self = this;
         window.sessionStorage.clear();
+        window.sessionStorage.setItem('language', 'zh-CN');
         document.addEventListener("keydown",this.handleEnterKey);
         RSA().then(() => {
             self.setState({

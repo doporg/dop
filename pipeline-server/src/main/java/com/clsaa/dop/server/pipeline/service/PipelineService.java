@@ -57,13 +57,14 @@ public class PipelineService {
                 .id(id)
                 .name(pipelineV1.getName())
                 .monitor(pipelineV1.getMonitor())
+                .timing(pipelineV1.getTiming())
                 .config(pipelineV1.getConfig())
                 .appId(pipelineV1.getAppId())
                 .appEnvId(pipelineV1.getAppEnvId())
                 .stages(pipelineV1.getStages())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
-                .cuser(pipelineV1.getCuser())
+                .cuser(loginUser)
                 .isDeleted(false)
                 .build();
 
@@ -77,19 +78,20 @@ public class PipelineService {
         return id.toString();
     }
 
-    public void addPipelineWithJenkins(PipelineVoV2 pipelineV2) {
+    public void addPipelineWithJenkins(PipelineVoV2 pipelineV2, Long loginUser) {
         ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
                 .id(id)
                 .name(pipelineV2.getName())
                 .monitor(pipelineV2.getMonitor())
+                .timing(pipelineV2.getTiming())
                 .config(pipelineV2.getConfig())
                 .appId(pipelineV2.getAppId())
                 .appEnvId(pipelineV2.getAppEnvId())
                 .jenkinsfile(pipelineV2.getJenkinsfile())
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
-                .cuser(pipelineV2.getCuser())
+                .cuser(loginUser)
                 .isDeleted(false)
                 .build();
 
@@ -99,6 +101,7 @@ public class PipelineService {
                 .id(id.toString())
                 .name(pipelineV2.getName())
                 .monitor(pipelineV2.getMonitor())
+                .timing(pipelineV2.getTiming())
                 .config(pipelineV2.getConfig())
                 .jenkinsfile(pipelineV2.getJenkinsfile())
                 .ctime(LocalDateTime.now())
@@ -121,6 +124,7 @@ public class PipelineService {
                     .id(pipelines.get(i).getId().toString())
                     .name(pipelines.get(i).getName())
                     .monitor(pipelines.get(i).getMonitor())
+                    .timing(pipelines.get(i).getTiming())
                     .config(pipelines.get(i).getConfig())
                     .appId(pipelines.get(i).getAppId())
                     .appEnvId(pipelines.get(i).getAppEnvId())
@@ -146,6 +150,7 @@ public class PipelineService {
                 .id(new ObjectId(id))
                 .name(pipelineBoV1.getName())
                 .monitor(pipelineBoV1.getMonitor())
+                .timing(pipelineBoV1.getTiming())
                 .stages(pipelineBoV1.getStages())
                 .ctime(pipelineBoV1.getCtime())
                 .mtime(pipelineBoV1.getMtime())
@@ -166,6 +171,7 @@ public class PipelineService {
                     .id(pipeline.getId().toString())
                     .name(pipeline.getName())
                     .monitor(pipeline.getMonitor())
+                    .timing(pipeline.getTiming())
                     .appId(pipeline.getAppId())
                     .appEnvId(pipeline.getAppEnvId())
                     .config(pipeline.getConfig())
@@ -190,6 +196,7 @@ public class PipelineService {
                 .id(new ObjectId(pipelineBoV1.getId()))
                 .name(pipelineBoV1.getName())
                 .monitor(pipelineBoV1.getMonitor())
+                .timing(pipelineBoV1.getTiming())
                 .config(pipelineBoV1.getConfig())
                 .jenkinsfile(pipelineBoV1.getJenkinsfile())
                 .stages(pipelineBoV1.getStages())
