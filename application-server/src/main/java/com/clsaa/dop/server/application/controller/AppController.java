@@ -101,7 +101,7 @@ public class AppController {
                           @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", defaultValue = "") String description) {
         BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
-        BizAssert.validParam(StringUtils.hasText(description) && description.length() < 50,
+        BizAssert.validParam(description.equals("") || StringUtils.hasText(description) && description.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         this.appService.updateApp(loginUser, appId, title, description);
     }
