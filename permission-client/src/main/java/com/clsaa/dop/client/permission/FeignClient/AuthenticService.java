@@ -9,10 +9,7 @@ package com.clsaa.dop.client.permission.FeignClient;
 import com.clsaa.dop.client.permission.model.dto.RoleDtoV1;
 import com.clsaa.dop.client.permission.model.dto.UserRuleDtoV1;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -125,6 +122,21 @@ public interface AuthenticService {
     List<Long> findUserByField(
             @RequestParam(value = "fieldValue") Long fieldValue,
             @RequestParam(value = "fieldName") String fieldName
+    );
+    /* *
+     *
+     *  根据字段值和用户ID删除数据
+     *  * @param fieldValue 作用域参数值
+     *  * @param fieldName 作用域参数名
+     *  * @param userId 作用域参数名
+     *
+     */
+
+    @DeleteMapping("/v1/userData/byFieldAndUserId")
+     void deleteByFieldAndUserId(
+            @RequestParam(value = "fieldValue") Long fieldValue,
+            @RequestParam(value = "fieldName") String fieldName,
+            @RequestParam(value = "userId") Long userId
     );
 }
 
