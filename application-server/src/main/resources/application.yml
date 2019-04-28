@@ -113,3 +113,7 @@ permission:
   viewService: "查看服务"
   createService: "创建服务"
   viewDeployment: "查看部署"
+  projectRuleId: 11
+  projectRuleFieldName: "projectId"
+  appRuleId: 12
+  appRuleFieldName: "appId"

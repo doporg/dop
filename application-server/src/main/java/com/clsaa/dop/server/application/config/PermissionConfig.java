@@ -37,4 +37,8 @@ public class PermissionConfig {
     private String viewService;
     private String createService;
     private String viewDeployment;
+    private Long projectRuleId;
+    private String projectRuleFieldName;
+    private Long appRuleId;
+    private String appRuleFieldName;
 }

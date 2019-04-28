@@ -1,6 +1,6 @@
 import Projects from './Projects.js';
 import BasicLayout from "../../layouts/BasicLayout";
-import Application from './Application/Application';
+import ProjectDetail from './components/projectManagement/ProjectDetail/ProjectDetail';
 import ApplicationDetail from './ApplicationDetail/ApplicationDetail';
 import ApplicationEnvironmentDetail
     from './components/ApplicationManagement/ApplicationEnvironmentDetail/ApplicationEnvironmentDeatil'
@@ -12,9 +12,9 @@ const projectConfig = [
         layout: BasicLayout,
         component: Projects,
     }, {
-        path: '/application',
+        path: '/projectDetail',
         layout: BasicLayout,
-        component: Application,
+        component: ProjectDetail,
     },
     {
         path: '/applicationDetail',

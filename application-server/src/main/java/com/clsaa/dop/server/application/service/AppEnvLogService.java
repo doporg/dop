@@ -15,8 +15,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -95,8 +94,7 @@ public class AppEnvLogService {
 
     public String readFile(String filePath) throws Exception {
         File file = ResourceUtils.getFile(filePath);
-        InputStreamReader reader = new InputStreamReader(
-                new FileInputStream(file)); // 建立一个输入流对象reader
+        FileReader reader = new FileReader(file);
         BufferedReader br = new BufferedReader(reader);
         String content = "";
         StringBuilder sb = new StringBuilder();

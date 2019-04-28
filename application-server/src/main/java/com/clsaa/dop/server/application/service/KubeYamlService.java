@@ -24,8 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,8 +53,8 @@ public class KubeYamlService {
 
     public String readFile(String filePath) throws Exception {
         File file = ResourceUtils.getFile(filePath);
-        InputStreamReader reader = new InputStreamReader(
-                new FileInputStream(file)); // 建立一个输入流对象reader
+        FileReader reader = new FileReader(file); // 建立一个输入流对象reader
+
         BufferedReader br = new BufferedReader(reader);
         String content = "";
         StringBuilder sb = new StringBuilder();
@@ -67,7 +66,7 @@ public class KubeYamlService {
                 break;
             }
 
-            sb.append(content);
+            sb.append(content + '\n');
         }
 
         br.close();
@@ -279,10 +278,10 @@ public class KubeYamlService {
                 }
 
             } else {
-                String deploymentTemplate = this.readFile("classpath:log-template.txt");
+                String deploymentTemplate = this.readFile("classpath:deployment-template.yaml");
                 deploymentTemplate = deploymentTemplate.replace("<NAME>", service);
                 deploymentTemplate = deploymentTemplate.replace("<NAMESPACE>", nameSpace);
-                deploymentTemplate = deploymentTemplate.replace("<CONTAINER_PORT>", targetPort.getStrValue());
+                deploymentTemplate = deploymentTemplate.replace("<CONTAINER_PORT>", String.valueOf(targetPort.getIntValue()));
                 deploymentTemplate = deploymentTemplate.replace("<REPLICAS>", replicas.toString());
                 deploymentTemplate = deploymentTemplate.replace("<VERSION>", versionId);
 
