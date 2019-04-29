@@ -16,6 +16,7 @@ import imgCommit from './imgs/commit.png';
 import imgBranch from './imgs/branch.png';
 import imgTag from './imgs/tag.png';
 import imgEdit from './imgs/edit.png';
+import imgMergeRequest from './imgs/merge-request.png';
 
 
 // @withRouter
@@ -105,11 +106,10 @@ class CodeProjectAside extends Component {
 
 
     const backLink="/code/projects/personal";
-
     const projectLink="/code/"+username+"/"+projectname;
     const branchLink="/code/"+username+"/"+projectname+"/branches";
     const tagLink="/code/"+username+"/"+projectname+"/tags";
-
+    const mergeRequestLink="/code/"+username+"/"+projectname+"/merge_requests/opened";
     const editLink="/code/"+username+"/"+projectname+"/edit";
 
     const accessInfo=this.state.accessInfo;
@@ -169,6 +169,13 @@ class CodeProjectAside extends Component {
                     }
                 })()
             }
+
+            <MenuItem key={mergeRequestLink}>
+                <Link to={mergeRequestLink} className="ice-menu-link">
+                    <img src={imgMergeRequest}/>
+                    <span className="ice-menu-item-text">{"合并请求"}</span>
+                </Link>
+            </MenuItem>
 
             {
                 (()=>{

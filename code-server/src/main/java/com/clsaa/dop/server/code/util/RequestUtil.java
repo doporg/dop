@@ -62,7 +62,7 @@ public class RequestUtil {
 //        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
         String access_token="1756641a28e5fa6133647c8833a2559df420ee053ac8762c40b823f814761e02";//waszqt
 
-        String path="/projects";
+        String path="/projects/3/merge_requests/2";
 
         String url=api+path+"?access_token="+access_token;
 //        String url=api+"/projects/13"+"?access_token="+access_token;
