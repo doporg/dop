@@ -6,6 +6,7 @@ import com.clsaa.dop.server.application.dao.ProjectRepository;
 import com.clsaa.dop.server.application.model.bo.ProjectBoV1;
 import com.clsaa.dop.server.application.model.po.Project;
 import com.clsaa.dop.server.application.model.vo.ProjectV1;
+import com.clsaa.dop.server.application.model.vo.UserV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
@@ -27,12 +28,28 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private PermissionConfig permissionConfig;
 
     @Autowired
     private PermissionService permissionService;
+
+    public void deleteMemberFromProject(Long userId, Long projectId, Long loginUser) {
+        this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
+    }
+
+    public void addMemberToProject(Long userId, Long projectId, Long loginUser) {
+        this.permissionService.addData(this.permissionConfig.getProjectRuleId(), userId, projectId, loginUser);
+
+    }
+
+    public List<UserV1> getMembersInProject(Long projectId) {
+        List<Long> userIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
+        return userIdList.stream().map(l -> this.userService.findUserById(l)).collect(Collectors.toList());
+    }
+
     /**
      * 分页查询项目
      *
@@ -44,12 +61,15 @@ public class ProjectService {
      */
     public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
 
+
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
                 , BizCodes.NO_PERMISSION);
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
+        //得到可以查看的所有数据的ID列表
+        List<Long> idList = permissionService.findAllIds(permissionConfig.getViewProject(), loginUser, permissionConfig.getProjectRuleFieldName());
 
         Page<Project> projectPage;
         List<Project> projectList;
@@ -61,13 +81,13 @@ public class ProjectService {
         if (!queryKey.equals("")) {
             //如果包含已结项目则不带状态查询
             if (includeFinished) {
-                projectList = projectRepository.findAllByTitleStartingWith(queryKey, pageable).getContent();
+                projectList = projectRepository.findAllByTitleStartingWithAndIdIn(queryKey, pageable, idList).getContent();
 
                 //这一句是为了获得所有条目的数量
-                totalCount = projectRepository.countAllByTitleStartingWith(queryKey);
+                totalCount = projectRepository.countAllByTitleStartingWithAndIdIn(queryKey, idList);
             } else {
-                projectList = projectRepository.findAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey, pageable).getContent();
-                totalCount = projectRepository.countAllByStatusAndTitleStartingWith(Project.Status.NORMAL, queryKey);
+                projectList = projectRepository.findAllByStatusAndTitleStartingWithAndIdIn(Project.Status.NORMAL, queryKey, pageable, idList).getContent();
+                totalCount = projectRepository.countAllByStatusAndTitleStartingWithAndIdIn(Project.Status.NORMAL, queryKey, idList);
             }
         }
         /*
@@ -76,11 +96,11 @@ public class ProjectService {
         else {
             if (includeFinished) {
 
-                projectList = projectRepository.findAll(pageable).getContent();
-                totalCount = projectRepository.findAll().size();
+                projectList = projectRepository.findAllByIdIn(pageable, idList).getContent();
+                totalCount = projectRepository.countAllByIdIn(idList);
             } else {
-                projectList = projectRepository.findAllByStatus(Project.Status.NORMAL, pageable).getContent();
-                totalCount = projectRepository.findAllByStatus(Project.Status.NORMAL).size();
+                projectList = projectRepository.findAllByStatusAndIdIn(Project.Status.NORMAL, pageable, idList).getContent();
+                totalCount = projectRepository.countAllByStatusAndIdIn(Project.Status.NORMAL, idList);
             }
         }
 
@@ -124,16 +144,24 @@ public class ProjectService {
         return pagination;
     }
 
+    public ProjectBoV1 findProjectById(Long loginUser, Long projectId) {
+        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
+                , BizCodes.NO_PERMISSION);
+
+        return BeanUtils.convertType(this.projectRepository.findById(projectId).orElse(null), ProjectBoV1.class);
+    }
+
     /**
      * 创建项目
      *
      * @param title       项目名称
      * @param description 项目描述
      */
-    public void createProjects(Long loginUser, String title, Long origanizationId, String description) {
+    public void createProjects(Long loginUser, String title, Long origanizationId, String description, String status) {
 
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateProject(), loginUser)
                 , BizCodes.NO_PERMISSION);
+
 
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
@@ -145,10 +173,13 @@ public class ProjectService {
                 .is_deleted(false)
                 .organizationId(origanizationId)
                 .status(Project.Status.NORMAL)
+                .privateStatus(Project.PrivateStatus.valueOf(status))
                 .ctime(ctime)
                 .mtime(mtime)
                 .build();
         this.projectRepository.saveAndFlush(project);
+        //this.imageService.createProject(title,status,loginUser);
+        this.permissionService.addData(permissionConfig.getProjectRuleId(), loginUser, project.getId(), loginUser);
 
 
     }

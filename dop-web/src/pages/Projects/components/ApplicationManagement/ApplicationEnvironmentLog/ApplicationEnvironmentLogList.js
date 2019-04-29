@@ -34,17 +34,33 @@ export default class ApplicationEnvironmentLogList extends Component {
     }
 
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
-    codeIdRender(id) {
+    codeIdRender(url) {
         let _this = this;
-        return <Link to={""}
-        >{id}</Link>
+        // github.com/clsaa/dop/commit/011fd4191f7c9b3e92539eb63152b8670b003253
+        console.log(url.split("/"))
+        let infoList = url.split("/")
+        let userName = infoList[3]
+        let projectName = infoList[4]
+        let commitId = infoList[6]
+        ///code/:username/:projectname/commit/:sha
+        return <Link to={"/code/" + userName + "/" + projectName + "/commit/" + commitId}
+        >{commitId}</Link>
+    }
+
+    linkTest() {
+        this.props.history.push()
     }
 
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
-    imageIdRender(id) {
+    imageIdRender(imageUrl) {
         let _this = this;
-        return <Link to={""}
-        >{id}</Link>
+        // registry.dop.clsaa.com/dop/dop-web:201904131311d357d70
+        let buildTag = imageUrl.split(":")[1]
+        let projectName = imageUrl.split("/")[1]
+        console.log("repoName", imageUrl.split("/"))
+        let repoName = imageUrl.split("/")[2].split(":")[0]
+        return <Link to={"/repos/" + projectName + "/" + repoName + "/images/" + buildTag}
+        >{buildTag}</Link>
     }
 
 
@@ -75,23 +91,23 @@ export default class ApplicationEnvironmentLogList extends Component {
 
                         <Table.Column
                             cell={this.codeIdRender.bind(this)}
-                            title="代码ID"
-                            dataIndex="codeId"/>
+                            title="commitId"
+                            dataIndex="commitUrl"/>
 
                         <Table.Column cell={this.imageIdRender.bind(this)}
                                       title="版本号"
-                                      dataIndex="buildTag"/>
+                                      dataIndex="imageUrl"/>
 
                         <Table.Column
                             cell={envRender.bind(this)}
                             title="环境信息"
-                            dataIndex="envInfo"/>
+                            dataIndex="appEnvLog"/>
 
                         <Table.Column title="部署时间"
-                                      dataIndex="ctime"/>
+                                      dataIndex="rtime"/>
 
                         <Table.Column title="部署人"
-                                      dataIndex="userId"/>
+                                      dataIndex="ruserName"/>
 
                         <Table.Column title="运行状态"
                                       dataIndex="status"/>

@@ -37,11 +37,6 @@ const asideMenuConfig = [
         icon: 'repair',
     },
     {
-        name: '应用管理',
-        path: '/application',
-        icon: 'publish',
-    },
-    {
          name: '自调节集成',
          path: '/ciadjust',
          icon: 'cascades',

@@ -49,9 +49,9 @@ export default class ProjectForm extends Component {
                 Axios.post(url, {}, {
                         params: {
                             organizationId: "123",
-                            title: this.field.getValue('title')
-                            // private: this.field.getValue('title'),
-                            // projectDescription:this.field.getValue('description')}
+                            title: this.field.getValue('title'),
+                            status: this.field.getValue('private'),
+                            projectDescription: this.field.getValue('description')
                         }
                     }
                 )
@@ -100,7 +100,10 @@ export default class ProjectForm extends Component {
                                   help={this.field.getError("title") ? "请输入名称" : ""}
                                   label="项目名称："
                                   required>
-                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
+                            <Input
+                                maxLength={25}
+                                hasLimitHint
+                                {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
                                    placeholder="请输入项目名称"/>
                         </FormItem>
                         <FormItem {...formItemLayout}
@@ -115,6 +118,8 @@ export default class ProjectForm extends Component {
                         <FormItem {...formItemLayout}
                                   label="项目描述：">
                             <Input  {...init('description')}
+                                    maxLength={50}
+                                    hasLimitHint
                                     multiple placeholder="项目描述"/>
                         </FormItem>
                     </Form>
