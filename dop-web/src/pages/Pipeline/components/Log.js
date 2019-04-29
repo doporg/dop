@@ -39,8 +39,8 @@ export default class Log extends Component {
 
     render() {
         return (
-            <div className="accordion">
-                <div className="title" onClick={this.clickTitle.bind(this, this.props.href)}>
+            <div className="pipeline-log-accordion">
+                <div className="pipeline-log-title" onClick={this.clickTitle.bind(this, this.props.href)}>
                     {(() => {
                         if (this.props.result === 'SUCCESS') {
                             return (

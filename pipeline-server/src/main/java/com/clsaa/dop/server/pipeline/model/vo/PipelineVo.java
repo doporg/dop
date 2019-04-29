@@ -78,10 +78,4 @@ public class PipelineVo {
      * 修改人
      */
     private Long cuser;
-
-    /**
-     * 是否删除
-     */
-    private Boolean isDeleted;
-
 }

@@ -56,7 +56,7 @@ class PipelineInfo extends Component {
             haveJenkinsFile: null,
             jenkinsFileInfo: {
                 git: "",
-                path: ""
+                path: "./Jenkinsfile"
             },
             currentStage: 0,
             applications: []

@@ -50,9 +50,9 @@ public class JenkinsService {
      * 创建流水线
      * param: 流水线的信息, 版本
      * */
-    public String createJob(PipelineBoV1 pipelineBoV1, String version) {
-        Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getAppEnvId(), pipelineBoV1.getStages());
-        String name = pipelineBoV1.getId();
+    public String createJob(Pipeline pipeline, String version) {
+        Jenkinsfile jenkinsfile = new Jenkinsfile(pipeline.getAppEnvId(), pipeline.getStages());
+        String name = pipeline.getId();
 
         try {
             if (jenkins.getJob(name) == null) {

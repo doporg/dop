@@ -62,7 +62,7 @@ public class ResultOutputService {
         running.setResult(output);
         this.resultOutputRepository.save(running);
 
-        PipelineBoV1 pipelineBoV1 = this.pipelineService.findById(new ObjectId(pipelineId));
+        Pipeline pipeline = this.pipelineService.findById(pipelineId);
 
         String git = null;
         Pattern patternGit = Pattern.compile("http(?:s)://(.*)+.git");
@@ -94,10 +94,10 @@ public class ResultOutputService {
                 .commitUrl(git + "/" + commitId)
                 .imageUrl(repository)
                 .rtime(running.getCtime())
-                .ruser(pipelineBoV1.getCuser())
-                .Status(this.jenkinsService.getBuildResult(pipelineBoV1.getId()))
+                .ruser(pipeline.getCuser())
+                .Status(this.jenkinsService.getBuildResult(pipeline.getId()))
                 .build();
-        this.applicationFeign.addLog(loginUser, pipelineBoV1.getAppEnvId(), logInfoV1);
+        this.applicationFeign.addLog(loginUser, pipeline.getAppEnvId(), logInfoV1);
     }
 
     public ResultOutput findByRunningId(String runningId) {

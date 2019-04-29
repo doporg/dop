@@ -57,7 +57,7 @@ public class PipelineService {
     public String addPipeline(PipelineVoV1 pipelineV1, Long loginUser) {
         ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
-                .id(id)
+                .id(id.toString())
                 .name(pipelineV1.getName())
                 .monitor(pipelineV1.getMonitor())
                 .timing(pipelineV1.getTiming())
@@ -76,15 +76,15 @@ public class PipelineService {
         //拿到 result output id
         String resultOutputId = this.resultOutputService.create(id.toString());
         //拿到 校验流水线信息完整
-        PipelineBoV1 pipelineBoV1 = this.setInfo(id.toString(), resultOutputId, loginUser);
-        this.jenkinsService.createJob(pipelineBoV1, "1.0");
+        Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
+        this.jenkinsService.createJob(pipelineWithInfo, "1.0");
         return id.toString();
     }
 
     public void addPipelineWithJenkins(PipelineVoV2 pipelineV2, Long loginUser) {
         ObjectId id = new ObjectId();
         Pipeline pipeline = Pipeline.builder()
-                .id(id)
+                .id(id.toString())
                 .name(pipelineV2.getName())
                 .monitor(pipelineV2.getMonitor())
                 .timing(pipelineV2.getTiming())
@@ -100,20 +100,7 @@ public class PipelineService {
 
         pipelineRepository.insert(pipeline);
 
-        PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
-                .id(id.toString())
-                .name(pipelineV2.getName())
-                .monitor(pipelineV2.getMonitor())
-                .timing(pipelineV2.getTiming())
-                .config(pipelineV2.getConfig())
-                .jenkinsfile(pipelineV2.getJenkinsfile())
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .cuser(pipelineV2.getCuser())
-                .isDeleted(false)
-                .build();
-
-        this.jenkinsService.createByJenkinsfile(pipelineBoV1.getId(), pipelineBoV1.getJenkinsfile().getGit(), pipelineBoV1.getJenkinsfile().getPath());
+        this.jenkinsService.createByJenkinsfile(id.toString(), pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath());
     }
 
     public List<PipelineVoV3> getPipelineForTable() {
@@ -132,34 +119,6 @@ public class PipelineService {
     }
 
     /**
-     * 获得全部流水线信息, 存在返回全部流水线信息，若不存在返回null
-     */
-    public List<PipelineBoV2> findAll() {
-        List<Pipeline> pipelines = this.pipelineRepository.findAllNoDeleted();
-        List<PipelineBoV2> pipelineBoV2s = new ArrayList<>();
-        for (int i = 0; i < pipelines.size(); i++) {
-            System.out.println(pipelines.get(i).getMonitor());
-            PipelineBoV2 pipelineBoV2 = PipelineBoV2.builder()
-                    .id(pipelines.get(i).getId().toString())
-                    .name(pipelines.get(i).getName())
-                    .monitor(pipelines.get(i).getMonitor().ordinal())
-                    .timing(pipelines.get(i).getTiming())
-                    .config(pipelines.get(i).getConfig().ordinal())
-                    .appId(pipelines.get(i).getAppId())
-                    .appEnvId(pipelines.get(i).getAppEnvId())
-                    .jenkinsfile(pipelines.get(i).getJenkinsfile())
-                    .stages(pipelines.get(i).getStages())
-                    .ctime(pipelines.get(i).getCtime())
-                    .mtime(pipelines.get(i).getMtime())
-                    .cuser(pipelines.get(i).getCuser())
-                    .build();
-            pipelineBoV2s.add(pipelineBoV2);
-        }
-
-        return pipelineBoV2s;
-    }
-
-    /**
      * 根据id进行逻辑删除
      */
     public Pipeline deleteById(String id) {
@@ -168,54 +127,24 @@ public class PipelineService {
         this.pipelineRepository.save(pipeline);
         return pipeline;
     }
+    /**
+     * 获得全部流水线信息, 存在返回全部流水线信息，若不存在返回null
+     */
+    public List<Pipeline> findAll() {
+        return this.pipelineRepository.findAllNoDeleted();
+    }
 
     /**
      * 根据id查找，存在返回这条流水线信息，不存在返回null
      */
-    public PipelineBoV1 findById(ObjectId id) {
-        Optional<Pipeline> optionalPipeline = this.pipelineRepository.findById(id);
-        if (optionalPipeline.isPresent()) {
-            Pipeline pipeline = optionalPipeline.get();
-            PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
-                    .id(pipeline.getId().toString())
-                    .name(pipeline.getName())
-                    .monitor(pipeline.getMonitor())
-                    .timing(pipeline.getTiming())
-                    .appId(pipeline.getAppId())
-                    .appEnvId(pipeline.getAppEnvId())
-                    .config(pipeline.getConfig())
-                    .jenkinsfile(pipeline.getJenkinsfile())
-                    .stages(pipeline.getStages())
-                    .ctime(pipeline.getCtime())
-                    .mtime(pipeline.getMtime())
-                    .cuser(pipeline.getCuser())
-                    .isDeleted(pipeline.getIsDeleted())
-                    .build();
-            return pipelineBoV1;
-        } else {
-            return null;
-        }
+    public Pipeline findById(String id) {
+        return this.pipelineRepository.findById(id);
     }
 
     /**
      * 更新流水线信息
      */
-    public void update(PipelineBoV1 pipelineBoV1) {
-        Pipeline pipeline = Pipeline.builder()
-                .id(new ObjectId(pipelineBoV1.getId()))
-                .name(pipelineBoV1.getName())
-                .monitor(pipelineBoV1.getMonitor())
-                .timing(pipelineBoV1.getTiming())
-                .config(pipelineBoV1.getConfig())
-                .jenkinsfile(pipelineBoV1.getJenkinsfile())
-                .stages(pipelineBoV1.getStages())
-                .ctime(pipelineBoV1.getCtime())
-                .mtime(pipelineBoV1.getMtime())
-                .cuser(pipelineBoV1.getCuser())
-                .appEnvId(pipelineBoV1.getAppEnvId())
-                .appId(pipelineBoV1.getAppId())
-                .isDeleted(false)
-                .build();
+    public void update(Pipeline pipeline) {
         pipelineRepository.save(pipeline);
     }
 
@@ -243,7 +172,6 @@ public class PipelineService {
      * 根据envid， 查询pipelineid
      */
     public List<PipelineV1Project> getPipelineIdByEnvId(Long envid) {
-        System.out.println(envid);
         List<Pipeline> pipelines = this.pipelineRepository.findByAppEnvId(envid);
         List<PipelineV1Project> pipelineV1Projects = new ArrayList<>();
         for (int i = 0; i < pipelines.size(); i++) {
@@ -260,9 +188,9 @@ public class PipelineService {
         return pipelineV1Projects;
     }
 
-    public PipelineBoV1 setInfo(String pipelineId, String resultOutputId, Long loginUser) {
-        PipelineBoV1 pipelineBoV1 = this.findById(new ObjectId(pipelineId));
-        if (pipelineBoV1 != null && pipelineBoV1.getConfig().equals("无Jenkinsfile")) {
+    public Pipeline setInfo(String pipelineId, String resultOutputId, Long loginUser) {
+        Pipeline pipeline = this.pipelineRepository.findById(pipelineId);
+        if (pipeline != null && pipeline.getConfig().equals(Pipeline.Config.NoJenkinsfile)) {
             String gitUrl = null;
             String dockerUserName = null;
             String dockerPassword = null;
@@ -273,26 +201,24 @@ public class PipelineService {
             String token = null;
             //收集信息
 
-            System.out.println(pipelineBoV1.getCuser());
             UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
 
             dockerUserName = userCredentialV1.getIdentifier();
             dockerPassword = userCredentialV1.getCredential();
 
 
-            if (pipelineBoV1.getAppId() != null) {
-
-                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipelineBoV1.getAppId());
+            if (pipeline.getAppId() != null) {
+                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipeline.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
             }
 
-            if (pipelineBoV1.getAppEnvId() != null) {
-                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
+            if (pipeline.getAppEnvId() != null) {
+                repositoryVersion = this.applicationFeign.findBuildTagByAppEnvIdAndRunningId(loginUser, pipeline.getAppEnvId(), resultOutputId);
             }
 
             if (repositoryVersion != null) {
-                deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipelineBoV1.getAppEnvId(), resultOutputId);
+                deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipeline.getAppEnvId(), resultOutputId);
                 if (deploy == null) {
                     deploy = "apiVersion: extensions/v1beta1\n" +
                             "kind: Deployment\n" +
@@ -332,7 +258,7 @@ public class PipelineService {
                             "          hostPath:\n" +
                             "            path: /etc/timezone";
                 }
-                KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipelineBoV1.getAppEnvId());
+                KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipeline.getAppEnvId());
                 if (kubeCredentialWithTokenV1 == null) {
                     ip = "https://121.43.191.226:6443";
                     token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1sY25kOCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImIyZDBlYTQzLTA5MzAtMTFlOS1hYmM3LTAwMTYzZTBlYzFjZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.KlrkaUDeoyWngUwbmGS2C7gpSixEYJYRgv52w9v_YVLe_uDO_SdHAaQanxG8W23RbKxYPRt_0S7haFy-gU5ngbuYPxHVvPMoB8gVrPX8dGOvYpxvs26eOEjibgnfJTmegWBgylSP9ULKqLTgJ3feFiUyMtd_metvaCSJInPDonDFlvNTzLIn8sOxE3Qxq3fAApNgkxNeuHT8vygznoLysv0I3Tzobhn5R78q5D1QL01AxRlAIKm57i6h5X7utoXrnt8JbuLlMk2ZERa8ANTlhTDhFOj4ODiAqWgN2gtDUmX9ACGHr7kbU8HW_COj4QMS6gLNdnI4bBxTCWVSL-er9Q";
@@ -342,7 +268,7 @@ public class PipelineService {
                 }
             }
 
-            List<Stage> stages = pipelineBoV1.getStages();
+            List<Stage> stages = pipeline.getStages();
             for (int i = 0; i < stages.size(); i++) {
                 List<Step> steps = stages.get(i).getSteps();
                 for (int j = 0; j < steps.size(); j++) {
@@ -372,8 +298,7 @@ public class PipelineService {
                 }
             }
         }
-        return pipelineBoV1;
-
+        return pipeline;
     }
 
 

@@ -23,6 +23,7 @@ export default class RunResult extends Component {
         let self = this;
         if (nextProps.runs) {
             if(nextProps.runs._links.self.href !== ""){
+                console.log(222)
                 this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
                     self.step(stages[self.state.currentStage])
                 })
@@ -50,9 +51,11 @@ export default class RunResult extends Component {
         let stages = [];
         return new Promise((resolve, reject) => {
             Axios.get(url).then((response) => {
+                console.log(response)
                 if (response.status === 200) {
                     if (response.data.length === 0) {
                         self.stage(href);
+                        console.log(33)
                         return;
                     }
                     for (let i = 0; i < response.data.length; i++) {

@@ -27,7 +27,7 @@ public class Pipeline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SerializedName("id")
-    private ObjectId id;
+    private String id;
 
     /**
      * 流水线名称
