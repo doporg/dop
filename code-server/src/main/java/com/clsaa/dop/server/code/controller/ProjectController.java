@@ -6,13 +6,11 @@ import com.clsaa.dop.server.code.model.dto.project.ProjectDto;
 import com.clsaa.dop.server.code.model.vo.project.*;
 import com.clsaa.dop.server.code.service.ProjectService;
 import com.clsaa.dop.server.code.util.BeanUtils;
-import com.clsaa.dop.server.code.util.URLUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,7 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
 
     @ApiOperation(value = "获得用户可以拉取代码的所有项目地址",notes = "根据用户的id获得可以拉取代码的所有项目地址，包括所有的public项目，和权限在guest以上的项目" )
     @GetMapping("/project_url_list")
@@ -174,6 +173,15 @@ public class ProjectController {
                                                @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
         projectService.deleteProjectMember(id,user_id,userId);
+    }
+
+    @ApiOperation(value = "查询用户的项目权限",notes = "根据项目id，用户id查询用户的项目权限包括项目可见等级和用户的角色")
+    @GetMapping("/projects/{username}/{projectname}/access")
+    public ProjectAccessLevelVo findProjectAccessLevel(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                                       @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                                       @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        return BeanUtils.convertType(projectService.findProjectAccessLevel(id,userId),ProjectAccessLevelVo.class);
     }
 
 

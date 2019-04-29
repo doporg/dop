@@ -33,8 +33,21 @@ class CodeProjectAside extends Component {
           username:username,
           projectname:projectname,
           projectid:username+"/"+projectname,
+          accessInfo:{
+              access_level:0,
+              visibility:"private",
+          },
       };
   }
+
+    loadAccess(){
+        let url = API.code+"/projects/"+this.state.projectid+"/access";
+        Axios.get(url).then(response=>{
+            this.setState({
+                accessInfo:response.data
+            });
+        });
+    }
 
   componentWillMount(){
       if(this.props.match.params.hasOwnProperty('ref')){
@@ -48,6 +61,7 @@ class CodeProjectAside extends Component {
               })
           })
       }
+      this.loadAccess();
   }
 
 
@@ -98,7 +112,7 @@ class CodeProjectAside extends Component {
 
     const editLink="/code/"+username+"/"+projectname+"/edit";
 
-
+    const accessInfo=this.state.accessInfo;
 
     return (
         <Menu mode="inline" selectedKeys={[pathname]} className="ice-menu-custom">
@@ -114,36 +128,63 @@ class CodeProjectAside extends Component {
                     <span className="ice-menu-item-text">{"项目"}</span>
                 </Link>
             </MenuItem>
-            <MenuItem>
-                <a onClick={this.getBranchAndJump.bind(this,this.fileLink.bind(this))} className="ice-menu-link">
-                    <img src={imgFile}/>
-                    <span className="ice-menu-item-text">{"文件"}</span>
-                </a>
-            </MenuItem>
-            <MenuItem>
-                <a onClick={this.getBranchAndJump.bind(this,this.commitLink.bind(this))} className="ice-menu-link">
-                    <img src={imgCommit}/>
-                    <span className="ice-menu-item-text">{"提交"}</span>
-                </a>
-            </MenuItem>
-            <MenuItem key={branchLink}>
-                <Link to={branchLink} className="ice-menu-link">
-                    <img src={imgBranch}/>
-                    <span className="ice-menu-item-text">{"分支"}</span>
-                </Link>
-            </MenuItem>
-            <MenuItem key={tagLink}>
-                <Link to={tagLink} className="ice-menu-link">
-                    <img src={imgTag}/>
-                    <span className="ice-menu-item-text">{"标签"}</span>
-                </Link>
-            </MenuItem>
-            <MenuItem key={editLink}>
-                <Link to={editLink} className="ice-menu-link">
-                    <img src={imgEdit}/>
-                    <span className="ice-menu-item-text">{"设置"}</span>
-                </Link>
-            </MenuItem>
+            {
+                (()=>{
+                    if(accessInfo.visibility==="public"||accessInfo.access_level>10){
+                        let res=[];
+                        res.push(
+                            <MenuItem>
+                                <a onClick={this.getBranchAndJump.bind(this,this.fileLink.bind(this))} className="ice-menu-link">
+                                    <img src={imgFile}/>
+                                    <span className="ice-menu-item-text">{"文件"}</span>
+                                </a>
+                            </MenuItem>
+                        );
+                        res.push(
+                            <MenuItem>
+                                <a onClick={this.getBranchAndJump.bind(this,this.commitLink.bind(this))} className="ice-menu-link">
+                                    <img src={imgCommit}/>
+                                    <span className="ice-menu-item-text">{"提交"}</span>
+                                </a>
+                            </MenuItem>
+                        );
+                        res.push(
+                            <MenuItem key={branchLink}>
+                                <Link to={branchLink} className="ice-menu-link">
+                                    <img src={imgBranch}/>
+                                    <span className="ice-menu-item-text">{"分支"}</span>
+                                </Link>
+                            </MenuItem>
+                        );
+                        res.push(
+                            <MenuItem key={tagLink}>
+                                <Link to={tagLink} className="ice-menu-link">
+                                    <img src={imgTag}/>
+                                    <span className="ice-menu-item-text">{"标签"}</span>
+                                </Link>
+                            </MenuItem>
+                        );
+
+                        return res;
+                    }
+                })()
+            }
+
+            {
+                (()=>{
+                    if(accessInfo.access_level===40){
+                        return (
+                            <MenuItem key={editLink}>
+                                <Link to={editLink} className="ice-menu-link">
+                                    <img src={imgEdit}/>
+                                    <span className="ice-menu-item-text">{"设置"}</span>
+                                </Link>
+                            </MenuItem>
+                        )
+                    }
+                })()
+            }
+
         </Menu>
     );
   }
