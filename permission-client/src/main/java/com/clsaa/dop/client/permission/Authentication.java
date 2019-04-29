@@ -53,7 +53,6 @@ public class Authentication {
             if (!(paramAnnotation instanceof GetUserId)) {
                 continue;
             }
-            GetUserId userIdAnnotation = (GetUserId) paramAnnotation;
 
             userId.append(args[argIndex]);
         }
