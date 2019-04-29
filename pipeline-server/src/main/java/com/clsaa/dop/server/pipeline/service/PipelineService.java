@@ -8,6 +8,7 @@ import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
 import com.clsaa.dop.server.pipeline.feign.PipelineFeign;
 import com.clsaa.dop.server.pipeline.feign.UserFeign;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
+import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV2;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
 import com.clsaa.dop.server.pipeline.model.dto.KubeCredentialWithTokenV1;
@@ -16,8 +17,10 @@ import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVo;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,19 +116,35 @@ public class PipelineService {
         this.jenkinsService.createByJenkinsfile(pipelineBoV1.getId(), pipelineBoV1.getJenkinsfile().getGit(), pipelineBoV1.getJenkinsfile().getPath());
     }
 
+    public List<PipelineVoV3> getPipelineForTable() {
+        List<Pipeline> pipelines = this.pipelineRepository.findAllNoDeleted();
+        List<PipelineVoV3> pipelineVoV3s = new ArrayList<>();
+        for (int i = 0; i < pipelines.size(); i++) {
+            PipelineVoV3 pipelineVoV3 = PipelineVoV3.builder()
+                    .id(pipelines.get(i).getId().toString())
+                    .name(pipelines.get(i).getName())
+                    .cuser(this.userFeign.findUserByIdV1(pipelines.get(i).getCuser()).getName())
+                    .ctime(pipelines.get(i).getCtime())
+                    .build();
+            pipelineVoV3s.add(pipelineVoV3);
+        }
+        return pipelineVoV3s;
+    }
+
     /**
      * 获得全部流水线信息, 存在返回全部流水线信息，若不存在返回null
      */
-    public List<PipelineBoV1> findAll() {
-        List<Pipeline> pipelines = this.pipelineRepository.findAll();
-        List<PipelineBoV1> pipelineBoV1s = new ArrayList<PipelineBoV1>();
+    public List<PipelineBoV2> findAll() {
+        List<Pipeline> pipelines = this.pipelineRepository.findAllNoDeleted();
+        List<PipelineBoV2> pipelineBoV2s = new ArrayList<>();
         for (int i = 0; i < pipelines.size(); i++) {
-            PipelineBoV1 pipelineBoV1 = PipelineBoV1.builder()
+            System.out.println(pipelines.get(i).getMonitor());
+            PipelineBoV2 pipelineBoV2 = PipelineBoV2.builder()
                     .id(pipelines.get(i).getId().toString())
                     .name(pipelines.get(i).getName())
-                    .monitor(pipelines.get(i).getMonitor())
+                    .monitor(pipelines.get(i).getMonitor().ordinal())
                     .timing(pipelines.get(i).getTiming())
-                    .config(pipelines.get(i).getConfig())
+                    .config(pipelines.get(i).getConfig().ordinal())
                     .appId(pipelines.get(i).getAppId())
                     .appEnvId(pipelines.get(i).getAppEnvId())
                     .jenkinsfile(pipelines.get(i).getJenkinsfile())
@@ -133,31 +152,21 @@ public class PipelineService {
                     .ctime(pipelines.get(i).getCtime())
                     .mtime(pipelines.get(i).getMtime())
                     .cuser(pipelines.get(i).getCuser())
-                    .isDeleted(pipelines.get(i).getIsDeleted())
                     .build();
-            pipelineBoV1s.add(pipelineBoV1);
+            pipelineBoV2s.add(pipelineBoV2);
         }
 
-        return pipelineBoV1s;
+        return pipelineBoV2s;
     }
 
     /**
      * 根据id进行逻辑删除
      */
-    public void deleteById(String id) {
-        PipelineBoV1 pipelineBoV1 = this.findById(new ObjectId(id));
-        Pipeline pipeline = Pipeline.builder()
-                .id(new ObjectId(id))
-                .name(pipelineBoV1.getName())
-                .monitor(pipelineBoV1.getMonitor())
-                .timing(pipelineBoV1.getTiming())
-                .stages(pipelineBoV1.getStages())
-                .ctime(pipelineBoV1.getCtime())
-                .mtime(pipelineBoV1.getMtime())
-                .cuser(pipelineBoV1.getCuser())
-                .isDeleted(true)
-                .build();
+    public Pipeline deleteById(String id) {
+        Pipeline pipeline = this.pipelineRepository.findById(id);
+        pipeline.setIsDeleted(true);
         this.pipelineRepository.save(pipeline);
+        return pipeline;
     }
 
     /**
@@ -366,5 +375,7 @@ public class PipelineService {
         return pipelineBoV1;
 
     }
+
+
 
 }

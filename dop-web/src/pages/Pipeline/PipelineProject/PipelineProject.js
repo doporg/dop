@@ -213,7 +213,7 @@ export default class PipelineProject extends Component {
 
     render() {
         return (
-            <div className="body">
+            <div className="project-body">
                 <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
                     <div className="operate">
                         <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
@@ -223,7 +223,7 @@ export default class PipelineProject extends Component {
                                 defaultMessage="运行流水线"
                             />
                         </Button>
-                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
+                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} disabled>
                             <Icon type="edit"/>
                             <FormattedMessage
                                 id="pipeline.project.editPipeline"
