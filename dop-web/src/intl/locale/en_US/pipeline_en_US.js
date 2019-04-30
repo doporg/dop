@@ -14,6 +14,7 @@ const PIPELINE_EN_US = {
     'pipeline.table.operation.language': 'en-us',
     'pipeline.table.operation.deleteSuccess': 'Success',
     'pipeline.table.operation.deleteFailure': 'Failure',
+    'pipeline.table.operation.requestFailure': 'Failure',
 
     'pipeline.project.runPipeline': 'Run Pipeline',
     'pipeline.project.editPipeline': 'Edit Pipeline',

@@ -135,7 +135,7 @@ export default class PipelineProject extends Component {
             resultStatus: "BUILD",
             notRunning: false
         });
-        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/build/' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {

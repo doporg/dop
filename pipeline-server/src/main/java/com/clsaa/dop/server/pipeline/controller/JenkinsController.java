@@ -84,10 +84,10 @@ public class JenkinsController {
     }
 
     @ApiOperation(value = "运行流水线", notes = "根据流水线id查找开始运行流水线")
-    @PostMapping("/v1/jenkins/build")
+    @PostMapping("/v1/jenkins/build/{id}")
     public void build(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
-            String id
+            @PathVariable(value = "id") String id
     ) {
         //拿到 result output id
         String resultOutputId = this.resultOutputService.create(id);
