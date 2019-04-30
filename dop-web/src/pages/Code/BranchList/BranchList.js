@@ -92,7 +92,9 @@ class BranchList extends React.Component{
             });
             let url = API.code + "/projects/" + this.state.projectid + "/repository/merged_branches";
             Axios.delete(url).then(() => {
-                this.loadData();
+                setTimeout(()=>{
+                    this.loadData();
+                },1000);
             })
         }
     }

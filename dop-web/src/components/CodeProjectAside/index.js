@@ -109,7 +109,7 @@ class CodeProjectAside extends Component {
     const projectLink="/code/"+username+"/"+projectname;
     const branchLink="/code/"+username+"/"+projectname+"/branches";
     const tagLink="/code/"+username+"/"+projectname+"/tags";
-    const mergeRequestLink="/code/"+username+"/"+projectname+"/merge_requests/opened";
+    const mergeRequestLink="/code/"+username+"/"+projectname+"/merge_requests?state=opened";
     const editLink="/code/"+username+"/"+projectname+"/edit";
 
     const accessInfo=this.state.accessInfo;
@@ -164,18 +164,21 @@ class CodeProjectAside extends Component {
                                 </Link>
                             </MenuItem>
                         );
+                        res.push(
+                            <MenuItem key={mergeRequestLink}>
+                                <Link to={mergeRequestLink} className="ice-menu-link">
+                                    <img src={imgMergeRequest}/>
+                                    <span className="ice-menu-item-text">{"合并请求"}</span>
+                                </Link>
+                            </MenuItem>
+                        );
 
                         return res;
                     }
                 })()
             }
 
-            <MenuItem key={mergeRequestLink}>
-                <Link to={mergeRequestLink} className="ice-menu-link">
-                    <img src={imgMergeRequest}/>
-                    <span className="ice-menu-item-text">{"合并请求"}</span>
-                </Link>
-            </MenuItem>
+
 
             {
                 (()=>{

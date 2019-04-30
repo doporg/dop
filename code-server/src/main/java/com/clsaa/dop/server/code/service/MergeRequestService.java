@@ -27,7 +27,7 @@ public class MergeRequestService {
      */
     public List<MergeRequestBo> findMRList(String id,String state,Long userId){
         id = URLUtil.encodeURIComponent(id);
-        String path="/projects/"+id+"/merge_requests?state="+state;
+        String path="/projects/"+id+"/merge_requests?state="+state+"&order_by=updated_at";
         List<MergeRequestBo> mergeRequestBos=RequestUtil.getList(path,userId,MergeRequestBo.class);
         for(MergeRequestBo mergeRequestBo:mergeRequestBos){
             mergeRequestBo.setCreated_by(mergeRequestBo.getAuthor().getUsername());
@@ -90,6 +90,34 @@ public class MergeRequestService {
         params.add(new BasicNameValuePair("title",title));
         params.add(new BasicNameValuePair("description",description));
         RequestUtil.post(path,userId,params);
+    }
+
+    /**
+     * close或reopen一个合并请求
+     * @param id 项目id
+     * @param iid 合并请求id
+     * @param state_event close or reopen
+     * @param userId 用户id
+     */
+    public void updateMR(String id,int iid,String state_event,Long userId){
+        id = URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/merge_requests/"+iid;
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("state_event",state_event));
+        RequestUtil.put(path,userId,params);
+    }
+
+    /**
+     * 通过一个合并请求
+     * @param id 项目id
+     * @param iid 合并请求id
+     * @param userId 用户id
+     */
+    public void acceptMR(String id,int iid,Long userId){
+        id = URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/merge_requests/"+iid+"/merge";
+        List<NameValuePair> params=new ArrayList<>();
+        RequestUtil.put(path,userId,params);
     }
 
 }

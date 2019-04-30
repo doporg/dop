@@ -56,7 +56,7 @@ class NewMergeRequest extends React.Component{
     }
 
     cancelLink(){
-        this.props.history.push("/code/"+this.state.projectid+"/merge_requests/opened");
+        this.props.history.push("/code/"+this.state.projectid+"/merge_requests?state=opened");
     }
 
     addMergeRequest(){
@@ -75,7 +75,7 @@ class NewMergeRequest extends React.Component{
                 description:description,
             },
         }).then(response=>{
-            this.props.history.push("/code/"+this.state.projectid+"/merge_requests/opened");
+            this.props.history.push("/code/"+this.state.projectid+"/merge_requests?state=opened");
         })
     }
 

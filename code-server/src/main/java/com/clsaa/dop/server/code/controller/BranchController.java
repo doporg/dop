@@ -37,6 +37,17 @@ public class BranchController {
         return branchVos;
     }
 
+    @ApiOperation(value = "获得项目的一个分支",notes = "根据项目的id和分支获得一个分支")
+    @GetMapping("/projects/{username}/{projectname}/repository/branch")
+    public BranchVo findSingleBranch(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                                         @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                         @ApiParam(value = "分支名") @RequestParam("branch") String branch,
+                                         @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        BranchBo branchBo=branchService.findSingleBranch(id,branch,userId);
+        return BeanUtils.convertType(branchBo,BranchVo.class);
+    }
+
     @ApiOperation(value = "创建一个分支",notes = "根据项目的id，新的分支名，源分支创建一个新的分支")
     @PostMapping("/projects/{username}/{projectname}/repository/branches")
     public void addBranch(@ApiParam(value = "用户名") @PathVariable("username") String username,

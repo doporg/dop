@@ -4,8 +4,12 @@ import com.clsaa.dop.server.code.model.bo.mergeRequest.MergeRequestBo;
 import com.clsaa.dop.server.code.model.vo.mergeRequest.MergeRequestVo;
 import com.clsaa.dop.server.code.service.MergeRequestService;
 import com.clsaa.dop.server.code.util.BeanUtils;
+import com.clsaa.dop.server.code.util.RequestUtil;
+import com.clsaa.dop.server.code.util.URLUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +66,31 @@ public class MergeRequestController {
         mergeRequestService.createMR(id,source_branch,target_branch,title,description,userId);
     }
 
-    
+    @ApiOperation(value = "修改一个合并请求",notes = "close或reopen一个合并请求")
+    @PutMapping("/projects/{username}/{projectname}/merge_requests/{iid}")
+    public void updateMR(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                         @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                         @ApiParam(value = "请求id") @PathVariable("iid") int iid,
+                         @ApiParam(value = "改变的状态") @RequestParam("state_event") String state_event,
+                         @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        mergeRequestService.updateMR(id,iid,state_event,userId);
+    }
+
+    @ApiOperation(value = "通过一个合并请求",notes = "通过一个合并请求")
+    @PutMapping("/projects/{username}/{projectname}/merge_requests/{iid}/merge")
+    public void acceptMR(@ApiParam(value = "用户名") @PathVariable("username") String username,
+                         @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                         @ApiParam(value = "请求id") @PathVariable("iid") int iid,
+                         @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        String id=username+"/"+projectname;
+        mergeRequestService.acceptMR(id,iid,userId);
+    }
+
+
+
+
+
+
 
 }

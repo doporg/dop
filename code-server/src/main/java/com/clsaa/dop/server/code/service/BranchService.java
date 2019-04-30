@@ -46,6 +46,29 @@ public class BranchService {
     }
 
     /**
+     * 查询一个分支
+     * @param id 项目id
+     * @param branch 分支名
+     * @param userId 用户id
+     * @return 分支信息
+     */
+    public BranchBo findSingleBranch(String id,String branch,Long userId){
+
+        id = URLUtil.encodeURIComponent(id);
+        branch=URLUtil.encodeURIComponent(branch);
+        String path = "/projects/" + id + "/repository/branches/"+branch;
+
+        BranchBo branchBo=RequestUtil.get(path,userId,BranchBo.class);
+        CommitBo commitBo = branchBo.getCommit();
+        branchBo.setCommit_id(commitBo.getId());
+        branchBo.setCommit_short_id(commitBo.getId().substring(0,8));
+        branchBo.setCommit_msg(commitBo.getMessage());
+        branchBo.setCommit_time(TimeUtil.natureTime(commitBo.getAuthored_date()).get(1));
+
+        return branchBo;
+    }
+
+    /**
      * 创建一个分支
      * @param id 项目id
      * @param branch 新的分支名称
