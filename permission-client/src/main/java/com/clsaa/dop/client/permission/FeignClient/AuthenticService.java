@@ -138,6 +138,25 @@ public interface AuthenticService {
             @RequestParam(value = "fieldName") String fieldName,
             @RequestParam(value = "userId") Long userId
     );
+
+    /* *
+     *
+     *  添加多个用户数据
+     *  * @param ruleId 规则ID
+     *  * @param userIdList 用户ID列表
+     *  * @param fieldValue 作用域参数值
+     *  * @param loginUser 当前登录用户
+     *
+     */
+    @PostMapping("/v1/userData/byUserList")
+    void addDataByUserList(
+            @RequestParam(value = "ruleId")Long ruleId,
+            @RequestParam(value = "userId")List<Long> userIdList,
+            @RequestParam(value = "fieldValue")Long fieldValue,
+            @RequestHeader("x-login-user")Long loginUser
+    );
+
+
 }
 
 

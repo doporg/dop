@@ -82,7 +82,7 @@ public class PermissionService {
     {
             Permission existPermission=this.permissionRepository.findByName(name);
             BizAssert.allowed(existPermission==null, BizCodes.REPETITIVE_PERMISSION_NAME);
-            Permission permission= Permission.builder()
+            Permission  permission= Permission.builder()
                     .parentId(parentId)
                     .name(name)
                     .isPrivate(isPrivate)
@@ -93,7 +93,7 @@ public class PermissionService {
                     .mtime(LocalDateTime.now())
                     .deleted(false)
                     .build();
-            permissionRepository.saveAndFlush(permission);
+            permissionRepository.saveAndFlush( permission);
             authenticationService.addData(
                     authenticationService.findUniqueRule("in","permissionId",
                             authenticationService.findByName("权限管理员").getId()).getId(),

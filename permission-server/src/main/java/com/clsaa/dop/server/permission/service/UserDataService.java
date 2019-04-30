@@ -71,6 +71,31 @@ public class UserDataService {
         userDataDAO.saveAndFlush(userData);
     }
 
+    public void addDataByUserList(Long ruleId,List<Long> userIdList,Long fieldValue,Long cuser,Long muser)
+    {
+        for(Long userId:userIdList)
+        {
+            UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
+            BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
+
+            UserRule userRule=userRuleService.findById(ruleId);
+            UserData userData=UserData.builder()
+                    .ruleId(ruleId)
+                    .userId(userId)
+                    .fieldValue(fieldValue)
+                    .description("身为 "+roleService.findById(userRule.getRoleId()).getName()+
+                            " 有权操作 "+userRule.getFieldName()+" "+userRule.getRule()+" {作用域参数值} 的数据")
+                    .cuser(cuser)
+                    .muser(muser)
+                    .ctime(LocalDateTime.now())
+                    .mtime(LocalDateTime.now())
+                    .build();
+            userDataDAO.saveAndFlush(userData);
+        }
+
+
+    }
+
     //验证某个功能点操作的数据是否允许操作
     public boolean check(String permissionName,Long userId,String fieldName,Long fieldValue)
     {

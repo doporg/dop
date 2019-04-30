@@ -44,15 +44,31 @@ public class UserDataController {
     @PostMapping("/v1/userData")
     public void addData(
             @ApiParam(name = "ruleId",value = "规则ID",required = true)
-            @RequestParam(value = "ruleId", required = true)Long ruleId,
+            @RequestParam(value = "ruleId")Long ruleId,
             @ApiParam(name = "userId",value = "用户ID",required = true)
-            @RequestParam(value = "userId", required = true)Long userId,
+            @RequestParam(value = "userId")Long userId,
             @ApiParam(name = "fieldValue",value = "权限作用域参数值",required = true)
-            @RequestParam(value = "fieldValue", required = true)Long fieldValue,
+            @RequestParam(value = "fieldValue")Long fieldValue,
             @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser
     )
     {
         userDataService.addData(ruleId,userId,fieldValue,loginUser,loginUser);
+    }
+
+    //添加多个用户数据
+    @ApiOperation(value = "为多个用户添加数据", notes = "为多个用户添加数据")
+    @PostMapping("/v1/userData/byUserList")
+    public void addDataByUserList(
+            @ApiParam(name = "ruleId",value = "规则ID",required = true)
+            @RequestParam(value = "ruleId")Long ruleId,
+            @ApiParam(name = "userId",value = "用户ID",required = true)
+            @RequestParam(value = "userId")List<Long> userIdList,
+            @ApiParam(name = "fieldValue",value = "权限作用域参数值",required = true)
+            @RequestParam(value = "fieldValue")Long fieldValue,
+            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser
+    )
+    {
+        userDataService.addDataByUserList(ruleId,userIdList,fieldValue,loginUser,loginUser);
     }
 
     //判断该用户当前功能点是否可在该条数据执行

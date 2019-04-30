@@ -14,7 +14,6 @@ import Select from "@icedesign/base/lib/select";
 const { Item: FormItem } = Form;
 
 
-let roleMap=new Map()
 export default class DataRules extends Component
 {
     constructor(props) {
@@ -25,18 +24,12 @@ export default class DataRules extends Component
             currentData : [],
             roleList:[],
             currentRuleId:0,
-            userList:[
-                {id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:23,name:"Rgj",email:"1046504820@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:28,name:"ren",email:"812022339@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                {id:39,name:"newTest",email:"1171067930@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
-            ],
+            userList:[],
 
             userSelectList:[],
+
             isLoading:true,
+            userIsLoading:true,
             ruleVisible:false,
             dataVisible:false,
             deleteVisible:false,
@@ -44,12 +37,22 @@ export default class DataRules extends Component
             pageSize:8,
             totalCount:0,
 
+            userPageNo:1,
+            userPageSize:8,
+            userTotalCount:0,
+
             rowSelection: {
                 onChange: this.onSelectChange.bind(this),
                 mode:"single",
-                selectedRowKey: 0,
+                selectedRoleId: 0,
+            },
 
-            }
+            rowUserSelection: {
+                onChange: this.onUserSelectChange.bind(this),
+                mode:"single",
+                selectedUserId: 0,
+
+            },
         };
 
     }
@@ -105,13 +108,45 @@ export default class DataRules extends Component
         console.log(this.state.pageNo)
     }
 
+//改变页码
+    onUserChange=currentPage=> {
+
+        this.setState({userIsLoading:true})
+        let url = API.user + "/v1/users/search" ;
+        let params=
+            {
+                pageNo:currentPage,
+                pageSize:this.state.userPageSize
+            }
+        Axios.get(url,{params:(params)}).then((response) => {
+            // handle success
+            this.setState({
+                    userList:response.data.pageList,
+                    userPageNo:response.data.pageNo,
+                    userTotalCount:response.data.totalCount,
+                    userIsLoading:false
+                }
+            );
+        }).catch((error)=>{
+            // handle error
+            console.log(error);
+        });
+    }
 
     //选择角色
     onSelectChange(role) {
         let { rowSelection } = this.state;
-        rowSelection.selectedRowKey = role;
+        rowSelection.selectedRoleId = role;
         console.log("onSelectChange", role);
         this.setState({ rowSelection });
+    }
+
+    //勾选用户
+    onUserSelectChange(userids) {
+        let { rowUserSelection } = this.state;
+        rowUserSelection.selectedUserId = userids;
+        console.log("onSelectChange", userids);
+        this.setState({ rowUserSelection });
     }
     //重置
     handleReset(e) {
@@ -127,7 +162,7 @@ export default class DataRules extends Component
                 console.log("Errors in form!!!");
                 return;}
             console.log(values)
-            let roleId=this.state.rowSelection.selectedRowKey[0]
+            let roleId=this.state.rowSelection.selectedRoleId[0]
             console.log(roleId)
 
             let createUserRuleUrl=API.permission+"/v1/userRules"
@@ -196,6 +231,29 @@ export default class DataRules extends Component
         console.log(record)
         //获取当前选择的规则ID并填入
         this.setState({currentRuleId:record.id})
+
+        //获取用户列表
+        let url = API.user + "/v1/users/search" ;
+        let params=
+            {
+                pageNo:1,
+                pageSize:this.state.userPageSize
+            }
+        Axios.get(url,{params:(params)}).then((response) => {
+            this.setState({
+                userList:response.data.pageList,
+                userPageNo:response.data.pageNo,
+                userTotalCount:response.data.totalCount,
+                userIsLoading:false
+            })
+        }).catch((error)=>{
+            // handle error
+            console.log(error);
+        }).then(()=>{
+            // always executed
+        });
+
+
         //将用户列表填入下拉选项中
         let tmpList=[]
         this.state.userList.forEach(item=>{
@@ -230,7 +288,7 @@ export default class DataRules extends Component
                 return;}
             this.setState({dataVisible: false})
             let url=API.permission+"/v1/userData"
-            let params={ruleId:this.state.currentRuleId,userId:values.userId,fieldValue:values.fieldValue}
+            let params={ruleId:this.state.currentRuleId,userId:this.state.rowUserSelection.selectedUserId[0],fieldValue:values.fieldValue}
 
             Axios.post(url,{},{params:(params)}).then(response=>{
                 Feedback.toast.success("创建用户数据成功！")
@@ -380,10 +438,22 @@ export default class DataRules extends Component
             >
                 <Form field={this.dataField}>
                     <FormItem label="用户：" {...formItemLayout} required>
-                        <Select dataSource={this.state.userSelectList}
-                                {...initData("userId")}>
-
-                        </Select>
+                        <Table
+                            isloading={this.state.userIsLoading}
+                            hasBorder={false}
+                            dataSource={this.state.userList}
+                            primaryKey="id"
+                            isTree
+                            rowSelection={this.state.rowUserSelection}
+                        >
+                            <Table.Column title="用户名称" dataIndex="name" />
+                            <Table.Column title="用户邮箱" dataIndex="email" />
+                        </Table>
+                        <Pagination total={this.state.userTotalCount}
+                                    current={this.state.userPageNo}
+                                    onChange={this.onUserChange}
+                                    pageSize={this.state.userPageSize}
+                                    className="pagination" />
                     </FormItem>
 
                     <FormItem label="作用域参数值：" {...formItemLayout} required>
