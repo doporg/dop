@@ -17,11 +17,9 @@ export default class Application extends Component {
     constructor(props) {
         super(props);
 
-        //从项目列表点击项目ID 跳转到该页面，从URL中通过正则表达式解析出项目ID
-        console.log(props.location.search.match("projectId=[0-9]+"));
 
         this.state = {
-            projectId: props.location.search.match("projectId=[0-9]+")[0].split("=")[1],
+            projectId: props.projectId,
             searchKey: "",
             createdApplicationNeedRefresh: false,
         }
@@ -57,7 +55,7 @@ export default class Application extends Component {
                 <Breadcrumb className="Breadcrumb">
                     <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                     <Breadcrumb.Item
-                        link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
                 </Breadcrumb>
                 <TopBar
                     extraBefore={

@@ -49,13 +49,13 @@ public class AppUrlInfoController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
         BizAssert.validParam(Validator.isUrl(imageUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
-        BizAssert.validParam(Validator.isUrl(productionDbUrl),
+        BizAssert.validParam(productionDbUrl.equals("") || Validator.isUrl(productionDbUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发数据库Url格式错误"));
-        BizAssert.validParam(Validator.isUrl(testDbUrl),
+        BizAssert.validParam(testDbUrl.equals("") || Validator.isUrl(testDbUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "测试数据库Url格式错误"));
-        BizAssert.validParam(Validator.isDomain(productionDomain),
+        BizAssert.validParam(productionDomain.equals("") || Validator.isDomain(productionDomain),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发域名格式错误"));
-        BizAssert.validParam(Validator.isDomain(testDomain),
+        BizAssert.validParam(testDomain.equals("") || Validator.isDomain(testDomain),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "测试域名格式错误"));
         this.appUrlInfoService.updateAppUrlInfoByAppId(appId, loginUser, warehouseUrl, imageUrl, productionDbUrl, testDbUrl, productionDomain, testDomain);
     }

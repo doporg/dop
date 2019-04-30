@@ -78,7 +78,6 @@ export default class CreateProjectDialog extends Component {
             onClose={this.onClose}
             title="创建项目"
             className="dialog"
-            footerAlign={this.state.footerAlign}
         >
           <ProjectForm
               isSubmit={this.state.isSubmit}

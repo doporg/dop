@@ -36,7 +36,9 @@ export default class ProjectPagination extends Component {
         this.setState({
             loading: true
         })
-        let url = API.application + '/project';
+
+
+        let url = API.application + '/paged-project';
         let _this = this;
         Axios.get(url, {
             params: {

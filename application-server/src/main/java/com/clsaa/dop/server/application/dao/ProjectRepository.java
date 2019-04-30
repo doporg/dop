@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,9 +20,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param title  搜索字符串
      * @return {@link Page<Project>} 项目持久层对象
      */
-    //@Query(value = "select p from Project p where p.status=:status and p.searchString like :searchString % ORDER BY ?#{#pageable}",
-    //        countQuery = "SELECT count(*) FROM Project WHERE STATUS=:status")
-    Page<Project> findAllByStatusAndTitleStartingWith(Project.Status status, String title, Pageable pageable);
+
+    Page<Project> findAllByStatusAndTitleStartingWithAndIdIn(Project.Status status, String title, Pageable pageable, Collection<Long> c);
 
     /**
      * 根据status和关键词查询Project
@@ -30,9 +30,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param title  搜索字符串
      * @return {@link Integer} 项目持久层对象
      */
-    //@Query(value = "select p from Project p where p.status=:status and p.searchString like :searchString % ORDER BY ?#{#pageable}",
-    //        countQuery = "SELECT count(*) FROM Project WHERE STATUS=:status")
-    Integer countAllByStatusAndTitleStartingWith(Project.Status status, String title);
+
+    Integer countAllByStatusAndTitleStartingWithAndIdIn(Project.Status status, String title, Collection<Long> c);
 
     /**
      * 根据status和关键词查询Project
@@ -40,19 +39,41 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param status 项目状态
      * @return {@link Page<Project>} 项目持久层对象
      */
-    //@Query(value = "select p from Project p where p.status=:status and p.searchString like :searchString % ORDER BY ?#{#pageable}",
-    //        countQuery = "SELECT count(*) FROM Project WHERE STATUS=:status")
-    Page<Project> findAllByStatus(Project.Status status, Pageable pageable);
 
+    Page<Project> findAllByStatusAndIdIn(Project.Status status, Pageable pageable, Collection<Long> c);
+
+    /**
+     * 根据status和关键词查询Project
+     *
+     * @param status 项目状态
+     * @return {@link Integer} 项目持久层对象
+     */
+
+    Integer countAllByStatusAndIdIn(Project.Status status, Collection<Long> c);
+
+    /**
+     * 根据status和关键词查询Project
+     *
+     * @return {@link Integer} 项目持久层对象
+     */
+    Integer countAllByIdIn(Collection<Long> c);
+
+    /**
+     * 根据status和关键词查询Project
+     *
+     * @return {@link Integer} 项目持久层对象
+     */
+    Page<Project> findAllByIdIn(Pageable pageable, Collection<Long> c);
     /**
      * 根据status和关键词查询Project
      *
      * @param status 项目状态
      * @return {@link Page<Project>} 项目持久层对象
      */
-    //@Query(value = "select p from Project p where p.status=:status and p.searchString like :searchString % ORDER BY ?#{#pageable}",
-    //        countQuery = "SELECT count(*) FROM Project WHERE STATUS=:status")
-    List<Project> findAllByStatus(Project.Status status);
+
+    List<Project> findAllByStatusAndIdIn(Project.Status status, Collection<Long> c);
+
+
 
     /**
      * 根据关键词查询Project
@@ -61,7 +82,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @return {@link Integer} 项目持久层对象
      */
 
-    Integer countAllByTitleStartingWith(String Title);
+    Integer countAllByTitleStartingWithAndIdIn(String Title, Collection<Long> c);
 
     /**
      * 根据关键词查询Project
@@ -69,5 +90,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @param Title 项目名称
      * @return {@link Page<Project>} 项目持久层对象
      */
-    Page<Project> findAllByTitleStartingWith(String Title, Pageable pageable);
+    Page<Project> findAllByTitleStartingWithAndIdIn(String Title, Pageable pageable, Collection<Long> c);
 }

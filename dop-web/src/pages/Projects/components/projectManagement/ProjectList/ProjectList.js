@@ -43,20 +43,21 @@ export default class ProjectList extends Component {
     }
 
     //链接 点击后跳转到对应projectId所包含的所有应用列表的页面
-    idRender = function (id) {
-        return <Link to={"/application?projectId=" + id}
-        >{id}</Link>
+    nameRender = function (value, index, record) {
+        return <Link to={"/projectDetail?projectId=" + record.id}
+        >{value}</Link>
     }
     render() {
         return (
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender}
+                        <Table.Column
                                       title="项目ID"
                                       dataIndex="id"/>
 
                         <Table.Column title="项目名称"
+                                      cell={this.nameRender.bind(this)}
                                       dataIndex="title"/>
 
                         <Table.Column title="创建人"

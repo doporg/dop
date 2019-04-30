@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
-import {Input, Loading, Pagination, Table} from '@icedesign/base';
-import {Grid} from '@icedesign/base';
+import {Grid, Input, Loading, Pagination, Table} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
-import {Link} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import DeleteRepoDialog from "../DeleteRepoDialog";
 import "../../Style.scss"
@@ -129,10 +127,8 @@ export default class RepoList extends Component {
         this.refreshList(this.state.current,value)
     }
 
-    nameRender=(value, index, record)=> {
-        //链接到对应的镜像列表
-        return <Link to={"/repos/"+value+"/images"}
-        >{value}</Link>
+    nameRender(value, index, record) {
+        console.log("namerender", value, index, record)
     };
 
     render() {

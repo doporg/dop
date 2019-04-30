@@ -69,10 +69,10 @@ export default class ApplicationList extends Component {
     }
 
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
-    idRender(id) {
+    nameRender(value, index, record) {
         let _this = this
-        return <Link to={"/applicationDetail?appId=" + id + "&projectId=" + _this.state.projectId}
-        >{id}</Link>
+        return <Link to={"/applicationDetail?appId=" + record.id + "&projectId=" + _this.state.projectId}
+        >{value}</Link>
     }
 
     render() {
@@ -89,11 +89,12 @@ export default class ApplicationList extends Component {
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column cell={this.idRender.bind(this)}
+                        <Table.Column
                                       title="ID"
                                       dataIndex="id"/>
 
                         <Table.Column title="应用名称"
+                                      cell={this.nameRender.bind(this)}
                                       dataIndex="title"/>
 
                         <Table.Column title="拥有者"
