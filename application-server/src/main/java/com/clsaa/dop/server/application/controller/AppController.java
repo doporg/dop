@@ -82,7 +82,7 @@ public class AppController {
                           @ApiParam(name = "imageUrl", value = "镜像仓库地址", defaultValue = "") @RequestParam(value = "imageUrl", required = false) String imageUrl) {
         BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
-        BizAssert.validParam(description.length() < 50,
+        BizAssert.validParam(description == null || description.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         BizAssert.validParam(Validator.isUrl(gitUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
@@ -101,7 +101,7 @@ public class AppController {
                           @ApiParam(name = "description", value = "应用描述", defaultValue = "") @RequestParam(value = "description", defaultValue = "") String description) {
         BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
-        BizAssert.validParam(StringUtils.hasText(description) && description.length() < 50,
+        BizAssert.validParam(description.equals("") || StringUtils.hasText(description) && description.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         this.appService.updateApp(loginUser, appId, title, description);
     }

@@ -41,9 +41,8 @@ export default class ApplicationDetail extends Component {
     }
 
     envRender() {
+        console.log(this.state.showPage, this.state.showPage === "envList")
         if (this.state.showPage === "envList") {
-            return (<div></div>)
-        } else {
             return (<ApplicationEnvironment
                 projectId={this.state.projectId}
                 switchPage={this.switchPage.bind(this)}
@@ -54,8 +53,6 @@ export default class ApplicationDetail extends Component {
 
     envLogRender() {
         if (this.state.showPage === "envLog") {
-            return (<div></div>)
-        } else {
             return (<ApplicationEnvironmentLog
                 projectId={this.state.projectId}
                 switchPage={this.switchPage.bind(this)}
@@ -116,7 +113,9 @@ export default class ApplicationDetail extends Component {
                              key={"env"}
                              className="TabPane">
 
+
                         {this.envRender()}
+                        {this.envLogRender()}
                         {this.envDetailRender()}
                     </TabPane>
 

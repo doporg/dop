@@ -15,8 +15,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,9 +43,8 @@ public class AppEnvLogService {
         Set userIdList = new HashSet();
         Map<Long, String> idNameMap = new HashMap<>();
         for (String runningId : runningIdList) {
-
             AppEnvLog appEnvLog = this.appEnvLogRepository.findByRunningId(runningId).orElse(null);
-            AppEnvLogV1 appEnvLogV1 = BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
+            BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
             Long id = appEnvLog.getRuser();
 
             if (!userIdList.contains(id)) {
@@ -63,10 +61,20 @@ public class AppEnvLogService {
 
 
             String ruserName = idNameMap.get(id);
+
+            AppEnvLogV1 appEnvLogV1 = AppEnvLogV1.builder()
+                    .status(appEnvLog.getStatus())
+                    .imageUrl(appEnvLog.getImageUrl())
+                    .commitUrl(appEnvLog.getCommitUrl())
+                    .appEnvLog(appEnvLog.getAppEnvLog())
+                    .runningId(appEnvLog.getRunningId())
+                    .rtime(appEnvLog.getRtime())
+                    .ruserName(ruserName)
+                    .build();
             // String log = logInfoV1List.get(i).getLog();
             //String result =  log.matches("docker push [a-z]+.[a-z]+.[a-z]+.[a-z]+/([a-z]+)/([a-z]+):([0-9]+)");
 
-            appEnvLogV1.setRuserName(ruserName);
+            //appEnvLogV1.setRuserName(ruserName);
             appEnvLogV1List.add(appEnvLogV1);
         }
         //List<String> runningIdList= this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);
@@ -86,8 +94,7 @@ public class AppEnvLogService {
 
     public String readFile(String filePath) throws Exception {
         File file = ResourceUtils.getFile(filePath);
-        InputStreamReader reader = new InputStreamReader(
-                new FileInputStream(file)); // 建立一个输入流对象reader
+        FileReader reader = new FileReader(file);
         BufferedReader br = new BufferedReader(reader);
         String content = "";
         StringBuilder sb = new StringBuilder();

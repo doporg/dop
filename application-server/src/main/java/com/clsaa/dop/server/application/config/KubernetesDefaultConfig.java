@@ -24,5 +24,6 @@ public class KubernetesDefaultConfig {
     private String serviceKind;
     private String ingressApiVersion;
     private String ingressKind;
+    private String virtualServiceVersionLabel;
 
 }

@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-import {Breadcrumb, Button, Card, Dialog, Feedback, Field, Form, Input, Loading} from '@icedesign/base';
+import {Breadcrumb, Button, Card, Dialog, Feedback, Field, Form, Input, Loading, Select} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../../API";
 import TopBar from "./topbar";
 import "./ApplicationBasicInfo.scss"
 
+const Option = Select.Option;
+const {Combobox} = Select;
 const Toast = Feedback.toast;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -33,6 +35,8 @@ export default class ApplicationBasicInfo extends Component {
             appBasicData: [],
             userData: [],
             loading: true,
+            gitUrlData: [],
+            imageUrlData: [],
             projectId: props.projectId
         }
     }
@@ -40,6 +44,50 @@ export default class ApplicationBasicInfo extends Component {
     //加载应用基本信息
     componentDidMount() {
         this.getData()
+        this.getUrlData()
+    }
+
+
+    getUrlData() {
+        this.setState({
+            loading: true
+        })
+        let projectUrl = API.application + "/project/" + this.state.projectId
+        Axios.get(projectUrl)
+            .then((response) => {
+
+                let projectData = response.data
+                let _this = this
+                let gitUrl = API.application + "/git_url_list"
+                Axios.get(gitUrl).then((response) => {
+                    _this.setState({
+                        gitUrlData: response.data
+                    })
+                    let imageUrl = API.application + "/image_url_list"
+                    Axios.get(imageUrl, {
+                        params: {
+                            projectName: projectData.name
+                        }
+                    })
+                        .then((response) => {
+                            _this.setState({
+                                imageUrlData: response.data,
+                                loading: false
+                            })
+                        })
+                        .catch((response => {
+                            console.log(response)
+                            _this.setState({
+                                loading: false
+                            })
+                        }))
+                })
+                    .catch((response => {
+                        console.log(response)
+                    }))
+
+            })
+
     }
 
     getData() {
@@ -175,7 +223,7 @@ export default class ApplicationBasicInfo extends Component {
                 })
                 Axios.put(url, {}, {
                         params: {
-                            warehouseUrl: this.urlField.getValue("warehouseUrl"),
+                            warehouseUrl: this.urlField.getValue("gitUrl"),
                             imageUrl: this.urlField.getValue("imageUrl"),
                             productionDbUrl: this.urlField.getValue("productionDbUrl"),
                             testDbUrl: this.urlField.getValue("testDbUrl"),
@@ -202,6 +250,16 @@ export default class ApplicationBasicInfo extends Component {
         });
     }
 
+    onGitUrlChange(e, value) {
+        console.log("value0", value)
+        this.urlField.setValue("gitUrl", value)
+    }
+
+    onImageUrlChange(e, value) {
+        console.log("value0", value)
+        this.urlField.setValue("imageUrl", value)
+    }
+
     render() {
 
         const titleOpr = () => {
@@ -212,7 +270,10 @@ export default class ApplicationBasicInfo extends Component {
                           placeholder="应用名称"
                           className="form-item-text">{this.state.appBasicData.title}</div>)
             } else {
-                return (<Input defaultValue={this.state.appBasicData.title} {...init('title', {
+                return (<Input defaultValue={this.state.appBasicData.title}
+                               maxLength={25}
+                               hasLimitHint
+                               {...init('title', {
                     rules: [{
                         required: true,
                         message: "该项不能为空"
@@ -230,7 +291,10 @@ export default class ApplicationBasicInfo extends Component {
                 )
             } else {
                 return (
-                    <Input defaultValue={this.state.appBasicData.description} {...init('description')}
+                    <Input
+                        maxLength={50}
+                        hasLimitHint
+                        defaultValue={this.state.appBasicData.description} {...init('description')}
                            placeholder="应用描述"/>)
             }
         }
@@ -242,56 +306,92 @@ export default class ApplicationBasicInfo extends Component {
                 return (
                     <div>
                         <FormItem{...formItemLayout} label="Git仓库地址："
-                                 validateStatus={this.urlField.getError("warehouseUrl") ? "error" : ""}
-                                 help={this.urlField.getError("warehouseUrl") ? "请输入Git仓库地址" : ""}
+                                 validateStatus={this.urlField.getError("gitUrl") ? "error" : ""}
+                                 help={this.urlField.getError("gitUrl") ? "请检查镜像仓库地址（须以http/https开头）" : ""}
                                  required>
-                            <Input
-                                {...init('warehouseUrl', {
-                                    rules: [{
-                                        required: true,
-                                        message: "该项不能为空"
-                                    }]
+                            <Combobox  {...init('gitUrl', {
+                                initValue: this.state.appBasicData.warehouseUrl,
+                                rules: [{type: "url", required: true, message: "该项不能为空"}]
+                            })}
+                                       placeholder="git仓库地址"
+                                       onChange={this.onGitUrlChange.bind(this)}
+                                       onInputBlur={this.onGitUrlChange.bind(this)}
+                            >
+                                {this.state.gitUrlData.length === 0 ? "" : this.state.gitUrlData.map((item) => {
+                                    return (<Option value={String(item)}>{String(item)}</Option>)
                                 })}
-                                defaultValue={this.state.appBasicData.warehouseUrl}
-
-                                placeholder="Git仓库地址"/>
+                            </Combobox>
                         </FormItem>
 
                         <FormItem{...formItemLayout} label="镜像仓库地址："
                                  validateStatus={this.urlField.getError("imageUrl") ? "error" : ""}
-                                 help={this.urlField.getError("imageUrl") ? "请输入镜像仓库地址" : ""}
+                                 help={this.urlField.getError("imageUrl") ? "请检查镜像仓库地址（须以http/https开头）" : ""}
 
                                  required>
-                            <Input
-                                {...init('imageUrl', {
-                                    rules: [{
-                                        required: true,
-                                        message: "该项不能为空"
-                                    }]
+                            <Combobox className="form-item-input" {...init('imageUrl', {
+                                initValue: this.state.appBasicData.imageUrl,
+                                rules: [{type: "url", required: true, message: "该项不能为空"}]
+                            })}
+                                      placeholder="镜像仓库地址"
+                                      onChange={this.onImageUrlChange.bind(this)}
+                                      onInputBlur={this.onImageUrlChange.bind(this)}
+                                // onInputUpdate={this.onImageUrlChange.bind(this)}
+                            >
+                                {this.state.imageUrlData.length === 0 ? "" : this.state.imageUrlData.map((item) => {
+                                    return (<Option value={String(item)}>{String(item)}</Option>)
                                 })}
-                                defaultValue={this.state.appBasicData.imageUrl}
+                            </Combobox>
 
-                                placeholder="镜像仓库地址"/>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发数据库地址：">
-                            <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl')}
+                        <FormItem{...formItemLayout} label="开发数据库地址："
+                                 validateStatus={this.urlField.getError("productionDbUrl") ? "error" : ""}
+                                 help={this.urlField.getError("productionDbUrl") ? "请检查开发数据库地址（须以http/https开头）" : ""}
+                        >
+                            <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl', {
+                                rules: [{
+                                    type: "url",
+                                    message: "该项不能为空"
+                                }]
+                            })}
                                    placeholder="开发数据库地址"/>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试数据库地址：">
-                            <Input defaultValue={this.state.appBasicData.testDbUrl} {...init('testDbUrl')}
+                        <FormItem{...formItemLayout} label="测试数据库地址："
+                                 validateStatus={this.urlField.getError("testDbUrl") ? "error" : ""}
+                                 help={this.urlField.getError("testDbUrl") ? "请检查测试数据库地址（须以http/https开头）" : ""}
+                        >
+                            <Input defaultValue={this.state.appBasicData.testDbUrl} {...init('testDbUrl', {
+                                rules: [{
+                                    type: "url",
+                                    message: "该项不能为空"
+                                }]
+                            })}
                                    placeholder="测试数据库地址"/>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发域名：">
+                        <FormItem{...formItemLayout} label="开发域名："
+                                 validateStatus={this.urlField.getError("productionDomain") ? "error" : ""}
+                                 help={this.urlField.getError("productionDomain") ? "请检查开发域名" : ""}>
                             <Input
-                                defaultValue={this.state.appBasicData.productionDomain}  {...init('productionDomain')}
+                                defaultValue={this.state.appBasicData.productionDomain}  {...init('productionDomain', {
+                                rules: [{
+                                    pattern: "^([a-z0-9]+.?)+[a-z]+$",
+                                    message: "该项不能为空"
+                                }]
+                            })}
                                 placeholder="开发域名"/>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试域名：">
-                            <Input defaultValue={this.state.appBasicData.testDomain} {...init('testDomain')}
+                        <FormItem{...formItemLayout} label="测试域名："
+                                 validateStatus={this.urlField.getError("testDomain") ? "error" : ""}
+                                 help={this.urlField.getError("testDomain") ? "请检查测试域名" : ""}>
+                            <Input defaultValue={this.state.appBasicData.testDomain} {...init('testDomain', {
+                                rules: [{
+                                    pattern: "^([a-z0-9]+.?)+[a-z]+$",
+                                    message: "该项不能为空"
+                                }]
+                            })}
                                    placeholder="测试域名"/>
                         </FormItem>
 
@@ -343,7 +443,7 @@ export default class ApplicationBasicInfo extends Component {
                     extraBefore={<Breadcrumb>
                         <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
                         <Breadcrumb.Item
                             link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
                     </Breadcrumb>}
