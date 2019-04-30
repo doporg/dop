@@ -101,7 +101,7 @@ public class FileService {
         List<ChildrenBo> tags = new ArrayList<>();
 
         for (BranchBo branchBo : branchBos) {
-            branches.add(new ChildrenBo(branchBo.getName(), branchBo.getName()));
+            branches.add(new ChildrenBo(branchBo.getName(), branchBo.getName(),branchBo.isDefault_(),branchBo.isProtected_()));
         }
 
         for (TagBo tagBo : tagBos) {

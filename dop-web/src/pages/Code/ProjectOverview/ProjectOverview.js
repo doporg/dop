@@ -61,6 +61,10 @@ class ProjectOverview extends React.Component{
                 "file_size": "0B",
                 "file_content": ""
             },
+            accessInfo:{
+                access_level:0,
+                visibility:"private",
+            },
             loadingVisible:true,
 
         }
@@ -72,6 +76,7 @@ class ProjectOverview extends React.Component{
 
         let url =  API.code+ "/projects/"+this.state.projectid;
         let self = this;
+        this.loadAccess();
         Axios.get(url).then((response) => {
             self.setState({url:response.data.http_url_to_repo,projectInfo:response.data},()=>{
                 // 先取得default_branch
@@ -85,6 +90,15 @@ class ProjectOverview extends React.Component{
 
 
 
+    }
+
+    loadAccess(){
+        let url = API.code+"/projects/"+this.state.projectid+"/access";
+        Axios.get(url).then(response=>{
+            this.setState({
+                accessInfo:response.data
+            });
+        });
     }
 
     star(){
@@ -140,6 +154,7 @@ class ProjectOverview extends React.Component{
     render(){
 
         const projectInfo=this.state.projectInfo;
+        const accessInfo=this.state.accessInfo;
 
         return (
 
@@ -162,9 +177,18 @@ class ProjectOverview extends React.Component{
                             }
                         })()
                     }
-                    <button className="btn-project btn-project-edit" onClick={this.editProjectLink.bind(this)}>
-                        <img src={imgEdit}/>
-                    </button>
+                    {
+                        (()=>{
+                            if(accessInfo.access_level===40){
+                                return (
+                                    <button className="btn-project btn-project-edit" onClick={this.editProjectLink.bind(this)}>
+                                        <img src={imgEdit}/>
+                                    </button>
+                                )
+                            }
+                        })()
+                    }
+
                     <div className="div-project-avatar">
                         {projectInfo.name.substring(0,1).toUpperCase()}
                     </div>
@@ -178,9 +202,9 @@ class ProjectOverview extends React.Component{
                         <button className="btn-project btn-project-star" onClick={this.star.bind(this)}>
                             <img src={imgStar}/>{projectInfo.star_count}
                         </button>
-                        <button className="btn-project btn-project-fork">
-                            <img src={imgFork}/>{projectInfo.forks_count}
-                        </button>
+                        {/*<button className="btn-project btn-project-fork">*/}
+                            {/*<img src={imgFork}/>{projectInfo.forks_count}*/}
+                        {/*</button>*/}
 
                         <button className="btn-project btn-project-ssh" onClick={this.changeSSH.bind(this)}>
                             SSH

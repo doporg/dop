@@ -14,5 +14,7 @@ public class ChildrenVo {
 
     private String value;
     private String label;
+    private boolean default_;
+    private boolean protected_;
 
 }

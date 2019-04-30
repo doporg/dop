@@ -34,7 +34,7 @@
     height: 34px;
     padding: 15px;
     float: right;
-    margin: 23px 0 23px 15px;
+    margin: 23px 15px 23px 0;
     border-radius: 2px;
     border: 1px solid #e1e1e1;
 }
@@ -50,7 +50,7 @@
     color: #db3b21;
     border-color: #db3b21;
     border-radius: 3px;
-    margin: 23px 0 23px 15px;
+    margin: 23px 15px 23px 0;
 }
 
 .btn-delete-merged-branches:hover{
@@ -70,7 +70,7 @@
     background-color: #1aaa55;
     border-color: #168f48;
     color: #fff;
-    margin: 23px 15px 23px 15px;
+    margin: 23px 15px 23px 0;
 }
 
 .div-branch-list-item{
