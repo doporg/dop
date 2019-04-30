@@ -75,6 +75,19 @@ export default class PipelineProject extends Component {
                         self.setState({
                             notRunning: false
                         });
+                        if(response.data[0].result === 'FAILURE'){
+                            self.clear();
+                            self.setState({
+                                notRunning: true,
+                                visible: false
+                            });
+                            toast.show({
+                                type: "error",
+                                content: "启动运行失败, 请检查流水线配置",
+                                duration: 3000
+                            });
+                            return;
+                        }
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
@@ -213,7 +226,7 @@ export default class PipelineProject extends Component {
 
     render() {
         return (
-            <div className="body">
+            <div className="project-body">
                 <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
                     <div className="operate">
                         <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
@@ -223,7 +236,7 @@ export default class PipelineProject extends Component {
                                 defaultMessage="运行流水线"
                             />
                         </Button>
-                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
+                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} disabled>
                             <Icon type="edit"/>
                             <FormattedMessage
                                 id="pipeline.project.editPipeline"

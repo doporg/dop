@@ -47,6 +47,13 @@ public class ResultOutput {
     @SerializedName("status")
     @Enumerated(EnumType.STRING)
     private Status status;
+    public enum Status {
+        RUNNING("RUNNING"),
+        FINISHED("FINISHED");
+        private String code;
+        Status(String code) {
+        }
+    }
 
     /**
      * 创建时间
@@ -63,14 +70,4 @@ public class ResultOutput {
     @SerializedName("isDeleted")
     private Boolean isDeleted;
 
-
-    public enum Status {
-
-        RUNNING("RUNNING"),
-        FINISHED("FINISHED");
-        private String code;
-
-        Status(String code) {
-        }
-    }
 }

@@ -7,9 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -29,7 +27,7 @@ public class Pipeline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SerializedName("id")
-    private ObjectId id;
+    private String id;
 
     /**
      * 流水线名称
@@ -43,14 +41,24 @@ public class Pipeline {
      */
     @Field("monitor")
     @SerializedName("monitor")
-    private String monitor;
+    @Enumerated(EnumType.STRING)
+    private Monitor monitor;
+    public enum Monitor {AutomaticTrigger, ManualTrigger, TimingTrigger;}
+
+    /**
+     * 定时触发时间间隔
+     */
+    @Field("timing")
+    @SerializedName("timing")
+    private Long timing;
 
     /**
      *  配置方式
      * */
     @Field("config")
     @SerializedName("config")
-    private String config;
+    private Config config;
+    public enum Config {HasJenkinsfile, NoJenkinsfile;}
 
     /**
      *  Jenkinsfile

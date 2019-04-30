@@ -16,6 +16,7 @@ export default class Intl extends Component {
     }
     componentDidMount(){
         let self = this;
+        window.sessionStorage.setItem('language', 'zh-CN');
         window.sessionStorage.setItem('language', navigator.language);
         window.addEventListener('setItemEvent', function(event) {
             let rlanguage;

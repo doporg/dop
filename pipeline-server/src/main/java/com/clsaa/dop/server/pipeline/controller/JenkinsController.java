@@ -73,8 +73,8 @@ public class JenkinsController {
 
     @ApiOperation(value = "创建流水线", notes = "根据流水线信息创建流水线, 流水线的名称是id")
     @PostMapping("/v1/jenkins")
-    public void create(@RequestBody PipelineBoV1 pipelineBoV1) {
-        this.jenkinsService.createJob(pipelineBoV1, "1.0");
+    public void create(@RequestBody Pipeline pipeline) {
+        this.jenkinsService.createJob(pipeline, "1.0");
     }
 
     @ApiOperation(value = "创建流水线", notes = "根据jenkinsfile创建流水线, 流水线的名称是id")
@@ -92,13 +92,13 @@ public class JenkinsController {
         //拿到 result output id
         String resultOutputId = this.resultOutputService.create(id);
         //拿到 校验流水线信息完整
-        PipelineBoV1 pipelineBoV1 = this.pipelineService.setInfo(id, resultOutputId, loginUser);
+        Pipeline pipeline = this.pipelineService.setInfo(id, resultOutputId, loginUser);
 
         //创建流水线
-        if(pipelineBoV1.getConfig().equals("自带Jenkinsfile")){
-            this.jenkinsService.createByJenkinsfile(pipelineBoV1.getId(), pipelineBoV1.getJenkinsfile().getGit(), pipelineBoV1.getJenkinsfile().getPath());
+        if(pipeline.getConfig().equals(Pipeline.Config.HasJenkinsfile)){
+            this.jenkinsService.createByJenkinsfile(pipeline.getId(), pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath());
         }else{
-            this.jenkinsService.createJob(pipelineBoV1, "1.0");
+            this.jenkinsService.createJob(pipeline, "1.0");
         }
 
         //运行流水线

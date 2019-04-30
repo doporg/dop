@@ -5,8 +5,15 @@ import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Getter
@@ -14,63 +21,61 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PipelineVoV2 {
+public class PipelineVo {
+    private String id;
 
     /**
      * 流水线名称
      */
-    @SerializedName("name")
     private String name;
 
     /**
      * 监听方式
      */
-    @SerializedName("monitor")
     private Pipeline.Monitor monitor;
 
     /**
      * 定时触发时间间隔
      */
-    @Field("timing")
-    @SerializedName("timing")
     private Long timing;
+
     /**
      *  配置方式
      * */
-    @Field("config")
-    @SerializedName("config")
     private Pipeline.Config config;
 
     /**
      *  Jenkinsfile
      * */
-    @SerializedName("jenkinsfile")
     private Jenkinsfile jenkinsfile;
+
+    /**
+     * 流水线阶段
+     */
+    private ArrayList<Stage> stages;
 
     /**
      * 流水线所属项目的id
      */
-    @Field("appId")
-    @SerializedName("appId")
     private Long appId;
 
     /**
      * 流水线所属环境的id
      */
-    @Field("appEnvId")
-    @SerializedName("appEnvId")
     private Long appEnvId;
 
     /**
-     * 流水线阶段
+     * 创建时间
      */
-    @SerializedName("stages")
-    private ArrayList<Stage> stages;
+    private LocalDateTime ctime;
 
+    /**
+     * 修改时间
+     */
+    private LocalDateTime mtime;
 
     /**
      * 修改人
      */
-    @SerializedName("cuser")
     private Long cuser;
 }

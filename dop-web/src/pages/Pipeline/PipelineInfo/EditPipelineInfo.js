@@ -56,6 +56,7 @@ export default class EditPipelineInfo extends Component {
             visible: true
         });
         Axios.get(url).then((response) => {
+            console.log(response)
             if (response.status === 200) {
                 if(response.data.stages === null){
                     response.data.stages = []
