@@ -204,7 +204,7 @@ class PipelineInfo extends Component {
                         language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
                         content: <div>
                             <p>请复制以下链接到webhook: </p>
-                            <p>{API.gateway + "/v1/jenkins/build/" + response.data}</p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
                         </div>,
                         title: "提示",
                         onOk: self.copy.bind(this, response.data),
@@ -248,7 +248,7 @@ class PipelineInfo extends Component {
                         language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
                         content: <div>
                             <p>请复制以下链接到webhook: </p>
-                            <p>{API.gateway + "/v1/jenkins/build/" + response.data}</p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
                         </div>,
                         title: "提示",
                         onOk: self.copy.bind(this, response.data),
