@@ -199,6 +199,18 @@ class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
+                if (self.state.pipeline.monitor === 0) {
+                    Dialog.confirm({
+                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                        content: <div>
+                            <p>请复制以下链接到webhook: </p>
+                            <p>{API.gateway + "/v1/jenkins/build/" + response.data}</p>
+                        </div>,
+                        title: "提示",
+                        onOk: self.copy.bind(this, response.data),
+                        onCancel: self.onCancel.bind(this)
+                    });
+                }
                 self.props.history.push('/pipeline')
             }
         }).catch(() => {
