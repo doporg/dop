@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.message.config;
+package com.clsaa.dop.server.test.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
