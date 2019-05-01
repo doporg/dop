@@ -28,7 +28,7 @@ class PipelineInfo extends Component {
                 name: "",
                 //监听设置
                 monitor: 1,
-                timing: null,
+                timing: "H/15 * * * *",
                 appId: null,
                 appEnvId: null,
                 config: 1,
@@ -44,15 +44,16 @@ class PipelineInfo extends Component {
                 this.props.intl.messages["pipeline.info.hasJenkinsfile"],
                 this.props.intl.messages["pipeline.info.noJenkinsfile"]
             ],
-            timing: [
-                this.props.intl.messages["pipeline.info.monitor.timing.10"],
-                this.props.intl.messages["pipeline.info.monitor.timing.20"],
-                this.props.intl.messages["pipeline.info.monitor.timing.30"],
-                this.props.intl.messages["pipeline.info.monitor.timing.60"],
-                this.props.intl.messages["pipeline.info.monitor.timing.120"],
-                this.props.intl.messages["pipeline.info.monitor.timing.240"],
-                this.props.intl.messages["pipeline.info.monitor.timing.360"]
-            ],
+            // timing: [
+            //     this.props.intl.messages["pipeline.info.monitor.timing.10"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.20"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.30"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.60"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.120"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.240"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.360"]
+            // ],
+            timing: "H/15 * * * *",
             haveJenkinsFile: null,
             jenkinsFileInfo: {
                 git: "",
@@ -311,13 +312,13 @@ class PipelineInfo extends Component {
                                 } else if (this.state.pipeline.monitor === 2) {
                                     return (
                                         <div className="form-item-tip">
-                                            <Combobox
+                                            <Input
                                                 key="timing"
                                                 onChange={this.selectTiming.bind(this)}
-                                                dataSource={this.state.timing}
+                                                value={this.state.timing}
                                                 placeholder="定时触发间隔时长"
                                             >
-                                            </Combobox>
+                                            </Input>
                                         </div>
                                     )
                                 }

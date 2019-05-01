@@ -43,17 +43,17 @@ public class PipelineController {
     @PostMapping("/v1/pipeline")
     public String addUserV1(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
-            @RequestBody PipelineVoV1 pipelineV1
+            @RequestBody Pipeline pipeline
     ){
-        return this.pipelineService.addPipeline(pipelineV1, loginUser);
+        return this.pipelineService.addPipeline(pipeline, loginUser);
     }
 
     @ApiOperation(value = "通过jenkinsfile添加流水线", notes = "流水线信息: 一条流水线可以有多个阶段(stage), 一个阶段可以执行多条任务(step)，成功返回status===200，失败返回400")
     @PostMapping("/v1/pipeline/jenkinsfile")
     public void addUserV1Byjenkinsfile(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
-            @RequestBody PipelineVoV2 pipelineV2) {
-        this.pipelineService.addPipelineWithJenkins(pipelineV2, loginUser);
+            @RequestBody Pipeline pipeline) {
+        this.pipelineService.addPipelineWithJenkins(pipeline, loginUser);
     }
 
     @ApiOperation(value = "查找简略流水线信息, 集中展示")
