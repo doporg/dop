@@ -1,5 +1,5 @@
 import React from 'react';
-import {CascaderSelect} from "@icedesign/base";
+import {Select} from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import {Loading} from "@icedesign/base";
@@ -91,7 +91,7 @@ class NewBranch extends React.Component {
                         <div className="div-new-branch-input">
                             <span className="text-new-branch-source">创建自</span>
                             <Loading className="loading-new-branch" visible={this.state.loadingVisible} tip={spinner}>
-                                <CascaderSelect onChange={this.selectRef.bind(this)} className="select-new-branch" size='large' dataSource={this.state.refOptions}/>
+                                <Select onChange={this.selectRef.bind(this)} className="select-new-branch" size='large' dataSource={this.state.refOptions}/>
                             </Loading>
                         </div>
                     </div>

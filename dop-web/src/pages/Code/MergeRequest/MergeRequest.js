@@ -21,6 +21,10 @@ class MergeRequest extends React.Component{
                 state:"",
                 created_by:"",
                 created_at:"",
+                merged_by:"",
+                merged_at:"",
+                closed_by:"",
+                closed_at:"",
                 target_branch:"",
                 source_branch:"",
                 title:"",
@@ -31,7 +35,10 @@ class MergeRequest extends React.Component{
                 access_level:0,
                 visibility:"private",
             },
-            developers_can_merge:false,
+            target_branch:{
+                protected_:true,
+                developers_can_merge:false
+            },
         }
     }
 
@@ -62,7 +69,7 @@ class MergeRequest extends React.Component{
         let url= API.code+"/projects/"+this.state.projectid+"/repository/branch?branch="+this.state.mrInfo.target_branch;
         Axios.get(url).then(response=>{
             this.setState({
-                developers_can_merge:response.data.developers_can_merge
+                target_branch:response.data
             })
         });
     }
@@ -98,7 +105,7 @@ class MergeRequest extends React.Component{
     }
 
     render(){
-        const {mrInfo,accessInfo}=this.state;
+        const {mrInfo,accessInfo,target_branch}=this.state;
         return (
             <div className="mr-container">
                 <div className="div-mr-top">
@@ -114,7 +121,7 @@ class MergeRequest extends React.Component{
                                 }
                             })()
                         }
-                        <span className="text-mr-author-time">{mrInfo.created_at}</span>提交由
+                        <span className="text-mr-author-time">{mrInfo.created_at}</span>创建由
                         <div className="div-mr-author-avatar">{mrInfo.created_by.charAt(0)}</div><b>{mrInfo.created_by}</b>
                     </div>
                     {
@@ -138,7 +145,7 @@ class MergeRequest extends React.Component{
                     (()=>{
                         if(mrInfo.state==="opened"){
                             if(mrInfo.merge_status==="can_be_merged"){
-                                if(accessInfo.access_level===40||accessInfo.access_level===30&&this.state.developers_can_merge) {
+                                if(target_branch.protected_==="false"||accessInfo.access_level===40||accessInfo.access_level===30&&target_branch.developers_can_merge) {
                                     return (
                                         <div className="div-mr-operation">
                                             <img className="img-mr-tip" src={imgOk}/>

@@ -27,6 +27,7 @@ class BranchList extends React.Component{
             branchList:[],//name,default_,protected_,merged,commit_id,commit_short_id,commit_msg,commit_time
             showData:[],
             nameInput:"",
+            defaultBranch:"",
             loadingVisible:true,
             accessInfo:{
                 access_level:0,
@@ -51,10 +52,17 @@ class BranchList extends React.Component{
     loadData(){
         let url=API.code+"/projects/"+this.state.projectid+"/repository/branches";
         Axios.get(url).then(response=>{
+            let defaultBranch;
+            for(let i=0;i<response.data.length;i++){
+                if(response.data[i].default_==="true"){
+                    defaultBranch=response.data[i].name;
+                }
+            }
             this.setState({
                 branchList:response.data,
                 showData:response.data,
                 nameInput:"",
+                defaultBranch:defaultBranch,
                 loadingVisible:false,
             })
         });
@@ -119,6 +127,9 @@ class BranchList extends React.Component{
         this.props.history.push("/code/"+this.state.projectid+"/commit/"+sha);
     }
 
+    newMergeRequest(source){
+        this.props.history.push("/code/"+this.state.projectid+"/merge_requests/new?source="+source+"&target="+this.state.defaultBranch);
+    }
     render(){
         const accessInfo=this.state.accessInfo;
         return (
@@ -203,13 +214,13 @@ class BranchList extends React.Component{
                                                 })()
                                             }
 
-                                            {/*{*/}
-                                                {/*(() => {*/}
-                                                    {/*if (item.default_ === "false") {*/}
-                                                        {/*return <a className="btn-branch-item-merge">Merge request</a>*/}
-                                                    {/*}*/}
-                                                {/*})()*/}
-                                            {/*}*/}
+                                            {
+                                                (() => {
+                                                    if (item.default_ === "false"&&accessInfo.access_level>=30) {
+                                                        return <a onClick={this.newMergeRequest.bind(this,item.name)} className="btn-branch-item-merge">Merge request</a>
+                                                    }
+                                                })()
+                                            }
                                         </div>
                                     </div>
                                 )

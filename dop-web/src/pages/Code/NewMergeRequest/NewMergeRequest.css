@@ -2,6 +2,10 @@
     background-color: rgb(255, 255, 255);
 }
 
+.loading-new-mr{
+    width: 100%;
+}
+
 .div-new-mr-top{
     font-weight: bold;
     font-size: 17px;

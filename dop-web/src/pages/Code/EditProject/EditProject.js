@@ -1,5 +1,5 @@
 import React from 'react';
-import { CascaderSelect } from "@icedesign/base";
+import { Select } from "@icedesign/base";
 import {Radio} from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
@@ -24,7 +24,6 @@ class EditProject extends React.Component{
             projectid:username+"/"+projectname,
             editInfo:{},//id,name,description,default_branch,visibility
             branches:[],
-            deleteVisible:false
 
         };
     }
@@ -67,8 +66,6 @@ class EditProject extends React.Component{
             },
         }).then(response => {
 
-            toast.success("修改项目信息成功");
-
             let {username,projectname}=this.state;
 
             this.props.history.push("/code/"+username+"/"+projectname);
@@ -80,11 +77,13 @@ class EditProject extends React.Component{
 
     deleteProject(){
 
-        let projectid=this.state.projectid;
-        let url=API.code+"/projects/"+projectid+"?userId="+sessionStorage.getItem("user-id");
-        Axios.delete(url).then(response=>{
-            this.props.history.push("/code/projects");
-        })
+        if(window.confirm("确认删除项目?")) {
+            let projectid = this.state.projectid;
+            let url = API.code + "/projects/" + projectid + "?userId=" + sessionStorage.getItem("user-id");
+            Axios.delete(url).then(response => {
+                this.props.history.push("/code/projects/personal");
+            })
+        }
 
     }
 
@@ -121,18 +120,6 @@ class EditProject extends React.Component{
         })
     }
 
-    openDelete(){
-        this.setState({
-            deleteVisible:true
-        });
-    }
-
-    closeDelete(){
-        this.setState({
-            deleteVisible:false
-        });
-    }
-
 
     render(){
 
@@ -152,7 +139,7 @@ class EditProject extends React.Component{
                     </div>
                     <div className="edit-project-input-div">
                         <label className="edit-project-label-branch">默认分支</label>
-                        <CascaderSelect value={this.state.editInfo.default_branch} dataSource={this.state.branches} className="edit-project-select-branch" size="large" onChange={this.changeDefaultBranch.bind(this)} />
+                        <Select value={this.state.editInfo.default_branch} dataSource={this.state.branches} className="edit-project-select-branch" size="large" onChange={this.changeDefaultBranch.bind(this)} />
                     </div>
                     <div className="edit-project-choose-div">
                         <label className="edit-project-label-left">可见等级</label>
@@ -179,22 +166,9 @@ class EditProject extends React.Component{
                         <p><b>删除项目无法恢复！</b></p>
                     </div>
                     <div className="edit-project-submit-div">
-                        <button onClick={this.openDelete.bind(this)} className="edit-project-delete-btn">删除项目</button>
+                        <button onClick={this.deleteProject.bind(this)} className="edit-project-delete-btn">删除项目</button>
                     </div>
                 </div>
-
-                <Dialog
-                    visible={this.state.deleteVisible}
-                    onOk={this.deleteProject.bind(this)}
-                    onCancel={this.closeDelete.bind(this)}
-                    onClose={this.closeDelete.bind(this)}
-                    title={"删除"+this.state.editInfo.name}
-                    footerAlign="left"
-                >
-                    <div className="edit-project-delete-dialog">
-                        <p className="edit-project-delete-font"><b>删除项目后无法恢复！确定要继续吗?</b></p>
-                    </div>
-                </Dialog>
             </div>
         )
     }

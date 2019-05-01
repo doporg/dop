@@ -1,5 +1,5 @@
 import React from 'react';
-import {CascaderSelect} from "@icedesign/base";
+import {Select} from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import {Loading} from "@icedesign/base";
@@ -152,7 +152,7 @@ class MemberList extends React.Component{
                         </div>
                         <div className="div-member-list-input">
                             <span className="text-member-list-name">角色</span>
-                            <CascaderSelect value={this.state.user_role} onChange={this.selectRole.bind(this)} className="select-member-list" size='large' dataSource={this.state.roleOptions} />
+                            <Select value={this.state.user_role} onChange={this.selectRole.bind(this)} className="select-member-list" size='large' dataSource={this.state.roleOptions} />
                         </div>
                         <div className="div-member-list-submit">
                             <button onClick={this.addMember.bind(this)} className="btn-member-list-add">增加</button>
@@ -185,7 +185,7 @@ class MemberList extends React.Component{
                                                     return <span className="text-member-list-item-role">{this.getRoleByAccessLevel(item.access_level)}</span>
                                                 }else {
                                                     return [<a onClick={this.deleteMember.bind(this,item.id,item.username)} className="btn-member-list-item-delete"><img className="img-member-list-item-delete" src={imgDelete}/></a>,
-                                                    <CascaderSelect onChange={this.changeRole.bind(this,item.id)} value={this.getRoleByAccessLevel(item.access_level)} className="select-member-list-item" size='large' dataSource={this.state.roleOptions} />]
+                                                    <Select onChange={this.changeRole.bind(this,item.id)} value={this.getRoleByAccessLevel(item.access_level)} className="select-member-list-item" size='large' dataSource={this.state.roleOptions} />]
                                                 }
                                             })()
                                         }
