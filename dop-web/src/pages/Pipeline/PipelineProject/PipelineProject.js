@@ -89,20 +89,20 @@ export default class PipelineProject extends Component {
                         self.setState({
                             notRunning: false
                         });
-                        if(response.data[0].result === 'FAILURE'){
-                            self.clear();
-                            self.setState({
-                                notRunning: true,
-                                visible: false
-                            });
-                            toast.show({
-                                type: "error",
-                                content: "启动运行失败, 请检查流水线配置",
-                                duration: 3000
-                            });
-                            self.setResult();
-                            return;
-                        }
+                        // if(response.data[0].result === 'FAILURE'){
+                        //     self.clear();
+                        //     self.setState({
+                        //         notRunning: true,
+                        //         visible: false
+                        //     });
+                        //     toast.show({
+                        //         type: "error",
+                        //         content: "启动运行失败, 请检查流水线配置",
+                        //         duration: 3000
+                        //     });
+                        //     self.setResult();
+                        //     return;
+                        // }
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
