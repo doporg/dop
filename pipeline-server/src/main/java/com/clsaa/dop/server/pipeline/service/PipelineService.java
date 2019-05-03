@@ -1,14 +1,9 @@
 package com.clsaa.dop.server.pipeline.service;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
-import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
 import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
-import com.clsaa.dop.server.pipeline.feign.PipelineFeign;
 import com.clsaa.dop.server.pipeline.feign.UserFeign;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV2;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
 import com.clsaa.dop.server.pipeline.model.dto.KubeCredentialWithTokenV1;
@@ -17,9 +12,6 @@ import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVo;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;

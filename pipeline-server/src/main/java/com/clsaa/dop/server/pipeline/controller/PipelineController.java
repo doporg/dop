@@ -1,25 +1,14 @@
 package com.clsaa.dop.server.pipeline.controller;
 
-import com.clsaa.dop.server.pipeline.config.BizCodes;
 import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV2;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
 import com.clsaa.dop.server.pipeline.service.PipelineService;
-import com.clsaa.rest.result.bizassert.BizAssert;
-import com.clsaa.rest.result.bizassert.BizCode;
-import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.ApiOperation;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 

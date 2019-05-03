@@ -1,20 +1,10 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
-import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.dto.LogInfoV1;
-import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
-import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.dop.server.pipeline.service.ResultOutputService;
-import io.kubernetes.client.ApiClient;
-import io.kubernetes.client.Configuration;
-import io.kubernetes.client.util.Config;
 import io.swagger.annotations.ApiOperation;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;

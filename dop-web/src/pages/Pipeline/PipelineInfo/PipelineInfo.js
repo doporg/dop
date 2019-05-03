@@ -28,7 +28,7 @@ class PipelineInfo extends Component {
                 name: "",
                 //监听设置
                 monitor: 1,
-                timing: "H/15 * * * *",
+                timing: null,
                 appId: null,
                 appEnvId: null,
                 config: 1,

@@ -7,19 +7,30 @@ import './Styles.scss';
 import Pull from './chosenSteps/Pull'
 import Maven from './chosenSteps/Maven'
 import Node from './chosenSteps/Node'
+import Djanggo from './chosenSteps/Djanggo'
 import DockerImage from './chosenSteps/DockerImage'
 import PushDockerImage from './chosenSteps/PushDockerImage'
 import Shell from './chosenSteps/Shell'
 import Deployment from './chosenSteps/Deployment'
+import {injectIntl} from "react-intl";
 
 const {Combobox} = Select;
 
-export default class PipelineInfoStep extends Component {
+class PipelineInfoStep extends Component {
     constructor(props) {
         super(props);
         this.state = {
             stage: this.props.stage,
-            availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本", "部署"],
+            availableSteps: [
+                this.props.intl.messages['pipeline.info.step.pull'],
+                this.props.intl.messages['pipeline.info.step.maven'],
+                this.props.intl.messages['pipeline.info.step.node'],
+                this.props.intl.messages['pipeline.info.step.djanggo'],
+                this.props.intl.messages['pipeline.info.step.buildDocker'],
+                this.props.intl.messages['pipeline.info.step.pushDocker'],
+                this.props.intl.messages['pipeline.info.step.custom'],
+                this.props.intl.messages['pipeline.info.step.deploy'],
+            ],
             steps: [],
             currentStep: null,
             selectEnvId: null,
@@ -48,6 +59,7 @@ export default class PipelineInfoStep extends Component {
 
     selectStep(value) {
         let newTask;
+        console.log(value);
         switch (value) {
             case "拉取代码" :
                 newTask = {
@@ -80,6 +92,20 @@ export default class PipelineInfoStep extends Component {
             case "构建node":
                 newTask = {
                     taskName: "构建node",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    repositoryVersion: "",
+                    shell: "",
+                    deploy:"",
+                    ip: "",
+                    token: ""
+                };
+                break;
+            case "构建djanggo":
+                newTask = {
+                    taskName: "构建djanggo",
                     gitUrl: "",
                     dockerUserName: "",
                     dockerPassword: "",
@@ -334,6 +360,10 @@ export default class PipelineInfoStep extends Component {
                                                                     return (
                                                                         <Node/>
                                                                     );
+                                                                case "构建djanggo":
+                                                                    return (
+                                                                        <Djanggo />
+                                                                    );
                                                                 case "构建docker镜像":
                                                                     return (
                                                                         <DockerImage
@@ -389,3 +419,5 @@ export default class PipelineInfoStep extends Component {
         )
     }
 }
+
+export default injectIntl(PipelineInfoStep)
