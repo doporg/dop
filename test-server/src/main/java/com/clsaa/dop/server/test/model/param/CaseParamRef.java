@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.param;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
  * @since 11/04/2019
  */
 @Data
+@Builder
 public class CaseParamRef {
 
     @NotNull

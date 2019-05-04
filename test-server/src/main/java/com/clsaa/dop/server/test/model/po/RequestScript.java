@@ -37,6 +37,12 @@ public class RequestScript implements Po {
     @Fetch(FetchMode.SUBSELECT)
     private List<RequestHeader> requestHeaders;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id", referencedColumnName = "id",
+            foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @Fetch(FetchMode.SUBSELECT)
+    private List<RequestParam> requestParams;
+
     @Column(name = "request_body")
     private String requestBody;
 

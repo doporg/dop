@@ -1,6 +1,5 @@
 package com.clsaa.dop.server.test.util;
 
-import com.clsaa.dop.server.test.doExecute.plugin.UrlParamResolvePlugin;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

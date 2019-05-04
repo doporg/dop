@@ -25,6 +25,8 @@ public class RequestScriptParam {
 
     private List<@Valid RequestHeaderParam> requestHeaders;
 
+    private List<@Valid RequestParamCreateParam> requestParams;
+
     private String requestBody;
 
     private List<@Valid RequestCheckPointParam> requestCheckPoints;

@@ -2,10 +2,7 @@ package com.clsaa.dop.server.test.mapper.param2po;
 
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.param.RequestScriptParam;
-import com.clsaa.dop.server.test.model.po.RequestCheckPoint;
-import com.clsaa.dop.server.test.model.po.RequestHeader;
-import com.clsaa.dop.server.test.model.po.RequestScript;
-import com.clsaa.dop.server.test.model.po.UrlResultParam;
+import com.clsaa.dop.server.test.model.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +21,9 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
 
     @Autowired
     private RequestHeaderPoMapper requestHeaderPoMapper;
+
+    @Autowired
+    private RequestParamPoMapper requestParamPoMapper;
 
     @Autowired
     private CheckPointPoMapper checkPointPoMapper;
@@ -49,6 +49,7 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
         }
 
         List<RequestHeader> requestHeaders = requestHeaderPoMapper.convert(requestScriptParam.getRequestHeaders());
+        List<RequestParam> requestParams = requestParamPoMapper.convert(requestScriptParam.getRequestParams());
         List<RequestCheckPoint> checkPoints = checkPointPoMapper.convert(requestScriptParam.getRequestCheckPoints());
         List<UrlResultParam> resultParams = resultParamPoMapper.convert(requestScriptParam.getResultParams());
         return super.convert(requestScriptParam)
@@ -59,6 +60,7 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
 
                         //inject RequestScript into joined Objects
                         requestHeaders.forEach(requestHeader -> requestHeader.setRequestScript(requestScript));
+                        requestParams.forEach(requestParam -> requestParam.setRequestScript(requestScript));
                         checkPoints.forEach(checkPoint -> checkPoint.setRequestScript(requestScript));
                         resultParams.forEach(urlResultParam -> urlResultParam.setRequestScript(requestScript));
 
