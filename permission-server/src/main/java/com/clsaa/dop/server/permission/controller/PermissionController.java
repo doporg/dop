@@ -129,6 +129,13 @@ public class PermissionController {
         return permissionService.checkUserPermission(permissionName,loginUser);
     }
 
-
+    @ApiOperation(value = "查询当前登录用户的功能点", notes = "查询当前登录用户的功能点")
+    @GetMapping("/v1/users/permissions/ByCurrent")
+    //根据用户ID查询功能点
+    public List<PermissionV1> findByCurrentUserId(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
+    {
+        return permissionService.findByUserId(loginUser)
+                .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
+    }
 
 }

@@ -8,15 +8,11 @@ import com.clsaa.dop.server.permission.dao.RoleRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
 import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.Role;
-import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
-import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
 import com.clsaa.dop.server.permission.model.vo.RoleV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -132,7 +128,6 @@ public class RoleService {
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
 
         //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
@@ -140,11 +135,12 @@ public class RoleService {
         List<Role> roleList=new ArrayList<>();
         if(key.equals(""))
         {
-             roleList=this.roleRepository.findByIdIn(idList,pageRequest).getContent();
+             roleList=this.roleRepository.findByIdIn(idList,pagination.getRowOffset(),pagination.getPageSize());
         }
         else
         {
-             roleList = this.roleRepository.findAllByNameLikeAndIdIn(key+"%",idList,pageRequest).getContent();
+             roleList = this.roleRepository.findAllByNameLikeAndIdIn(key,idList,pagination.getRowOffset(),
+                     pagination.getPageSize());
         }
         int count=roleList.size();
         pagination.setTotalCount(count);
@@ -203,30 +199,16 @@ public class RoleService {
     //根据功能点ID查询角色
     public List<RoleBoV1> findByPermissionId(Long permissionId)
     {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingService.findByPermissionId(permissionId);
-        List<RoleBoV1> roleBoV1List=new ArrayList<>();
-        rolePermissionMappingList.forEach(rolePermissionMapping -> {
-            Optional<Role> role=roleRepository.findById(rolePermissionMapping.getRoleId());
-            if(role.isPresent())
-            {
-                roleBoV1List.add(BeanUtils.convertType(role.get(),RoleBoV1.class));
-            }
-        });
+        List<RoleBoV1> roleBoV1List=roleRepository.findByPermissionId(permissionId)
+                .stream().map(p->BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
         return roleBoV1List;
     }
 
     //根据用户ID查询角色
     public List<RoleBoV1> findByUserId(Long userId)
     {
-        List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
-        List<RoleBoV1> roleBoV1List =new ArrayList<>();
-        userRoleMappingList.forEach(userRoleMapping -> {
-            Optional<Role> role=roleRepository.findById(userRoleMapping.getRoleId());
-            if(role.isPresent())
-            {
-                roleBoV1List.add(BeanUtils.convertType(role.get(),RoleBoV1.class));
-            }
-        });
+        List<RoleBoV1> roleBoV1List =roleRepository.findByUserId(userId)
+                .stream().map(p->BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
         return roleBoV1List;
     }
 

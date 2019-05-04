@@ -1,11 +1,9 @@
 package com.clsaa.dop.server.permission.dao;
 
 import com.clsaa.dop.server.permission.model.po.Permission;
-
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -32,13 +30,18 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
     /**
      * 根据关键字key过滤查询
      *
-     * @param   key 关键字
-     * @param  {List <Long> idList}
-     * @param  pageable 分页
+     * @param  key 关键字
+     * @param {List <Long> idList}
+     * @param rowOffset
+     * @param pageSize
      * @return {@link List < Permission >}
      */
-
-    Page<Permission> findAllByNameLikeAndIdIn(String key, List<Long> idList, Pageable pageable);
+    @Query(value = "select * from t_permission where id in :idList and name like concat(:key,'%')"+
+            " limit :rowOffset,:pageSize",nativeQuery = true)
+    List<Permission> findAllByNameLikeAndIdIn(@Param("key") String key,
+                                              @Param("idList") List<Long> idList,
+                                              @Param("rowOffset") Integer rowOffset,
+                                              @Param("pageSize") Integer pageSize);
 
     /**
      * 查询全部
@@ -46,17 +49,58 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @param  {List <Long> idList}
      * @return {@link List < Permission >}
      */
-
-    List<Permission> findByIdIn(List<Long> idList);
+    @Query(value = "select * from t_permission p where id in :idList",nativeQuery = true)
+    List<Permission> findByIdIn(@Param("idList") List<Long> idList);
 
     /**
      * 分页查询全部
      *
      * @param  {List <Long> idList}
-     * @param  pageable 分页
+     * @param rowOffset
+     * @param pageSize
      * @return {@link List < Permission >}
      */
+    @Query(value = "select * from t_permission where id in :idList"+
+            " limit :rowOffset,:pageSize",nativeQuery = true)
+    List<Permission> findByIdIn( @Param("idList") List<Long> idList,
+                                 @Param("rowOffset") Integer rowOffset,
+                                 @Param("pageSize") Integer pageSize);
 
-    Page<Permission> findByIdIn(List<Long> idList,Pageable pageable);
+    /**
+     * 根据角色ID查询功能点
+     *
+     * @param  {Long roleId}
+     *
+     * @return {@link List < Permission >}
+     */
+    @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
+    "where rp.role_id=:roleId",nativeQuery=true)
+    List<Permission> findByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     * 根据用户ID查询功能点
+     *
+     * @param  {Long userId}
+     *
+     * @return {@link List < Permission >}
+     */
+    @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
+            "inner join t_user_role_mapping ur on rp.role_id=ur.role_id "+
+            "where ur.user_id=:userId",nativeQuery=true)
+    List<Permission> findByUserId(@Param("userId")Long userId);
+
+    /**
+     * 判断用户是否有此功能点
+     *
+     * @param  {Long userId}
+     * @param  permissionName
+     *
+     * @return {boolean}
+     */
+    @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
+            "inner join t_user_role_mapping ur on rp.role_id=ur.role_id "+
+            "where ur.user_id=:userId and p.name=:permissionName",nativeQuery=true)
+    List<Permission> findByUserIdAndPermissionName(@Param("userId")Long userId,
+                                    @Param("permissionName")String permissionName);
 
 }

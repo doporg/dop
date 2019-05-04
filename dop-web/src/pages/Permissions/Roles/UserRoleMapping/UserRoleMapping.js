@@ -52,13 +52,24 @@ export default class UserRoleMapping extends Component {
 
             userPageNo:1,
             userPageSize:8,
-            userTotalCount:0
+            userTotalCount:0,
+
+            addRolePermission:"false",
+            findUserDataPermission:"false",
+            findUserPermission:"false"
         };
 
     };
 
     //每次访问的刷新，查询当前用户的信息
     componentDidMount() {
+
+        let getPermissionUrl=API.permission+"/v1/users/permissions/ByCurrent"
+        Axios.get(getPermissionUrl).then(response=>
+        {
+            console.log(response)
+        })
+
         this.setState({userIsLoading:true})
         let url = API.user + "/v1/users/search" ;
         let params=
@@ -300,6 +311,7 @@ export default class UserRoleMapping extends Component {
         const showRoles =(value, index, record)=>{
             return(
                 <Button
+                    disabled={this.state.addRolePermission}
                     type="primary"
                     shape="normal"
                     size="medium"
