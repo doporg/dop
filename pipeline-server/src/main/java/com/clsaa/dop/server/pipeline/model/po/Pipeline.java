@@ -50,7 +50,7 @@ public class Pipeline {
      */
     @Field("timing")
     @SerializedName("timing")
-    private Long timing;
+    private String timing;
 
     /**
      *  配置方式

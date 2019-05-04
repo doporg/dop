@@ -36,6 +36,15 @@ class PipelineTable extends Component {
                 dataSource: data,
                 visible: false
             });
+        }).catch(()=>{
+            toast.show({
+                type: "error",
+                content: self.props.intl.messages["pipeline.table.operation.requestFailure"],
+                duration: 1000
+            });
+            self.setState({
+                visible: false
+            });
         })
     }
 
@@ -90,7 +99,7 @@ class PipelineTable extends Component {
     renderIndex(value, index) {
         return index + 1;
     };
-    
+
 
     /**
      *  表格 操作栏配置

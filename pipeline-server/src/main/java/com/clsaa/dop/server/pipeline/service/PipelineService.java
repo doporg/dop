@@ -1,14 +1,9 @@
 package com.clsaa.dop.server.pipeline.service;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
-import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
 import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
-import com.clsaa.dop.server.pipeline.feign.PipelineFeign;
 import com.clsaa.dop.server.pipeline.feign.UserFeign;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV2;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.dto.AppBasicInfoV1;
 import com.clsaa.dop.server.pipeline.model.dto.KubeCredentialWithTokenV1;
@@ -17,9 +12,6 @@ import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVo;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
-import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV2;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,53 +46,33 @@ public class PipelineService {
     /**
      * 添加流水线信息
      */
-    public String addPipeline(PipelineVoV1 pipelineV1, Long loginUser) {
+    public String addPipeline(Pipeline pipeline, Long loginUser) {
         ObjectId id = new ObjectId();
-        Pipeline pipeline = Pipeline.builder()
-                .id(id.toString())
-                .name(pipelineV1.getName())
-                .monitor(pipelineV1.getMonitor())
-                .timing(pipelineV1.getTiming())
-                .config(pipelineV1.getConfig())
-                .appId(pipelineV1.getAppId())
-                .appEnvId(pipelineV1.getAppEnvId())
-                .stages(pipelineV1.getStages())
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .cuser(loginUser)
-                .isDeleted(false)
-                .build();
-
+        pipeline.setId(id.toString());
+        pipeline.setCuser(loginUser);
+        pipeline.setCtime(LocalDateTime.now());
+        pipeline.setMtime(LocalDateTime.now());
+        pipeline.setIsDeleted(false);
         pipelineRepository.insert(pipeline);
 
         //拿到 result output id
         String resultOutputId = this.resultOutputService.create(id.toString());
         //拿到 校验流水线信息完整
         Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
-        this.jenkinsService.createJob(pipelineWithInfo, "1.0");
+        this.jenkinsService.createJob(pipelineWithInfo);
         return id.toString();
     }
 
-    public void addPipelineWithJenkins(PipelineVoV2 pipelineV2, Long loginUser) {
+    public void addPipelineWithJenkins(Pipeline pipeline, Long loginUser) {
         ObjectId id = new ObjectId();
-        Pipeline pipeline = Pipeline.builder()
-                .id(id.toString())
-                .name(pipelineV2.getName())
-                .monitor(pipelineV2.getMonitor())
-                .timing(pipelineV2.getTiming())
-                .config(pipelineV2.getConfig())
-                .appId(pipelineV2.getAppId())
-                .appEnvId(pipelineV2.getAppEnvId())
-                .jenkinsfile(pipelineV2.getJenkinsfile())
-                .ctime(LocalDateTime.now())
-                .mtime(LocalDateTime.now())
-                .cuser(loginUser)
-                .isDeleted(false)
-                .build();
-
+        pipeline.setId(id.toString());
+        pipeline.setCuser(loginUser);
+        pipeline.setCtime(LocalDateTime.now());
+        pipeline.setMtime(LocalDateTime.now());
+        pipeline.setIsDeleted(false);
         pipelineRepository.insert(pipeline);
 
-        this.jenkinsService.createByJenkinsfile(id.toString(), pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath());
+        this.jenkinsService.createByJenkinsfile(pipeline);
     }
 
     public List<PipelineVoV3> getPipelineForTable() {
@@ -108,7 +80,7 @@ public class PipelineService {
         List<PipelineVoV3> pipelineVoV3s = new ArrayList<>();
         for (int i = 0; i < pipelines.size(); i++) {
             PipelineVoV3 pipelineVoV3 = PipelineVoV3.builder()
-                    .id(pipelines.get(i).getId().toString())
+                    .id(pipelines.get(i).getId())
                     .name(pipelines.get(i).getName())
                     .cuser(this.userFeign.findUserByIdV1(pipelines.get(i).getCuser()).getName())
                     .ctime(pipelines.get(i).getCtime())

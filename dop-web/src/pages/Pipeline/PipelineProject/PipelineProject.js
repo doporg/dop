@@ -54,6 +54,19 @@ export default class PipelineProject extends Component {
         });
     }
 
+    getPipelineInfo() {
+        let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
+        let self = this;
+
+        Axios.get(url).then((response) => {
+            if (response.status === 200) {
+                self.setState({
+                    pipeline: response.data
+                })
+            }
+        })
+    }
+
     getRuns() {
         let url = API.pipeline + '/v1/jenkins/runs?id=' + this.state.pipelineId;
         let self = this;
@@ -70,27 +83,30 @@ export default class PipelineProject extends Component {
                             notRunning: true
                         });
                         resolve(response.data[0]);
+                        self.setResult();
                         self.clear();
                     } else {
                         self.setState({
                             notRunning: false
                         });
-                        if(response.data[0].result === 'FAILURE'){
-                            self.clear();
-                            self.setState({
-                                notRunning: true,
-                                visible: false
-                            });
-                            toast.show({
-                                type: "error",
-                                content: "启动运行失败, 请检查流水线配置",
-                                duration: 3000
-                            });
-                            return;
-                        }
+                        // if(response.data[0].result === 'FAILURE'){
+                        //     self.clear();
+                        //     self.setState({
+                        //         notRunning: true,
+                        //         visible: false
+                        //     });
+                        //     toast.show({
+                        //         type: "error",
+                        //         content: "启动运行失败, 请检查流水线配置",
+                        //         duration: 3000
+                        //     });
+                        //     self.setResult();
+                        //     return;
+                        // }
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
+                            self.setResult();
                             if (self.state.resultStatus === "BUILD") {
                                 self.setResult();
                             }
@@ -115,19 +131,6 @@ export default class PipelineProject extends Component {
         })
     }
 
-    getPipelineInfo() {
-        let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
-        let self = this;
-
-        Axios.get(url).then((response) => {
-            if (response.status === 200) {
-                self.setState({
-                    pipeline: response.data
-                })
-            }
-        })
-    }
-
     buildPipeline() {
         let self = this;
         self.setState({
@@ -135,7 +138,7 @@ export default class PipelineProject extends Component {
             resultStatus: "BUILD",
             notRunning: false
         });
-        let url = API.pipeline + '/v1/jenkins/build?id=' + this.state.pipelineId;
+        let url = API.pipeline + '/v1/jenkins/build/' + this.state.pipelineId;
         Axios.post(url).then((response) => {
             if (response.status === 200) {
                 let time = setInterval(() => {
@@ -166,6 +169,7 @@ export default class PipelineProject extends Component {
 
     clear() {
         clearInterval(this.state.time);
+        this.setResult();
     }
 
     setResult() {

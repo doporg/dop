@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
-import {Input, Button, Select} from '@icedesign/base';
+import {Input, Button, Select, Dialog} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import Jenkinsfile from '../components/Jenkinsfile'
 import PipelineInfoStage from '../components/PipelineInfoStage'
@@ -44,15 +44,16 @@ class PipelineInfo extends Component {
                 this.props.intl.messages["pipeline.info.hasJenkinsfile"],
                 this.props.intl.messages["pipeline.info.noJenkinsfile"]
             ],
-            timing:[
-                this.props.intl.messages["pipeline.info.monitor.timing.10"],
-                this.props.intl.messages["pipeline.info.monitor.timing.20"],
-                this.props.intl.messages["pipeline.info.monitor.timing.30"],
-                this.props.intl.messages["pipeline.info.monitor.timing.60"],
-                this.props.intl.messages["pipeline.info.monitor.timing.120"],
-                this.props.intl.messages["pipeline.info.monitor.timing.240"],
-                this.props.intl.messages["pipeline.info.monitor.timing.360"]
-            ],
+            // timing: [
+            //     this.props.intl.messages["pipeline.info.monitor.timing.10"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.20"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.30"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.60"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.120"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.240"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.360"]
+            // ],
+            timing: "H/15 * * * *",
             haveJenkinsFile: null,
             jenkinsFileInfo: {
                 git: "",
@@ -104,7 +105,7 @@ class PipelineInfo extends Component {
         })
     }
 
-    selectTiming(value){
+    selectTiming(value) {
         let pipeline = Object.assign({}, this.state.pipeline, {timing: this.state.timing.indexOf(value)});
         this.setState({
             pipeline: pipeline
@@ -149,6 +150,41 @@ class PipelineInfo extends Component {
             pipeline
         })
     }
+    copy(data){
+        const input = document.createElement('input')
+        document.body.appendChild(input);
+        input.setAttribute('value', API.pipeline + '/v1/jenkins/build/' + data);
+        input.select();
+        try{
+            if(document.execCommand("copy","false",null)){
+                toast.show({
+                    type: "success",
+                    content: "复制成功",
+                    duration: 1000
+                });
+            }else{
+                toast.show({
+                    type: "error",
+                    content: "复制失败请手动复制",
+                    duration: 1000
+                });
+            }
+        }catch(err){
+            toast.show({
+                type: "error",
+                content: "复制失败请手动复制",
+                duration: 1000
+            });
+        }
+        document.body.removeChild(input)
+    }
+    onCancel(){
+        toast.show({
+            type: "error",
+            content: "不进行设置将不会进行自动触发",
+            duration: 1000
+        });
+    }
 
     saveJenkinsfile() {
         let pipeline = this.state.pipeline;
@@ -164,6 +200,18 @@ class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
+                if (self.state.pipeline.monitor === 0) {
+                    Dialog.confirm({
+                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                        content: <div>
+                            <p>请复制以下链接到webhook: </p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                        </div>,
+                        title: "提示",
+                        onOk: self.copy.bind(this, response.data),
+                        onCancel: self.onCancel.bind(this)
+                    });
+                }
                 self.props.history.push('/pipeline')
             }
         }).catch(() => {
@@ -195,7 +243,20 @@ class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
-                // self.props.history.push('/pipeline')
+
+                if (self.state.pipeline.monitor === 0) {
+                    Dialog.confirm({
+                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                        content: <div>
+                            <p>请复制以下链接到webhook: </p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                        </div>,
+                        title: "提示",
+                        onOk: self.copy.bind(this, response.data),
+                        onCancel: self.onCancel.bind(this)
+                    });
+                }
+                self.props.history.push('/pipeline')
             }
         }).catch((error) => {
             toast.show({
@@ -251,13 +312,13 @@ class PipelineInfo extends Component {
                                 } else if (this.state.pipeline.monitor === 2) {
                                     return (
                                         <div className="form-item-tip">
-                                            <Combobox
+                                            <Input
                                                 key="timing"
                                                 onChange={this.selectTiming.bind(this)}
-                                                dataSource={this.state.timing}
+                                                value={this.state.timing}
                                                 placeholder="定时触发间隔时长"
                                             >
-                                            </Combobox>
+                                            </Input>
                                         </div>
                                     )
                                 }

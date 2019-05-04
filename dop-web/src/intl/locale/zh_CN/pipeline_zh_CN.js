@@ -14,6 +14,7 @@ const PIPELINE_ZH_CN = {
     'pipeline.table.operation.language': 'zh-cn',
     'pipeline.table.operation.deleteSuccess': '删除成功',
     'pipeline.table.operation.deleteFailure': '删除失败',
+    'pipeline.table.operation.requestFailure': '请求失败',
 
     'pipeline.project.runPipeline': '运行流水线',
     'pipeline.project.editPipeline': '编辑流水线',
@@ -46,5 +47,14 @@ const PIPELINE_ZH_CN = {
     'pipeline.info.task.tip': '请注意任务的选择顺序',
     'pipeline.info.save': '保存',
     'pipeline.info.cancel': '取消',
+
+    'pipeline.info.step.pull': '拉取代码',
+    'pipeline.info.step.maven': '构建maven',
+    'pipeline.info.step.node': '构建node',
+    'pipeline.info.step.djanggo': '构建djanggo',
+    'pipeline.info.step.buildDocker': '构建docker镜像',
+    'pipeline.info.step.pushDocker': '推送docker镜像',
+    'pipeline.info.step.custom ': '用户自定义脚本',
+    'pipeline.info.step.deploy ': '部署',
 };
 export default PIPELINE_ZH_CN;

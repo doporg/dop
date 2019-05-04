@@ -22,6 +22,7 @@ export default class Jenkinsfile extends Component{
                             <Input
                                 placeholder="请输入仓库地址"
                                 value={this.props.jenkinsfile.git}
+                                className = "combobox"
                             />
                         </FormBinder>
                         <FormError className="form-item-error" name="git"/>
@@ -32,6 +33,7 @@ export default class Jenkinsfile extends Component{
                             <Input
                                 placeholder="请输入Jenkinsfile路径"
                                 value={this.props.jenkinsfile.path?this.props.jenkinsfile.path:"./Jenkinsfile"}
+                                className = "combobox"
                             />
                         </FormBinder>
                         <FormError className="form-item-error" name="path"/>

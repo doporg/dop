@@ -10,9 +10,17 @@ export default class Log extends Component {
         super(props)
         this.state = {
             content: false,
+            title: this.props.title ? this.props.title : null,
             count: 1,
             logs: []
         }
+    }
+
+    componentWillMount() {
+        let title = this.state.title.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+        this.setState({
+            title
+        })
     }
 
     clickTitle(href) {
@@ -21,12 +29,14 @@ export default class Log extends Component {
             count: this.state.count + 1
         });
         if (href && this.state.count % 2) {
-            // let url = API.jenkins + href;
             let url = API.pipeline + "/v1/jenkins/result?path=" + href;
             let self = this;
             Axios.get(url).then((response) => {
                 if (response.status === 200) {
-                    let logs =  response.data.split('\n');
+                    let logs = response.data.split('\n');
+                    for (let i = 0; i < logs.length; i++) {
+                        logs[i] = logs[i].replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+                    }
                     logs.pop();
                     self.setState({
                         logs
@@ -74,7 +84,7 @@ export default class Log extends Component {
                     }
 
 
-                    <div className="process">{this.props.title}</div>
+                    <div className="process">{this.state.title}</div>
                     <div className="prop">{this.props.prop ? "--" + this.props.prop : null}</div>
                 </div>
 
@@ -86,8 +96,8 @@ export default class Log extends Component {
                                     {this.state.logs.map((log, index) => {
                                         return (
                                             <div key={index} className="li-wrap">
-                                                <span className="idx" >{index}</span>
-                                                <span className="shell" >
+                                                <span className="idx">{index}</span>
+                                                <span className="shell">
                                                     {log}
                                                 </span>
                                             </div>

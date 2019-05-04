@@ -14,6 +14,7 @@ const PIPELINE_EN_US = {
     'pipeline.table.operation.language': 'en-us',
     'pipeline.table.operation.deleteSuccess': 'Success',
     'pipeline.table.operation.deleteFailure': 'Failure',
+    'pipeline.table.operation.requestFailure': 'Failure',
 
     'pipeline.project.runPipeline': 'Run Pipeline',
     'pipeline.project.editPipeline': 'Edit Pipeline',
@@ -46,5 +47,14 @@ const PIPELINE_EN_US = {
     'pipeline.info.task.tip': 'Please note the order of selection',
     'pipeline.info.save': 'Save',
     'pipeline.info.cancel': 'Cancel',
+
+    'pipeline.info.step.pull': 'Pull the code',
+    'pipeline.info.step.maven': 'Build maven project',
+    'pipeline.info.step.node': 'Build node project',
+    'pipeline.info.step.djanggo': 'Build djanggo project',
+    'pipeline.info.step.buildDocker': 'Build docker image',
+    'pipeline.info.step.pushDocker': 'Push docker image',
+    'pipeline.info.step.custom ': 'Custom script',
+    'pipeline.info.step.deploy ': 'Deploy',
 };
 export default PIPELINE_EN_US;
