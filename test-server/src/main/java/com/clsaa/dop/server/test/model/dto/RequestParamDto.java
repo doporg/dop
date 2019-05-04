@@ -1,6 +1,10 @@
 package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.enums.ParamClass;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +13,10 @@ import java.time.LocalDateTime;
  * @version 1.0
  * @since 04/05/2019
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestParamDto {
 
     private Long id;

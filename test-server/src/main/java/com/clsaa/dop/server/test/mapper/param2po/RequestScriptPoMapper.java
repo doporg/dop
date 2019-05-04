@@ -55,6 +55,7 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
         return super.convert(requestScriptParam)
                 .map(requestScript -> {
                         requestScript.setRequestHeaders(requestHeaders);
+                        requestScript.setRequestParams(requestParams);
                         requestScript.setRequestCheckPoints(checkPoints);
                         requestScript.setResultParams(resultParams);
 

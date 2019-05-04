@@ -50,6 +50,7 @@ export default class RequestStageForm extends Component{
             rawUrl: '',
             httpMethod: 'GET',
             requestHeaders: [],
+            requestParams: [],
             requestBody: '',
             requestCheckPoints: [],
             retryTimes: '',

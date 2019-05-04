@@ -48,9 +48,6 @@ export default class Operations extends Component{
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        /*if (nextProps.stage !== this.props.stage) {
-
-        }*/
         this.setState({
             requestScripts: nextProps.requestScripts,
             waitOperations: nextProps.waitOperations,
