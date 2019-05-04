@@ -3,6 +3,11 @@
     min-height: 600px;
 }
 
+.loading-mr-list{
+    width: 100%;
+    min-height: 500px;
+}
+
 .div-mr-list-top{
     height: 60px;
     border-bottom: 1px solid #d1d1d1;

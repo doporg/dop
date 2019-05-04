@@ -22,6 +22,7 @@ import ProtectBranch from './ProtectBranch'
 import MemberList from './MemberList'
 import MergeRequestList from './MergeRequestList'
 import NewMergeRequest from './NewMergeRequest'
+import MergeRequest from './MergeRequest'
 
 
 const codeConfig = [
@@ -128,9 +129,14 @@ const codeConfig = [
         component: NewMergeRequest
     },
     {
-        path: '/code/:username/:projectname/merge_requests/:state',
+        path: '/code/:username/:projectname/merge_requests',
         layout: CodeProjectLayout,
         component: MergeRequestList
+    },
+    {
+        path: '/code/:username/:projectname/merge_requests/:iid',
+        layout: CodeProjectLayout,
+        component: MergeRequest
     }
 
 

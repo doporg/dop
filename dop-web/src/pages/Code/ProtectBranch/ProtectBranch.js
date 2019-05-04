@@ -1,5 +1,5 @@
 import React from 'react';
-import {CascaderSelect} from "@icedesign/base";
+import {Select} from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import {Loading} from "@icedesign/base";
@@ -153,7 +153,7 @@ class ProjectBranch extends React.Component{
                         <div className="div-protect-branch-input">
                             <span className="text-protect-branch-name">分支</span>
                             <Loading className="loading-protect-branch" visible={this.state.loadingVisible} tip={spinner}>
-                                <CascaderSelect value={this.state.ref} onChange={this.selectRef.bind(this)} className="select-protect-branch" size='large' dataSource={this.state.refOptions} />
+                                <Select value={this.state.ref} onChange={this.selectRef.bind(this)} className="select-protect-branch" size='large' dataSource={this.state.refOptions} />
                             </Loading>
                         </div>
                         <div className="div-protect-branch-input">

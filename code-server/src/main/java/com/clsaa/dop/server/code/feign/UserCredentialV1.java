@@ -1,6 +1,5 @@
 package com.clsaa.dop.server.code.feign;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.io.Serializable;
@@ -41,12 +40,10 @@ public class UserCredentialV1 implements Serializable {
     /**
      * 创建时间
      */
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime ctime;
     /**
      * 修改时间
      */
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime mtime;
     /**
      * 用户认证类型
