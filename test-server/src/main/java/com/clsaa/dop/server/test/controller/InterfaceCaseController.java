@@ -9,6 +9,7 @@ import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
 import com.clsaa.dop.server.test.model.param.update.UpdatedInterfaceCase;
+import com.clsaa.dop.server.test.model.vo.ImportApiVo;
 import com.clsaa.dop.server.test.service.*;
 import com.clsaa.dop.server.test.service.core.ImportService;
 import com.clsaa.rest.result.Pagination;
@@ -142,7 +143,7 @@ public class InterfaceCaseController {
     }
 
     @PostMapping(value = "/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public String importApi(@RequestParam("file") MultipartFile multipartFile) {
+    public ImportApiVo importApi(@RequestParam("file") MultipartFile multipartFile) {
         String content = null;
         if (!multipartFile.isEmpty()) {
             try {
@@ -154,6 +155,6 @@ public class InterfaceCaseController {
                 return importService.doImport(content);
             }
         }
-        return "";
+        return null;
     }
 }

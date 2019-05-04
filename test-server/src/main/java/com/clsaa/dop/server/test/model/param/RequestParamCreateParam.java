@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.model.param;
 
 import com.clsaa.dop.server.test.enums.ParamClass;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
  * @since 04/05/2019
  */
 @Data
+@Builder
 public class RequestParamCreateParam {
 
     private ParamClass paramClass;

@@ -17,4 +17,17 @@ public enum  ParamClass {
     ParamClass(String comment) {
         this.comment = comment;
     }
+
+    public static ParamClass from(String origin) {
+        switch (origin) {
+            case "path":
+                return PATH_PARAM;
+            case "file":
+                return FILE_PARAM;
+            case "query":
+                return GET_PARAM;
+            default:
+                return GET_PARAM;
+        }
+    }
 }
