@@ -6,6 +6,7 @@ import copy from 'copy-to-clipboard';
 import {Feedback} from '@icedesign/base';
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl,FormattedRelative } from 'react-intl';
 
 import './Commit.css';
 import './ReactDiffView.css'
@@ -131,7 +132,7 @@ class Commit extends React.Component{
 
     copySha(){
         copy(this.state.commitInfo.id);
-        toast.success("已将commit sha复制到剪贴板")
+        toast.success(this.props.intl.messages["code.commit.copied"])
     }
 
     browseFile(){
@@ -146,12 +147,12 @@ class Commit extends React.Component{
         return (
             <div className="commit-container">
                 <div className="div-diff-author">
-                    <b>Commit&nbsp;{commitInfo.short_id}</b><a onClick={this.copySha.bind(this)}><img className="img-diff-copy-sha" src={imgCopy}/></a>
-                    <span className="text-diff-time">{commitInfo.authored_time}</span>提交由<div className="div-diff-avatar">{commitInfo.author_name.charAt(0).toUpperCase()}</div><b>{commitInfo.author_name}</b>
-                    <a onClick={this.browseFile.bind(this)} className="btn-diff-browse-file">浏览文件</a>
+                    <b>{this.props.intl.messages["code.commit.top"]}&nbsp;{commitInfo.short_id}</b><a onClick={this.copySha.bind(this)}><img className="img-diff-copy-sha" src={imgCopy}/></a>
+                    <span className="text-diff-time"><FormattedRelative value={new Date(parseInt(commitInfo.authored_time))}/></span>{this.props.intl.messages["code.commit.commitedby"]}<div className="div-diff-avatar">{commitInfo.author_name.charAt(0).toUpperCase()}</div><b>{commitInfo.author_name}</b>
+                    <a onClick={this.browseFile.bind(this)} className="btn-diff-browse-file">{this.props.intl.messages["code.commit.browsefiles"]}</a>
                 </div>
                 <div className="div-diff-msg">{commitInfo.message}</div>
-                <div className="div-diff-stat">正在显示<span className="text-diff-blue">{this.state.diffInfo.length}个修改文件</span>包含<span className="text-diff-green">{commitInfo.additions}行增加</span>和<span className="text-diff-red">{commitInfo.deletions}行删除</span></div>
+                <div className="div-diff-stat">{this.props.intl.messages["code.commit.showing"]}<span className="text-diff-blue">{this.state.diffInfo.length}{this.props.intl.messages["code.commit.count"]}</span>{this.props.intl.messages["code.commit.including"]}<span className="text-diff-green">{commitInfo.additions}{this.props.intl.messages["code.commit.addtions"]}</span>{this.props.intl.messages["code.commit.and"]}<span className="text-diff-red">{commitInfo.deletions}{this.props.intl.messages["code.commit.deletions"]}</span></div>
                 {
                     this.state.diffInfo.map(item=>{
                         return <DiffFile diffItem={item}/>;
@@ -163,5 +164,5 @@ class Commit extends React.Component{
     }
 }
 
-export default (props)=><Commit {...props} key={props.location.pathname} />
+export default injectIntl((props)=><Commit {...props} key={props.location.pathname} />)
 

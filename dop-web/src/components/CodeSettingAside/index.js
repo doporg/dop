@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
 import { Icon } from '@icedesign/base';
+import {FormattedMessage} from 'react-intl';
 
 import './index.scss';
 
@@ -49,25 +50,25 @@ class CodeSettingProjectAside extends Component {
                 <MenuItem key={backLink}>
                     <Link to={backLink} className="ice-menu-link">
                         <img src={imgBack}/>
-                        <span className="ice-menu-item-text">{"返回"}</span>
+                        <span className="ice-menu-item-text"><FormattedMessage id="code.settingaside.back"/></span>
                     </Link>
                 </MenuItem>
                 <MenuItem key={editLink}>
                     <Link to={editLink} className="ice-menu-link">
                         <img src={imgEdit}/>
-                        <span className="ice-menu-item-text">{"基本信息"}</span>
+                        <span className="ice-menu-item-text"><FormattedMessage id="code.settingaside.basicinfo"/></span>
                     </Link>
                 </MenuItem>
                 <MenuItem key={protectBranchLink}>
                     <Link to={protectBranchLink} className="ice-menu-link">
                         <img src={imgProtect}/>
-                        <span className="ice-menu-item-text">{"分支保护"}</span>
+                        <span className="ice-menu-item-text"><FormattedMessage id="code.settingaside.protectbranch"/></span>
                     </Link>
                 </MenuItem>
                 <MenuItem key={memberLink}>
                     <Link to={memberLink} className="ice-menu-link">
                         <img src={imgMembers}/>
-                        <span className="ice-menu-item-text">{"成员"}</span>
+                        <span className="ice-menu-item-text"><FormattedMessage id="code.settingaside.members"/></span>
                     </Link>
                 </MenuItem>
             </Menu>

@@ -5,6 +5,7 @@ import API from "../../API";
 import { Dialog } from '@icedesign/base';
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './Blob.css'
 
@@ -243,7 +244,7 @@ class Blob extends React.Component{
                             let strs = path.split("/");
                             let paths = [];
 
-                            paths.push(<a onClick={this.changePath.bind(this,"/")}>根目录</a>);
+                            paths.push(<a onClick={this.changePath.bind(this,"/")}>{this.props.intl.messages["code.blob.root"]}</a>);
 
                             let temp_str = "";
                             for (let i = 0; i < strs.length; i++) {
@@ -263,7 +264,7 @@ class Blob extends React.Component{
                     }
                     <button className="btn-search-file" onClick={this.findFile.bind(this)}>
                         <img src={imgSearch} className="img-blob-search"/>
-                        <span className="text-blob-search">查找文件</span>
+                        <span className="text-blob-search">{this.props.intl.messages["code.blob.findfile"]}</span>
                     </button>
                 </div>
                 <div className="div-blob-title">
@@ -276,15 +277,15 @@ class Blob extends React.Component{
                             if(this.hasAccess()){
                                 return (
                                     <div className="div-blob-operation">
-                                        <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>
-                                        <button className="btn-blob-delete" onClick={this.openDelete.bind(this)}>删除</button>
+                                        <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>{this.props.intl.messages["code.blob.edit"]}</button>
+                                        <button className="btn-blob-delete" onClick={this.openDelete.bind(this)}>{this.props.intl.messages["code.blob.delete"]}</button>
                                     </div>
                                 )
                             }else {
                                 return (
                                     <div className="div-blob-operation">
-                                        <button className="btn-blob-disabled" onClick={this.editFile.bind(this)} disabled="disabled">编辑</button>
-                                        <button className="btn-blob-disabled" onClick={this.openDelete.bind(this)} disabled="disabled">删除</button>
+                                        <button className="btn-blob-disabled" onClick={this.editFile.bind(this)} disabled="disabled">{this.props.intl.messages["code.blob.edit"]}</button>
+                                        <button className="btn-blob-disabled" onClick={this.openDelete.bind(this)} disabled="disabled">{this.props.intl.messages["code.blob.delete"]}</button>
                                     </div>
                                 )
                             }
@@ -313,10 +314,11 @@ class Blob extends React.Component{
                     onOk={this.deleteFile.bind(this)}
                     onCancel={this.closeDelete.bind(this)}
                     onClose={this.closeDelete.bind(this)}
-                    title={"删除"+this.state.blobInfo.file_name}
+                    title={this.props.intl.messages["code.blob.delete"]+this.state.blobInfo.file_name}
                     footerAlign="left"
+                    language={this.props.intl.messages["code.blob.language"]}
                 >
-                    <div className="div-blob-delete-title">提交信息</div>
+                    <div className="div-blob-delete-title">{this.props.intl.messages["code.blob.delete.title"]}</div>
                     <textarea value={this.state.commit_message} className="input-area-code-commit" onChange={this.changeCommitMsg.bind(this)} />
                 </Dialog>
 
@@ -326,4 +328,4 @@ class Blob extends React.Component{
 
 }
 
-export default (props)=><Blob {...props} key={props.location.pathname} />
+export default injectIntl((props)=><Blob {...props} key={props.location.pathname} />)

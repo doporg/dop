@@ -44,25 +44,27 @@ public class TimeUtil {
         }
 
         LocalDateTime dt_commit=LocalDateTime.parse(lastTime,dtf);
-        dt_commit=dt_commit.plusHours(8);
-
-        //计算距现在的时长
-        LocalDateTime dt_now=LocalDateTime.now();
-        long between = dt_now.toInstant(ZoneOffset.UTC).toEpochMilli() - dt_commit.toInstant(ZoneOffset.UTC).toEpochMilli();
-        String commit_time;
-        if (between > YEAR) {
-            commit_time = ((between - YEAR) / YEAR + 1) + "年前";
-        }else if (between > MONTH) {
-            commit_time = ((between - MONTH) / MONTH + 1) + "月前";
-        }else if (between > DAY) {
-            commit_time = ((between - DAY) / DAY + 1) + "天前";
-        }else if (between > HOUR) {
-            commit_time = ((between - HOUR) / HOUR + 1) + "小时前";
-        }else if (between > MINUTE) {
-            commit_time = ((between - MINUTE) / MINUTE + 1) + "分钟前";
-        }else {
-            commit_time = "刚刚";
-        }
+        Long ts_commit=dt_commit.toInstant(ZoneOffset.of("+0")).toEpochMilli();
+        String commit_time=ts_commit.toString();
+//        dt_commit=dt_commit.plusHours(8);
+//
+//        //计算距现在的时长
+//        LocalDateTime dt_now=LocalDateTime.now();
+//        long between = dt_now.toInstant(ZoneOffset.UTC).toEpochMilli() - dt_commit.toInstant(ZoneOffset.UTC).toEpochMilli();
+//        String commit_time;
+//        if (between > YEAR) {
+//            commit_time = ((between - YEAR) / YEAR + 1) + "年前";
+//        }else if (between > MONTH) {
+//            commit_time = ((between - MONTH) / MONTH + 1) + "月前";
+//        }else if (between > DAY) {
+//            commit_time = ((between - DAY) / DAY + 1) + "天前";
+//        }else if (between > HOUR) {
+//            commit_time = ((between - HOUR) / HOUR + 1) + "小时前";
+//        }else if (between > MINUTE) {
+//            commit_time = ((between - MINUTE) / MINUTE + 1) + "分钟前";
+//        }else {
+//            commit_time = "刚刚";
+//        }
 
         List<String> res = new ArrayList<>();
         String commit_date=dt_commit.toString();

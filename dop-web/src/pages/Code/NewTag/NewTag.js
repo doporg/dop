@@ -5,6 +5,7 @@ import API from "../../API";
 import {Loading} from "@icedesign/base";
 import {Feedback} from '@icedesign/base';
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './NewTag.css'
 
@@ -78,7 +79,6 @@ class NewTag extends React.Component{
                 message:this.state.message,
             },
         }).then(()=>{
-            toast.success("创建标签成功");
             this.props.history.push("/code/"+this.state.projectid+"/tags");
         })
     }
@@ -88,27 +88,27 @@ class NewTag extends React.Component{
             <div className="new-tag-container">
                 <Loading className="creating-new-tag" visible={this.state.creatingVisible} tip={spinner}>
                     <div className="div-new-tag-top">
-                        新标签
+                        {this.props.intl.messages["code.newtag.top"]}
                     </div>
                     <div>
                         <div className="div-new-tag-input">
-                            <span className="text-new-tag-name-msg">名称</span>
+                            <span className="text-new-tag-name-msg">{this.props.intl.messages["code.newtag.name"]}</span>
                             <input onChange={this.changeTagName.bind(this)} className="input-new-tag-name-msg"/>
                         </div>
                         <div className="div-new-tag-input">
-                            <span className="text-new-tag-name-msg">信息</span>
+                            <span className="text-new-tag-name-msg">{this.props.intl.messages["code.newtag.message"]}</span>
                             <input onChange={this.changeMsg.bind(this)} className="input-new-tag-name-msg"/>
                         </div>
                         <div className="div-new-tag-input">
-                            <span className="text-new-tag-source">创建自</span>
+                            <span className="text-new-tag-source">{this.props.intl.messages["code.newtag.source"]}</span>
                             <Loading className="loading-new-tag" visible={this.state.loadingVisible} tip={spinner}>
-                                <Select onChange={this.selectRef.bind(this)} className="select-new-tag" size='large' dataSource={this.state.refOptions}/>
+                                <Select language={this.props.intl.messages["code.language"]} onChange={this.selectRef.bind(this)} className="select-new-tag" size='large' dataSource={this.state.refOptions}/>
                             </Loading>
                         </div>
                     </div>
                     <div className="div-new-tag-submit">
-                        <button onClick={this.addTag.bind(this)} className="btn-new-tag-add">创建标签</button>
-                        <button onClick={this.cancel.bind(this)} className="btn-new-tag-cancel">取消</button>
+                        <button onClick={this.addTag.bind(this)} className="btn-new-tag-add">{this.props.intl.messages["code.newtag.add"]}</button>
+                        <button onClick={this.cancel.bind(this)} className="btn-new-tag-cancel">{this.props.intl.messages["code.newtag.cancel"]}</button>
                     </div>
                 </Loading>
             </div>
@@ -116,4 +116,4 @@ class NewTag extends React.Component{
     }
 }
 
-export default (props) => <NewTag {...props} key={props.location.pathname}/>
+export default injectIntl((props) => <NewTag {...props} key={props.location.pathname}/>)
