@@ -217,6 +217,11 @@ class PipelineInfoStep extends Component {
             chosenStep
         })
     }
+    onChangeApp(value){
+        this.props.onChangeApp(value)
+    }
+
+
     onSelectEnv(value){
         this.setState({
             selectEnvId: value
@@ -244,10 +249,13 @@ class PipelineInfoStep extends Component {
         this.setState({
             stage
         });
+        this.props.onChangeDockerUserName(value)
         this.props.onChange(this.state.stage)
+
     }
 
     buildRepository(value) {
+
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
         });
@@ -256,6 +264,7 @@ class PipelineInfoStep extends Component {
         this.setState({
             stage
         });
+        this.props.onChangeRepository(value)
         this.props.onChange(this.state.stage)
     }
 
@@ -348,6 +357,7 @@ class PipelineInfoStep extends Component {
                                                                     return (
                                                                         <Pull
                                                                             onChange={this.gitUrl.bind(this)}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             gitUrl={this.state.chosenStep.gitUrl}
                                                                             appId = {this.props.appId}
                                                                         />
@@ -368,6 +378,7 @@ class PipelineInfoStep extends Component {
                                                                     return (
                                                                         <DockerImage
                                                                             appId = {this.props.appId}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
                                                                             onDockerPasswordChange={this.buildDockerPassword.bind(this)}
@@ -379,12 +390,13 @@ class PipelineInfoStep extends Component {
                                                                     );
                                                                 case "推送docker镜像":
                                                                     return (
-                                                                        <PushDockerImage
+                                                                        <DockerImage
                                                                             appId = {this.props.appId}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                                            onRepositoryChange={this.buildRepository.bind(this)}
                                                                             onDockerPasswordChange={this.buildDockerPassword.bind(this)}
+                                                                            onRepositoryChange={this.buildRepository.bind(this)}
                                                                             dockerUserName={this.state.chosenStep.dockerUserName}
                                                                             repository={this.state.chosenStep.repository}
                                                                             selectEnvId={this.state.selectEnvId}

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {injectIntl, FormattedMessage} from 'react-intl';
+import DockerImage from '../components/chosenSteps/DockerImage'
 
 
 
@@ -20,6 +21,10 @@ class PipelineTest extends Component {
                 <FormattedMessage
                     id="pipeline.hello"
                     defaultMessage="你好"
+                />
+                <DockerImage
+                    onChangeApp = {(value)=>{console.log(value)}}
+                    onSelectEnv = {(value)=>{console.log(value)}}
                 />
             </div>
         )

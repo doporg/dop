@@ -85,8 +85,18 @@ class PipelineInfoStage extends Component {
             currentStage: this.state.stages.length - 1
         })
     }
+    onChangeApp(value){
+        this.props.onChangeApp(value)
+    }
     onSelectEnv(value){
         this.props.onSelectEnv(value)
+    }
+
+    onChangeDockerUserName(value){
+        this.props.onChangeDockerUserName(value)
+    }
+    onChangeRepository(value){
+        this.props.onChangeRepository(value)
     }
     step(value) {
         let stages = this.state.stages;
@@ -122,8 +132,14 @@ class PipelineInfoStage extends Component {
                     stage={this.state.stages[this.state.currentStage]}
                     appId = {this.props.appId}
                     onChange={this.step.bind(this)}
+                    onChangeApp={this.onChangeApp.bind(this)}
                     onSelectEnv = {this.onSelectEnv.bind(this)}
                     currentStage={this.state.currentStage}
+
+                    dockerUserName={this.props.dockerUserName}
+                    onChangeDockerUserName={this.onChangeDockerUserName.bind(this)}
+                    repository={this.props.repository}
+                    onChangeRepository={this.onChangeRepository.bind(this)}
                 />
             </div>
         )

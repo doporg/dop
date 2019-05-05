@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
-import {Feedback, Select} from "@icedesign/base/index";
+import {Form, Select, Input, Loading} from "@icedesign/base";
 import Axios from "axios/index";
 import API from "../../../API";
+import {injectIntl} from "react-intl";
+import {Feedback} from "@icedesign/base/index";
+
 const {toast} = Feedback;
-const Option = Select.Option;
+const FormItem = Form.Item;
+const {Combobox} = Select;
 
 
-export default class DockerImage extends Component {
+class DockerImage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            visible: false,
+            applications: [],
+            selectedApp: null,
             environments: [],
             selectedEnv: null,
             dockerUser: [],
@@ -21,26 +28,75 @@ export default class DockerImage extends Component {
     }
 
     componentWillMount() {
-        if (this.props.appId) {
-            this.getEnv();
-            this.getDockerUser();
-        } else {
-            toast.show({
-                type: "error",
-                content: "请先绑定一个应用",
-                duration: 3000
-            });
-        }
-        if(this.props.selectEnvId){
-            this.getRepository();
-        }
+        this.getApplication()
+
 
     }
 
-    getEnv() {
-        let url = API.application + "/app/" + this.props.appId + "/allEnv";
+    getApplication() {
+        this.setState({
+            applications:[],
+            visible: true
+        });
+        return new Promise((resolve, reject) => {
+            let url = API.application + "/app?ouser=" + window.sessionStorage.getItem('user-id');
+            let self = this;
+            let applications = self.state.applications;
+            Axios.get(url).then((response) => {
+                if (response.status === 200) {
+                    this.setState({
+                        visible: false
+                    });
+                    for (let i = 0; i < response.data.length; i++) {
+                        let application = {
+                            label: response.data[i].title,
+                            value: response.data[i].id
+                        };
+                        if (self.props.appId === response.data[i].id) {
+                            self.setState({
+                                selectedApp: response.data[i].title
+                            });
+                            self.selectApplication(response.data[i].id);
+                        }
+                        applications.push(application)
+                    }
+                    self.setState({
+                        applications: [...new Set(applications)]
+                    });
+                    resolve()
+                }
+            }).catch(() => {
+                toast.show({
+                    type: "error",
+                    content: "获取应用信息失败",
+                    duration: 3000
+                });
+                reject()
+            })
+        })
+
+    }
+
+    selectApplication(value) {
+        this.setState({
+            selectedApp: value
+        });
+        this.props.onChangeApp(value);
+
+        this.getEnv(value);
+        this.getRepository(value);
+        this.getDockerUser()
+    }
+
+
+    getEnv(data) {
+        this.setState({
+            visible: true
+        });
+        let url = API.application + "/app/" + data + "/allEnv";
         let self = this;
-        let environments = self.state.environments;
+        let environments = [];
+
         Axios.get(url).then((response) => {
             if (response.status === 200) {
                 for (let i = 0; i < response.data.length; i++) {
@@ -48,39 +104,51 @@ export default class DockerImage extends Component {
                         label: response.data[i].title,
                         value: response.data[i].id
                     };
-                    environments.push(environment)
-
-                    if(self.props.selectEnvId === response.data[i].id){
+                    environments.push(environment);
+                    if (self.props.selectEnvId === response.data[i].id) {
                         self.setState({
                             selectedEnv: response.data[i].title
-                        })
+                        });
+                        self.selectEnv(response.data[i].id)
                     }
                 }
                 self.setState({
-                    environments: environments
-                })
+                    environments:[...new Set(environments)],
+                    visible: false
+                });
             }
+        }).catch(()=>{
+            this.setState({
+                visible: false
+            });
         })
     }
 
     getDockerUser() {
+        this.setState({
+            visible: true
+        });
         let url = API.user + "/v1/users/" + window.sessionStorage.getItem("user-id") + "/credential?type=DOP_INNER_HARBOR_LOGIN_EMAIL";
         let self = this;
-        let dockerUser = self.state.dockerUser;
+        let dockerUser = [];
         Axios.get(url).then((response) => {
             if (response.status === 200) {
                 let user = {
                     label: response.data.identifier,
-                    id: response.data.id,
-                    key: response.data.id,
+                    value: response.data.id,
                     credential: response.data.credential,
                     identifier: response.data.identifier,
                 };
                 dockerUser.push(user);
                 self.setState({
-                    dockerUser
+                    dockerUser:[...new Set(dockerUser)],
+                    visible: false
                 })
             }
+        }).catch(()=>{
+            this.setState({
+                visible: false
+            });
         })
     }
 
@@ -88,17 +156,16 @@ export default class DockerImage extends Component {
         this.setState({
             selectedEnv: value
         });
-        console.log(value)
-        if(!this.props.selectEnvId){
-            this.getRepository();
-        }
         this.props.onSelectEnv(value)
     }
 
-    getRepository() {
-        let url = API.application + "/app/" + this.props.appId + "/urlInfo";
+    getRepository(data) {
+        this.setState({
+            visible: true
+        });
+        let url = API.application + "/app/" + data + "/urlInfo";
         let self = this;
-        let repositories = self.state.repositories;
+        let repositories = [];
         Axios.get(url).then((response) => {
             if (response.status === 200) {
                 let repository = {
@@ -107,11 +174,15 @@ export default class DockerImage extends Component {
                     key: self.state.repositories.length
                 };
                 repositories.push(repository);
-                console.log(repositories)
                 self.setState({
-                    repositories
-                })
+                    repositories:[...new Set(repositories)],
+                    visible: false
+                });
             }
+        }).catch(()=>{
+            this.setState({
+                visible: false
+            });
         })
     }
 
@@ -131,58 +202,84 @@ export default class DockerImage extends Component {
     }
 
     render() {
+        const formItemLayout = {
+            labelCol: {
+                span: 10
+            },
+            wrapperCol: {
+                span: 10
+            }
+        };
         return (
-            <div>
+            <Loading shape="fusion-reactor" visible={this.state.visible}>
                 <h3 className="chosen-task-detail-title">构建docker镜像</h3>
-                <div className="chosen-task-detail-body">
-                     <span className="item">
-                        <span className="must">*</span>
-                        <span>环境设置: </span>
-                    </span>
-                    <Select
-                        key="env"
-                        onChange={this.selectEnv.bind(this)}
-                        placeholder={this.state.selectedEnv?this.state.selectedEnv:"请选择环境"}
-                        disabled={!this.props.appId}
-                        className="input"
-                        dataSource={this.state.environments}
-
-                    />
-
-                    <br/>
-
-                    <span className="item">
-                        <span className="must">*</span>
-                        <span>DockerUserName: </span>
-                    </span>
-                    <Select
-                        key="docker"
-                        placeholder={this.props.dockerUserName?this.props.dockerUserName:"请选择docker用户"}
-                        onChange={this.selectDocker.bind(this)}
-                        fillProps="label"
-                        className="input"
+                <Form
+                    labelAlign="left"
+                    labelTextAlign="left"
+                >
+                    <FormItem
+                        label="应用设置："
+                        {...formItemLayout}
                     >
-                        {this.state.dockerUser.map((user, index) => {
-                            return <Option value={user.id} key={"docker" + index}>{user.label}</Option>
-                        })}
-                    </Select>
-                    <br/>
+                        <Combobox
+                            key="0"
+                            onChange={this.selectApplication.bind(this)}
+                            dataSource={this.state.applications}
+                            value={this.state.selectedApp ? this.state.selectedApp : this.props.intl.messages["pipeline.info.apply.placeholder"]}
+                            fillProps="label"
+                            style={{'width': '200px'}}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label="环境设置："
+                        {...formItemLayout}
+                        required
+                    >
+                        <Combobox
+                            key="1"
+                            fillProps="label"
+                            style={{'width': '200px'}}
+                            onChange={this.selectEnv.bind(this)}
+                            placeholder={this.state.selectedEnv ? this.state.selectedEnv : "请选择环境"}
+                            disabled={!this.state.selectedApp}
+                            dataSource={this.state.environments}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label="DockerUserName："
+                        {...formItemLayout}
+                        required
+                    >
+                        <Combobox
+                            key="2"
+                            fillProps="label"
+                            dataSource={this.state.dockerUser}
+                            style={{'width': '200px'}}
+                            disabled={!this.state.selectedApp}
+                            placeholder={this.props.dockerUserName?this.props.dockerUserName:"请选择docker用户"}
+                            onChange={this.selectDocker.bind(this)}
+                        />
 
-                    <span className="item">
-                        <span className="must">*</span>
-                        <span>Repository: </span>
-                    </span>
-
-                    <Select
-                        key="repos"
-                        onChange={this.selectRepository.bind(this)}
-                        placeholder={this.props.repository?this.props.repository:"请选择镜像名称"}
-                        disabled={!this.state.selectedEnv}
-                        className="input"
-                        dataSource={this.state.repositories}
-                    />
-                </div>
-            </div>
+                    </FormItem>
+                    <FormItem
+                        label="Repository："
+                        {...formItemLayout}
+                        required
+                    >
+                        <Combobox
+                            key="3"
+                            fillProps="label"
+                            style={{'width': '200px'}}
+                            onChange={this.selectRepository.bind(this)}
+                            placeholder={this.props.repository ? this.props.repository : "请选择镜像名称"}
+                            disabled={!this.state.selectedEnv}
+                            dataSource={this.state.repositories}
+                        />
+                    </FormItem>
+                </Form>
+            </Loading>
         )
     }
 }
+
+export default injectIntl(DockerImage)

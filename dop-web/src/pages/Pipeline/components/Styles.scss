@@ -212,6 +212,13 @@
         &.hide{
           display: none;
         }
+        .next-loading{
+          .next-loading-component{
+            .chosen-task-detail-title{
+              font-size: 15px;
+            }
+          }
+        }
         .chosen-task-detail-title{
           font-size: 15px;
         }
