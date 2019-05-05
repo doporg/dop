@@ -10,6 +10,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class UrlPathVariablePlugin implements UrlPlugin{
     public void apply(RequestContext requestContext) {
         String url = requestContext.getUrl();
         Map<String, String> data = requestContext.getRequestParams()
-                .get(ParamClass.PATH_PARAM)
+                .getOrDefault(ParamClass.PATH_PARAM,new ArrayList<>())
                 .stream()
                 .collect(Collectors.toMap(RequestParamDto::getName, RequestParamDto::getValue));
         requestContext.setUrl(StringUtils.tryToResolveBrace(url, data));

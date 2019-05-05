@@ -5,7 +5,9 @@ import com.clsaa.dop.server.test.enums.ParamClass;
 import com.clsaa.dop.server.test.model.dto.RequestParamDto;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.util.CollectionUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,6 +34,10 @@ public class RequestContext {
     private Map<ParamClass, List<RequestParamDto>> requestParams;
 
     public void fillRequestParams(List<RequestParamDto> requestParamDtos) {
+        if (CollectionUtils.isEmpty(requestParamDtos)) {
+            this.requestParams = new HashMap<>();
+            return;
+        }
         this.requestParams = requestParamDtos.stream()
                 .collect(Collectors.groupingBy(RequestParamDto::getParamClass));
     }
