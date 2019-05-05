@@ -94,6 +94,7 @@ class PipelineInfoStep extends Component {
      *  点击编辑task
      * */
     editTask(chosenStep) {
+        console.log(chosenStep)
         this.setState({
             chosenStep
         })
@@ -233,70 +234,87 @@ class PipelineInfoStep extends Component {
                                             })()}
                                         </div>
                                         {(() => {
-                                            if (this.state.chosenStep.taskName) {
+                                            if (this.state.chosenStep.taskName != undefined) {
                                                 return (
-                                                    <div className="chosen-task-detail">
+                                                    <div>
                                                         {(() => {
+                                                            console.log(this.state.chosenStep.taskName)
                                                             switch (this.state.chosenStep.taskName) {
                                                                 case 0:
                                                                     return (
-                                                                        <Pull
-                                                                            onChange={this.gitUrl.bind(this)}
-                                                                            onChangeApp={this.onChangeApp.bind(this)}
-                                                                            gitUrl={this.state.chosenStep.gitUrl}
-                                                                            appId={this.props.appId}
-                                                                        />
+                                                                        <div className="chosen-task-detail">
+                                                                            <Pull
+                                                                                onChange={this.gitUrl.bind(this)}
+                                                                                onChangeApp={this.onChangeApp.bind(this)}
+                                                                                gitUrl={this.state.chosenStep.gitUrl}
+                                                                                appId={this.props.appId}
+                                                                            />
+                                                                        </div>
                                                                     );
                                                                 case 1:
                                                                     return (
-                                                                        <Maven/>
+                                                                        <div className="chosen-task-detail">
+                                                                            <Maven/>
+                                                                        </div>
                                                                     );
                                                                 case 2:
                                                                     return (
-                                                                        <Node/>
+                                                                        <div className="chosen-task-detail">
+                                                                            <Node/>
+                                                                        </div>
                                                                     );
                                                                 case 3:
                                                                     return (
-                                                                        <Djanggo/>
+                                                                        <div className="chosen-task-detail">
+                                                                            <Djanggo/>
+                                                                        </div>
                                                                     );
                                                                 case 4:
                                                                     return (
-                                                                        <DockerImage
-                                                                            appId={this.props.appId}
-                                                                            onChangeApp={this.onChangeApp.bind(this)}
-                                                                            onSelectEnv={this.onSelectEnv.bind(this)}
-                                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                                            onDockerPasswordChange={this.buildDockerPassword.bind(this)}
-                                                                            onRepositoryChange={this.buildRepository.bind(this)}
-                                                                            dockerUserName={this.state.chosenStep.dockerUserName}
-                                                                            repository={this.state.chosenStep.repository}
-                                                                            selectEnvId={this.state.selectEnvId}
-                                                                        />
+                                                                        <div className="chosen-task-detail">
+                                                                            <DockerImage
+                                                                                appId={this.props.appId}
+                                                                                onChangeApp={this.onChangeApp.bind(this)}
+                                                                                onSelectEnv={this.onSelectEnv.bind(this)}
+                                                                                onUserNameChange={this.buildDockerUserName.bind(this)}
+                                                                                onDockerPasswordChange={this.buildDockerPassword.bind(this)}
+                                                                                onRepositoryChange={this.buildRepository.bind(this)}
+                                                                                dockerUserName={this.state.chosenStep.dockerUserName}
+                                                                                repository={this.state.chosenStep.repository}
+                                                                                selectEnvId={this.state.selectEnvId}
+                                                                            />
+                                                                        </div>
                                                                     );
                                                                 case 5:
                                                                     return (
-                                                                        <DockerImage
-                                                                            appId={this.props.appId}
-                                                                            onChangeApp={this.onChangeApp.bind(this)}
-                                                                            onSelectEnv={this.onSelectEnv.bind(this)}
-                                                                            onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                                            onDockerPasswordChange={this.buildDockerPassword.bind(this)}
-                                                                            onRepositoryChange={this.buildRepository.bind(this)}
-                                                                            dockerUserName={this.state.chosenStep.dockerUserName}
-                                                                            repository={this.state.chosenStep.repository}
-                                                                            selectEnvId={this.state.selectEnvId}
-                                                                        />
+                                                                        <div className="chosen-task-detail">
+                                                                            <DockerImage
+                                                                                appId={this.props.appId}
+                                                                                onChangeApp={this.onChangeApp.bind(this)}
+                                                                                onSelectEnv={this.onSelectEnv.bind(this)}
+                                                                                onUserNameChange={this.buildDockerUserName.bind(this)}
+                                                                                onDockerPasswordChange={this.buildDockerPassword.bind(this)}
+                                                                                onRepositoryChange={this.buildRepository.bind(this)}
+                                                                                dockerUserName={this.state.chosenStep.dockerUserName}
+                                                                                repository={this.state.chosenStep.repository}
+                                                                                selectEnvId={this.state.selectEnvId}
+                                                                            />
+                                                                        </div>
                                                                     );
                                                                 case 6:
                                                                     return (
-                                                                        <Shell
-                                                                            onShellChange={this.shell.bind(this)}
-                                                                            shell={this.state.chosenStep.shell}
-                                                                        />
+                                                                        <div className="chosen-task-detail">
+                                                                            <Shell
+                                                                                onShellChange={this.shell.bind(this)}
+                                                                                shell={this.state.chosenStep.shell}
+                                                                            />
+                                                                        </div>
                                                                     );
                                                                 case 7:
                                                                     return (
-                                                                        <Deployment/>
+                                                                        <div className="chosen-task-detail">
+                                                                            <Deployment/>
+                                                                        </div>
                                                                     );
                                                                 default:
                                                             }

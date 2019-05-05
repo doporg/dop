@@ -49,6 +49,7 @@ const PIPELINE_EN_US = {
     'pipeline.info.step.title': 'Task Setting',
     'pipeline.info.step.placeholder': 'Please select a task',
     'pipeline.info.step.tip': 'Please note the order of selection',
+    'pipeline.info.step.pull': 'Pull code',
     'pipeline.info.step.maven': 'Build maven project',
     'pipeline.info.step.node': 'Build node project',
     'pipeline.info.step.djanggo': 'Build djanggo project',
