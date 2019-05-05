@@ -206,9 +206,17 @@ public class PermissionService {
     //根据用户ID查询功能点
     public List<PermissionBoV1> findByUserId(Long userId)
     {
-
-        return permissionRepository.findByUserId(userId).stream().map(p->
+        List<PermissionBoV1>permissionBoV1List=permissionRepository.findByUserId(userId).stream().map(p->
                 BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
+        //去重
+        for  ( int  i  =   0 ; i  <  permissionBoV1List.size()  -   1 ; i ++ )  {
+            for  ( int  j  =  permissionBoV1List.size()  -   1 ; j  >  i; j -- )  {
+                if  (permissionBoV1List.get(j).getId().equals(permissionBoV1List.get(i).getId()))  {
+                    permissionBoV1List.remove(j);
+                }
+            }
+        }
+        return permissionBoV1List;
 
     }
 

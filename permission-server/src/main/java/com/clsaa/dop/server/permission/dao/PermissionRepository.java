@@ -36,7 +36,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @param pageSize
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_permission where id in :idList and name like concat(:key,'%')"+
+    @Query(value = "select * from t_permission where id in :idList and name like concat(:key,'%') and is_deleted = 0"+
             " limit :rowOffset,:pageSize",nativeQuery = true)
     List<Permission> findAllByNameLikeAndIdIn(@Param("key") String key,
                                               @Param("idList") List<Long> idList,
@@ -49,7 +49,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @param  {List <Long> idList}
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_permission p where id in :idList",nativeQuery = true)
+    @Query(value = "select * from t_permission p where id in :idList and is_deleted = 0",nativeQuery = true)
     List<Permission> findByIdIn(@Param("idList") List<Long> idList);
 
     /**
@@ -60,7 +60,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @param pageSize
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_permission where id in :idList"+
+    @Query(value = "select * from t_permission where id in :idList and is_deleted = 0"+
             " limit :rowOffset,:pageSize",nativeQuery = true)
     List<Permission> findByIdIn( @Param("idList") List<Long> idList,
                                  @Param("rowOffset") Integer rowOffset,
@@ -74,7 +74,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      * @return {@link List < Permission >}
      */
     @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
-    "where rp.role_id=:roleId",nativeQuery=true)
+    "where rp.role_id=:roleId and p.is_deleted = 0",nativeQuery=true)
     List<Permission> findByRoleId(@Param("roleId") Long roleId);
 
     /**
@@ -86,7 +86,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      */
     @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
             "inner join t_user_role_mapping ur on rp.role_id=ur.role_id "+
-            "where ur.user_id=:userId",nativeQuery=true)
+            "where ur.user_id=:userId and p.is_deleted = 0",nativeQuery=true)
     List<Permission> findByUserId(@Param("userId")Long userId);
 
     /**
@@ -99,7 +99,7 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>
      */
     @Query(value = " select * from t_permission p inner join t_role_permission_mapping rp on p.id=rp.permission_id "+
             "inner join t_user_role_mapping ur on rp.role_id=ur.role_id "+
-            "where ur.user_id=:userId and p.name=:permissionName",nativeQuery=true)
+            "where ur.user_id=:userId and p.name=:permissionName and p.is_deleted = 0",nativeQuery=true)
     List<Permission> findByUserIdAndPermissionName(@Param("userId")Long userId,
                                     @Param("permissionName")String permissionName);
 
