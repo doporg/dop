@@ -18,6 +18,8 @@ import Search from "@icedesign/base/lib/search";
  * */
 
 export default class UserRoleMapping extends Component {
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -54,43 +56,48 @@ export default class UserRoleMapping extends Component {
             userPageSize:8,
             userTotalCount:0,
 
-            addRolePermission:"false",
-            findUserDataPermission:"false",
-            findUserPermission:"false"
+            addRolePermission:"false"
         };
 
     };
 
     //每次访问的刷新，查询当前用户的信息
     componentDidMount() {
-
         let getPermissionUrl=API.permission+"/v1/users/permissions/ByCurrent"
         Axios.get(getPermissionUrl).then(response=>
         {
-            console.log(response)
+            let permissionTmp= response.data.map(x=>{return x.name})
+            if(permissionTmp.indexOf("创建角色")!=-1)
+            {
+                console.log("可以创建角色！")
+                this.setState({addRolePermission:"true"})};
+
+            this.setState({userIsLoading:true})
+            let url = API.user + "/v1/users/search" ;
+            let params=
+                {
+                    pageNo:this.state.userPageNo,
+                    pageSize:this.state.userPageSize
+                }
+            Axios.get(url,{params:(params)}).then((response) => {
+                this.setState({
+                    currentData:response.data.pageList,
+                    userPageNo:response.data.pageNo,
+                    userTotalCount:response.data.totalCount,
+                    userIsLoading:false
+                })
+            }).catch((error)=>{
+                // handle error
+                console.log(error);
+            }).then(()=>{
+                // always executed
+            });
+            this.setState({userIsLoading:false})
+
         })
 
-        this.setState({userIsLoading:true})
-        let url = API.user + "/v1/users/search" ;
-        let params=
-            {
-                pageNo:this.state.userPageNo,
-                pageSize:this.state.userPageSize
-            }
-        Axios.get(url,{params:(params)}).then((response) => {
-            this.setState({
-                currentData:response.data.pageList,
-                userPageNo:response.data.pageNo,
-                userTotalCount:response.data.totalCount,
-                userIsLoading:false
-            })
-        }).catch((error)=>{
-            // handle error
-            console.log(error);
-        }).then(()=>{
-            // always executed
-        });
-        this.setState({userIsLoading:false})
+
+
     }
 
     //改变页码
@@ -309,15 +316,19 @@ export default class UserRoleMapping extends Component {
             width: "60%" ,height:"70%"
         }
         const showRoles =(value, index, record)=>{
-            return(
-                <Button
-                    disabled={this.state.addRolePermission}
-                    type="primary"
-                    shape="normal"
-                    size="medium"
-                    className="button"
-                    onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
-            )
+
+            if(this.state.addRolePermission=="true")
+            {
+                return(
+                    <Button
+                        type="primary"
+                        shape="normal"
+                        size="medium"
+                        className="button"
+                        onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
+                )
+            }
+
         }
         const showPermissions =(value, index, record)=>{
             return(

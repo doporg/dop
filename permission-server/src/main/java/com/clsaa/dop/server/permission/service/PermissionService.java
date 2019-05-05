@@ -1,9 +1,8 @@
 package com.clsaa.dop.server.permission.service;
 
 
-import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
-import com.clsaa.dop.client.permission.annotation.GetUserId;
-import com.clsaa.dop.client.permission.annotation.PermissionName;
+import com.clsaa.dop.server.permission.annotation.GetUserId;
+import com.clsaa.dop.server.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -46,7 +45,7 @@ public class PermissionService {
 
     @Autowired
     //权限管理服务
-    private AuthenticService authenticationService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     //用户服务
