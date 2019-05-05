@@ -5,6 +5,8 @@ import Axios from "axios";
 import Button from "@icedesign/base/lib/button";
 import Pagination from "@icedesign/base/lib/pagination";
 import Search from "@icedesign/base/lib/search";
+import {injectIntl} from "react-intl";
+import {Role} from "../Role";
 
 
 
@@ -17,7 +19,7 @@ import Search from "@icedesign/base/lib/search";
  *
  * */
 
-export default class UserRoleMapping extends Component {
+export class UserRoleMapping extends Component {
 
 
     constructor(props) {
@@ -56,7 +58,44 @@ export default class UserRoleMapping extends Component {
             userPageSize:8,
             userTotalCount:0,
 
-            addRolePermission:"false"
+            addRolePermission:"false",
+
+            userRoleMappingText:[
+                this.props.intl.messages[ 'permission.addRole'],
+                this.props.intl.messages[ 'permission.showPermission'],
+                this.props.intl.messages[ 'permission.showUserData'],
+                this.props.intl.messages[ 'permission.userRoleMapTable'],
+                this.props.intl.messages[ 'permission.roleBelongUser'],
+                this.props.intl.messages[ 'permission.allRole'],
+                this.props.intl.messages[ 'permission.userPermissionMap'],
+                this.props.intl.messages[ 'permission.userDataTable:'],
+                this.props.intl.messages[ 'permission.defaultDataSearch'],
+                this.props.intl.messages[ 'permission.ID'],
+                this.props.intl.messages[ 'permission.ruleId'],
+                this.props.intl.messages[ 'permission.dataDes'],
+                this.props.intl.messages[ 'permission.fieldValue'],
+                this.props.intl.messages[ 'permission.userName'],
+                this.props.intl.messages[ 'permission.userEmail'],
+                this.props.intl.messages[ 'permission.modifyTime'],
+
+                this.props.intl.messages[ 'permission.creator'],
+                this.props.intl.messages[ 'permission.createTime'],
+                this.props.intl.messages[ 'permission.deleteTitle'],
+                this.props.intl.messages[ 'permission.cancelDelete'],
+                this.props.intl.messages[ 'permission.repeatName'],
+                this.props.intl.messages[ 'permission.successDelete'],
+                this.props.intl.messages[ 'permission.successAdd'],
+                this.props.intl.messages[ 'permission.confirm'],
+                this.props.intl.messages[ 'permission.reset'],
+                this.props.intl.messages[ 'permission.cancel'],
+                this.props.intl.messages[ 'permission.add'],
+                this.props.intl.messages[ 'permission.delete'],
+                this.props.intl.messages[ 'permission.confirmDelete'],
+                this.props.intl.messages[ 'permission.inputName'],
+                this.props.intl.messages[ 'permission.nullNameWarning'],
+                this.props.intl.messages[ 'permission.nullDesWarning'],
+                this.props.intl.messages[ 'permission.defaultSearch']
+            ]
         };
 
     };
@@ -198,7 +237,7 @@ export default class UserRoleMapping extends Component {
 
             Axios.get(getRoleUrl,{params:(userId)}).then(response=>
             {
-                Feedback.toast.success("成功删除！")
+                Feedback.toast.success( this.props.intl.messages[ 'permission.succesDelete'])
                 this.setState({currentRoles:response.data})
             })
         )
@@ -212,7 +251,7 @@ export default class UserRoleMapping extends Component {
         Axios.post(url,{},{params:(param)}).then(response=>
             Axios.get(getRoleUrl,{params:(userId)}).then(response1=>
             {
-                Feedback.toast.success("成功添加！")
+                Feedback.toast.success( this.props.intl.messages[ 'permission.successAdd'])
 
                 this.setState({currentRoles:response1.data})
             })
@@ -272,7 +311,7 @@ export default class UserRoleMapping extends Component {
 
             Axios.get(getDataUrl,{params:(userId)}).then(response=>
             {
-                Feedback.toast.success("成功删除！")
+                Feedback.toast.success( this.props.intl.messages[ 'permission.successDelete'])
                 this.setState({currentUserData:response.data})
             })
         )
@@ -325,35 +364,35 @@ export default class UserRoleMapping extends Component {
                         shape="normal"
                         size="medium"
                         className="button"
-                        onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
+                        onClick={this.editUserOpen.bind(this,record.id)}> {this.props.intl.messages[ 'permission.addRole']}</Button>
                 )
             }
 
         }
         const showPermissions =(value, index, record)=>{
             return(
-                <Button onClick={this.showPermissions.bind(this,record.id)}>查看功能点</Button>
+                <Button onClick={this.showPermissions.bind(this,record.id)}>{this.props.intl.messages[ 'permission.showPermission']}</Button>
             )
         }
         const showUserData =(value, index, record)=>{
             return(
-                <Button onClick={this.showUserData.bind(this,record.id)}>查看数据</Button>
+                <Button onClick={this.showUserData.bind(this,record.id)}>{this.props.intl.messages[ 'permission.showUserData']}</Button>
             )
         }
         const footer=(
             <a onClick={this.onClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         )
         const footer2=(
             <a onClick={this.onPermissionClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         )
 
         const footer3=(
             <a onClick={this.onUserDataClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         )
         //删除角色按钮
@@ -364,7 +403,7 @@ export default class UserRoleMapping extends Component {
                     shape="warning"
                     size="medium"
                     className="button"
-                    onClick={this.removeRole.bind(this, record.id)}>删除</Button>
+                    onClick={this.removeRole.bind(this, record.id)}>{this.props.intl.messages[ 'permission.delete']}</Button>
             );
         }
         //添加角色按钮
@@ -375,7 +414,7 @@ export default class UserRoleMapping extends Component {
                     shape="normal"
                     size="medium"
                     className="button"
-                    onClick={this.addRole.bind(this, record.id)}>添加</Button>
+                    onClick={this.addRole.bind(this, record.id)}>{this.props.intl.messages[ 'permission.add']}</Button>
             );
         }
 
@@ -386,14 +425,14 @@ export default class UserRoleMapping extends Component {
                     shape="warning"
                     size="medium"
                     className="button"
-                    onClick={this.deleteUserData.bind(this, record.id)}>删除</Button>
+                    onClick={this.deleteUserData.bind(this, record.id)}>{this.props.intl.messages[ 'permission.delete']}</Button>
             );
         }
 
         return(
             <div>
                 <Dialog
-                    title="用户关联角色列表"
+                    title={this.props.intl.messages[ 'permission.userRoleMapTable']}
                     visible={this.state.visible}
                     onClose={this.onClose}
                     style={dialogStyle}
@@ -401,22 +440,22 @@ export default class UserRoleMapping extends Component {
                     footer={footer}
                     shouldUpdatePosition={true}
                 >
-                            <h2>已关联角色</h2>
+                            <h2>{this.props.intl.messages[ 'permission.roleBelongUser']}</h2>
                             <Table
                                 hasBorder={false}
                                 dataSource={this.state.currentRoles}
                                 primaryKey="id"
                                 isLoading={this.state.roleIsLoading}>
-                                <Table.Column  title="名称" dataIndex="name" />
-                                <Table.Column title="删除操作" cell={deleteRoleMap} width="10%" />
+                                <Table.Column  title={this.props.intl.messages[ 'permission.roleName']} dataIndex="name" />
+                                <Table.Column title={this.props.intl.messages[ 'permission.deleteTitle']}cell={deleteRoleMap} width="10%" />
                             </Table>
 
 
 
-                            <h2>所有角色</h2>
+                            <h2>{this.props.intl.messages[ 'permission.allRole']}</h2>
                             <Search
                             onChange={this.onSearchChange.bind(this)}
-                            placeholder="输入角色名称搜索"
+                            placeholder={this.props.intl.messages[ 'permission.defaultSearch']}
                             hasIcon={false}
                             autoWidth
                             />
@@ -424,8 +463,8 @@ export default class UserRoleMapping extends Component {
                                 hasBorder={false}
                                 dataSource={this.state.roleList}
                                 primaryKey="id">
-                                <Table.Column  title="名称" dataIndex="name" />
-                                <Table.Column title="添加" cell={addRoleMap} width="10%" />
+                                <Table.Column  title={this.props.intl.messages[ 'permission.roleName']} dataIndex="name" />
+                                <Table.Column title={this.props.intl.messages[ 'permission.add']} cell={addRoleMap} width="10%" />
                             </Table>
                             <Pagination total={this.state.roleTotalCount}
                                 current={this.state.rolePageNo}
@@ -435,7 +474,7 @@ export default class UserRoleMapping extends Component {
                 </Dialog>
 
                 <Dialog
-                    title="用户功能点表"
+                    title={this.props.intl.messages[ 'permission.userPermissionMapTable']}
                     visible={this.state.permissionVisible}
                     onClose={this.onPermissionClose}
                     style={dialogStyle}
@@ -446,14 +485,14 @@ export default class UserRoleMapping extends Component {
                         hasBorder={false}
                         isLoading={this.state.permissionIsLoading}
                         dataSource={this.state.currentPermissions}>
-                        <Table.Column  title="名称" dataIndex="name" />
-                        <Table.Column  title="功能点描述" dataIndex="description" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.permissionName']} dataIndex="name" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.permissionDes']} dataIndex="description" />
                     </Table>
 
                 </Dialog>
 
                 <Dialog
-                    title="用户数据表"
+                    title={this.props.intl.messages[ 'permission.userDataTable']}
                     visible={this.state.userDataVisible}
                     onClose={this.onUserDataClose}
                     style={dialogStyle}
@@ -462,7 +501,7 @@ export default class UserRoleMapping extends Component {
                     shouldUpdatePosition={true}>
                     <Search
                         onChange={this.onDataSearchChange.bind(this)}
-                        placeholder="输入相关描述进行搜索"
+                        placeholder={this.props.intl.messages[ 'permission.defaultDataSearch']}
                         hasIcon={false}
                         autoWidth
                     />
@@ -470,11 +509,11 @@ export default class UserRoleMapping extends Component {
                         hasBorder={false}
                         dataSource={this.state.currentUserData}
                         isLoading={this.state.dataIsLoading}>
-                        <Table.Column  title="ID" dataIndex="id" width="10%" />
-                        <Table.Column  title="规则ID" dataIndex="ruleId" width="10%" />
-                        <Table.Column  title="数据描述" dataIndex="description" />
-                        <Table.Column  title="作用域参数值" dataIndex="fieldValue" width="15%" />
-                        <Table.Column  title="删除操作" cell={deleteUserData}  width="10%" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.ID']} dataIndex="id" width="10%" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.ruleId']} dataIndex="ruleId" width="10%" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.dataDes']} dataIndex="description" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.fieldValue']} dataIndex="fieldValue" width="15%" />
+                        <Table.Column  title={this.props.intl.messages[ 'permission.deleteTitle']} cell={deleteUserData}  width="10%" />
                     </Table>
 
                 </Dialog>
@@ -483,12 +522,12 @@ export default class UserRoleMapping extends Component {
                     hasBorder={false}
                     isLoading={this.state.userIsLoading}
                     dataSource={this.state.currentData}>
-                    <Table.Column title="用户名称" dataIndex="name"/>
-                    <Table.Column title="用户邮箱"   dataIndex="email"/>
-                    <Table.Column title="最后修改时间" dataIndex="mtime"/>
-                    <Table.Column title="分配角色" cell={showRoles} width="10%"/>
-                    <Table.Column title="查看可操作数据" cell={showUserData} width="10%"/>
-                    <Table.Column title="查看功能点" cell={showPermissions} width="10%"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.userName']} dataIndex="name"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.userEmail']}   dataIndex="email"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.modifyTime']}  dataIndex="mtime"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.roleDistribution']}  cell={showRoles} width="10%"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.showUserData']} cell={showUserData} width="10%"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.showPermission']} cell={showPermissions} width="10%"/>
 
                 </Table>
                 <Pagination total={this.state.userTotalCount}
@@ -501,3 +540,4 @@ export default class UserRoleMapping extends Component {
     }
 
 }
+export default injectIntl(UserRoleMapping)

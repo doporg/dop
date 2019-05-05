@@ -16,12 +16,13 @@ import Select from "@icedesign/base/lib/select";
 import {Nav ,Icon , Menu} from "@icedesign/base";
 import '../Styles.scss'
 import Search from "@icedesign/base/lib/search";
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 
 const { Item: FormItem } = Form;
 const { Group: RadioGroup } = Radio;
 
-export default class Permission extends Component {
+export  class Permission extends Component {
 
 
     constructor(props) {
@@ -43,8 +44,42 @@ export default class Permission extends Component {
                 },
             pageNo:1,
             pageSize:8,
-            totalCount:0
+            totalCount:0,
+
+            permissionText:[
+                this.props.intl.messages['permission.newPermission'],
+                this.props.intl.messages['permission.permissionName'],
+                this.props.intl.messages['permission.isPrivate'],
+                this.props.intl.messages['permission.defineIsPrivate'],
+                this.props.intl.messages[ 'permission.private'],
+                this.props.intl.messages[ 'permission.public'],
+                this.props.intl.messages[ 'permission.permissionDes'],
+                this.props.intl.messages[ 'permission.defaultPermissionDes'],
+                this.props.intl.messages[ 'permission.parentId'],
+                this.props.intl.messages[  'permission.permissionId'],
+
+                this.props.intl.messages[ 'permission.creator'],
+                this.props.intl.messages[ 'permission.createTime'],
+                this.props.intl.messages[ 'permission.deleteTitle'],
+                this.props.intl.messages[ 'permission.cancelDelete'],
+                this.props.intl.messages[ 'permission.repeatName'],
+                this.props.intl.messages[ 'permission.successDelete'],
+                this.props.intl.messages[ 'permission.successAdd'],
+                this.props.intl.messages[ 'permission.confirm'],
+                this.props.intl.messages[ 'permission.reset'],
+                this.props.intl.messages[ 'permission.cancel'],
+                this.props.intl.messages[ 'permission.add'],
+                this.props.intl.messages[ 'permission.delete'],
+                this.props.intl.messages[ 'permission.confirmDelete'],
+                this.props.intl.messages[ 'permission.inputName'],
+                this.props.intl.messages[ 'permission.nullNameWarning'],
+                this.props.intl.messages[ 'permission.nullDesWarning'],
+                this.props.intl.messages[ 'permission.defaultSearch']
+            ]
         };
+
+
+
 
     }
     handleReset(e) {
@@ -56,7 +91,7 @@ export default class Permission extends Component {
     //取消删除操作
     onCancel = () => {
         console.log('取消删除');
-        Feedback.toast.error('删除已取消！')
+        Feedback.toast.error(this.props.intl.messages['permission.cancelDelete'])
     }
 
     //弹出创建功能点弹窗
@@ -155,7 +190,7 @@ export default class Permission extends Component {
                     console.log("监测重复返回的东西："+response.data.name);
                     if(response.data.name==values.name)
                     {
-                        Feedback.toast.error("功能点名称重复！")
+                        Feedback.toast.error(this.props.intl.messages['permission.repeatName'])
                     }
                     else
                     {
@@ -192,7 +227,7 @@ export default class Permission extends Component {
         Axios.delete(url,{params:(params)}
         )
             .then((response)=>{
-                Feedback.toast.success('成功删除！')
+                Feedback.toast.success(this.props.intl.messages['permission.successDelete'])
                 this.onChange(this.state.currentPage)
             }).catch((error)=> {
             console.log(error);
@@ -235,7 +270,7 @@ export default class Permission extends Component {
         //窗口按钮定义
         const footer = (
             <a onClick={this.onClose} href="javascript:">
-                取消
+                {this.props.intl.messages['permission.cancel']}
             </a>
         );
 
@@ -245,13 +280,13 @@ export default class Permission extends Component {
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
                     onCancel={this.onCancel}
-                    title="您真的要删除吗？"
+                    title={this.props.intl.messages['permission.confirmDelete']}
                 >
                     <Button
                         type="primary"
                         shape="warning"
                         size="medium"
-                        className="button">删除</Button>
+                        className="button">{this.props.intl.messages['permission.delete']}</Button>
                 </BalloonConfirm>
 
             );
@@ -260,9 +295,9 @@ export default class Permission extends Component {
         <div>
             <Button type="primary"
                     className="topButton"
-                    onClick={this.onOpen} >创建功能点</Button>
+                    onClick={this.onOpen} > {this.props.intl.messages['permission.newPermission']}</Button>
             <Dialog
-                title="创建功能点"
+                title={this.props.intl.messages['permission.newPermission']}
                 visible={this.state.visible}
                 onClose={this.onClose}
                 style={dialogStyle}
@@ -273,7 +308,7 @@ export default class Permission extends Component {
                 <Form field={this.field}>
 
                     <FormItem
-                        label="功能点名称："
+                        label={this.props.intl.messages['permission.permissionName']}
                         {...formItemLayout}
                         hasFeedback
                         help={
@@ -285,47 +320,47 @@ export default class Permission extends Component {
                         <Input
                             maxLength={10}
                             hasLimitHint
-                            placeholder="请输入名称"
+                            placeholder={this.props.intl.messages['permission.inputName']}
                             {...init("name", {
                                 rules: [
-                                    { required: true, min: 1, message: "名称不能为空！" },
+                                    { required: true, min: 1, message:this.props.intl.messages['permission.nullNameWarning'] },
                                     //检验名称是否重复
                                 ]
                             })}
                         />
                     </FormItem>
 
-                    <FormItem label="是否私有：" hasFeedback {...formItemLayout}>
+                    <FormItem label={this.props.intl.messages['permission.isPrivate']} hasFeedback {...formItemLayout}>
                         <RadioGroup
                             {...init("isPrivate", {
-                                rules: [{ required: true, message: "请定义是否私有" }]
+                                rules: [{ required: true, message: this.props.intl.messages['permission.defineIsPrivate'] }]
                             })}
                         >
-                            <Radio value="0">公有</Radio>
-                            <Radio value="1">私有</Radio>
+                            <Radio value="0">{this.props.intl.messages['permission.private']}</Radio>
+                            <Radio value="1">{this.props.intl.messages['permission.public']}</Radio>
                         </RadioGroup>
                     </FormItem>
-                    <FormItem label="功能点描述：" {...formItemLayout}>
+                    <FormItem label={this.props.intl.messages['permission.permissionDes']} {...formItemLayout}>
                         <Input
                             multiple
                             maxLength={30}
                             hasLimitHint
-                            placeholder="请描述该功能点具体内容"
+                            placeholder={this.props.intl.messages['permission.defaultPermissionDes']}
                             {...init("description", {
-                                rules: [{ required: true, message: "真的不打算写点什么吗？" }]
+                                rules: [{ required: true, message:this.props.intl.messages['permission.nullDesWarning'] }]
                             })}
                         />
                     </FormItem>
-                    <FormItem label="父功能点ID：" {...formItemLayout} required>
+                    <FormItem label={this.props.intl.messages['permission.parentId']} {...formItemLayout} required>
                         <Select style={{ width: 200 }} {...init("parentId")}>
                         </Select>
                     </FormItem>
                     <FormItem wrapperCol={{ offset: 6 }}>
                         <Button type="primary" onClick={this.handleSubmit.bind(this)}>
-                            确定
+                            {this.props.intl.messages['permission.confirm']}
                         </Button>
                         &nbsp;&nbsp;&nbsp;
-                        <Button onClick={this.handleReset.bind(this)}>重置</Button>
+                        <Button onClick={this.handleReset.bind(this)}>{this.props.intl.messages['permission.reset']}</Button>
                     </FormItem>
 
                 </Form>
@@ -335,19 +370,19 @@ export default class Permission extends Component {
                 className="search"
                 onChange={this.onSearchChange.bind(this)}
                 dataSource={this.state.dataSource}
-                placeholder="输入功能点名称搜索"
+                placeholder={this.props.intl.messages['permission.defaultSearch']}
                 hasIcon={false}
                 autoWidth
             />
             <Table dataSource={this.state.currentData}
                    isLoading={this.state.isLoading}
                    hasBorder={false}>
-                <Table.Column title="功能点ID" dataIndex="id" width="10%"/>
-                <Table.Column title="功能点名称" dataIndex="name"/>
-                <Table.Column title="功能点描述" dataIndex="description"/>
-                <Table.Column title="创建人" dataIndex="userName"/>
-                <Table.Column title="创建时间" dataIndex="ctime"/>
-                <Table.Column title="删除操作" cell={renderDelete} width="10%" />
+                <Table.Column title={this.props.intl.messages['permission.permissionId']} dataIndex="id" width="10%"/>
+                <Table.Column title={this.props.intl.messages['permission.permissionName']} dataIndex="name"/>
+                <Table.Column title={this.props.intl.messages['permission.permissionDes']} dataIndex="description"/>
+                <Table.Column title={this.props.intl.messages['permission.creator']} dataIndex="userName"/>
+                <Table.Column title={this.props.intl.messages['permission.createTime']} dataIndex="ctime"/>
+                <Table.Column title={this.props.intl.messages['permission.deleteTitle']} cell={renderDelete} width="10%" />
 
             </Table>
             <Pagination total={this.state.totalCount}
@@ -360,3 +395,4 @@ export default class Permission extends Component {
         );
     }
 }
+export default injectIntl(Permission)
