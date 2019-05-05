@@ -36,7 +36,8 @@ export default class RequestStageForm extends Component{
         this.state = {
             isSubmit: this.props.isSubmit,
             value: this.props.data,
-            stage: this.props.stage
+            stage: this.props.stage,
+            caseParams: this.props.caseParams
         };
     }
 
@@ -59,6 +60,22 @@ export default class RequestStageForm extends Component{
             operationType: 'REQUEST',
             order: index
         });
+        this.state.value.waitOperations.push({
+            waitTime: 1000000,
+            order: -1,
+            operationType: 'WAIT'
+        });
+        this.setState({isSubmit: false, value: this.state.value});
+    };
+
+    addRequestScriptWithContent(script) {
+        let index = this.state.value.operations.length;
+        this.state.value.operations.push({
+            operationType: 'REQUEST',
+            order: index
+        });
+        this.state.value.requestScripts.push(script);
+        script["order"] = index;
         this.state.value.waitOperations.push({
             waitTime: 1000000,
             order: -1,
@@ -158,7 +175,8 @@ export default class RequestStageForm extends Component{
         this.setState({
             isSubmit: nextProps.isSubmit,
             value: nextProps.data,
-            stage: nextProps.stage
+            stage: nextProps.stage,
+            caseParams: nextProps.caseParams
         });
     }
 
@@ -180,6 +198,10 @@ export default class RequestStageForm extends Component{
                     removeOperation={this.removeOperation.bind(this)}
                     cancel={this.cancel.bind(this)}
                     stage={this.props.stage}
+                    addRequestScriptWithContent={this.addRequestScriptWithContent.bind(this)}
+                    caseId={this.props.caseId}
+                    addCaseParam={this.props.add_caseParam}
+                    caseParams={this.state.caseParams}
                 />
 
                 <Row>

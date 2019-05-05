@@ -3,6 +3,7 @@ package com.clsaa.dop.server.test.service.core;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.test.enums.HttpMethod;
+import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.enums.ParamClass;
 import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.RequestParamCreateParam;
@@ -35,6 +36,7 @@ public class ImportService {
         String host = apiJson.getString(HOST_KEY);
         addCaseParam("host", host, caseParams);
         String basePath = apiJson.getString(BASE_PATH_KEY);
+        addCaseParam("basePath", basePath, caseParams);
 
         JSONObject pathsJson = apiJson.getJSONObject(PATHS_KEY);
         List<RequestScriptParam> requestScriptParams = new ArrayList<>();
@@ -61,7 +63,7 @@ public class ImportService {
                             requestParams.add(requestParam);
                         });
 
-                        String url = "http://" + host + basePath;
+                        String url = "http://" + "${host}" + "${basePath}";
                         if (rawUrl.startsWith("/")) {
                             url += rawUrl.substring(1);
                         }else {
@@ -71,6 +73,13 @@ public class ImportService {
                         requestScript.setRawUrl(url);
                         requestScript.setHttpMethod(httpMethod);
                         requestScript.setRequestParams(requestParams);
+                        requestScript.setRequestHeaders(new ArrayList<>());
+                        requestScript.setRequestCheckPoints(new ArrayList<>());
+                        requestScript.setResultParams(new ArrayList<>());
+                        requestScript.setRequestBody("");
+                        requestScript.setRetryTimes(0);
+                        requestScript.setRetryInterval(0L);
+                        requestScript.setOperationType(OperationType.REQUEST);
 
                         requestScript.setOrder(order.getAndUpdate(integer -> integer + 1));
                         requestScriptParams.add(requestScript);

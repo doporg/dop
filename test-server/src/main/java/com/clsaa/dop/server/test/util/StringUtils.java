@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -19,11 +20,14 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
     private static String dollarRegex = "\\S*\\$\\{\\S+\\}\\S*";
-    private static Pattern pattern = Pattern.compile(dollarRegex);
+    private static Pattern dollarPattern = Pattern.compile(dollarRegex);
+
+    private static String braceRegex = "\\S*\\{\\S+\\}\\S*";
+    private static Pattern bracePattern = Pattern.compile(braceRegex);
 
     // 带有${}变量的字符串, 进行变量替换
-    public static String tryToResolve(String origin, Map<String, String> data) {
-        if (pattern.matcher(origin).matches()) {
+    public static String tryToResolveDollar(String origin, Map<String, String> data) {
+        if (dollarPattern.matcher(origin).matches()) {
             try {
                 Template template = new Template("tpl", origin, new Configuration(Configuration.VERSION_2_3_28));
                 StringWriter resultWriter = new StringWriter();
@@ -39,4 +43,40 @@ public class StringUtils {
         return origin;
     }
 
+    // 带有{}变量的字符串，进行变量替换
+    public static String tryToResolveBrace(String origin, Map<String, String> data) {
+        while (bracePattern.matcher(origin).matches()) {
+            char[] chars = origin.toCharArray();
+            int a = -1, b = -1;
+            find:
+            for (int i = 0; i < chars.length; i++) {
+                if (chars[i] == '{') {
+                    for (int j = i + 1; j < chars.length; j++) {
+                        if (chars[j] == '}') {
+                            a = i + 1;
+                            b = j;
+                            break find;
+                        }
+                    }
+                }
+            }
+
+            if (a != -1) {
+                String ref = origin.substring(a, b);
+                String value = data.getOrDefault(ref, String.format("Path Param %s miss", ref));
+                origin = new String(chars, 0, a - 1) +
+                        value +
+                        new String(chars, b + 1, chars.length - b - 1);
+            }
+        }
+        return origin;
+    }
+
+    public static void main(String[] args) {
+        String origin = "{p1}/{p2}";
+        Map<String, String> map = new HashMap<>();
+        map.put("p1", "a");
+        map.put("p2", "b");
+        System.out.println(tryToResolveBrace(origin, map));
+    }
 }

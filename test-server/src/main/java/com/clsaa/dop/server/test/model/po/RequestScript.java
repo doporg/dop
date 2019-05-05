@@ -43,6 +43,7 @@ public class RequestScript implements Po {
     @Fetch(FetchMode.SUBSELECT)
     private List<RequestParam> requestParams;
 
+    @Lob
     @Column(name = "request_body")
     private String requestBody;
 

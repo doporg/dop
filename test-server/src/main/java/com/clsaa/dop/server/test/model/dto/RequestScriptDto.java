@@ -7,7 +7,6 @@ import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
-import com.clsaa.dop.server.test.model.po.RequestParam;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
 import io.restassured.http.ContentType;
@@ -110,9 +109,11 @@ public class RequestScriptDto implements Operation {
                     .url(rawUrl)
                     .requestHeaders(headersMap)
                     .requestBody(requestBody)
-                    .params(executeContext.getCaseParams())
+                    .caseParams(executeContext.getCaseParams())
                     .version(currentVersion())
                     .build();
+            requestContext.fillRequestParams(this.requestParams);
+
             String url = urlHandled(requestContext);
             Map<String, String> headers = requestHeadersHandled(requestContext);
 

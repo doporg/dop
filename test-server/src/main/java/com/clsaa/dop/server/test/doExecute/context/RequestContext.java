@@ -1,10 +1,14 @@
 package com.clsaa.dop.server.test.doExecute.context;
 
 import com.clsaa.dop.server.test.doExecute.Version;
+import com.clsaa.dop.server.test.enums.ParamClass;
+import com.clsaa.dop.server.test.model.dto.RequestParamDto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xihao
@@ -23,5 +27,12 @@ public class RequestContext {
 
     private String requestBody;
 
-    private Map<String, String> params;
+    private Map<String, String> caseParams;
+
+    private Map<ParamClass, List<RequestParamDto>> requestParams;
+
+    public void fillRequestParams(List<RequestParamDto> requestParamDtos) {
+        this.requestParams = requestParamDtos.stream()
+                .collect(Collectors.groupingBy(RequestParamDto::getParamClass));
+    }
 }
