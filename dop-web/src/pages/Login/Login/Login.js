@@ -176,7 +176,8 @@ export default class Login extends Component {
                     </div>
                     <div className="right">
                         <Loading shape="fusion-reactor" visible={this.state.visible}
-                                 className="next-loading my-loading">
+                                 className="next-loading my-loading"
+                        >
                             <div className="form">
                                 <div className="title">
                                     密码登陆

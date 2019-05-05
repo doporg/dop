@@ -245,23 +245,23 @@ public class PipelineService {
                 List<Step> steps = stages.get(i).getSteps();
                 for (int j = 0; j < steps.size(); j++) {
                     Step task = steps.get(j);
-                    String taskName = task.getTaskName();
+                    Step.TaskType taskName = task.getTaskName();
                     switch (taskName) {
-                        case ("拉取代码"):
+                        case PullCode:
                             task.setGitUrl(gitUrl == null ? task.getGitUrl() : gitUrl);
                             break;
-                        case ("构建docker镜像"):
+                        case BuildDocker:
                             task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
                             task.setRepository(repository == null ? task.getRepository() : repository);
                             task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
                             break;
-                        case ("推送docker镜像"):
+                        case PushDocker:
                             task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
                             task.setRepository(repository == null ? task.getRepository() : repository);
                             task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
                             task.setDockerPassword(dockerPassword == null ? task.getDockerPassword() : dockerPassword);
                             break;
-                        case ("部署"):
+                        case Deploy:
                             task.setDeploy(deploy);
                             task.setIp(ip);
                             task.setToken(token);

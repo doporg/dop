@@ -3,6 +3,10 @@ package com.clsaa.dop.server.pipeline.model.po;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 /**
  * 流水线阶段所做任务持久层对象
  * @author 张富利
@@ -14,12 +18,22 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Step {
-
     /**
      * 任务名称
      */
     @SerializedName("taskName")
-    private String taskName;
+    @Enumerated(EnumType.STRING)
+    private TaskType taskName;
+    public enum TaskType {
+        PullCode,
+        BuildMaven,
+        BuildNode,
+        BuildDjanggo,
+        BuildDocker,
+        PushDocker,
+        CustomScript,
+        Deploy;
+    }
 
     /**
      * git地址
