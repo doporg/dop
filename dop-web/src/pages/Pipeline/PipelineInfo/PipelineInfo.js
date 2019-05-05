@@ -60,7 +60,9 @@ class PipelineInfo extends Component {
                 path: "./Jenkinsfile"
             },
             currentStage: 0,
-            applications: []
+            applications: [],
+            dockerUserName: null,
+            repository: null
         };
     }
 
@@ -142,12 +144,28 @@ class PipelineInfo extends Component {
             currentStage: currentStage
         })
     }
-
+    onChangeApp(value){
+        let pipeline = this.state.pipeline;
+        pipeline.appId = value;
+        this.setState({
+            pipeline
+        })
+    }
     onSelectEnv(value) {
         let pipeline = this.state.pipeline;
         pipeline.appEnvId = value;
         this.setState({
             pipeline
+        })
+    }
+    onChangeDockerUserName(value){
+        this.setStages({
+            dockerUserName: value
+        })
+    }
+    onChangeRepository(value){
+        this.setStages({
+            repository: value
         })
     }
     copy(data){
@@ -190,7 +208,6 @@ class PipelineInfo extends Component {
         let pipeline = this.state.pipeline;
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
         let self = this;
-        console.log(self.state.pipeline);
         pipeline.jenkinsfile = jenkinsFileInfo;
         let url = API.pipeline + "/v1/pipeline/jenkinsfile";
         Axios.post(url, pipeline).then((response) => {
@@ -325,24 +342,6 @@ class PipelineInfo extends Component {
                             })()}
                         </div>
                         <div className="form-item">
-                            <span className="form-item-label">{this.props.intl.messages["pipeline.info.apply"]}: </span>
-                            <FormBinder
-                                name="appId"
-                                required
-                                message={this.props.intl.messages["pipeline.info.apply.placeholder"]}>
-                                <Combobox
-                                    onChange={this.selectApplication.bind(this)}
-                                    dataSource={this.state.applications}
-                                    placeholder={this.props.intl.messages["pipeline.info.apply.placeholder"]}
-                                    fillProps="label"
-                                    className="combobox"
-                                >
-                                </Combobox>
-                            </FormBinder>
-                            <FormError className="form-item-error" name="appId"/>
-                        </div>
-
-                        <div className="form-item">
                             <span
                                 className="form-item-label">{this.props.intl.messages["pipeline.info.jenkinsfile"]}: </span>
                             <FormBinder
@@ -378,7 +377,13 @@ class PipelineInfo extends Component {
                                         currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
                                         onChange={this.setStages.bind(this)}
+                                        onChangeApp={this.onChangeApp.bind(this)}
                                         onSelectEnv={this.onSelectEnv.bind(this)}
+
+                                        dockerUserName={this.state.dockerUserName}
+                                        onChangeDockerUserName={this.onChangeDockerUserName.bind(this)}
+                                        repository={this.state.repository}
+                                        onChangeRepository={this.onChangeRepository.bind(this)}
                                     />
                                 )
                             }
