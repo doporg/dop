@@ -296,10 +296,10 @@ class PipelineInfoStep extends Component {
                                 ref="form"
                             >
                                 <div className="pipeline-info-step">
-                                    <h3 className="header">阶段设置</h3>
+                                    <h3 className="header">{this.props.intl.messages["pipeline.info.stage.title"]}</h3>
                                     <div>
-                                        <span className="label">名称: </span>
-                                        <FormBinder name="name" required message="请输入阶段的名称">
+                                        <span className="label">{this.props.intl.messages["pipeline.info.stage.name.title"]}: </span>
+                                        <FormBinder name="name" required message={this.props.intl.messages["pipeline.info.stage.name"]}>
                                             <Input
                                                 value={this.state.stage.name}
                                             />
@@ -308,13 +308,13 @@ class PipelineInfoStep extends Component {
                                     </div>
                                     <div className="task">
                                     <span className="task-label-set">
-                                        任务设置:
-                                        <p>*请注意任务顺序</p>
+                                        {this.props.intl.messages["pipeline.info.step.title"]}:
+                                        <p>*{this.props.intl.messages["pipeline.info.step.tip"]}</p>
                                     </span>
                                         <div className="choose-task">
                                             <Combobox
                                                 filterLocal={false}
-                                                placeholder="请选择任务"
+                                                placeholder={this.props.intl.messages["pipeline.info.step.placeholder"]}
                                                 onChange={this.selectStep.bind(this)}
                                                 dataSource={this.state.availableSteps}
                                             />
