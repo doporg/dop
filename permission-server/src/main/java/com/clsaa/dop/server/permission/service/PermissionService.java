@@ -7,17 +7,12 @@ import com.clsaa.dop.client.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
-import com.clsaa.dop.server.permission.model.bo.RoleBoV1;
 import com.clsaa.dop.server.permission.model.po.Permission;
-import com.clsaa.dop.server.permission.model.po.RolePermissionMapping;
-import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -125,8 +120,6 @@ public class PermissionService {
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-        Pageable pageRequest = PageRequest.of(pagination.getPageNo() - 1, pagination.getPageSize(), sort);
-
 //
 //        可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
@@ -134,11 +127,12 @@ public class PermissionService {
         List<Permission> permissionList=new ArrayList<>();
         if(key.equals(""))
         {
-            permissionList=this.permissionRepository.findByIdIn(idList,pageRequest).getContent();
+            permissionList=this.permissionRepository.findByIdIn(idList,pagination.getRowOffset(),pagination.getPageSize());
         }
         else
         {
-            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn(key+"%",idList,pageRequest).getContent();
+            permissionList = this.permissionRepository.findAllByNameLikeAndIdIn(key,idList,pagination.getRowOffset(),
+                    pagination.getPageSize());
         }
 
         int count=permissionList.size();
@@ -203,53 +197,27 @@ public class PermissionService {
     //根据角色ID查询功能点
     public List<PermissionBoV1> findByRoleId(Long roleId)
     {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingService.findByRoleId(roleId);
-        List<PermissionBoV1> permissionBoV1List=new ArrayList<>();
-        for(RolePermissionMapping rolePermissionMapping:rolePermissionMappingList)
-        {
-            Optional<Permission> permission=permissionRepository.findById(rolePermissionMapping.getPermissionId());
-            if(permission.isPresent())
-            {
-                permissionBoV1List.add(BeanUtils.convertType(permission.get(),PermissionBoV1.class));
-            }
-        }
-        return permissionBoV1List;
+
+        return permissionRepository.findByRoleId(roleId).stream().map(p->
+                BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
+
     }
 
     //根据用户ID查询功能点
     public List<PermissionBoV1> findByUserId(Long userId)
     {
-        List<RoleBoV1> roleBoV1List=roleService.findByUserId(userId);
-        List<PermissionBoV1> permissionBoV1List=new ArrayList<>();
-        /*用Set存功能点ID，再通过功能点ID去获取功能点，去重*/
-        Set<Long> permissionIdSet=new HashSet<>();
-        roleBoV1List.forEach(roleBoV1 -> {
-            List<PermissionBoV1> permissionBoV1ListTmp= this.findByRoleId(roleBoV1.getId());
-            permissionBoV1ListTmp.forEach(permissionBoV1 -> {
-                permissionIdSet.add(permissionBoV1.getId());
-            });
-        });
-        permissionIdSet.forEach(permissionId->{
-           permissionBoV1List.add(BeanUtils.convertType(this.findById(permissionId),PermissionBoV1.class)) ;
-        });
 
-        return permissionBoV1List;
+        return permissionRepository.findByUserId(userId).stream().map(p->
+                BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
+
     }
 
     //判断用户是否拥有特定功能点
     public boolean checkUserPermission(String permissionName,Long userId)
     {
+       if (permissionRepository.findByUserIdAndPermissionName(userId,permissionName).isEmpty())
+       {return false;}
+        return true;
 
-       if(permissionRepository.findByName(permissionName)==null)
-            return false;
-        Long permissionId=permissionRepository.findByName(permissionName).getId();
-        List<UserRoleMapping> userRoleMappingList=userRoleMappingService.findByUserId(userId);
-        if(userRoleMappingList==null)return false;
-        for (UserRoleMapping userRoleMapping : userRoleMappingList) {
-            if (rolePermissionMappingService.findByRoleIdAndPermissionId(userRoleMapping.getRoleId(), permissionId) != null) {
-                return true;
-            }
-        }
-        return false;
     }
 }
