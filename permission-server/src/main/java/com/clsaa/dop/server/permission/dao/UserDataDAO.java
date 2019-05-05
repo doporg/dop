@@ -2,6 +2,10 @@ package com.clsaa.dop.server.permission.dao;
 
 import com.clsaa.dop.server.permission.model.po.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,21 +57,58 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
      void deleteByRuleId(Long ruleId);
 
     /**
-     * 根据作用域值查询数据
+     * 根据字段值查找用户ID列表
      *
      * @param fieldValue  作用域值
-     * @return {@link List<UserData>}
+     * @param fieldName 作用域名称
+     *
+     * @return {List<Long>}
      */
-    List<UserData> findByFieldValue(Long fieldValue);
+
+    @Query(value = "select * from t_user_data d inner join t_user_rule r on d.rule_id=r.id"
+            +" where d.field_value=:fieldValue and r.field_name=:fieldName and d.is_deleted = 0",nativeQuery = true)
+    List<UserData> findUserByField(@Param("fieldValue") Long fieldValue,
+                                   @Param("fieldName") String fieldName);
 
     /**
-     * 根据用户ID和作用域参数值和规则ID删除数据
+     * 根据作用域名称、值和用户ID删除用户数据
      *
-     * @param userId  用户ID
      * @param fieldValue  作用域值
-     * @param ruleId  规则ID
+     * @param fieldName 作用域名称
+     * @param userId 用户ID
      *
-     * @return {@link UserData}
+     * @return {List<Long>}
      */
-    void deleteByUserIdAndFieldValueAndRuleId(Long userId,Long fieldValue,Long ruleId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update t_user_data d inner join t_user_rule r on d.rule_id=r.id set d.is_deleted = 1"
+            +" where d.field_value=:fieldValue and r.field_name=:fieldName and d.user_id=:userId and d.is_deleted = 0",
+            nativeQuery = true)
+
+    void deleteByFieldAndUserId(@Param("fieldValue") Long fieldValue,
+                                          @Param("fieldName") String fieldName,
+                                          @Param("userId") Long userId);
+
+    /**
+     * 得到某个功能点操作允许操作的数据范围
+     *
+     * @param permissionName  作用域值
+     * @param fieldName 作用域名称
+     * @param userId 用户ID
+     *
+     * @return {List<Long>}
+     */
+
+    @Query(value = "select * from t_user_data d inner join t_user_rule r on d.rule_id=r.id " +
+            "inner join t_user_role_mapping ur on d.user_id=ur.user_id " +
+            "inner join t_role_permission_mapping rp on ur.role_id=rp.role_id " +
+            "inner join t_permission p on rp.permission_id=p.id "
+            +"where p.name=:permissionName and d.user_id=:userId and r.field_name=:fieldName and " +
+            "r.rule='in' and d.is_deleted = 0",nativeQuery = true)
+    List<UserData> findAllIds(@Param("permissionName") String permissionName,
+                              @Param("userId") Long userId,
+                              @Param("fieldName") String fieldName);
+
+
 }

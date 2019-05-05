@@ -1,9 +1,8 @@
 package com.clsaa.dop.server.permission.service;
 
 
-import com.clsaa.dop.client.permission.FeignClient.AuthenticService;
-import com.clsaa.dop.client.permission.annotation.GetUserId;
-import com.clsaa.dop.client.permission.annotation.PermissionName;
+import com.clsaa.dop.server.permission.annotation.GetUserId;
+import com.clsaa.dop.server.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.config.BizCodes;
 import com.clsaa.dop.server.permission.dao.PermissionRepository;
 import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
@@ -46,7 +45,7 @@ public class PermissionService {
 
     @Autowired
     //权限管理服务
-    private AuthenticService authenticationService;
+    private AuthenticationService authenticationService;
 
     @Autowired
     //用户服务
@@ -206,9 +205,17 @@ public class PermissionService {
     //根据用户ID查询功能点
     public List<PermissionBoV1> findByUserId(Long userId)
     {
-
-        return permissionRepository.findByUserId(userId).stream().map(p->
+        List<PermissionBoV1>permissionBoV1List=permissionRepository.findByUserId(userId).stream().map(p->
                 BeanUtils.convertType(p, PermissionBoV1.class)).collect(Collectors.toList());
+        //去重
+        for  ( int  i  =   0 ; i  <  permissionBoV1List.size()  -   1 ; i ++ )  {
+            for  ( int  j  =  permissionBoV1List.size()  -   1 ; j  >  i; j -- )  {
+                if  (permissionBoV1List.get(j).getId().equals(permissionBoV1List.get(i).getId()))  {
+                    permissionBoV1List.remove(j);
+                }
+            }
+        }
+        return permissionBoV1List;
 
     }
 
