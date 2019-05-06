@@ -9,7 +9,8 @@ public enum  ParamClass {
 
     GET_PARAM("get param"),
     PATH_PARAM("path param"),
-    FILE_PARAM("file param")
+    FILE_PARAM("file param"),
+    BODY_PARAM("body param")
     ;
 
     private String comment;
@@ -26,8 +27,11 @@ public enum  ParamClass {
                 return FILE_PARAM;
             case "query":
                 return GET_PARAM;
+            case "body":
+                return BODY_PARAM;
+
             default:
-                return GET_PARAM;
+                return BODY_PARAM;
         }
     }
 }

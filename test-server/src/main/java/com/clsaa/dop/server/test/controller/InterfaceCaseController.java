@@ -142,6 +142,7 @@ public class InterfaceCaseController {
         return updatedInterfaceCase;
     }
 
+    @ApiOperation(value = "导入OpenApi数据")
     @PostMapping(value = "/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ImportApiVo importApi(@RequestParam("file") MultipartFile multipartFile) {
         String content = null;

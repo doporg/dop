@@ -46,7 +46,6 @@ public class ImportService {
                     ensureJson(object)
                     .getInnerMap()
                     .forEach((method, apiInfo) -> {
-                        RequestScriptParam requestScript = new RequestScriptParam();
                         HttpMethod httpMethod = HttpMethod.from(method);
                         JSONObject infoObject = ensureJson(apiInfo);
 
@@ -54,6 +53,8 @@ public class ImportService {
                         infoObject.getJSONArray(PARAMS_KEY).forEach(param -> {
                             JSONObject paramJson = ensureJson(param);
                             ParamClass paramClass = ParamClass.from(paramJson.getString(PARAM_TYPE_KEY));
+                            // skip body param
+                            if (paramClass == ParamClass.BODY_PARAM) return;
                             String name = paramJson.getString("name");
                             RequestParamCreateParam requestParam = RequestParamCreateParam.builder()
                                     .paramClass(paramClass)
@@ -70,18 +71,20 @@ public class ImportService {
                             url += rawUrl;
                         }
 
-                        requestScript.setRawUrl(url);
-                        requestScript.setHttpMethod(httpMethod);
-                        requestScript.setRequestParams(requestParams);
-                        requestScript.setRequestHeaders(new ArrayList<>());
-                        requestScript.setRequestCheckPoints(new ArrayList<>());
-                        requestScript.setResultParams(new ArrayList<>());
-                        requestScript.setRequestBody("");
-                        requestScript.setRetryTimes(0);
-                        requestScript.setRetryInterval(0L);
-                        requestScript.setOperationType(OperationType.REQUEST);
+                        RequestScriptParam requestScript = RequestScriptParam.builder()
+                                .rawUrl(url)
+                                .httpMethod(httpMethod)
+                                .requestParams(requestParams)
+                                .requestHeaders(new ArrayList<>())
+                                .requestCheckPoints(new ArrayList<>())
+                                .resultParams(new ArrayList<>())
+                                .requestBody("")
+                                .retryTimes(0)
+                                .retryInterval(0L)
+                                .operationType(OperationType.REQUEST)
+                                .order(order.getAndUpdate(i -> i + 1))
+                                .build();
 
-                        requestScript.setOrder(order.getAndUpdate(integer -> integer + 1));
                         requestScriptParams.add(requestScript);
                     })
         );

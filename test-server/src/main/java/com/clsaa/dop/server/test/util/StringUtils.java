@@ -63,7 +63,7 @@ public class StringUtils {
 
             if (a != -1) {
                 String ref = origin.substring(a, b);
-                String value = data.getOrDefault(ref, String.format("Path Param %s miss", ref));
+                String value = data.getOrDefault(ref, String.format("Path Param %s missed", ref));
                 origin = new String(chars, 0, a - 1) +
                         value +
                         new String(chars, b + 1, chars.length - b - 1);
