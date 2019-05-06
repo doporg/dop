@@ -1,7 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
-import com.clsaa.dop.server.test.model.po.InterfaceCase;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.clsaa.dop.server.test.enums.ParamClass;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,22 +11,24 @@ import java.time.LocalDateTime;
 /**
  * @author xihao
  * @version 1.0
- * @since 11/04/2019
+ * @since 04/05/2019
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CaseParamDto {
+public class RequestParamDto {
 
-    private String ref;
+    private Long id;
+
+    // ----------- main property ---------
+    private ParamClass paramClass;
+
+    private String name;
 
     private String value;
 
     // ----------- common property ---------
-    private Long id;
-
     private LocalDateTime ctime;
 
     private LocalDateTime mtime;

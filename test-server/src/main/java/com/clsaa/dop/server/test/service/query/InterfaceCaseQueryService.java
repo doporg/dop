@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.service;
+package com.clsaa.dop.server.test.service.query;
 
 import com.clsaa.dop.server.test.mapper.ServiceMapper;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;

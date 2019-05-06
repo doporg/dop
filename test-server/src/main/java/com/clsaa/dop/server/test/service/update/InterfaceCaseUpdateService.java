@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.service;
+package com.clsaa.dop.server.test.service.update;
 
 import com.clsaa.dop.server.test.mapper.po2dto.CaseParamDtoMapper;
 import com.clsaa.dop.server.test.model.param.update.UpdatedInterfaceCase;
@@ -18,13 +18,13 @@ import java.util.List;
  * @since 16/04/2019
  */
 @Component
-public class InterfaceCaseUpdateServiceImpl extends CommonUpdateServiceImpl<Long, UpdatedInterfaceCase, InterfaceCase>{
+public class InterfaceCaseUpdateService extends CommonUpdateServiceImpl<Long, UpdatedInterfaceCase, InterfaceCase>{
 
     @Autowired
     private CaseParamDtoMapper caseParamDtoMapper;
 
     @Autowired
-    public InterfaceCaseUpdateServiceImpl(JpaRepository<InterfaceCase, Long> repository) {
+    public InterfaceCaseUpdateService(JpaRepository<InterfaceCase, Long> repository) {
         super(repository);
     }
 

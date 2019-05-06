@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.po;
 
+import com.clsaa.dop.server.test.enums.CaseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +23,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "interface_execute_log", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "begin"})},
-        indexes = {@Index(columnList = "case_id,begin", unique = true)})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_type", "case_id", "begin"})},
+        indexes = {@Index(columnList = "case_type,case_id,begin", unique = true)})
 public class InterfaceExecuteLog implements Po {
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "case_type")
+    private CaseType caseType;
 
     @Column(name = "jenkins_info")
     private String jenkinsInfo;
@@ -46,6 +51,10 @@ public class InterfaceExecuteLog implements Po {
             ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<OperationExecuteLog> operationExecuteLogs;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_log_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    private GroupExecuteLog groupExecuteLog;
 
     // ----------- common property ---------
     @Id

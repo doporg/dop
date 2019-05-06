@@ -3,6 +3,7 @@ package com.clsaa.dop.server.test.model.param.update;
 import com.clsaa.dop.server.test.model.dto.CaseParamDto;
 import com.clsaa.dop.server.test.model.param.UpdateParam;
 import com.clsaa.dop.server.test.model.po.CaseStatus;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @since 16/04/2019
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdatedInterfaceCase implements UpdateParam<Long> {
 
     private Long id;

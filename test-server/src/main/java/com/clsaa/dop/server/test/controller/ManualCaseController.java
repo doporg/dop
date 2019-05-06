@@ -2,8 +2,8 @@ package com.clsaa.dop.server.test.controller;
 
 import com.clsaa.dop.server.test.model.dto.ManualCaseDto;
 import com.clsaa.dop.server.test.model.param.ManualCaseParam;
-import com.clsaa.dop.server.test.service.ManualCaseCreateService;
-import com.clsaa.dop.server.test.service.ManualCaseQueryService;
+import com.clsaa.dop.server.test.service.create.ManualCaseCreateService;
+import com.clsaa.dop.server.test.service.query.ManualCaseQueryService;
 import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

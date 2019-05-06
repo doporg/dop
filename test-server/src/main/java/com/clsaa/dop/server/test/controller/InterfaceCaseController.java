@@ -9,14 +9,29 @@ import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.param.InterfaceStageParam;
 import com.clsaa.dop.server.test.model.param.update.UpdatedInterfaceCase;
-import com.clsaa.dop.server.test.service.*;
+import com.clsaa.dop.server.test.model.vo.ImportApiVo;
+import com.clsaa.dop.server.test.service.core.ImportService;
+import com.clsaa.dop.server.test.service.create.CaseParamCreateService;
+import com.clsaa.dop.server.test.service.create.InterfaceCaseCreateService;
+import com.clsaa.dop.server.test.service.create.InterfaceStageCreateService;
+import com.clsaa.dop.server.test.service.query.InterfaceCaseLogQueryService;
+import com.clsaa.dop.server.test.service.query.InterfaceCaseQueryService;
+import com.clsaa.dop.server.test.service.update.InterfaceCaseUpdateService;
+import com.clsaa.dop.server.test.service.update.InterfaceStageUpdateService;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.execute;
@@ -31,6 +46,7 @@ import static java.util.Objects.requireNonNull;
  */
 @RestController
 @CrossOrigin
+@Slf4j
 @RequestMapping("/interfaceCases")
 public class InterfaceCaseController {
 
@@ -50,10 +66,16 @@ public class InterfaceCaseController {
     private CaseParamCreateService caseParamCreateService;
 
     @Autowired
-    private InterfaceCaseUpdateServiceImpl interfaceCaseUpdateService;
+    private InterfaceCaseUpdateService interfaceCaseUpdateService;
 
     @Autowired
-    private InterfaceStageUpdateServiceImpl interfaceStageUpdateService;
+    private InterfaceStageUpdateService interfaceStageUpdateService;
+
+    @Autowired
+    private ImportService importService;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @ApiOperation(value = "新增接口测试用例", notes = "创建失败返回null")
     @PostMapping
@@ -71,10 +93,14 @@ public class InterfaceCaseController {
 
     @ApiOperation(value = "修改接口测试用例测试脚本", notes = "创建失败500，message为错误信息")
     @PutMapping("/{caseId}/stages")
-    public Boolean updateStages(@RequestBody JSONArray jsonArray, @PathVariable("caseId") Long caseId) {
-        List<InterfaceStageDto> stageDtos = jsonArray.toJavaList(InterfaceStageDto.class);
-//        validate(stageParams);
-        interfaceStageUpdateService.batchUpdate(stageDtos);
+    public Boolean updateStages(@RequestBody String jsonArray, @PathVariable("caseId") Long caseId) {
+        List<InterfaceStageDto> stageDtos;
+        try {
+            stageDtos = mapper.readValue(jsonArray, new TypeReference<List<InterfaceStageDto>>(){});
+            interfaceStageUpdateService.batchUpdate(stageDtos);
+        } catch (IOException e) {
+            log.error("[Update Stages Error]: ", e);
+        }
         return true;
     }
 
@@ -122,4 +148,20 @@ public class InterfaceCaseController {
         return updatedInterfaceCase;
     }
 
+    @ApiOperation(value = "导入OpenApi数据")
+    @PostMapping(value = "/import", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ImportApiVo importApi(@RequestParam("file") MultipartFile multipartFile) {
+        String content = null;
+        if (!multipartFile.isEmpty()) {
+            try {
+                content = new String(multipartFile.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (StringUtils.isNotEmpty(content)) {
+                return importService.doImport(content);
+            }
+        }
+        return null;
+    }
 }

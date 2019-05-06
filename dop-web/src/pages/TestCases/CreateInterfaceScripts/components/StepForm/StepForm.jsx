@@ -30,17 +30,19 @@ class StepForm extends Component {
       step: 0,
       caseId: case_Id,
       stages: this.props.stages,
-      operation: this.props.operation
+      operation: this.props.operation,
+      caseParams: this.props.caseParams
     };
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     this.setState({
-      step: 0,
+      step: this.state.step,
       caseId: nextProps.caseId,
       stages: nextProps.stages,
-      operation: nextProps.operation
-    }, this.nextStep);
+      operation: nextProps.operation,
+      caseParams: nextProps.caseParams
+    });
   }
 
   nextStep = (stage) => {
@@ -87,19 +89,30 @@ class StepForm extends Component {
     })
   };
 
+  addCaseParam(param){
+    this.props.addParam(param);
+  }
+
   renderStep = (step) => {
     if (step === 0) {
-      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+      return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)}
+                               onLast={this.lastStep.bind(this)}
+                               add_caseParam={this.addCaseParam.bind(this)}
+                               caseParams={this.state.caseParams}
                                stage='PREPARE' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 1) {
       return <RequestStageForm data={this.state.stages[step]} onSubmit={this.nextStep.bind(this)} onLast={this.lastStep.bind(this)}
+                               add_caseParam={this.addCaseParam.bind(this)}
+                               caseParams={this.state.caseParams}
                                stage='TEST' caseId={this.state.caseId} isSubmit={false}/>;
     }
 
     if (step === 2) {
       return <RequestStageForm data={this.state.stages[step]} onSubmit={this.postToServer.bind(this)}  onLast={this.lastStep.bind(this)}
+                               add_caseParam={this.addCaseParam.bind(this)}
+                               caseParams={this.state.caseParams}
                                stage='DESTROY' caseId={this.state.caseId} isSubmit={false}/>;
     }
   };

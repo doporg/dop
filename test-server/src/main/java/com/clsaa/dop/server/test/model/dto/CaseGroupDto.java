@@ -1,6 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
-import com.clsaa.dop.server.test.model.po.InterfaceCase;
+import com.clsaa.dop.server.test.enums.ExecuteWay;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,22 +8,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author xihao
  * @version 1.0
- * @since 11/04/2019
+ * @since 06/05/2019
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CaseParamDto {
+public class CaseGroupDto {
 
-    private String ref;
+    private Long appId;
 
-    private String value;
+    private ExecuteWay executeWay;
+
+    private String groupName;
+
+    private String comment;
+
+    private List<CaseUnitDto> caseUnits;
 
     // ----------- common property ---------
     private Long id;

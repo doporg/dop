@@ -2,10 +2,12 @@ package com.clsaa.dop.server.test.model.param;
 
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -15,6 +17,9 @@ import java.util.List;
  * @since 18/03/2019
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestScriptParam {
 
     @NotNull
@@ -24,6 +29,8 @@ public class RequestScriptParam {
     private HttpMethod httpMethod;
 
     private List<@Valid RequestHeaderParam> requestHeaders;
+
+    private List<@Valid RequestParamCreateParam> requestParams;
 
     private String requestBody;
 

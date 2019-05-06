@@ -17,6 +17,7 @@ import RequestCheckPoint from "./RequestCheckPoint";
 import {Option} from "@icedesign/base/lib/select";
 import Select from "@icedesign/base/lib/select";
 import ResultParam from "./ResultParam";
+import RequestParam from "./RequestParam";
 
 const { Row, Col } = Grid;
 const demo = JSON.stringify({
@@ -129,6 +130,22 @@ export default class RequestScriptForm extends Component{
         });
     };
 
+    addRequestParam = () => {
+        this.state.value.requestParams.push({
+            name: '',
+            value: '',
+            paramClass: 'GET_PARAM'
+        });
+        this.setState({ value: this.state.value });
+    };
+
+    removeRequestParam = (index) => {
+        this.state.value.requestParams.splice(index, 1);
+        this.setState({
+            value: this.state.value
+        });
+    };
+
     renderTab = (key) => {
         if (key === 'header') {
             return <RequestHeader
@@ -136,6 +153,14 @@ export default class RequestScriptForm extends Component{
                 addItem={this.addItem.bind(this)}
                 removeItem={this.removeItem.bind(this)}/>;
         }
+
+        if (key === 'param') {
+            return <RequestParam
+                requestParams={this.state.value.requestParams}
+                addItem={this.addRequestParam.bind(this)}
+                removeItem={this.removeRequestParam.bind(this)}/>;
+        }
+
         if (key === 'body') {
             return <Row>
                 <Col>
@@ -161,10 +186,6 @@ export default class RequestScriptForm extends Component{
     };
 
     componentWillReceiveProps(nextProps, nextContext) {
-        // if (nextProps.currentScript !== this.props.currentScript) {
-        //
-        // }
-        console.log(nextProps.currentScript);
         this.setState({
             value: nextProps.currentScript
         })
@@ -174,6 +195,7 @@ export default class RequestScriptForm extends Component{
     render() {
         const tabs = [
             { tab: "请求头", key: "header", content: "这里是首页内容" },
+            { tab: "请求参数", key: "param", content: "这里是首页内容" },
             { tab: "请求体", key: "body", content: "这里是文档内容" },
             { tab: checkPointTab, key: "checkPoint", content: "这里是 API 内容" },
             { tab: paramTab, key: "requestParam", content: "这里是 API 内容" }
