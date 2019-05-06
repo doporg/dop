@@ -71,12 +71,14 @@ class PipelineInfoStep extends Component {
             ip: "",
             token: ""
         };
+        let chosenStep = newTask
         let steps = this.state.stage.steps;
         steps.push(newTask);
         let stage = Object.assign({}, this.state.stage, {steps: steps});
         this.setState({
-            stage
-        })
+            stage,
+            chosenStep
+        });
     }
 
     /**
