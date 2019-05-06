@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.po;
 
+import com.clsaa.dop.server.test.enums.CaseResultEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,21 +21,6 @@ import java.time.LocalDateTime;
         indexes = {@Index(columnList = "case_id,rtime", unique = false)})
 public class CaseResult implements Po{
 
-    public enum Status{
-        SUCCESS("成功"),
-        FAIL("失败"),
-        TOCHECK("待核查"),
-        NONUSE("不可用"),
-        BLOCKED("阻塞")
-        ;
-
-        private String comment;
-
-        Status(String comment) {
-            this.comment = comment;
-        }
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +34,7 @@ public class CaseResult implements Po{
     private LocalDateTime rtime;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private CaseResultEnum status;
 
     private String comment;
 

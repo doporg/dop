@@ -1,4 +1,4 @@
-package com.clsaa.dop.server.test.service;
+package com.clsaa.dop.server.test.service.update;
 
 import com.clsaa.dop.server.test.mapper.po2dto.CaseParamDtoMapper;
 import com.clsaa.dop.server.test.model.param.update.UpdatedInterfaceCase;
