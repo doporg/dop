@@ -51,7 +51,7 @@ class CustomTable extends Component {
   };
 
   onChange = (...args) => {
-    console.log(...args);
+
   };
 
   handlePaginationChange = (current) => {
@@ -260,12 +260,6 @@ class CustomTable extends Component {
               <Col l="12" style={styles.center}>
                 <Button type="normal" style={styles.button}>
                   删除
-                </Button>
-                <Button type="normal" style={{ ...styles.button, marginLeft: 10 }}>
-                  导入
-                </Button>
-                <Button type="normal" style={{ ...styles.button, marginLeft: 10 }}>
-                  修改
                 </Button>
               </Col>
             </Row>

@@ -9,6 +9,7 @@ import com.clsaa.dop.server.test.model.param.CaseParamRef;
 import com.clsaa.dop.server.test.model.param.RequestParamCreateParam;
 import com.clsaa.dop.server.test.model.param.RequestScriptParam;
 import com.clsaa.dop.server.test.model.vo.ImportApiVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 04/05/2019
  */
 @Component
+@Slf4j
 public class ImportService {
 
     public static final String HOST_KEY = "host";
@@ -30,8 +32,15 @@ public class ImportService {
     public static final String PARAM_TYPE_KEY = "in";
 
     public ImportApiVo doImport(String openApi) {
-        JSONObject apiJson = JSON.parseObject(openApi);
-
+        JSONObject apiJson = null;
+        try {
+            apiJson = JSON.parseObject(openApi);
+        } catch (Exception e) {
+            log.error("Invalid Json File! Json Parse Error!");
+        }
+        if (apiJson == null) {
+            return null;
+        }
         List<CaseParamRef> caseParams = new ArrayList<>();
         String host = apiJson.getString(HOST_KEY);
         addCaseParam("host", host, caseParams);
