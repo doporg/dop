@@ -3,6 +3,7 @@ import {Grid, Table} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from 'react-router-dom';
 import "./ProjectList.scss"
+import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
 
@@ -12,7 +13,7 @@ const {Row} = Grid;
  * @author Bowen
  **/
 
-export default class ProjectList extends Component {
+class ProjectList extends Component {
 
     static displayName = 'ProjectList';
 
@@ -51,19 +52,20 @@ export default class ProjectList extends Component {
         return (
             <Row wrap gutter="20">
                 <Col>
-                    <Table dataSource={this.state.currentData}>
+                    <Table dataSource={this.state.currentData}
+                           locale={{empty: this.props.intl.messages["projects.text.noData"]}}>
                         <Table.Column
-                                      title="项目ID"
-                                      dataIndex="id"/>
+                            title={this.props.intl.messages["projects.text.projectId"]}
+                            dataIndex="id"/>
 
-                        <Table.Column title="项目名称"
+                        <Table.Column title={this.props.intl.messages["projects.text.projectName2"]}
                                       cell={this.nameRender.bind(this)}
                                       dataIndex="title"/>
 
-                        <Table.Column title="创建人"
+                        <Table.Column title={this.props.intl.messages["projects.text.creator"]}
                                       dataIndex="cuserName"/>
 
-                        <Table.Column title="创建时间"
+                        <Table.Column title={this.props.intl.messages["projects.text.createTime"]}
                                       dataIndex="ctime"/>
                     </Table>
                 </Col>
@@ -73,3 +75,4 @@ export default class ProjectList extends Component {
 
 }
 
+export default injectIntl(ProjectList)

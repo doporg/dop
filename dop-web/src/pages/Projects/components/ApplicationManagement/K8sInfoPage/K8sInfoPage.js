@@ -15,6 +15,7 @@ import React, {Component} from 'react';
 import API from "../../../../API";
 import Axios from "axios"
 import "./K8sInfoPage.scss"
+import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -24,7 +25,8 @@ const formItemLayout = {
     wrapperCol: {span: 16}
 };
 const {Combobox} = Select;
-export default class K8sInfoPage extends Component {
+
+class K8sInfoPage extends Component {
 
     constructor(props) {
         super(props);
@@ -218,8 +220,8 @@ export default class K8sInfoPage extends Component {
 
     envDetailConfirm = () => {
         Dialog.confirm({
-            content: "你确定要保存修改吗？",
-            title: "确认修改",
+            content: this.props.intl.messages['projects.text.confirmSave'],
+            title: this.props.intl.messages['projects.title.confirmSave'],
             onOk: this.envDetailSubmit.bind(this)
         });
     };
@@ -311,7 +313,7 @@ export default class K8sInfoPage extends Component {
                                         }
                                     }
                                 ).then((response) => {
-                                    Toast.success("更新成功！")
+                                    Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                     _this.setState({
                                         loading: false
                                     })
@@ -335,7 +337,7 @@ export default class K8sInfoPage extends Component {
                                         }
                                     }
                                 ).then((response) => {
-                                    Toast.success("更新成功！")
+                                    Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                     _this.setState({
                                         loading: false
                                     })
@@ -386,7 +388,7 @@ export default class K8sInfoPage extends Component {
                                     }
                                 })
                                     .then(() => {
-                                        Toast.success("服务创建成功")
+                                        Toast.success(_this.props.intl.messages['projects.text.createServiceSuccessful'])
 
                                         //然后判断是否存在yaml属性
                                         let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
@@ -410,7 +412,7 @@ export default class K8sInfoPage extends Component {
                                                         }
                                                     )
                                                         .then(function (response) {
-                                                            Toast.success("更新成功！")
+                                                            Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                                             _this.setState({
                                                                 loading: false
                                                             })
@@ -439,7 +441,7 @@ export default class K8sInfoPage extends Component {
                                                         }
                                                     )
                                                         .then(function (response) {
-                                                            Toast.success("更新成功！")
+                                                            Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                                             _this.setState({
                                                                 loading: false
                                                             })
@@ -502,7 +504,7 @@ export default class K8sInfoPage extends Component {
                                 }
                             )
                                 .then(function (response) {
-                                    Toast.success("更新成功！")
+                                    Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                     _this.setState({
                                         loading: false
                                     })
@@ -529,7 +531,7 @@ export default class K8sInfoPage extends Component {
                                 }
                             )
                                 .then(function (response) {
-                                    Toast.success("更新成功！")
+                                    Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                                     _this.setState({
                                         loading: false
                                     })
@@ -554,19 +556,22 @@ export default class K8sInfoPage extends Component {
             if (this.state.yamlMode === "profile") {
                 return (
                     <div>
-                        <FormItem label="命名空间:"
+                        <FormItem label={this.props.intl.messages['projects.text.nameSpace']}
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("nameSpace") ? "error" : ""}
-                                  help={this.field.getError("nameSpace") ? "请选择命名空间" : ""}>
+                                  help={this.field.getError("nameSpace") ? this.props.intl.messages['projects.check.nameSpace'] : ""}>
                             <div
                                 className={this.state.editMode ? "form-item-text hide" : "form-item-text"}
                             >{this.state.yamlData.nameSpace}</div>
                             <Combobox
                                 className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
-                                placeholder="命名空间"
+                                placeholder={this.props.intl.messages['projects.check.nameSpace']}
                                 {...init('nameSpace', {
                                     initValue: this.state.yamlData.nameSpace,
-                                    rules: [{required: true, message: "该项不能为空"}]
+                                    rules: [{
+                                        required: true,
+                                        message: this.props.intl.messages['projects.message.cantNull']
+                                    }]
                                 })}
                                 fillProps="value"
                                 hasClear={true}
@@ -579,29 +584,32 @@ export default class K8sInfoPage extends Component {
                         </FormItem>
 
                         <FormItem className={this.state.editMode ? "form-item-switch" : "form-item-switch hide"}
-                                  label="是否新建服务:"
+                                  label={this.props.intl.messages['projects.text.createNewService']}
                                   {...formItemLayout}>
                             <Switch
-                                checkedChildren="是"
-                                unCheckedChildren="否"
+                                checkedChildren={this.props.intl.messages['projects.text.yes']}
+                                unCheckedChildren={this.props.intl.messages['projects.text.no']}
                                 onChange={this.toggleCreateService.bind(this)}
                                 defaultChecked={this.state.createService}>
                             </Switch>
                         </FormItem>
 
-                        <FormItem label="服务:"
+                        <FormItem label={this.props.intl.messages['projects.text.service']}
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("service") ? "error" : ""}
-                                  help={this.field.getError("service") ? "服务必须以小写字母开头、结束，且只能包含小写字母与'-'" : ""}>
+                                  help={this.field.getError("service") ? this.props.intl.messages['projects.check.createNewService'] : ""}>
                             <div
                                 className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.service}</div>
                             <Combobox
                                 className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
-                                placeholder="服务"
+                                placeholder={this.props.intl.messages['projects.placeholder.service']}
                                 {...init('service', {
                                     initValue: this.state.yamlData.service,
                                     rules: [
-                                        {required: true, message: '该项不能为空'},
+                                        {
+                                            required: true,
+                                            message: this.props.intl.messages['projects.message.cantNull']
+                                        },
                                         {
                                             pattern: "^([a-z]+\-?)*[a-z]+$"
                                         }
@@ -622,17 +630,17 @@ export default class K8sInfoPage extends Component {
 
                         <FormItem
                             className={this.state.editMode && this.state.createService ? "form-item-use-ingress" : "form-item-use-ingress hide"}
-                            label="选择外部访问方式:"
+                            label={this.props.intl.messages['projects.text.exportStrategy']}
                             {...formItemLayout}>
                             <Select
                                 defaultValue="ingress"
                                 fillProps="label"
                                 onChange={this.switchIngress.bind(this)}>
                                 <Option value="ingress">
-                                    使用Ingress
+                                    {this.props.intl.messages['projects.text.useIngress']}
                                 </Option>
                                 <Option value="nodePort">
-                                    使用NodePort
+                                    {this.props.intl.messages['projects.text.useNodePort']}
                                 </Option>
 
                             </Select>
@@ -640,18 +648,18 @@ export default class K8sInfoPage extends Component {
 
                         <FormItem
                             className={this.state.editMode && this.state.createService ? "form-item-create-service" : "form-item-create-service hide"}
-                            label="TargetPort:"
+                            label={this.props.intl.messages['projects.text.ContainerPort']}
                             {...formItemLayout}
                             validateStatus={this.editField.getError("targetPort") ? "error" : ""}
-                            help={this.editField.getError("targetPort") ? "请输入正确的端口" : ""}
+                            help={this.editField.getError("targetPort") ? this.props.intl.messages['projects.check.ContainerPort'] : ""}
                         >
-                            <Input placeholder="容器端口"
+                            <Input placeholder={this.props.intl.messages['projects.placeholder.ContainerPort']}
                                    defaultValue={0}
                                    className="port-input"
                                    {...this.editField.init("targetPort", {
                                        rules: [{
                                            required: true,
-                                           message: "该项不能为空"
+                                           message: this.props.intl.messages['projects.message.cantNull']
                                        }, {
                                            pattern: "^[0-9]{4,5}$"
                                        }]
@@ -661,18 +669,18 @@ export default class K8sInfoPage extends Component {
 
                         <FormItem
                             className={this.state.editMode && this.state.createService && this.state.useIngress === "ingress" ? "form-item-use-ingress" : "form-item-use-ingress hide"}
-                            label="域名:"
+                            label={this.props.intl.messages['projects.text.host']}
                             {...formItemLayout}
                             validateStatus={this.editField.getError("host") ? "error" : ""}
-                            help={this.editField.getError("host") ? "请输入正确的域名" : ""}
+                            help={this.editField.getError("host") ? this.props.intl.messages['projects.check.host'] : ""}
                         >
-                            <Input placeholder="域名"
+                            <Input placeholder={this.props.intl.messages['projects.placeholder.host']}
                                    className="ingress-input"
                                    {...this.editField.init("host", {
                                        rules: [{
 
-                                           required: this.state.useIngress === "ingress" ? true : false,
-                                           message: "该项不能为空"
+                                           required: this.state.useIngress === "ingress",
+                                           message: this.props.intl.messages['projects.message.cantNull']
                                        },
                                            {pattern: "^([a-z0-9]+.?)+[a-z]+$"}]
                                    })}/>
@@ -681,17 +689,17 @@ export default class K8sInfoPage extends Component {
 
                         <FormItem
                             className={this.state.editMode && this.state.createService && this.state.useIngress === "nodePort" ? "form-item-use-ingress" : "form-item-use-ingress hide"}
-                            label="NodePort:"
+                            label={this.props.intl.messages['projects.text.NodePort']}
                             {...formItemLayout}
                             validateStatus={this.editField.getError("nodePort") ? "error" : ""}
-                            help={this.editField.getError("nodePort") ? "端口范围必须在30000-32767之间" : ""}
+                            help={this.editField.getError("nodePort") ? this.props.intl.messages['projects.check.NodePort'] : ""}
                         >
-                            <Input placeholder="对外开放端口"
+                            <Input placeholder={this.props.intl.messages['projects.placeholder.NodePort']}
                                    className="node-port-input"
                                    {...this.editField.init("nodePort", {
                                        rules: [{
-                                           required: this.state.useIngress === "nodePort" ? true : false,
-                                           message: "该项不能为空"
+                                           required: this.state.useIngress === "nodePort",
+                                           message: this.props.intl.messages['projects.message.cantNull']
                                        },
                                            {pattern: "3[0-2]\\d(?<!32[8-9])\\d(?<!327[7-9])\\d(?<!3276[8-9])"}]
                                    })}/>
@@ -700,41 +708,41 @@ export default class K8sInfoPage extends Component {
 
                         <FormItem
                             className={this.state.editMode && this.state.createService ? "form-item-create-service" : "form-item-create-service hide"}
-                            label="副本数量:"
+                            label={this.props.intl.messages['projects.text.replicas']}
                             {...formItemLayout}
                             validateStatus={this.editField.getError("replicas") ? "error" : ""}
-                            help={this.editField.getError("replicas") ? "副本数量" : ""}>
+                            help={this.editField.getError("replicas") ? this.props.intl.messages['projects.check.replicas'] : ""}>
                             <NumberPicker min={1}
                                           max={99}
-                                          placeholder="副本数量"
-                                          defaultValue={0}
+                                          placeholder={this.props.intl.messages['projects.placeholder.replicas']}
+                                          defaultValue={this.state.editMode && this.state.createService ? 1 : 0}
                                           {...this.editField.init('replicas', {
                                               rules: [{
                                                   required: true,
-                                                  message: "该项不能为空"
+                                                  message: this.props.intl.messages['projects.message.cantNull']
                                               }]
                                           })}/>
                         </FormItem>
 
 
                         <FormItem
-                            label="部署"
+                            label={this.props.intl.messages['projects.text.Deployment']}
 
                             {...formItemLayout}
                             validateStatus={this.field.getError("deployment") ? "error" : ""}
-                            help={this.field.getError("deployment") ? "部署" : ""}
+                            help={this.field.getError("deployment") ? this.props.intl.messages['projects.check.Deployment'] : ""}
                             className={this.checkDeploymentData() ? "form-item-deployment-detail hide" : "form-item-deployment-detail"}
                         >
                             <div
                                 className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.deployment}</div>
                             <Combobox
                                 className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
-                                placeholder="部署"
+                                placeholder={this.props.intl.messages['projects.placeholder.Deployment']}
                                 {...init('deployment', {
                                     initValue: this.state.yamlData.deployment,
                                     rules: this.checkDeploymentData() ? "" : [{
                                         required: true,
-                                        message: "该项不能为空"
+                                        message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}
                                 fillProps="value"
@@ -748,10 +756,10 @@ export default class K8sInfoPage extends Component {
                             </Combobox>
                         </FormItem>
 
-                        <FormItem label="容器"
+                        <FormItem label={this.props.intl.messages['projects.text.Deployment']}
                                   {...formItemLayout}
                                   validateStatus={this.field.getError("container") ? "error" : ""}
-                                  help={this.field.getError("container") ? "容器" : ""}
+                                  help={this.field.getError("container") ? this.props.intl.messages['projects.check.Deployment'] : ""}
                                   className={this.checkDeploymentData() ? "form-item-deployment-detail hide" : "form-item-deployment-detail"}
 
                         >
@@ -759,12 +767,12 @@ export default class K8sInfoPage extends Component {
                                 className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.container}</div>
                             <Combobox
                                 className={this.state.editMode ? "form-item-combobox" : "form-item-combobox hide"}
-                                placeholder="容器"
+                                placeholder={this.props.intl.messages['projects.placeholder.Deployment']}
                                 {...init('container', {
                                     initValue: this.state.yamlData.container,
                                     rules: this.checkDeploymentData() ? "" : [{
                                         required: true,
-                                        message: "该项不能为空"
+                                        message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}
                                 fillProps="value"
@@ -781,22 +789,22 @@ export default class K8sInfoPage extends Component {
                 )
             } else {
                 return (
-                    <FormItem label="Yaml文件路径"
+                    <FormItem label={this.props.intl.messages['projects.text.yamlFilePath']}
                               {...formItemLayout}
                               validateStatus={this.yamlPathField.getError("yamlFilePath") ? "error" : ""}
-                              help={this.yamlPathField.getError("yamlFilePath") ? "请输入文件路径" : ""}
+                              help={this.yamlPathField.getError("yamlFilePath") ? this.props.intl.messages['projects.check.yamlFilePath'] : ""}
                               required
                     >
                         <div
                             className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.yamlFilePath}</div>
-                        <Input placeholder="Yaml文件路径"
+                        <Input placeholder={this.props.intl.messages['projects.placeholder.yamlFilePath']}
                                className={this.state.editMode ? "form-item-yaml-path-input" : "form-item-yaml-path-input hide"}
                                {...this.yamlPathField.init("yamlFilePath", {
                                    initValue: this.state.yamlData.yamlFilePath,
                                    rules: [{
                                        pattern: "^[a-z0-9]([a-z0-9-]*[a-z0-9])?(/[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$",
                                        required: true,
-                                       message: "该项不能为空"
+                                       message: this.props.intl.messages['projects.message.cantNull']
                                    }]
                                })}/>
 
@@ -809,8 +817,8 @@ export default class K8sInfoPage extends Component {
 
     yamlEditorConfirm() {
         Dialog.confirm({
-            content: "你确定要保存修改吗？",
-            title: "确认修改",
+            content: this.props.intl.messages['projects.text.confirmSave'],
+            title: this.props.intl.messages['projects.title.confirmSave'],
             onOk: this.yamlEditorSubmit.bind(this)
         });
 
@@ -824,7 +832,7 @@ export default class K8sInfoPage extends Component {
         let url = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/deploymentYaml"
         Axios.put(url, {deploymentEditableYaml: _this.yamlEditorfield.getValue("deploymentYaml")}
         ).then((response) => {
-            Toast.success("更新成功")
+            Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
             _this.setState({
                 loading: false
             })
@@ -852,7 +860,7 @@ export default class K8sInfoPage extends Component {
                           className="yaml-editor-form-item"
                           {...formItemLayout}
                           validateStatus={this.field.getError("deploymentYaml") ? "error" : ""}
-                          help={this.field.getError("deploymentYaml") ? "该项不能为空" : ""}>
+                          help={this.field.getError("deploymentYaml") ? this.props.intl.messages['projects.message.cantNull'] : ""}>
                     <Input
                         className="yaml-input"
                         // size="large"
@@ -863,7 +871,7 @@ export default class K8sInfoPage extends Component {
                             initValue: this.state.yamlData.deploymentEditableYaml,
                             rules: [{
                                 required: true,
-                                message: "该项不能为空"
+                                message: this.props.intl.messages['projects.message.cantNull']
                             }]
                         })}>
                     </Input>
@@ -879,12 +887,12 @@ export default class K8sInfoPage extends Component {
 
                     onClick={this.yamlEditorConfirm.bind(this)}
                     type="primary">
-                    保存
+                    {this.props.intl.messages['projects.button.Save']}
                 </Button>
                 < Button
                     className={this.state.editDeploymentYaml ? "cancel-yaml-button" : "cancel-yaml-button hide"}
                     onClick={this.toggleYamlEditor.bind(this)}>
-                    取消
+                    {this.props.intl.messages['projects.button.cancel']}
                 </Button>
             </Form>
 
@@ -900,44 +908,50 @@ export default class K8sInfoPage extends Component {
             console.log(this.state.yamlData.yamlFilePath === "")
             return (
                 <div>
-                    <FormItem label="发布策略:"
+                    <FormItem label={this.props.intl.messages['projects.text.releaseStrategy']}
                               {...formItemLayout}
                               validateStatus={this.field.getError("releaseStrategy") ? "error" : ""}
-                              help={this.field.getError("releaseStrategy") ? "发布策略" : ""}>
+                              help={this.field.getError("releaseStrategy") ? this.props.intl.messages['projects.check.releaseStrategy'] : ""}>
                         <div
                             className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.releaseStrategy}
                             <Icon
                                 className={this.state.editMode ? "edit-k8s-icon hide" : "edit-k8s-icon"}
                                 type='edit' onClick={this.toggleEditMode.bind(this)}/></div>
-                        <Select placeholder="发布策略"
+                        <Select placeholder={this.props.intl.messages['projects.placeholder.releaseStrategy']}
                                 className={this.state.editMode ? "form-item-select" : "form-item-select hide"}
                                 {...init('releaseStrategy', {
                                     initValue: this.state.yamlData.releaseStrategy,
-                                    rules: [{required: true, message: "该项不能为空"}]
+                                    rules: [{
+                                        required: true,
+                                        message: this.props.intl.messages['projects.message.cantNull']
+                                    }]
                                 })}
                         >
-                            <Option value="BATCH" disabled={true}>分批发布</Option>
-                            <Option value="BLUE_GREEN" disabled={true}>蓝绿发布</Option>
-                            <Option value="ROLLING_UPDATE">滚动升级</Option>
+                            <Option value="BATCH"
+                                    disabled={true}>{this.props.intl.messages['projects.text.batchUpdate']}</Option>
+                            <Option value="BLUE_GREEN"
+                                    disabled={true}>{this.props.intl.messages['projects.text.blueGreenUpdate']}</Option>
+                            <Option
+                                value="ROLLING_UPDATE">{this.props.intl.messages['projects.text.rollingUpdate']}</Option>
                         </Select>
 
                     </FormItem>
 
-                    <FormItem
-                        className={this.field.getValue('releaseBatch') === 'BATCH' ? "form-item-release-batch" : "form-item-release-batch hide"}
-                              label="发布批次:"
-                              {...formItemLayout}
-                              validateStatus={this.field.getError("releaseBatch") ? "error" : ""}
-                              help={this.field.getError("releaseBatch") ? "发布策略" : ""}>
-                        <div
-                            className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.releaseBatch}</div>
-                        <NumberPicker
-                            className={this.state.editMode ? "form-item-NumberPicker" : "form-item-NumberPicker hide"}
-                            min={1}
-                            max={99}
-                            placeholder="发布批次"
-                            {...init('releaseBatch', {initValue: this.state.yamlData.releaseBatch})}/>
-                    </FormItem>
+                    {/*<FormItem*/}
+                    {/*    className={this.field.getValue('releaseBatch') === 'BATCH' ? "form-item-release-batch" : "form-item-release-batch hide"}*/}
+                    {/*          label="发布批次:"*/}
+                    {/*          {...formItemLayout}*/}
+                    {/*          validateStatus={this.field.getError("releaseBatch") ? "error" : ""}*/}
+                    {/*          help={this.field.getError("releaseBatch") ? this.props.intl.messages['projects.placeholder.releaseStrategy'] : ""}>*/}
+                    {/*    <div*/}
+                    {/*        className={this.state.editMode ? "form-item-text hide" : "form-item-text"}>{this.state.yamlData.releaseBatch}</div>*/}
+                    {/*    <NumberPicker*/}
+                    {/*        className={this.state.editMode ? "form-item-NumberPicker" : "form-item-NumberPicker hide"}*/}
+                    {/*        min={1}*/}
+                    {/*        max={99}*/}
+                    {/*        placeholder="发布批次"*/}
+                    {/*        {...init('releaseBatch', {initValue: this.state.yamlData.releaseBatch})}/>*/}
+                    {/*</FormItem>*/}
 
 
                     {/*<FormItem label="镜像地址"*/}
@@ -952,7 +966,7 @@ export default class K8sInfoPage extends Component {
                     {/*initValue: this.state.yamlData.imageUrl,*/}
                     {/*rules: [{*/}
                     {/*required: true,*/}
-                    {/*message: "该项不能为空"*/}
+                    {/*message: this.props.intl.messages['projects.message.cantNull']*/}
                     {/*}]*/}
                     {/*})}>*/}
                     {/*</Input>*/}
@@ -960,17 +974,17 @@ export default class K8sInfoPage extends Component {
                     {/*</FormItem>*/}
 
                     <FormItem className={this.state.editMode ? "form-item-yaml-origin" : "form-item-yaml-origin hide"}
-                              label="YAML文件来源:"
+                              label={this.props.intl.messages['projects.text.yamlSource']}
                               {...formItemLayout}>
                         <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
                             defaultValue={(this.state.yamlData.length === 0 || this.state.yamlFilePath === "") ? "profile" : "path"}>
                             <Option value="profile">
-                                使用配置
+                                {this.props.intl.messages['projects.text.userProfile']}
                             </Option>
                             <Option value="path">
-                                使用Yaml文件相对路径
+                                {this.props.intl.messages['projects.text.userRelativePath']}
                             </Option>
 
                         </Select>
@@ -1000,12 +1014,12 @@ export default class K8sInfoPage extends Component {
                             onClick={this.envDetailConfirm.bind(this)}
                             type="primary"
                         >
-                            保存
+                            {this.props.intl.messages['projects.button.Save']}
                         </Button>
                         < Button
                             className={this.state.editMode ? "cancel-button" : "cancel-button hide"}
                             onClick={this.toggleEditMode.bind(this)}>
-                            取消
+                            {this.props.intl.messages['projects.button.cancel']}
                         </Button>
 
 
@@ -1018,3 +1032,5 @@ export default class K8sInfoPage extends Component {
 
 
 }
+
+export default injectIntl(K8sInfoPage)

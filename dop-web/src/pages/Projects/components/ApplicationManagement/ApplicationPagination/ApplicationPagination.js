@@ -4,13 +4,14 @@ import API from "../../../../API.js"
 import Axios from "axios";
 import ApplicationList from "../ApplicationList/ApplicationList";
 import "./ApplicationPagination.scss"
+import {injectIntl} from "react-intl";
 
 
 /**
  * 应用列表翻页器
  * @author Bowen
  **/
-export default class ApplicationPagination extends Component {
+class ApplicationPagination extends Component {
     constructor(props) {
         super(props);
 
@@ -155,6 +156,13 @@ export default class ApplicationPagination extends Component {
                 </Loading>
 
                 <Pagination
+                    locale={{
+                        prev: this.props.intl.messages["projects.text.prev"],
+                        next: this.props.intl.messages["projects.text.next"],
+                        goTo: this.props.intl.messages["projects.text.goto"],
+                        page: this.props.intl.messages["projects.text.page"],
+                        go: this.props.intl.messages["projects.text.go"],
+                    }}
                     projectId={this.state.projectId}
                     className="pagination"
                     current={this.state.current}
@@ -168,7 +176,7 @@ export default class ApplicationPagination extends Component {
 }
 
 
-
+export default injectIntl(ApplicationPagination)
 
 
 

@@ -4,13 +4,16 @@ import TopBar from "./topbar"
 import Axios from "axios";
 import API from "../../../../API";
 import "./ProjectBasicInfo.scss"
+import AddMemberList from "../AddMemberList/AddMemberList"
+import {injectIntl} from "react-intl";
 
 /**
  * 项目基本信息页面
  * @author Bowen
  */
 const Toast = Feedback.toast;
-export default class ProjectBasicInfo extends Component {
+
+class ProjectBasicInfo extends Component {
     static displayName = 'ProjectBasicInfo';
 
     constructor(props) {
@@ -22,7 +25,9 @@ export default class ProjectBasicInfo extends Component {
             loading: true,
             userData: [],
             visible: false,
-            memberData: []
+            addMemberListVisible: false,
+            memberData: [],
+            memberDataLoading: false
         }
 
     }
@@ -30,6 +35,7 @@ export default class ProjectBasicInfo extends Component {
     //加载应用基本信息
     componentDidMount() {
         this.getData()
+        // this.getMemberData()
     }
 
     popupConfirm(id) {
@@ -43,6 +49,7 @@ export default class ProjectBasicInfo extends Component {
     }
 
     onDelete(id) {
+        let _this = this
         let deleteUrl = API.application + "/project/" + this.state.projectId + "/members"
         Axios.delete(deleteUrl, {
             params: {
@@ -53,7 +60,7 @@ export default class ProjectBasicInfo extends Component {
         })
             .then((response) => {
                     Toast.success("删除成功")
-                    this.getData()
+                _this.getData()
                 }
             )
             .catch((response) => {
@@ -73,7 +80,7 @@ export default class ProjectBasicInfo extends Component {
 
     getMemberData() {
         this.setState({
-            loading: true
+            memberDataLoading: true
         })
         let _this = this
         let url = API.application + "/project/" + this.state.projectId + "/members"
@@ -83,15 +90,20 @@ export default class ProjectBasicInfo extends Component {
             }
         })
             .then((response) => {
-                console.log(response)
-                this.setState({
+                console.log("then", response)
+                _this.setState({
                     memberData: response.data,
-                    loading: false
+                    memberDataLoading: false,
+                    addMemberListVisible: false
                 })
             })
-            .catch((reason => {
-                console.log(reason)
-            }))
+            .catch((response) => {
+                console.log("catch", response)
+                _this.setState({
+                    memberDataLoading: false,
+                    addMemberListVisible: false
+                })
+            })
     }
 
     getData() {
@@ -124,12 +136,19 @@ export default class ProjectBasicInfo extends Component {
                     })
                     .catch((response) => {
                         console.log(response)
+                        _this.setState({
+                                loading: false
+                            }
+                        )
                     })
 
 
             })
             .catch((response) => {
                     console.log(response)
+                _this.setState({
+                    loading: false
+                })
                 }
             )
 
@@ -155,6 +174,9 @@ export default class ProjectBasicInfo extends Component {
     }
 
     addMember() {
+        this.setState({
+            addMemberListVisible: true
+        })
 
     }
 
@@ -165,44 +187,53 @@ export default class ProjectBasicInfo extends Component {
                 <div>
                     <TopBar
                         extraBefore={<Breadcrumb>
-                            <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                             <Breadcrumb.Item
-                                link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                                link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
                         </Breadcrumb>}/>
                     <Card
                         className="user-card"
                         title={this.state.userData.name}
                         bodyHeight="100%"
-                        subTitle="应用拥有人"
-                        extra={<a href="">转交应用&gt;</a>}
+                        subTitle={this.props.intl.messages["projects.text.projectOwner"]}
+                        extra={<a href="">{this.props.intl.messages["projects.text.handOverApplication"]}&gt;</a>}
                     >
                         <img alt="avatar"
                              src={this.state.userData.avatarURL === "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
                              className="avatar"/>
                         <span>
             <Button onClick={this.manageMember.bind(this)} type="primary">
-            管理成员
+            {this.props.intl.messages["projects.text.manageMembers"]}
             </Button>
             <Dialog
                 visible={this.state.visible}
-                onOk={this.onOk}
+                onOk={this.onClose}
                 onCancel={this.onClose}
                 onClose={this.onClose}
                 className="dialog"
             >
             <div>
-            <h2>成员管理</h2>
+            <h2> {this.props.intl.messages["projects.text.memberManagement"]}</h2>
             <div>
-            <Button onClick={this.addMember.bind(this)} type="primary">
-        添加成员
+            <Button onClick={this.addMember.bind(this)} type="primary"
+                    disabled={this.state.memberDataLoading}>
+        {this.props.intl.messages["projects.text.addMember"]}
         </Button>
+                <AddMemberList
+                    getMemberData={this.getMemberData.bind(this)}
+                    memberList={this.state.memberData}
+                    visible={this.state.addMemberListVisible}
+                    projectId={this.state.projectId}/>
             </div>
-            <Table dataSource={this.state.memberData}>
+            <Table
+                isLoading={this.state.memberDataLoading}
+                dataSource={this.state.memberData}>
         <Table.Column cell={this.idRender}
-                      title="成员ID"
+                      title={this.props.intl.messages['projects.text.dialog.memberId']}
                       dataIndex="id"/>
 
-        <Table.Column title="成员名称"
+        <Table.Column title={this.props.intl.messages['projects.text.dialog.memberName']}
                       dataIndex="name"
                       cell={this.nameRender.bind(this)}/>
 
@@ -217,3 +248,5 @@ export default class ProjectBasicInfo extends Component {
         )
     }
 }
+
+export default injectIntl(ProjectBasicInfo)

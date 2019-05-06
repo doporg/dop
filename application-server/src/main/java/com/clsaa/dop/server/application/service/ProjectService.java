@@ -10,6 +10,7 @@ import com.clsaa.dop.server.application.model.vo.UserV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,8 +41,14 @@ public class ProjectService {
         this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
     }
 
-    public void addMemberToProject(Long userId, Long projectId, Long loginUser) {
-        this.permissionService.addData(this.permissionConfig.getProjectRuleId(), userId, projectId, loginUser);
+    public void addMemberToProject(List<Long> userIdList, Long projectId, Long loginUser) {
+        List<Long> existUserIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
+        Set<Long> userIdSet = new HashSet<>(existUserIdList);
+
+        for (Long userId : userIdList) {
+            BizAssert.validParam(!existUserIdList.contains(userId), new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "已在项目中"));
+            this.permissionService.addData(this.permissionConfig.getProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
+        }
 
     }
 

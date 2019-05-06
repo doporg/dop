@@ -1,24 +1,16 @@
 import React, {Component} from 'react';
 import {Radio} from "@icedesign/base";
+import {injectIntl} from "react-intl";
 
 const {Group: RadioGroup} = Radio;
-const list = [
-    {
-        value: "PUBLIC",
-        label: "公开"
-    },
-    {
-        value: "PRIVATE",
-        label: "私人"
-    },
-];
+
 
 
 /**
  *    私密性单选按钮
  *
  * */
-export default class PrivateController extends Component {
+class PrivateController extends Component {
     constructor(props) {
         super(props);
 
@@ -48,6 +40,16 @@ export default class PrivateController extends Component {
     }
 
     render() {
+        const list = [
+            {
+                value: "PUBLIC",
+                label: this.props.intl.messages['projects.radio.public']
+            },
+            {
+                value: "PRIVATE",
+                label: this.props.intl.messages['projects.radio.private']
+            },
+        ];
         return (
             <div>
                 <RadioGroup
@@ -60,3 +62,5 @@ export default class PrivateController extends Component {
     }
 
 }
+
+export default injectIntl(PrivateController)

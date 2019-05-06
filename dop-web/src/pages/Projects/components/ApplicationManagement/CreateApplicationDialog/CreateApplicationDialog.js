@@ -2,6 +2,7 @@ import {Button, Dialog,} from "@icedesign/base";
 import CreateApplicationForm from "../CreateApplicationForm/CreateApplicationForm"
 import React, {Component} from 'react';
 import "./CreateApplicationDialog.scss"
+import {injectIntl} from "react-intl";
 
 
 /**
@@ -9,8 +10,7 @@ import "./CreateApplicationDialog.scss"
  *  @author Bowen
  *
  * */
-
-export default class CreateApplicationDialog extends Component {
+class CreateApplicationDialog extends Component {
 
     constructor(props) {
         super(props);
@@ -71,14 +71,14 @@ export default class CreateApplicationDialog extends Component {
         return (
             <span>
                 <Button onClick={this.onOpen} type="primary">
-          创建应用
+        {this.props.intl.messages['projects.button.createApplication']}
         </Button>
         <Dialog
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="创建应用"
+            title={this.props.intl.messages['projects.button.createApplication']}
             className="dialog"
             footerAlign={this.state.footerAlign}
         >
@@ -90,10 +90,14 @@ export default class CreateApplicationDialog extends Component {
         onOk={this.onCreateDialogClose}
         onCancel={this.onCreateDialogClose}
         onClose={this.onCreateDialogClose}
-        title="创建成功"
+        title={this.props.intl.messages['projects.text.createSuccess']}
         className="success-dialog"
+        locale={{
+            ok: this.props.intl.messages["projects.button.confirm"],
+            cancel: this.props.intl.messages["projects.button.cancel"]
+        }}
         footerAlign={this.state.footerAlign}>
-应用创建成功！
+{this.props.intl.messages['projects.text.createApplicationSuccess']}
 </Dialog>
       </span>
         );
@@ -101,3 +105,5 @@ export default class CreateApplicationDialog extends Component {
 
 
 }
+
+export default injectIntl(CreateApplicationDialog)

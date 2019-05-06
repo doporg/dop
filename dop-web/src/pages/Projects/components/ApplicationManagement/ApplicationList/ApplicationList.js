@@ -5,6 +5,7 @@ import {Col} from "@alifd/next/lib/grid";
 import Axios from "axios";
 import {Link} from "react-router-dom";
 import "./ApplicationList.scss"
+import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
 const Toast = Feedback.toast;
@@ -13,7 +14,7 @@ const Toast = Feedback.toast;
  * @author Bowen
  **/
 
-export default class ApplicationList extends Component {
+class ApplicationList extends Component {
 
     static displayName = 'ApplicationList';
 
@@ -44,8 +45,8 @@ export default class ApplicationList extends Component {
     popupConfirm = (id) => {
         console.log(id)
         Dialog.confirm({
-            content: "你确定要删除该应用吗？",
-            title: "确认删除",
+            content: this.props.intl.messages['projects.text.deleteConfirmApplication'],
+            title: this.props.intl.messages['projects.text.deleteConfirm'],
             onOk: this.onDelete.bind(this, id)
         });
     };
@@ -57,7 +58,7 @@ export default class ApplicationList extends Component {
         console.log("id", id)
         Axios.delete(url)
             .then(function (response) {
-                Toast.success("删除成功")
+                Toast.success(_this.props.intl.messages['projects.text.deleteSuccessful'])
                 _this.state.deletedCallRefresh();
                 }
             )
@@ -90,18 +91,18 @@ export default class ApplicationList extends Component {
                 <Col>
                     <Table dataSource={this.state.currentData}>
                         <Table.Column
-                                      title="ID"
-                                      dataIndex="id"/>
+                            title={this.props.intl.messages['projects.text.id']}
+                            dataIndex="id"/>
 
-                        <Table.Column title="应用名称"
+                        <Table.Column title={this.props.intl.messages['projects.text.applicationName']}
                                       cell={this.nameRender.bind(this)}
                                       dataIndex="title"/>
 
-                        <Table.Column title="拥有者"
+                        <Table.Column title={this.props.intl.messages['projects.text.Owner']}
                                       dataIndex="ouserName"/>
 
                         <Table.Column cell={renderOpr}
-                                      title="创建时间"
+                                      title={this.props.intl.messages['projects.text.createTime']}
                                       dataIndex="ctime"/>
                     </Table>
                 </Col>
@@ -111,3 +112,4 @@ export default class ApplicationList extends Component {
 
 }
 
+export default injectIntl(ApplicationList)

@@ -6,6 +6,7 @@ import PipelineBindPage from "../PipelineBindPage/PipelineBindPage"
 import ClusterInfoForm from "../ClusterInfoForm/ClusterInfoForm"
 import TopBar from "./topbar";
 import "./ApplicationEnvironmentDetail.scss"
+import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -19,7 +20,7 @@ const formItemLayout = {
  * 展示应用环境详情的列表
  * @author Bowen
  **/
-export default class ApplicationEnvironmentDetail extends Component {
+class ApplicationEnvironmentDetail extends Component {
 
     constructor(props) {
         super(props);
@@ -77,18 +78,19 @@ export default class ApplicationEnvironmentDetail extends Component {
         }
     }
     render() {
-        const {init} = this.field
+        const {init} = this.field;
         return (
             <div>
 
                 <TopBar
                     extraBefore={<Breadcrumb>
-                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                        <Breadcrumb.Item>{"应用环境：" + this.state.appEnvId}</Breadcrumb.Item>
+                            link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.props.intl.messages['projects.bread.appEnv'] + this.state.appEnvId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
                 <div className="form-container">
@@ -97,21 +99,25 @@ export default class ApplicationEnvironmentDetail extends Component {
                     >
                         <Form className="deployment-strategy-form">
 
-                            <FormItem label="部署方式:"
+                            <FormItem label={this.props.intl.messages['projects.text.deploymentStrategy']}
                                       className="deployment-strategy-form"
-                              {...formItemLayout}
-                              validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
-                              help={this.field.getError("deploymentStrategy") ? "请选择部署方式" : ""}
+                                      {...formItemLayout}
+                                      validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
+                                      help={this.field.getError("deploymentStrategy") ? this.props.intl.messages['projects.check.deploymentStrategy'] : ""}
                     >
 
-                        <Select placeholder="部署方式"
-                                onChange={this.onChange.bind(this)}
+                                <Select placeholder={this.props.intl.messages['projects.check.deploymentStrategy']}
+                                        onChange={this.onChange.bind(this)}
 
-                                {...init('deploymentStrategy', {
+                                        {...init('deploymentStrategy', {
                                     initValue: this.state.envData.deploymentStrategy,
-                                    rules: [{required: true, message: "该项不能为空"}]
+                                            rules: [{
+                                                required: true,
+                                                message: this.props.intl.messages['projects.message.cantNull']
+                                            }]
                                 })}>
-                            <Option value="KUBERNETES">Kubernetes部署</Option>
+                                    <Option
+                                        value="KUBERNETES">{this.props.intl.messages['projects.text.deploymentByKubernetes']}</Option>
                             <Option value="test">测试</Option>
                         </Select>
 
@@ -125,10 +131,13 @@ export default class ApplicationEnvironmentDetail extends Component {
                 <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 
-                    <Button onClick={this.state.switchPage.bind(this, "envList")} type="primary">返回环境列表</Button>
+                    <Button onClick={this.state.switchPage.bind(this, "envList")}
+                            type="primary">{this.props.intl.messages['projects.button.returnToEnvList']}</Button>
 
                 </div>
             </div>
         );
     }
 }
+
+export default injectIntl(ApplicationEnvironmentDetail)

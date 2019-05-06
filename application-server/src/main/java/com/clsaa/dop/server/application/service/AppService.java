@@ -231,7 +231,7 @@ public class AppService {
     public AppBasicInfoV1 findAppById(Long loginUser, Long id) {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
                 , BizCodes.NO_PERMISSION);
-        System.out.print(this.appRepository.findById(id).orElse(null));
+        //System.out.print(this.appRepository.findById(id).orElse(null));
         AppBoV1 app = BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
         AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);
         AppBasicInfoV1 appBasicInfoV1 = AppBasicInfoV1.builder()

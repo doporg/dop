@@ -8,8 +8,9 @@ import {Breadcrumb, Input} from '@icedesign/base';
 import TopBar from './components/projectManagement/TopBar';
 import Pagination from './components/projectManagement/ProjectPagination/ProjectPagination'
 import CreateProjectDialog from './components/projectManagement/CreateProjectDialog/CreateProjectDialog'
+import {injectIntl} from "react-intl";
 
-export default class Projects extends Component {
+class Projects extends Component {
     static displayName = 'Projects';
 
     constructor(props) {
@@ -47,16 +48,16 @@ export default class Projects extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                 </Breadcrumb>
                 <TopBar
                     extraBefore={
                         <Input
                             size="large"
-                            placeholder="请输入关键字进行搜索"
                             style={{width: '240px'}}
-                            // hasClear
                             onChange={this.onSearch.bind(this)}
+                            placeholder={this.props.intl.messages["projects.search.project"]}
                         />
                     }
                     extraAfter={< CreateProjectDialog refreshProjectList={this.refreshProjectList.bind(this)}/>
@@ -70,3 +71,5 @@ export default class Projects extends Component {
         );
     }
 }
+
+export default injectIntl(Projects)

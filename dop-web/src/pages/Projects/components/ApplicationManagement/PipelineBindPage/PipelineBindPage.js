@@ -4,13 +4,15 @@ import API from "../../../../API.js"
 import {Link} from 'react-router-dom';
 import {Field, Form, Loading} from "@icedesign/base";
 import "./PipelineBindPage.scss"
+import {injectIntl} from "react-intl";
 
 const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
 };
 const FormItem = Form.Item
-export default class PipelineBindPage extends Component {
+
+class PipelineBindPage extends Component {
     constructor(props) {
         super(props);
         this.field = new Field(this)
@@ -201,15 +203,19 @@ export default class PipelineBindPage extends Component {
             return (
 
                 <Form className="form">
-                    <Loading visible={this.state.loading} size='small' shape="dot-circle"
+                    <Loading
+                        className="form-loading"
+                        visible={this.state.loading} size='small' shape="dot-circle"
                              color="#2077FF"
                     >
-                        <FormItem    {...formItemLayout}
-                                     label="流水线:">
+                        <FormItem
+                            className="form-item"
+                            {...formItemLayout}
+                            label={this.props.intl.messages['projects.text.pipeline']}>
                             <Link
                                 to={this.state.currentPipeline === "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
                                 <div
-                                    className="text">{this.state.currentPipeline === "" ? "点击前往绑定流水线" : this.state.currentPipeline.name}</div>
+                                    className="text">{this.state.currentPipeline === "" ? this.props.intl.messages['projects.text.bindPipeline'] : this.state.currentPipeline.name}</div>
                             </Link>
                         </FormItem>
 
@@ -230,3 +236,5 @@ export default class PipelineBindPage extends Component {
         )
     }
 }
+
+export default injectIntl(PipelineBindPage)
