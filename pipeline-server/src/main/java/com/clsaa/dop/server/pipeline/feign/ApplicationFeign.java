@@ -19,9 +19,11 @@ public interface ApplicationFeign {
     /**
      * 根据id查询应用信息
      */
-
+    @ApiOperation(value = "根据ID查询应用信息", notes = "根据ID查询应用项目")
     @GetMapping(value = "/app/{appId}/urlInfo")
-    AppBasicInfoV1 findAppById(@ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId);
+    AppBasicInfoV1 findAppById(
+            @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
+            @ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId);
 
 
     /**

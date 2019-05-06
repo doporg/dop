@@ -122,5 +122,11 @@ public class JenkinsController {
         return responseEntity.getBody();
     }
 
+    @ApiOperation(value = "查找流水线运行最后一次的状态", notes = "根据传进来的地址进行api接口的访问")
+    @GetMapping("/v1/jenkins/result/status")
+    public String status(String id) {
+        return this.jenkinsService.getBuildResult(id);
+    }
+
 
 }

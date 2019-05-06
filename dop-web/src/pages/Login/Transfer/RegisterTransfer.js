@@ -6,9 +6,10 @@ import Axios from 'axios'
 import API from '../../API'
 import {Feedback} from "@icedesign/base";
 import {RSA} from "../index";
+import {injectIntl} from "react-intl";
 const {toast} = Feedback;
 
-export default class RegisterTransfer extends Component {
+class RegisterTransfer extends Component {
 
     componentWillMount(){
         let self = this;
@@ -17,7 +18,7 @@ export default class RegisterTransfer extends Component {
         }).catch((error)=>{
             toast.show({
                 type: "error",
-                content: "权限网络请求失败",
+                content: self.props.intl.messages["login.transfer.RegisterTransfer.rsa.error"],
                 duration: 1000
             });
         })
@@ -30,11 +31,9 @@ export default class RegisterTransfer extends Component {
             if(response.status === 200){
                 toast.show({
                     type: "success",
-                    content: "注册成功",
+                    content: self.props.intl.messages["login.transfer.RegisterTransfer.success"],
                     duration: 5000
                 });
-            }else{
-                console.log(response)
             }
         }).catch((error)=>{
             console.log(error.response)
@@ -55,12 +54,12 @@ export default class RegisterTransfer extends Component {
                 </div>
                 <div className="register-content">
                     <div className="title">
-                        欢迎注册DevopsPlatform
+                        {this.props.intl.messages["login.transfer.RegisterTransfer.title"]}
                     </div>
                     <div className="tip">
-                        本项目由南京大学软件学院DOP项目组开发,如遇不便请联系Q
+                        {this.props.intl.messages["login.transfer.RegisterTransfer.tip"]}
                         <br />  <br />
-                        请等待激活......
+                        {this.props.intl.messages["login.transfer.RegisterTransfer.tip.waiting"]}......
                     </div>
                 </div>
                 <Footer/>
@@ -68,3 +67,4 @@ export default class RegisterTransfer extends Component {
         )
     }
 }
+export default injectIntl(RegisterTransfer)

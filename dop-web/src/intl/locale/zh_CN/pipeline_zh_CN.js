@@ -1,8 +1,7 @@
 const PIPELINE_ZH_CN = {
-    'pipeline.hello': '你好，世界！',
-    'pipeline.name': '我的名字是 {name}',
-    'pipeline.newPipeline': '新建流水线',
+    'pipeline.name': '流水线管理',
 
+    'pipeline.newPipeline': '新建流水线',
     'pipeline.table.index': '序号',
     'pipeline.table.name': '流水线名称',
     'pipeline.table.createTime': '创建时间',
@@ -57,5 +56,41 @@ const PIPELINE_ZH_CN = {
     'pipeline.info.step.pushDocker': '推送docker镜像',
     'pipeline.info.step.custom': '用户自定义脚本',
     'pipeline.info.step.deploy': '部署',
+
+    'pipeline.info.step.pull.title': '拉取代码',
+    'pipeline.info.step.pull.apply': '应用设置',
+    'pipeline.info.step.pull.apply.error': '获取应用信息失败',
+    'pipeline.info.step.pull.git': 'Git',
+
+    'pipeline.info.step.maven.title': '构建maven',
+    'pipeline.info.step.maven.tip': '我们将执行以下操作',
+    'pipeline.info.step.node.version': 'mvn --version',
+    'pipeline.info.step.maven.clean': 'mvn -U -am clean package',
+
+    'pipeline.info.step.node.title': '构建 node',
+    'pipeline.info.step.node.tip': '我们将执行以下操作',
+    'pipeline.info.step.node.npm.version': 'npm --version',
+    'pipeline.info.step.node.node.version': 'node --version',
+
+    'pipeline.info.step.django.title': '构建 Django',
+    'pipeline.info.step.django.tip': '我们将执行以下操作',
+    'pipeline.info.step.django.python': 'python --version',
+    'pipeline.info.step.django.pip': 'pip --version',
+
+    'pipeline.info.step.docker.apply.error': '获取应用信息失败',
+    'pipeline.info.step.docker.title': 'Docker 设置',
+    'pipeline.info.step.docker.apply': '应用设置',
+    'pipeline.info.step.docker.environment': '环境设置',
+    'pipeline.info.step.docker.environment.placeholder': '请选择环境',
+    'pipeline.info.step.docker.dockerUser.placeholder': '请选择docker账户',
+    'pipeline.info.step.docker.repository.placeholder': '请选择docker仓库',
+
+    'pipeline.info.step.shell.title': '自定义脚本',
+    'pipeline.info.step.shell.type': '脚本类型',
+    'pipeline.info.step.shell.type.placeholder': '请选择脚本类型',
+    'pipeline.info.step.shell.content': '脚本内容',
+
+    'pipeline.info.step.deploy.title': '部署设置',
+    'pipeline.info.step.deploy.tip': '我们会根据您环境中的配置进行部署',
 };
 export default PIPELINE_ZH_CN;

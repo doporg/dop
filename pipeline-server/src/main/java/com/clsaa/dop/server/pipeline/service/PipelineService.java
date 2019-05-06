@@ -53,14 +53,18 @@ public class PipelineService {
         pipeline.setCtime(LocalDateTime.now());
         pipeline.setMtime(LocalDateTime.now());
         pipeline.setIsDeleted(false);
-        pipelineRepository.insert(pipeline);
 
-        //拿到 result output id
-        String resultOutputId = this.resultOutputService.create(id.toString());
-        //拿到 校验流水线信息完整
-        Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
-        this.jenkinsService.createJob(pipelineWithInfo);
-        return id.toString();
+        try{
+            pipelineRepository.insert(pipeline);
+            //拿到 result output id
+            String resultOutputId = this.resultOutputService.create(id.toString());
+            //拿到 校验流水线信息完整
+            Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
+            this.jenkinsService.createJob(pipelineWithInfo);
+            return id.toString();
+        }catch (Exception e){
+            return e.toString();
+        }
     }
 
     public void addPipelineWithJenkins(Pipeline pipeline, Long loginUser) {
@@ -180,7 +184,7 @@ public class PipelineService {
 
 
             if (pipeline.getAppId() != null) {
-                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipeline.getAppId());
+                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(loginUser, pipeline.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
             }
@@ -245,23 +249,23 @@ public class PipelineService {
                 List<Step> steps = stages.get(i).getSteps();
                 for (int j = 0; j < steps.size(); j++) {
                     Step task = steps.get(j);
-                    String taskName = task.getTaskName();
+                    Step.TaskType taskName = task.getTaskName();
                     switch (taskName) {
-                        case ("拉取代码"):
+                        case PullCode:
                             task.setGitUrl(gitUrl == null ? task.getGitUrl() : gitUrl);
                             break;
-                        case ("构建docker镜像"):
+                        case BuildDocker:
                             task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
                             task.setRepository(repository == null ? task.getRepository() : repository);
                             task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
                             break;
-                        case ("推送docker镜像"):
+                        case PushDocker:
                             task.setDockerUserName(dockerUserName == null ? task.getDockerUserName() : dockerUserName);
                             task.setRepository(repository == null ? task.getRepository() : repository);
                             task.setRepositoryVersion(repositoryVersion == null ? task.getRepositoryVersion() : repositoryVersion);
                             task.setDockerPassword(dockerPassword == null ? task.getDockerPassword() : dockerPassword);
                             break;
-                        case ("部署"):
+                        case Deploy:
                             task.setDeploy(deploy);
                             task.setIp(ip);
                             task.setToken(token);
