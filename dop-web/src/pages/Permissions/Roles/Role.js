@@ -10,6 +10,8 @@ import Input from "@icedesign/base/lib/input";
 import Select, {Option} from "@icedesign/base/lib/select";
 import { Link } from 'react-router-dom';
 import Search from "@icedesign/base/lib/search";
+import {injectIntl} from "react-intl";
+import {Permission} from "../Permissions/Permission";
 const { Item: FormItem } = Form;
 /**
  *  角色管理
@@ -18,7 +20,7 @@ const { Item: FormItem } = Form;
  *
  * */
 
-export default class Role extends Component {
+export class Role extends Component {
 
 
     constructor(props) {
@@ -54,8 +56,40 @@ export default class Role extends Component {
 
            permissionPageNo:1,
            permissionPageSize:8,
-           permissionTotalCount:0
+           permissionTotalCount:0,
 
+            roleText:[
+                this.props.intl.messages[ 'permission.successCreateMessage'],
+                this.props.intl.messages[ 'permission.failCreateMessage'],
+                this.props.intl.messages[ 'permission.editRole'],
+                this.props.intl.messages[ 'permission.newRole'],
+                this.props.intl.messages[ 'permission.roleDistribution'],
+                this.props.intl.messages[ 'permission.roleName'],
+                this.props.intl.messages[ 'permission.parentRole'],
+                this.props.intl.messages[ 'permission.rolePermission:'],
+                this.props.intl.messages[ 'permission.rolePermissionList'],
+                this.props.intl.messages[ 'permission.permissionBelongRole'],
+                this.props.intl.messages[ 'permission.allPermission'],
+                this.props.intl.messages[ 'permission.roleId'],
+
+                this.props.intl.messages[ 'permission.creator'],
+                this.props.intl.messages[ 'permission.createTime'],
+                this.props.intl.messages[ 'permission.deleteTitle'],
+                this.props.intl.messages[ 'permission.cancelDelete'],
+                this.props.intl.messages[ 'permission.repeatName'],
+                this.props.intl.messages[ 'permission.successDelete'],
+                this.props.intl.messages[ 'permission.successAdd'],
+                this.props.intl.messages[ 'permission.confirm'],
+                this.props.intl.messages[ 'permission.reset'],
+                this.props.intl.messages[ 'permission.cancel'],
+                this.props.intl.messages[ 'permission.add'],
+                this.props.intl.messages[ 'permission.delete'],
+                this.props.intl.messages[ 'permission.confirmDelete'],
+                this.props.intl.messages[ 'permission.inputName'],
+                this.props.intl.messages[ 'permission.nullNameWarning'],
+                this.props.intl.messages[ 'permission.nullDesWarning'],
+                this.props.intl.messages[ 'permission.defaultSearch']
+            ]
 
         };
 
@@ -138,7 +172,7 @@ export default class Role extends Component {
                 console.log("监测重复返回的东西："+response.data.name);
                 if(response.data.name==values.name)
                 {
-                    Feedback.toast.error("角色名称重复！")
+                    Feedback.toast.error( this.props.intl.messages[ 'permission.repeatName'])
                 }
                 else {
                     //不重复 则关闭窗口 开始插入数据
@@ -150,9 +184,9 @@ export default class Role extends Component {
                     )
                         .then((response)=>{
                             if((response.data)!='')
-                            {Feedback.toast.success('创建成功，此条数据ID为'+response.data)}
+                            {Feedback.toast.success( this.props.intl.messages[ 'permission.successCreateMessage'] +response.data)}
                             else
-                            {Feedback.toast.error('创建失败，您没有权限')}
+                            {Feedback.toast.error( this.props.intl.messages[ 'permission.failCreateMessage'])}
                             console.log(typeof (response.data))
                             this.componentDidMount()
                             //插入关联关系
@@ -288,7 +322,7 @@ export default class Role extends Component {
         Axios.delete(url,{params:(params)}
         )
             .then((response)=>{
-                Feedback.toast.success('成功删除！')
+                Feedback.toast.success( this.props.intl.messages[ 'permission.successDelete'])
                 this.onChange(this.state.currentPage)
             }).catch((error)=> {
             console.log(error);
@@ -297,7 +331,7 @@ export default class Role extends Component {
     //取消删除操作
     onCancel = () => {
         console.log('取消删除');
-        Feedback.toast.error('删除已取消！')
+        Feedback.toast.error( this.props.intl.messages[ 'permission.cancelDelete'])
 
     }
 
@@ -313,7 +347,7 @@ export default class Role extends Component {
 
             Axios.get(getPermissionUrl,{params:(roleId)}).then(response=>
         {
-            Feedback.toast.success("成功删除！")
+            Feedback.toast.success( this.props.intl.messages[ 'permission.successDelete'])
             this.setState({currentPermission:response.data})
         })
          )
@@ -327,7 +361,7 @@ export default class Role extends Component {
         Axios.post(url,{},{params:(param)}).then(response=>
             Axios.get(getPermissionUrl,{params:(roleId)}).then(response1=>
             {
-                Feedback.toast.success("成功添加！")
+                Feedback.toast.success( this.props.intl.messages[ 'permission.successAdd'])
                 console.log(response)
                 this.setState({currentPermission:response1.data})
             })
@@ -388,12 +422,12 @@ export default class Role extends Component {
         //窗口按钮定义
         const footer = (
             <a onClick={this.onClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         );
         const footer2=(
             <a onClick={this.onPermissionClose} href="javascript:;">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         )
 
@@ -403,7 +437,7 @@ export default class Role extends Component {
                         shape="normal"
                         size="medium"
                         className="button"
-                        onClick={this.editRoleOpen.bind(this,record.id)}>编辑角色</Button>
+                        onClick={this.editRoleOpen.bind(this,record.id)}>{this.props.intl.messages[ 'permission.editRole']}</Button>
             )
         }
 
@@ -413,14 +447,14 @@ export default class Role extends Component {
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
                     onCancel={this.onCancel}
-                    title="您真的要删除吗？"
+                    title={this.props.intl.messages[ 'permission.confirmDelete']}
                 >
                     <Button
                         type="primary"
                         shape="warning"
                         size="medium"
                         className="button"
-                    >删除</Button>
+                    >{this.props.intl.messages[ 'permission.delete']}</Button>
                 </BalloonConfirm>
 
             );
@@ -432,7 +466,7 @@ export default class Role extends Component {
                     type="primary"
                     shape="warning"
                     size="medium"
-                    onClick={this.removePermission.bind(this, record.id)}>删除</Button>
+                    onClick={this.removePermission.bind(this, record.id)}>{this.props.intl.messages[ 'permission.delete']}</Button>
             );
         }
         //添加角色功能点对应按钮
@@ -442,7 +476,7 @@ export default class Role extends Component {
                     type="primary"
                     shape="normal"
                     size="medium"
-                    onClick={this.addPermission.bind(this, record.id)}>添加</Button>
+                    onClick={this.addPermission.bind(this, record.id)}>{this.props.intl.messages[ 'permission.add']}</Button>
             );
         }
 
@@ -451,15 +485,15 @@ export default class Role extends Component {
             <div>
                 <Button type="primary"
                         className="topButton"
-                        onClick={this.onOpen} >创建新角色</Button>
+                        onClick={this.onOpen} >{this.props.intl.messages[ 'permission.newRole']}</Button>
 
                 <Link to='/permission/roles/userwithrole'>
                     <Button type="primary"
-                            className="topButton">角色分配</Button>
+                            className="topButton">{this.props.intl.messages[ 'permission.roleDistribution']}</Button>
                 </Link>
 
                 <Dialog
-                    title="创建角色"
+                    title={this.props.intl.messages[ 'permission.newRole']}
                     visible={this.state.visible}
                     onClose={this.onClose}
                     style={dialogStyle}
@@ -469,29 +503,29 @@ export default class Role extends Component {
 
                     <Form field={this.field}>
                         <FormItem
-                            label="角色名称："
+                            label={this.props.intl.messages[ 'permission.roleName']}
                             {...formItemLayout}
                             hasFeedback
                         >
                             <Input
                                 maxLength={10}
                                 hasLimitHint
-                                placeholder="请输入名称"
+                                placeholder={this.props.intl.messages[ 'permission.inputName']}
                                 {...init("name", {
                                     rules: [
-                                        { required: true, min: 1, message: "名称不能为空！" },
+                                        { required: true, min: 1, message:this.props.intl.messages[ 'permission.nullNameWarning'] },
                                     ]
                                 })}
                             />
                         </FormItem>
 
-                        <FormItem label="父角色：" {...formItemLayout} required>
+                        <FormItem label={this.props.intl.messages[ 'permission.parentRole']} {...formItemLayout} required>
                             <Select dataSource={this.state.roleSelectList} style={{width:200}}  {...init("parentId")}>
 
                             </Select>
                         </FormItem>
 
-                        <FormItem label="功能点：" {...formItemLayout} required>
+                        <FormItem label={this.props.intl.messages[ 'permission.rolePermission']} {...formItemLayout} required>
                             <Table
                                 hasBorder={false}
                                 dataSource={this.state.permissionList}
@@ -499,17 +533,17 @@ export default class Role extends Component {
                                 isTree
                                 rowSelection={this.state.rowSelection}
                             >
-                                <Table.Column title="名称" dataIndex="name" />
-                                <Table.Column title="功能描述" dataIndex="description" />
+                                <Table.Column title={this.props.intl.messages[ 'permission.permissionName']} dataIndex="name" />
+                                <Table.Column title={this.props.intl.messages[ 'permission.permissionDes']} dataIndex="description" />
                             </Table>
                         </FormItem>
 
                         <FormItem wrapperCol={{ offset: 6 }}>
                             <Button type="primary" onClick={this.handleSubmit.bind(this)}>
-                                确定
+                                {this.props.intl.messages[ 'permission.confirm']}
                             </Button>
                             &nbsp;&nbsp;&nbsp;
-                            <Button onClick={this.handleReset.bind(this)}>重置</Button>
+                            <Button onClick={this.handleReset.bind(this)}>{this.props.intl.messages[ 'permission.reset']}</Button>
                         </FormItem>
 
                     </Form>
@@ -517,7 +551,7 @@ export default class Role extends Component {
 
 
                 <Dialog
-                    title="角色功能点列表"
+                    title={this.props.intl.messages[ 'permission.rolePermissionList']}
                     visible={this.state.permissionVisible}
                     onClose={this.onPermissionClose}
                     style={dialogStyle}
@@ -526,25 +560,25 @@ export default class Role extends Component {
                     shouldUpdatePosition={true}>
                         <Form>
                             <FormItem>
-                                <h2>已有功能点</h2>
+                                <h2>{this.props.intl.messages[ 'permission.permissionBelongRole']}</h2>
                                     <Table
                                         hasBorder={false}
                                         dataSource={this.state.currentPermission}
                                         primaryKey="id">
-                                        <Table.Column width ='20%' title="名称" dataIndex="name" />
-                                        <Table.Column title="功能描述" dataIndex="description" />
-                                        <Table.Column title="删除操作" cell={deletePermissionMap} width="10%" />
+                                        <Table.Column width ='20%' title={this.props.intl.messages[ 'permission.permissionName']} dataIndex="name" />
+                                        <Table.Column title={this.props.intl.messages[ 'permission.permissionDes']} dataIndex="description" />
+                                        <Table.Column title={this.props.intl.messages[ 'permission.deleteTitle']} cell={deletePermissionMap} width="10%" />
                                     </Table>
                             </FormItem>
 
                             <FormItem>
 
-                                <h2>所有功能点</h2>
+                                <h2>{this.props.intl.messages[ 'permission.allPermission']}</h2>
 
                                         <Search
                                         onChange={this.onSearchChange.bind(this)}
                                         dataSource={this.state.dataSource}
-                                        placeholder="输入功能点名称搜索"
+                                        placeholder={this.props.intl.messages[ 'permission.defaultSearch']}
                                         hasIcon={false}
                                         autoWidth
                                         />
@@ -552,9 +586,9 @@ export default class Role extends Component {
                                             hasBorder={false}
                                             dataSource={this.state.permissionList}
                                             primaryKey="id">
-                                                <Table.Column width ='20%' title="名称" dataIndex="name" />
-                                                <Table.Column title="功能描述" dataIndex="description" />
-                                                <Table.Column title="添加" cell={addPermissionMap} width="10%" />
+                                                <Table.Column width ='20%' title={this.props.intl.messages[ 'permission.permissionName']} dataIndex="name" />
+                                                <Table.Column title={this.props.intl.messages[ 'permission.permissionDes']} dataIndex="description" />
+                                                <Table.Column title={this.props.intl.messages[ 'permission.add']} cell={addPermissionMap} width="10%" />
                                         </Table>
                                 <Pagination total={this.state.permissionTotalCount}
                                             current={this.state.permissionPageNo}
@@ -570,7 +604,7 @@ export default class Role extends Component {
                     className="search"
                     onChange={this.onRoleSearchChange.bind(this)}
                     dataSource={this.state.dataSource}
-                    placeholder="输入功能点名称搜索"
+                    placeholder={this.props.intl.messages[ 'permission.defaultSearch']}
                     hasIcon={false}
                     autoWidth
                 />
@@ -579,12 +613,12 @@ export default class Role extends Component {
                     hasBorder={false}
                     isLoading={this.state.isLoading}
                     dataSource={this.state.currentData}>
-                    <Table.Column title="角色ID" dataIndex="id"/>
-                    <Table.Column title="角色名称" dataIndex="name"/>
-                    <Table.Column title="创建人"   dataIndex="userName"/>
-                    <Table.Column title="创建时间" dataIndex="mtime"/>
-                    <Table.Column title="编辑角色" cell={showPermission} width="10%"/>
-                    <Table.Column title="删除操作" cell={renderDelete} width="10%" />
+                    <Table.Column title={this.props.intl.messages[ 'permission.roleId']} dataIndex="id"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.roleName']} dataIndex="name"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.creator']}   dataIndex="userName"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.createTime']} dataIndex="mtime"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.editRole']} cell={showPermission} width="10%"/>
+                    <Table.Column title={this.props.intl.messages[ 'permission.deleteTitle']} cell={renderDelete} width="10%" />
 
 
                 </Table>
@@ -597,3 +631,4 @@ export default class Role extends Component {
         )
     }
 }
+export default injectIntl(Role)
