@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Step, Icon} from '@icedesign/base';
 import PipelineInfoStep from './PipelineInfoStep'
+import {injectIntl} from "react-intl";
 
-export default class PipelineInfoStage extends Component {
+class PipelineInfoStage extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -76,7 +77,7 @@ export default class PipelineInfoStage extends Component {
 
     addStage() {
         let newStage = {
-            name: "请输入名称",
+            name: this.props.intl.messages["pipeline.info.stage.name"],
             steps: []
         };
         this.state.stages.push(newStage);
@@ -84,8 +85,18 @@ export default class PipelineInfoStage extends Component {
             currentStage: this.state.stages.length - 1
         })
     }
+    onChangeApp(value){
+        this.props.onChangeApp(value)
+    }
     onSelectEnv(value){
         this.props.onSelectEnv(value)
+    }
+
+    onChangeDockerUserName(value){
+        this.props.onChangeDockerUserName(value)
+    }
+    onChangeRepository(value){
+        this.props.onChangeRepository(value)
     }
     step(value) {
         let stages = this.state.stages;
@@ -110,7 +121,7 @@ export default class PipelineInfoStage extends Component {
                             />
                         )
                     })}
-                    <Step.Item title="添加"
+                    <Step.Item title={this.props.intl.messages["pipeline.info.stage.add"]}
                                itemRender={this.stepItemAdd.bind(this)}
                                className="pipeline-info-stage-stepItem"
                                onClick={this.addStage.bind(this, this.state.stages.length)}
@@ -121,10 +132,17 @@ export default class PipelineInfoStage extends Component {
                     stage={this.state.stages[this.state.currentStage]}
                     appId = {this.props.appId}
                     onChange={this.step.bind(this)}
+                    onChangeApp={this.onChangeApp.bind(this)}
                     onSelectEnv = {this.onSelectEnv.bind(this)}
                     currentStage={this.state.currentStage}
+
+                    dockerUserName={this.props.dockerUserName}
+                    onChangeDockerUserName={this.onChangeDockerUserName.bind(this)}
+                    repository={this.props.repository}
+                    onChangeRepository={this.onChangeRepository.bind(this)}
                 />
             </div>
         )
     }
 }
+export default injectIntl(PipelineInfoStage)

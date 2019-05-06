@@ -1,9 +1,6 @@
 package com.clsaa.dop.server.permission.controller;
 
 import com.clsaa.dop.server.permission.config.HttpHeaders;
-import com.clsaa.dop.server.permission.model.bo.PermissionBoV1;
-import com.clsaa.dop.server.permission.model.po.Permission;
-
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.service.PermissionService;
 import com.clsaa.dop.server.permission.util.BeanUtils;
@@ -12,11 +9,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -62,8 +57,8 @@ public class PermissionController {
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
         )
     {
-        permissionService.createPermission(parentId,name,isPrivate,
-                description,loginUser,loginUser);
+        permissionService.createPermission(loginUser,parentId,name,isPrivate,
+                description,loginUser);
     }
 
     @ApiOperation(value = "根据ID查询功能点", notes = "根据ID查询功能点")
@@ -77,15 +72,15 @@ public class PermissionController {
     @ApiOperation(value = "分页查询所有功能点", notes = "分页查询所有功能点")
     @GetMapping("/v1/permissions")
     public Pagination<PermissionV1> getPermissionV1Pagination(
-            @ApiParam(name = "pageNo",value = "页号",required = false,defaultValue = "1")
+            @ApiParam(name = "pageNo",value = "页号",defaultValue = "1")
             @RequestParam(value = "pageNo", required = false,defaultValue = "1")Integer page,
-            @ApiParam(name = "pageSize",value = "页大小",required = false,defaultValue = "8")
+            @ApiParam(name = "pageSize",value = "页大小",defaultValue = "8")
             @RequestParam(value = "pageSize", required = false,defaultValue = "8")Integer size,
             @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser,
-            @ApiParam(name = "key",value = "搜索关键字",required = false,defaultValue = "")
+            @ApiParam(name = "key",value = "搜索关键字",defaultValue = "")
             @RequestParam(value = "key", required = false,defaultValue = "")String key)
     {
-        return this.permissionService.getPermissionV1Pagination(page,size,loginUser,key);
+        return this.permissionService.getPermissionV1Pagination(loginUser,page,size,key);
     }
     @ApiOperation(value = "根据名称查询功能点", notes = "根据名称查询功能点")
     @GetMapping("/v1/permissions/byName")
@@ -102,7 +97,7 @@ public class PermissionController {
                            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
                            )
     {
-        permissionService.deleteById(id,loginUser);
+        permissionService.deleteById(loginUser,id);
     }
 
     @ApiOperation(value = "根据角色ID查询功能点", notes = "根据角色ID查询功能点")
@@ -132,6 +127,15 @@ public class PermissionController {
                                         @RequestParam("userId") Long loginUser)
     {
         return permissionService.checkUserPermission(permissionName,loginUser);
+    }
+
+    @ApiOperation(value = "查询当前登录用户的功能点", notes = "查询当前登录用户的功能点")
+    @GetMapping("/v1/users/permissions/ByCurrent")
+    //根据用户ID查询功能点
+    public List<PermissionV1> findByCurrentUserId(@RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser)
+    {
+        return permissionService.findByUserId(loginUser)
+                .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
     }
 
 }

@@ -37,6 +37,10 @@ class Blob extends React.Component{
             deleteVisible:false,
             commit_message:"",
             loadingVisible:true,
+            accessInfo:{
+                access_level:0,
+                visibility:"private",
+            },
         }
     }
 
@@ -71,6 +75,15 @@ class Blob extends React.Component{
             lineCount=24;
         }
         return {height:lineCount*20};
+    }
+
+    loadAccess(){
+        let url = API.code+"/projects/"+this.state.projectid+"/access";
+        Axios.get(url).then(response=>{
+            this.setState({
+                accessInfo:response.data
+            });
+        });
     }
 
     componentWillMount(){
@@ -108,7 +121,9 @@ class Blob extends React.Component{
                 blobInfo:response.data,
                 lineCount:response.data.file_content.split("\n").length
             })
-        })
+        });
+
+        this.loadAccess();
 
     }
 
@@ -132,20 +147,20 @@ class Blob extends React.Component{
 
     }
 
-    isOnBranch(){
-
-        let {ref,refOptions}=this.state;
+    hasAccess(){
+        let {ref,refOptions,accessInfo}=this.state;
 
         if(refOptions.length===0)
             return false;
 
         let branches=refOptions[0].children;
         for(let i=0;i<branches.length;i++){
-            if(branches[i].value===ref)
+            if(branches[i].value===ref&&!branches[i].default_&&!branches[i].protected_&&accessInfo.access_level>=30)
                 return true;
         }
 
         return false;
+
 
     }
 
@@ -258,7 +273,7 @@ class Blob extends React.Component{
 
                     {
                         (()=>{
-                            if(this.isOnBranch()){
+                            if(this.hasAccess()){
                                 return (
                                     <div className="div-blob-operation">
                                         <button className="btn-blob-edit" onClick={this.editFile.bind(this)}>编辑</button>

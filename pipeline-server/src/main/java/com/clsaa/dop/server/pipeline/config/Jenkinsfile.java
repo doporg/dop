@@ -87,11 +87,15 @@ public class Jenkinsfile {
                         this.stages += "sh \'node --version \' \n";
                         this.stages += "sh \'npm install \' \n";
                         break;
+                    case ("构建djanggo"):
+                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
+                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
+                        this.stages += "sh \'python ./manage.py runserver \' \n";
+                        break;
                     case ("构建docker镜像"):
                         this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
                         break;
                     case ("推送docker镜像"):
-
                         this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
                         this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
                         break;

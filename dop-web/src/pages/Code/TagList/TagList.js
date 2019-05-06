@@ -28,12 +28,25 @@ class TagList extends React.Component{
             showData:[],
             nameInput:"",
             loadingVisible:true,
+            accessInfo:{
+                access_level:0,
+                visibility:"private",
+            },
         };
     }
 
 
     componentWillMount(){
         this.loadData();
+    }
+
+    loadAccess(){
+        let url = API.code+"/projects/"+this.state.projectid+"/access";
+        Axios.get(url).then(response=>{
+            this.setState({
+                accessInfo:response.data
+            });
+        });
     }
 
     loadData(){
@@ -45,7 +58,8 @@ class TagList extends React.Component{
                 nameInput:"",
                 loadingVisible:false,
             })
-        })
+        });
+        this.loadAccess();
     }
 
     deleteTag(tag_name){
@@ -92,11 +106,18 @@ class TagList extends React.Component{
     }
 
     render(){
+        const accessInfo=this.state.accessInfo;
         return (
             <div className="tag-list-container">
                 <div className="div-tag-list-top">
                     <span className="text-tag-list-top">Tag可以将历史中某个特定的提交标记为重要的</span>
-                    <button onClick={this.newTag.bind(this)} className="btn-new-tag">+ 新建标签</button>
+                    {
+                        (()=>{
+                            if(accessInfo.access_level>=30){
+                                return <button onClick={this.newTag.bind(this)} className="btn-new-tag">+ 新建标签</button>
+                            }
+                        })()
+                    }
                     <input value={this.state.nameInput} onChange={this.changetTagName.bind(this)} className="input-tag-list-name" placeholder="输入标签名称来搜索"/>
                 </div>
                 <Loading visible={this.state.loadingVisible} className="loading-tag-list" tip={spinner}>
@@ -119,9 +140,17 @@ class TagList extends React.Component{
                                             </div>
                                         </div>
                                         <div className="div-tag-item-operation">
-                                            <a onClick={this.deleteTag.bind(this,item.name)} className="btn-tag-item-delete">
-                                                <img className="img-tag-item-delete" src={imgDelete}/>
-                                            </a>
+                                            {
+                                                (()=>{
+                                                    if(accessInfo.access_level===40){
+                                                        return (
+                                                            <a onClick={this.deleteTag.bind(this,item.name)} className="btn-tag-item-delete">
+                                                                <img className="img-tag-item-delete" src={imgDelete}/>
+                                                            </a>
+                                                        )
+                                                    }
+                                                })()
+                                            }
                                             <a onClick={this.downloadZipLink.bind(this,item.name)} className="btn-tag-item-download">
                                                 <img className="img-tag-item-download" src={imgDownload}/>
                                             </a>

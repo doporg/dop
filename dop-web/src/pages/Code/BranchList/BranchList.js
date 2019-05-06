@@ -27,7 +27,12 @@ class BranchList extends React.Component{
             branchList:[],//name,default_,protected_,merged,commit_id,commit_short_id,commit_msg,commit_time
             showData:[],
             nameInput:"",
+            defaultBranch:"",
             loadingVisible:true,
+            accessInfo:{
+                access_level:0,
+                visibility:"private",
+            },
         };
     }
 
@@ -35,16 +40,33 @@ class BranchList extends React.Component{
         this.loadData();
     }
 
+    loadAccess(){
+        let url = API.code+"/projects/"+this.state.projectid+"/access";
+        Axios.get(url).then(response=>{
+            this.setState({
+                accessInfo:response.data
+            });
+        });
+    }
+
     loadData(){
         let url=API.code+"/projects/"+this.state.projectid+"/repository/branches";
         Axios.get(url).then(response=>{
+            let defaultBranch;
+            for(let i=0;i<response.data.length;i++){
+                if(response.data[i].default_==="true"){
+                    defaultBranch=response.data[i].name;
+                }
+            }
             this.setState({
                 branchList:response.data,
                 showData:response.data,
                 nameInput:"",
+                defaultBranch:defaultBranch,
                 loadingVisible:false,
             })
-        })
+        });
+        this.loadAccess();
     }
 
     changeBranchName(e){
@@ -68,7 +90,7 @@ class BranchList extends React.Component{
 
     settingsLink(){
         let {username,projectname}=this.state;
-        this.props.history.push("/code/"+username+"/"+projectname+"/edit");
+        this.props.history.push("/code/"+username+"/"+projectname+"/protected_branches");
     }
 
     deleteMergedBranch(){
@@ -78,7 +100,9 @@ class BranchList extends React.Component{
             });
             let url = API.code + "/projects/" + this.state.projectid + "/repository/merged_branches";
             Axios.delete(url).then(() => {
-                this.loadData();
+                setTimeout(()=>{
+                    this.loadData();
+                },1000);
             })
         }
     }
@@ -103,13 +127,32 @@ class BranchList extends React.Component{
         this.props.history.push("/code/"+this.state.projectid+"/commit/"+sha);
     }
 
+    newMergeRequest(source){
+        this.props.history.push("/code/"+this.state.projectid+"/merge_requests/new?source="+source+"&target="+this.state.defaultBranch);
+    }
     render(){
+        const accessInfo=this.state.accessInfo;
         return (
             <div className="branch-list-container">
                 <div className="div-branch-list-top">
-                    <span className="text-branch-list-top">在<a onClick={this.settingsLink.bind(this)}>项目设置</a>里可以设置受保护的分支</span>
-                    <button onClick={this.newBranch.bind(this)} className="btn-new-branch">+ 新建分支</button>
-                    <button onClick={this.deleteMergedBranch.bind(this)} className="btn-delete-merged-branches">删除合并分支</button>
+                    {
+                        (()=>{
+                            if(accessInfo.access_level===40){
+                                return <span className="text-branch-list-top">在<a onClick={this.settingsLink.bind(this)}>项目设置</a>里可以设置受保护的分支</span>
+                            }
+                        })()
+                    }
+                    {
+                        (()=>{
+                            if(accessInfo.access_level>=30){
+                                return [
+                                    <button onClick={this.newBranch.bind(this)} className="btn-new-branch">+ 新建分支</button>,
+                                    <button onClick={this.deleteMergedBranch.bind(this)} className="btn-delete-merged-branches">删除合并分支</button>
+                                ];
+                            }
+                        })()
+                    }
+
                     <input value={this.state.nameInput} onChange={this.changeBranchName.bind(this)} className="input-branch-list-name" placeholder="输入分支名称来搜索"/>
                 </div>
                 <Loading visible={this.state.loadingVisible} className="loading-branch-list" tip={spinner}>
@@ -150,26 +193,31 @@ class BranchList extends React.Component{
                                         <div className="div-branch-item-operation">
                                             {
                                                 (()=>{
-                                                    if(item.default_==="true"||item.protected_==="true"){
-                                                        return (
-                                                            <a className="btn-branch-item-delete-disabled">
-                                                                <img className="img-branch-item-delete" src={imgDeleteDisabled}/>
-                                                            </a>
-                                                        )
-                                                    }else {
-                                                        return (
-                                                            <a onClick={this.deleteBranch.bind(this,item.name)} className="btn-branch-item-delete">
-                                                                <img className="img-branch-item-delete" src={imgDelete}/>
-                                                            </a>
-                                                        )
+                                                    if(accessInfo.access_level>=30) {
+                                                        if (item.default_ === "true" || item.protected_ === "true") {
+                                                            return (
+                                                                <a className="btn-branch-item-delete-disabled">
+                                                                    <img className="img-branch-item-delete"
+                                                                         src={imgDeleteDisabled}/>
+                                                                </a>
+                                                            )
+                                                        } else {
+                                                            return (
+                                                                <a onClick={this.deleteBranch.bind(this, item.name)}
+                                                                   className="btn-branch-item-delete">
+                                                                    <img className="img-branch-item-delete"
+                                                                         src={imgDelete}/>
+                                                                </a>
+                                                            )
+                                                        }
                                                     }
                                                 })()
                                             }
 
                                             {
                                                 (() => {
-                                                    if (item.default_ === "false") {
-                                                        return <a className="btn-branch-item-merge">Merge request</a>
+                                                    if (item.default_ === "false"&&accessInfo.access_level>=30) {
+                                                        return <a onClick={this.newMergeRequest.bind(this,item.name)} className="btn-branch-item-merge">Merge request</a>
                                                     }
                                                 })()
                                             }

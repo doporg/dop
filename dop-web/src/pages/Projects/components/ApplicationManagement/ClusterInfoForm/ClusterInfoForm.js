@@ -141,7 +141,7 @@ export default class ClusterInfoForm extends Component {
                         <FormItem label="目标集群URL:"
                                   {...formItemLayout}
                                   validateStatus={getError("targetClusterUrl") ? "error" : ""}
-                                  help={getError("targetClusterUrl") ? "请输入目标集群" : ""}
+                                  help={getError("targetClusterUrl") ? "请检测集群Url是否正确" : ""}
                         >
                             <Input
                                 className={this.state.editMode ? "form-item-input" : "form-item-input hide"}
@@ -149,6 +149,7 @@ export default class ClusterInfoForm extends Component {
                                 {...init('targetClusterUrl', {
                                     initValue: this.state.clusterData,
                                     rules: [{
+                                        type: "url",
                                         required: true,
                                         message: "该项不能为空"
                                     }]

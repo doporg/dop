@@ -6,7 +6,6 @@ import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.URLUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -302,6 +301,26 @@ public class ProjectService {
         String path="/projects/"+id+"/members/"+user_id;
 
         RequestUtil.delete(path,userId);
+    }
+
+    /**
+     * 查询用户的项目权限，包括项目可见等级和用户的角色
+     * @param id 项目id
+     * @param userId 用户id
+     * @return 项目可见等级和用户的角色
+     */
+    public ProjectAccessLevelBo findProjectAccessLevel(String id, Long userId){
+
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id;
+        ProjectAccessLevelBo projectAccessLevelBo=RequestUtil.get(path, userId,ProjectAccessLevelBo.class);
+        if(projectAccessLevelBo.getPermissions().getProject_access()!=null){
+            projectAccessLevelBo.setAccess_level(projectAccessLevelBo.getPermissions().getProject_access().getAccess_level());
+        }else {
+            projectAccessLevelBo.setAccess_level(0);
+        }
+
+        return projectAccessLevelBo;
     }
 
 

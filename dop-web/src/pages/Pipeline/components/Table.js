@@ -27,18 +27,22 @@ class PipelineTable extends Component {
     }
 
     getPipeline() {
-        let url = API.pipeline + '/v1/pipelines';
+        let url = API.pipeline + '/v1/pipelines/brief';
         let self = this;
         Axios.get(url).then((response) => {
             let dataSource = [];
             let data = response.data.sort();
-            for (let i = 0; i < data.length; i++) {
-                if (!data[i].isDeleted) {
-                    dataSource.push(data[i])
-                }
-            }
             self.setState({
-                dataSource: dataSource,
+                dataSource: data,
+                visible: false
+            });
+        }).catch(()=>{
+            toast.show({
+                type: "error",
+                content: self.props.intl.messages["pipeline.table.operation.requestFailure"],
+                duration: 1000
+            });
+            self.setState({
                 visible: false
             });
         })
@@ -96,9 +100,6 @@ class PipelineTable extends Component {
         return index + 1;
     };
 
-    renderCuser() {
-        return window.sessionStorage.getItem('user-name');
-    }
 
     /**
      *  表格 操作栏配置
@@ -121,6 +122,7 @@ class PipelineTable extends Component {
                         type="normal"
                         size="small"
                         className="button"
+                        disabled
                     >
                         <FormattedMessage
                             id="pipeline.table.operation.edit"
@@ -162,8 +164,7 @@ class PipelineTable extends Component {
         }, {
             title: this.props.intl.messages["pipeline.table.creator"],
             width: 8,
-            dataIndex: 'cuser',
-            cell: this.renderCuser
+            dataIndex: 'cuser'
         }, {
             title: this.props.intl.messages["pipeline.table.operation"],
             width: 10,

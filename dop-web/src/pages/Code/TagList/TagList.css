@@ -30,7 +30,7 @@
     background-color: #1aaa55;
     border-color: #168f48;
     color: #fff;
-    margin: 23px 15px 23px 15px;
+    margin: 23px 15px 23px 0;
 }
 
 .input-tag-list-name{
@@ -39,7 +39,7 @@
     height: 34px;
     padding: 15px;
     float: right;
-    margin: 23px 0 23px 15px;
+    margin: 23px 15px 23px 0;
     border-radius: 2px;
     border: 1px solid #e1e1e1;
 }
@@ -117,7 +117,7 @@
 
 .btn-tag-item-download{
     float: right;
-    margin-right: 15px;
+    margin-right: 20px;
     width: 50px;
     height: 30px;
     display: flex;

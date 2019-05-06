@@ -105,7 +105,10 @@ class ApplicationEnvironmentForm extends Component {
                             help={this.field.getError("title") ? "请输入Key" : ""}
                             label="环境名称："
                             required>
-                            <Input {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
+                            <Input
+                                maxLength={10}
+                                hasLimitHint
+                                {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
                                    placeholder="环境名称"/>
                         </FormItem>
 
@@ -126,8 +129,13 @@ class ApplicationEnvironmentForm extends Component {
                             validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
                             label="部署方式："
                             required>
-                            <Select  {...init('deploymentStrategy', {rules: [{required: true, message: "该项不能为空"}]})}
-                                     placeholder="部署方式">
+                            <Select className="form-item-select" {...init('deploymentStrategy', {
+                                rules: [{
+                                    required: true,
+                                    message: "该项不能为空"
+                                }]
+                            })}
+                                    placeholder="部署方式">
                                 <Option value="KUBERNETES">Kubernetes部署</Option>
                             </Select>
                         </FormItem>

@@ -1,57 +1,152 @@
 import React, {Component} from 'react';
-import {Input, Select} from '@icedesign/base';
+import {Form, Select, Input, Field, Loading} from "@icedesign/base";
 import API from '../../../API'
 import Axios from 'axios'
 import '../Styles.scss'
+import {injectIntl} from "react-intl";
+import {Feedback} from "@icedesign/base/index";
 
+const FormItem = Form.Item;
 const {Combobox} = Select;
+const {toast} = Feedback;
 
-export default class Pull extends Component{
-    constructor(props){
+
+class Pull extends Component {
+    constructor(props) {
         super(props);
+        this.field = new Field(this);
         this.state = {
+            applications: [],
+            visible: false,
+            selectedApp: null,
             gitUrl: ""
         }
     }
-    componentWillMount(){
-        console.log(this.props.appId)
-        if(this.props.appId != null && this.props.appId != undefined){
-            let url = API.application + "/app/" + this.props.appId + "/urlInfo";
-            let self = this;
-            Axios.get(url).then((response)=>{
-                if(response.status === 200){
-                    self.setState({
-                        gitUrl: response.data.warehouseUrl
-                    });
-                    self.props.onChange(response.data.warehouseUrl);
-                }
-            })
-        }
+
+    componentWillMount() {
+        this.getApplication();
     }
 
-    /**
-     *  构建-填入git地址
-     * */
+    getApplication() {
+        this.setState({
+            visible: true
+        });
+        return new Promise((resolve, reject) => {
+            let url = API.application + "/app?ouser=" + window.sessionStorage.getItem('user-id');
+            let self = this;
+            let applications = self.state.applications;
+            Axios.get(url).then((response) => {
+                if (response.status === 200) {
+                    this.setState({
+                        visible: false
+                    });
+                    for (let i = 0; i < response.data.length; i++) {
+                        let application = {
+                            label: response.data[i].title,
+                            value: response.data[i].id
+                        };
+                        if (self.props.appId === response.data[i].id) {
+                            self.setState({
+                                selectedApp: response.data[i].title
+                            });
+                            self.selectApplication(response.data[i].id)
+                        }
+                        applications.push(application)
+                    }
+                    self.setState({
+                        applications: applications
+                    });
+                    resolve()
+                }
+            }).catch(() => {
+                toast.show({
+                    type: "error",
+                    content: "获取应用信息失败",
+                    duration: 3000
+                });
+                reject()
+            })
+        })
+
+    }
+
+    getGit(value) {
+        this.setState({
+            visible: true
+        });
+        let url = API.application + "/app/" + value + "/urlInfo";
+        let self = this;
+        Axios.get(url).then((response) => {
+            if (response.status === 200) {
+                self.setState({
+                    gitUrl: response.data.warehouseUrl
+                });
+                self.props.onChange(response.data.warehouseUrl);
+                this.setState({
+                    visible: false
+                });
+            }
+        }).catch(() => {
+            this.setState({
+                visible: false
+            });
+        })
+    }
+
     buildMavenGit(value) {
         this.props.onChange(value)
     }
-    render(){
+
+    selectApplication(value) {
+        this.props.onChangeApp(value);
+        this.getGit(value)
+    }
+
+    render() {
+        const formItemLayout = {
+            labelCol: {
+                span: 10
+            },
+            wrapperCol: {
+                span: 10
+            }
+        };
         return (
-            <div>
+            <Loading shape="fusion-reactor" visible={this.state.visible}>
                 <h3 className="chosen-task-detail-title">拉取代码</h3>
-                <div
-                    className="chosen-task-detail-body">
-                    <span className="item">
-                        <span className="must">*</span>
-                        <span>Git地址: </span>
-                    </span>
-                    <Input
-                        onChange={this.buildMavenGit.bind(this)}
-                        className="input"
-                        value={this.state.gitUrl}
-                    />
-                </div>
-            </div>
+                <Form
+                    labelAlign="left"
+                    labelTextAlign="left"
+                >
+                    <FormItem
+                        label="应用设置："
+                        {...formItemLayout}
+                    >
+                        <Combobox
+                            onChange={this.selectApplication.bind(this)}
+                            dataSource={this.state.applications}
+                            value={this.state.selectedApp ? this.state.selectedApp : this.props.intl.messages["pipeline.info.apply.placeholder"]}
+                            fillProps="label"
+                            style={{'width': '250px'}}
+                        >
+                        </Combobox>
+                    </FormItem>
+                    <FormItem
+                        label="Git地址: "
+                        required
+                        {...formItemLayout}
+                    >
+                        <Input
+                            onChange={this.buildMavenGit.bind(this)}
+                            disabled
+                            style={{'width': '250px'}}
+                            value={this.state.gitUrl}
+                        />
+                    </FormItem>
+                </Form>
+            </Loading>
         )
     }
 }
+
+export default injectIntl(Pull)

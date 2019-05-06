@@ -1,5 +1,5 @@
 import React from 'react';
-import {CascaderSelect} from "@icedesign/base";
+import {Select} from "@icedesign/base";
 import Axios from 'axios';
 import API from "../../API";
 import {Loading} from "@icedesign/base";
@@ -102,7 +102,7 @@ class NewTag extends React.Component{
                         <div className="div-new-tag-input">
                             <span className="text-new-tag-source">创建自</span>
                             <Loading className="loading-new-tag" visible={this.state.loadingVisible} tip={spinner}>
-                                <CascaderSelect onChange={this.selectRef.bind(this)} className="select-new-tag" size='large' dataSource={this.state.refOptions}/>
+                                <Select onChange={this.selectRef.bind(this)} className="select-new-tag" size='large' dataSource={this.state.refOptions}/>
                             </Loading>
                         </div>
                     </div>

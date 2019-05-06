@@ -57,26 +57,26 @@
 }
 
 .btn-project-star{
-    left: 15px;
+    left: 55px;
     height: 45px;
     width: 60px;
 }
 
-.btn-project-fork{
-    left: 75px;
-    height: 45px;
-    width: 60px;
-    border-left:none;
-}
+/*.btn-project-fork{*/
+    /*left: 75px;*/
+    /*height: 45px;*/
+    /*width: 60px;*/
+    /*border-left:none;*/
+/*}*/
 
 .btn-project-ssh{
-    left: 150px;
+    left: 130px;
     height: 45px;
     width: 80px;
 }
 
 .btn-project-http{
-    left: 230px;
+    left: 210px;
     height: 45px;
     width: 100px;
     border-left:none;
@@ -89,7 +89,7 @@
     /*font-weight: normal;*/
     padding:5px 15px;
     position: absolute;
-    left: 330px;
+    left: 310px;
     height: 45px;
     width: 300px;
     border-left: none;
@@ -100,14 +100,14 @@
 }
 
 .btn-project-copy{
-    left:630px;
+    left:610px;
     height: 45px;
     width:50px;
 }
 
 .btn-project-download{
     padding-left: 12px;
-    left:705px;
+    left:685px;
     height: 45px;
     width:50px;
 }

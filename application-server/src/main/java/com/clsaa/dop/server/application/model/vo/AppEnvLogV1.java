@@ -41,7 +41,7 @@ public class AppEnvLogV1 {
     /**
      * 运行结果
      */
-    private String Status;
+    private String status;
 
     /**
      * 环境日志

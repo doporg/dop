@@ -1,6 +1,5 @@
 package com.clsaa.dop.server.permission.dao;
 
-import com.clsaa.dop.server.permission.model.po.UserRoleMapping;
 import com.clsaa.dop.server.permission.model.po.UserRule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -24,7 +23,7 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
      * @param rule  规则名称
      * @return {@link UserRule}
      */
-    public UserRule findByRoleIdAndFieldNameAndRule(Long roleId,String fieldName,String rule);
+    UserRule findByRoleIdAndFieldNameAndRule(Long roleId, String fieldName, String rule);
 
     /**
      * 根据角色ID查询规则
@@ -32,7 +31,7 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
      * @param roleId  角色ID
      * @return {@link List<UserRule>}
      */
-    public List<UserRule> findByRoleId(Long roleId);
+    List<UserRule> findByRoleId(Long roleId);
 
     /**
      * 根据角色ID删除规则
@@ -40,7 +39,15 @@ public interface UserRuleDAO extends JpaRepository<UserRule, Long> {
      * @param roleId  角色ID
      * @return
      */
-    public void deleteByRoleId(Long roleId);
+    void deleteByRoleId(Long roleId);
+
+    /**
+     * 根据fieldName查询规则
+     *
+     * @param fieldName  作用域名称
+     * @return
+     */
+    List<UserRule> findByFieldName(String fieldName);
 
 
 }

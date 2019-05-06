@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.GeneratedValue;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 
 /**
@@ -96,16 +92,24 @@ public class Project implements Serializable {
     //};
 
 
+    /**
+     * 项目状态
+     */
+    @Column(nullable = false, name = "private_status")
+    @Enumerated(EnumType.STRING)
+    private PrivateStatus privateStatus;
+    ;
+
     public enum Status {
 
         /**
-         * 正常的
+         * 公开的
          */
         NORMAL("NORMAL"),
         /**
-         * 结束的
+         * 私人的
          */
-        FINISHED("FINISHED"),
+        FINISHED("NORMAL"),
         ;
 
         private String code;
@@ -127,6 +131,24 @@ public class Project implements Serializable {
     @Column(nullable = false, name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public enum PrivateStatus {
+
+        /**
+         * 公开的
+         */
+        PUBLIC("PUBLIC"),
+        /**
+         * 私人的
+         */
+        PRIVATE("PRIVATE"),
+        ;
+
+        private String code;
+
+        PrivateStatus(String code) {
+        }
+    }
 
     /**
      * 项目描述

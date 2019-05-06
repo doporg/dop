@@ -6,7 +6,7 @@
 
 import React, {Component} from 'react';
 import {FormBinderWrapper, FormBinder, FormError} from '@icedesign/form-binder';
-import {Input, Button, Select} from '@icedesign/base';
+import {Input, Button, Select, Dialog} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import Jenkinsfile from '../components/Jenkinsfile'
 import PipelineInfoStage from '../components/PipelineInfoStage'
@@ -14,35 +14,55 @@ import './PipelineInfo.scss';
 import Axios from 'axios';
 import API from '../../API';
 import {Feedback} from "@icedesign/base/index";
+import {injectIntl} from "react-intl";
 
 const {Combobox} = Select;
 const {toast} = Feedback;
 
-export default class PipelineInfo extends Component {
+class PipelineInfo extends Component {
     constructor(props) {
         super(props);
         this.state = {
             // 流水线的基本信息
             pipeline: {
                 name: "",
-                cuser: window.sessionStorage.getItem('user-id'),
                 //监听设置
-                monitor: "",
+                monitor: 1,
+                timing: null,
                 appId: null,
                 appEnvId: null,
-                config: "无Jenkinsfile",
+                config: 1,
                 stages: [],
                 jenkinsfile: {}
             },
-            monitor: ["自动触发"],
-            jenkinsFile: ["自带Jenkinsfile", "无Jenkinsfile"],
+            monitor: [
+                this.props.intl.messages["pipeline.info.monitor.auto"],
+                this.props.intl.messages["pipeline.info.monitor.manual"],
+                this.props.intl.messages["pipeline.info.monitor.timing"],
+            ],
+            jenkinsFile: [
+                this.props.intl.messages["pipeline.info.hasJenkinsfile"],
+                this.props.intl.messages["pipeline.info.noJenkinsfile"]
+            ],
+            // timing: [
+            //     this.props.intl.messages["pipeline.info.monitor.timing.10"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.20"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.30"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.60"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.120"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.240"],
+            //     this.props.intl.messages["pipeline.info.monitor.timing.360"]
+            // ],
+            timing: "H/15 * * * *",
             haveJenkinsFile: null,
             jenkinsFileInfo: {
                 git: "",
-                path: ""
+                path: "./Jenkinsfile"
             },
             currentStage: 0,
-            applications: []
+            applications: [],
+            dockerUserName: null,
+            repository: null
         };
     }
 
@@ -81,9 +101,16 @@ export default class PipelineInfo extends Component {
      * 选择监听方式更新数据
      * */
     selectMonitor(value) {
-        let pipeline = Object.assign({}, this.state.pipeline, {monitor: value});
+        let pipeline = Object.assign({}, this.state.pipeline, {monitor: this.state.monitor.indexOf(value)});
         this.setState({
-            pipeline
+            pipeline: pipeline
+        })
+    }
+
+    selectTiming(value) {
+        let pipeline = Object.assign({}, this.state.pipeline, {timing: this.state.timing.indexOf(value)});
+        this.setState({
+            pipeline: pipeline
         });
     }
 
@@ -97,8 +124,10 @@ export default class PipelineInfo extends Component {
 
 
     selectJenkinsFile(value) {
+        let pipeline = Object.assign({}, this.state.pipeline, {config: this.state.jenkinsFile.indexOf(value)});
         this.setState({
-            haveJenkinsFile: value
+            haveJenkinsFile: this.state.jenkinsFile.indexOf(value),
+            pipeline: pipeline
         })
     }
 
@@ -115,13 +144,66 @@ export default class PipelineInfo extends Component {
             currentStage: currentStage
         })
     }
-    onSelectEnv(value){
+    onChangeApp(value){
+        let pipeline = this.state.pipeline;
+        pipeline.appId = value;
+        this.setState({
+            pipeline
+        })
+    }
+    onSelectEnv(value) {
         let pipeline = this.state.pipeline;
         pipeline.appEnvId = value;
         this.setState({
             pipeline
         })
     }
+    onChangeDockerUserName(value){
+        this.setStages({
+            dockerUserName: value
+        })
+    }
+    onChangeRepository(value){
+        this.setStages({
+            repository: value
+        })
+    }
+    copy(data){
+        const input = document.createElement('input')
+        document.body.appendChild(input);
+        input.setAttribute('value', API.pipeline + '/v1/jenkins/build/' + data);
+        input.select();
+        try{
+            if(document.execCommand("copy","false",null)){
+                toast.show({
+                    type: "success",
+                    content: "复制成功",
+                    duration: 1000
+                });
+            }else{
+                toast.show({
+                    type: "error",
+                    content: "复制失败请手动复制",
+                    duration: 1000
+                });
+            }
+        }catch(err){
+            toast.show({
+                type: "error",
+                content: "复制失败请手动复制",
+                duration: 1000
+            });
+        }
+        document.body.removeChild(input)
+    }
+    onCancel(){
+        toast.show({
+            type: "error",
+            content: "不进行设置将不会进行自动触发",
+            duration: 1000
+        });
+    }
+
     saveJenkinsfile() {
         let pipeline = this.state.pipeline;
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
@@ -135,6 +217,18 @@ export default class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
+                if (self.state.pipeline.monitor === 0) {
+                    Dialog.confirm({
+                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                        content: <div>
+                            <p>请复制以下链接到webhook: </p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                        </div>,
+                        title: "提示",
+                        onOk: self.copy.bind(this, response.data),
+                        onCancel: self.onCancel.bind(this)
+                    });
+                }
                 self.props.history.push('/pipeline')
             }
         }).catch(() => {
@@ -146,7 +240,7 @@ export default class PipelineInfo extends Component {
         })
     }
 
-    save() {
+    saveNoJenkinsfile() {
         let self = this;
         let url = API.pipeline + '/v1/pipeline';
         toast.show({
@@ -154,6 +248,7 @@ export default class PipelineInfo extends Component {
             content: "正在提交请稍后",
             duration: 4000
         });
+        console.log(self.state.pipeline);
         Axios({
             method: 'post',
             url: url,
@@ -165,9 +260,22 @@ export default class PipelineInfo extends Component {
                     content: "保存成功",
                     duration: 1000
                 });
+
+                if (self.state.pipeline.monitor === 0) {
+                    Dialog.confirm({
+                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                        content: <div>
+                            <p>请复制以下链接到webhook: </p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                        </div>,
+                        title: "提示",
+                        onOk: self.copy.bind(this, response.data),
+                        onCancel: self.onCancel.bind(this)
+                    });
+                }
                 self.props.history.push('/pipeline')
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             toast.show({
                 type: "error",
                 content: "保存失败",
@@ -187,57 +295,75 @@ export default class PipelineInfo extends Component {
                 >
                     <div className="form-body">
                         <div className="form-item">
-                            <span className="form-item-label">流水线名称: </span>
-                            <FormBinder name="name" required message="请输入流水线的名称">
-                                <Input placeholder="请输入流水线的名称" className="combobox"/>
+                            <span className="form-item-label">{this.props.intl.messages["pipeline.info.name"]}: </span>
+                            <FormBinder name="name" required
+                                        message={this.props.intl.messages["pipeline.info.name.placeholder"]}>
+                                <Input placeholder={this.props.intl.messages["pipeline.info.name.placeholder"]}
+                                       className="combobox"/>
                             </FormBinder>
                             <FormError className="form-item-error" name="name"/>
                         </div>
                         <div className="form-item">
-                            <span className="form-item-label">监听设置: </span>
-                            <FormBinder name="monitor" required message="请选择监听设置">
+                            <span
+                                className="form-item-label">{this.props.intl.messages["pipeline.info.monitor"]}: </span>
+                            <FormBinder
+                                name={this.state.monitor[this.state.pipeline.monitor]}
+                                required
+                                message={this.props.intl.messages["pipeline.info.monitor.placeholder"]}>
                                 <Combobox
                                     onChange={this.selectMonitor.bind(this)}
                                     dataSource={this.state.monitor}
-                                    placeholder="请选择监听设置"
+                                    placeholder={this.state.monitor[this.state.pipeline.monitor]}
                                     className="combobox"
                                 >
                                 </Combobox>
                             </FormBinder>
-                            <FormError className="form-item-error" name="monitor"/>
-                        </div>
+                            <FormError
+                                className="form-item-error"
+                                name={this.state.monitor[this.state.pipeline.monitor]}
+                            />
 
-                        <div className="form-item">
-                            <span className="form-item-label">应用设置: </span>
-                            <FormBinder name="appId" required message="请选择应用">
-                                <Combobox
-                                    onChange={this.selectApplication.bind(this)}
-                                    dataSource={this.state.applications}
-                                    placeholder="请选择应用"
-                                    fillProps="label"
-                                    className="combobox"
-                                >
-                                </Combobox>
-                            </FormBinder>
-                            <FormError className="form-item-error" name="appId"/>
+                            {(() => {
+                                if (this.state.pipeline.monitor === 0) {
+                                    return <div className="form-item-tip">注意: 只有当代码库push代码才会触发</div>
+                                } else if (this.state.pipeline.monitor === 2) {
+                                    return (
+                                        <div className="form-item-tip">
+                                            <Input
+                                                key="timing"
+                                                onChange={this.selectTiming.bind(this)}
+                                                value={this.state.timing}
+                                                placeholder="定时触发间隔时长"
+                                            >
+                                            </Input>
+                                        </div>
+                                    )
+                                }
+                            })()}
                         </div>
-
                         <div className="form-item">
-                            <span className="form-item-label">配置流水线: </span>
-                            <FormBinder name="config" required message="配置设置">
+                            <span
+                                className="form-item-label">{this.props.intl.messages["pipeline.info.jenkinsfile"]}: </span>
+                            <FormBinder
+                                name={this.state.jenkinsFile[this.state.pipeline.config]}
+                                required
+                                message={this.props.intl.messages["pipeline.info.jenkinsfile"]}>
                                 <Combobox
                                     onChange={this.selectJenkinsFile.bind(this)}
                                     dataSource={this.state.jenkinsFile}
-                                    placeholder="配置设置"
+                                    placeholder={this.state.jenkinsFile[this.state.pipeline.config]}
                                     className="combobox"
                                 >
                                 </Combobox>
                             </FormBinder>
-                            <FormError className="form-item-error" name="config"/>
+                            <FormError
+                                className="form-item-error"
+                                name={this.state.jenkinsFile[this.state.pipeline.config]}
+                            />
                         </div>
 
                         {(() => {
-                            if (this.state.haveJenkinsFile === '自带Jenkinsfile') {
+                            if (this.state.haveJenkinsFile === 0) {
                                 return (
                                     <Jenkinsfile
                                         jenkinsfile={this.state.jenkinsFileInfo}
@@ -251,7 +377,13 @@ export default class PipelineInfo extends Component {
                                         currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
                                         onChange={this.setStages.bind(this)}
-                                        onSelectEnv = {this.onSelectEnv.bind(this)}
+                                        onChangeApp={this.onChangeApp.bind(this)}
+                                        onSelectEnv={this.onSelectEnv.bind(this)}
+
+                                        dockerUserName={this.state.dockerUserName}
+                                        onChangeDockerUserName={this.onChangeDockerUserName.bind(this)}
+                                        repository={this.state.repository}
+                                        onChangeRepository={this.onChangeRepository.bind(this)}
                                     />
                                 )
                             }
@@ -264,17 +396,24 @@ export default class PipelineInfo extends Component {
 
                 <div className="footer">
                     <div className="footer-container">
-                        <Button type="primary"
-                                className="button"
-                                onClick={
-                                    this.state.haveJenkinsFile === "自带Jenkinsfile" ?
-                                        this.saveJenkinsfile.bind(this) : this.save.bind(this)
-                                }
-                        >保存</Button>
+                        <Button
+                            type="primary"
+                            className="button"
+                            onClick={
+                                this.state.haveJenkinsFile === 0 ?
+                                    this.saveJenkinsfile.bind(this) :
+                                    this.saveNoJenkinsfile.bind(this)
+                            }
+                        >
+                            {this.props.intl.messages["pipeline.info.save"]}
+                        </Button>
                         <Link to='/pipeline'>
-                            <Button type="normal"
-                                    className="button"
-                            >取消</Button>
+                            <Button
+                                type="normal"
+                                className="button"
+                            >
+                                {this.props.intl.messages["pipeline.info.cancel"]}
+                            </Button>
                         </Link>
 
                     </div>
@@ -283,3 +422,5 @@ export default class PipelineInfo extends Component {
         );
     }
 }
+
+export default injectIntl(PipelineInfo)

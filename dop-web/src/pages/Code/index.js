@@ -20,6 +20,10 @@ import TagList from './TagList'
 import NewTag from './NewTag'
 import ProtectBranch from './ProtectBranch'
 import MemberList from './MemberList'
+import MergeRequestList from './MergeRequestList'
+import NewMergeRequest from './NewMergeRequest'
+import MergeRequest from './MergeRequest'
+
 
 const codeConfig = [
 
@@ -113,10 +117,26 @@ const codeConfig = [
         path: '/code/:username/:projectname/protected_branches',
         layout: CodeSettingLayout,
         component: ProtectBranch
-    },{
+    },
+    {
         path: '/code/:username/:projectname/project_members',
         layout: CodeSettingLayout,
         component: MemberList
+    },
+    {
+        path: '/code/:username/:projectname/merge_requests/new',
+        layout: CodeProjectLayout,
+        component: NewMergeRequest
+    },
+    {
+        path: '/code/:username/:projectname/merge_requests',
+        layout: CodeProjectLayout,
+        component: MergeRequestList
+    },
+    {
+        path: '/code/:username/:projectname/merge_requests/:iid',
+        layout: CodeProjectLayout,
+        component: MergeRequest
     }
 
 

@@ -2,9 +2,7 @@ package com.clsaa.dop.server.permission.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
 import java.time.LocalDateTime;
-
 /**
  * 角色DTO对象
  *

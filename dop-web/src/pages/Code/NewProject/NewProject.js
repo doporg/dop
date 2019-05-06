@@ -34,12 +34,6 @@ export default class NewProject extends React.Component {
         })
     }
 
-    changeReadMe() {
-        this.setState({
-            initialize_with_readme: this.state.initialize_with_readme === "false" ? "true" : "false"
-        })
-    }
-
     createProject() {
 
         this.setState({
@@ -58,11 +52,8 @@ export default class NewProject extends React.Component {
             data: data,
             headers: {'Content-type': 'application/json',}
         }).then(response => {
-            toast.success("创建项目成功");
             this.props.history.push("/code/"+sessionStorage.getItem("user-name")+"/"+this.state.name.toLowerCase().trim().replace(/\s/g,"-"));
-        }).catch(error => {
-            toast.error("创建失败");
-        })
+        });
     }
 
     setName(e) {
@@ -78,7 +69,7 @@ export default class NewProject extends React.Component {
     }
 
     cancel(){
-        this.props.history.push("/code/projects");
+        this.props.history.push("/code/projects/personal");
     }
 
 
@@ -109,12 +100,6 @@ export default class NewProject extends React.Component {
                                     PUBLIC
                                 </Radio>
                             </RadioGroup>
-                        </div>
-                    </div>
-                    <div className="div-new-project-input">
-                        <label className="label-new-project-left">其他</label>
-                        <div className="div-new-project-visibility">
-                            <Checkbox defaultChecked onClick={this.changeReadMe.bind(this)}>自动创建README.md</Checkbox>
                         </div>
                     </div>
                     <div className="div-new-project-submit">

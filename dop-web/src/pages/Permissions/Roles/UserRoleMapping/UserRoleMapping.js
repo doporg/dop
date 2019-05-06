@@ -18,18 +18,13 @@ import Search from "@icedesign/base/lib/search";
  * */
 
 export default class UserRoleMapping extends Component {
+
+
     constructor(props) {
         super(props);
         this.state = {
             /*此时按当前角色来查找用户，因为只有拥有此角色，用户才能进行相应的操作，才能规定范围*/
-            currentData : [{id:1,name:"测试用户1",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                            {id:2,name:"测试用户2",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                             {id:3,name:"测试用户3",email:"xxx@xxx.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                                {id:22,name:"lzy",email:"552000264@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                                {id:23,name:"Rgj",email:"1046504820@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                                {id:28,name:"ren",email:"812022339@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"},
-                                {id:39,name:"newTest",email:"1171067930@qq.com",mtime:"xxxx/xx/xx- xx:xx:xx"}
-                            ],
+            currentData : [],
             currentUserId:0,
             currentRoles:[],
             currentPermissions:[],
@@ -43,6 +38,7 @@ export default class UserRoleMapping extends Component {
             permissionIsLoading:true,
             roleIsLoading:true,
             dataIsLoading:true,
+            userIsLoading:true,
 
             rolePageNo:1,
             rolePageSize:8,
@@ -54,17 +50,81 @@ export default class UserRoleMapping extends Component {
 
             permissionPageNo:1,
             permissionPageSize:8,
-            permissionTotalCount:0
+            permissionTotalCount:0,
+
+            userPageNo:1,
+            userPageSize:8,
+            userTotalCount:0,
+
+            addRolePermission:"false"
         };
 
     };
 
     //每次访问的刷新，查询当前用户的信息
     componentDidMount() {
-        this.setState({isLoading:false})
+        let getPermissionUrl=API.permission+"/v1/users/permissions/ByCurrent"
+        Axios.get(getPermissionUrl).then(response=>
+        {
+            let permissionTmp= response.data.map(x=>{return x.name})
+            if(permissionTmp.indexOf("创建角色")!=-1)
+            {
+                console.log("可以创建角色！")
+                this.setState({addRolePermission:"true"})};
+
+            this.setState({userIsLoading:true})
+            let url = API.user + "/v1/users/search" ;
+            let params=
+                {
+                    pageNo:this.state.userPageNo,
+                    pageSize:this.state.userPageSize
+                }
+            Axios.get(url,{params:(params)}).then((response) => {
+                this.setState({
+                    currentData:response.data.pageList,
+                    userPageNo:response.data.pageNo,
+                    userTotalCount:response.data.totalCount,
+                    userIsLoading:false
+                })
+            }).catch((error)=>{
+                // handle error
+                console.log(error);
+            }).then(()=>{
+                // always executed
+            });
+            this.setState({userIsLoading:false})
+
+        })
+
+
+
     }
 
-    //弹出角色功能点窗户
+    //改变页码
+    onChange=currentPage=> {
+
+        this.setState({userIsLoading:true})
+        let url = API.user + "/v1/users/search" ;
+        let params=
+            {
+                pageNo:currentPage,
+                pageSize:this.state.userPageSize
+            }
+        Axios.get(url,{params:(params)}).then((response) => {
+            // handle success
+            this.setState({
+                    currentData:response.data.pageList,
+                    userPageNo:response.data.pageNo,
+                    userTotalCount:response.data.totalCount,
+                    userIsLoading:false
+                }
+            );
+        }).catch((error)=>{
+            // handle error
+            console.log(error);
+        });
+    }
+   //弹出角色功能点窗户
     editUserOpen=id=>{
 
         console.log(id)
@@ -256,14 +316,19 @@ export default class UserRoleMapping extends Component {
             width: "60%" ,height:"70%"
         }
         const showRoles =(value, index, record)=>{
-            return(
-                <Button
-                    type="primary"
-                    shape="normal"
-                    size="medium"
-                    className="button"
-                    onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
-            )
+
+            if(this.state.addRolePermission=="true")
+            {
+                return(
+                    <Button
+                        type="primary"
+                        shape="normal"
+                        size="medium"
+                        className="button"
+                        onClick={this.editUserOpen.bind(this,record.id)}>添加角色</Button>
+                )
+            }
+
         }
         const showPermissions =(value, index, record)=>{
             return(
@@ -416,7 +481,7 @@ export default class UserRoleMapping extends Component {
 
                 <Table
                     hasBorder={false}
-                    isLoading={this.state.isLoading}
+                    isLoading={this.state.userIsLoading}
                     dataSource={this.state.currentData}>
                     <Table.Column title="用户名称" dataIndex="name"/>
                     <Table.Column title="用户邮箱"   dataIndex="email"/>
@@ -426,6 +491,11 @@ export default class UserRoleMapping extends Component {
                     <Table.Column title="查看功能点" cell={showPermissions} width="10%"/>
 
                 </Table>
+                <Pagination total={this.state.userTotalCount}
+                            current={this.state.userPageNo}
+                            onChange={this.onChange}
+                            pageSize={this.state.userPageSize}
+                            className="pagination" />
             </div>
         )
     }

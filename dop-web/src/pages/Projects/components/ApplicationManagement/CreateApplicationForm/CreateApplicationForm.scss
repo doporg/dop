@@ -1,8 +1,22 @@
-.form {
-  padding: 20px;
-  background: #FFF;
-  margin: 20px;
-  width: 100%;
-  text-align: left;
 
+.form-container {
+  width: 100%;
+
+  .form {
+    padding: 20px;
+    background: #FFF;
+    margin: 20px;
+    width: 100%;
+    text-align: left;
+
+    .form-loading {
+      width: 100%;
+
+      .form-item-input {
+        width: 100%
+      }
+    }
+
+
+  }
 }

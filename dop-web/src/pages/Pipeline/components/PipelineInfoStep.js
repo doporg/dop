@@ -7,19 +7,30 @@ import './Styles.scss';
 import Pull from './chosenSteps/Pull'
 import Maven from './chosenSteps/Maven'
 import Node from './chosenSteps/Node'
+import Djanggo from './chosenSteps/Djanggo'
 import DockerImage from './chosenSteps/DockerImage'
 import PushDockerImage from './chosenSteps/PushDockerImage'
 import Shell from './chosenSteps/Shell'
 import Deployment from './chosenSteps/Deployment'
+import {injectIntl} from "react-intl";
 
 const {Combobox} = Select;
 
-export default class PipelineInfoStep extends Component {
+class PipelineInfoStep extends Component {
     constructor(props) {
         super(props);
         this.state = {
             stage: this.props.stage,
-            availableSteps: ["拉取代码", "构建maven", "构建node", "构建docker镜像", "推送docker镜像", "自定义脚本", "部署"],
+            availableSteps: [
+                this.props.intl.messages['pipeline.info.step.pull'],
+                this.props.intl.messages['pipeline.info.step.maven'],
+                this.props.intl.messages['pipeline.info.step.node'],
+                this.props.intl.messages['pipeline.info.step.djanggo'],
+                this.props.intl.messages['pipeline.info.step.buildDocker'],
+                this.props.intl.messages['pipeline.info.step.pushDocker'],
+                this.props.intl.messages['pipeline.info.step.custom'],
+                this.props.intl.messages['pipeline.info.step.deploy'],
+            ],
             steps: [],
             currentStep: null,
             selectEnvId: null,
@@ -48,6 +59,7 @@ export default class PipelineInfoStep extends Component {
 
     selectStep(value) {
         let newTask;
+        console.log(value);
         switch (value) {
             case "拉取代码" :
                 newTask = {
@@ -80,6 +92,20 @@ export default class PipelineInfoStep extends Component {
             case "构建node":
                 newTask = {
                     taskName: "构建node",
+                    gitUrl: "",
+                    dockerUserName: "",
+                    dockerPassword: "",
+                    repository: "",
+                    repositoryVersion: "",
+                    shell: "",
+                    deploy:"",
+                    ip: "",
+                    token: ""
+                };
+                break;
+            case "构建djanggo":
+                newTask = {
+                    taskName: "构建djanggo",
                     gitUrl: "",
                     dockerUserName: "",
                     dockerPassword: "",
@@ -191,6 +217,11 @@ export default class PipelineInfoStep extends Component {
             chosenStep
         })
     }
+    onChangeApp(value){
+        this.props.onChangeApp(value)
+    }
+
+
     onSelectEnv(value){
         this.setState({
             selectEnvId: value
@@ -218,10 +249,13 @@ export default class PipelineInfoStep extends Component {
         this.setState({
             stage
         });
+        this.props.onChangeDockerUserName(value)
         this.props.onChange(this.state.stage)
+
     }
 
     buildRepository(value) {
+
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
         });
@@ -230,6 +264,7 @@ export default class PipelineInfoStep extends Component {
         this.setState({
             stage
         });
+        this.props.onChangeRepository(value)
         this.props.onChange(this.state.stage)
     }
 
@@ -270,10 +305,10 @@ export default class PipelineInfoStep extends Component {
                                 ref="form"
                             >
                                 <div className="pipeline-info-step">
-                                    <h3 className="header">阶段设置</h3>
+                                    <h3 className="header">{this.props.intl.messages["pipeline.info.stage.title"]}</h3>
                                     <div>
-                                        <span className="label">名称: </span>
-                                        <FormBinder name="name" required message="请输入阶段的名称">
+                                        <span className="label">{this.props.intl.messages["pipeline.info.stage.name.title"]}: </span>
+                                        <FormBinder name="name" required message={this.props.intl.messages["pipeline.info.stage.name"]}>
                                             <Input
                                                 value={this.state.stage.name}
                                             />
@@ -282,13 +317,13 @@ export default class PipelineInfoStep extends Component {
                                     </div>
                                     <div className="task">
                                     <span className="task-label-set">
-                                        任务设置:
-                                        <p>*请注意任务顺序</p>
+                                        {this.props.intl.messages["pipeline.info.step.title"]}:
+                                        <p>*{this.props.intl.messages["pipeline.info.step.tip"]}</p>
                                     </span>
                                         <div className="choose-task">
                                             <Combobox
                                                 filterLocal={false}
-                                                placeholder="请选择任务"
+                                                placeholder={this.props.intl.messages["pipeline.info.step.placeholder"]}
                                                 onChange={this.selectStep.bind(this)}
                                                 dataSource={this.state.availableSteps}
                                             />
@@ -322,6 +357,7 @@ export default class PipelineInfoStep extends Component {
                                                                     return (
                                                                         <Pull
                                                                             onChange={this.gitUrl.bind(this)}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             gitUrl={this.state.chosenStep.gitUrl}
                                                                             appId = {this.props.appId}
                                                                         />
@@ -334,10 +370,15 @@ export default class PipelineInfoStep extends Component {
                                                                     return (
                                                                         <Node/>
                                                                     );
+                                                                case "构建djanggo":
+                                                                    return (
+                                                                        <Djanggo />
+                                                                    );
                                                                 case "构建docker镜像":
                                                                     return (
                                                                         <DockerImage
                                                                             appId = {this.props.appId}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
                                                                             onDockerPasswordChange={this.buildDockerPassword.bind(this)}
@@ -349,12 +390,13 @@ export default class PipelineInfoStep extends Component {
                                                                     );
                                                                 case "推送docker镜像":
                                                                     return (
-                                                                        <PushDockerImage
+                                                                        <DockerImage
                                                                             appId = {this.props.appId}
+                                                                            onChangeApp={this.onChangeApp.bind(this)}
                                                                             onSelectEnv =  {this.onSelectEnv.bind(this)}
                                                                             onUserNameChange={this.buildDockerUserName.bind(this)}
-                                                                            onRepositoryChange={this.buildRepository.bind(this)}
                                                                             onDockerPasswordChange={this.buildDockerPassword.bind(this)}
+                                                                            onRepositoryChange={this.buildRepository.bind(this)}
                                                                             dockerUserName={this.state.chosenStep.dockerUserName}
                                                                             repository={this.state.chosenStep.repository}
                                                                             selectEnvId={this.state.selectEnvId}
@@ -389,3 +431,5 @@ export default class PipelineInfoStep extends Component {
         )
     }
 }
+
+export default injectIntl(PipelineInfoStep)

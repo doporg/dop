@@ -50,16 +50,16 @@ public class JenkinsService {
      * 创建流水线
      * param: 流水线的信息, 版本
      * */
-    public String createJob(PipelineBoV1 pipelineBoV1, String version) {
-        Jenkinsfile jenkinsfile = new Jenkinsfile(pipelineBoV1.getAppEnvId(), pipelineBoV1.getStages());
-        String name = pipelineBoV1.getId();
+    public String createJob(Pipeline pipeline) {
+        Jenkinsfile jenkinsfile = new Jenkinsfile(pipeline.getAppEnvId(), pipeline.getStages());
+        String name = pipeline.getId();
 
         try {
             if (jenkins.getJob(name) == null) {
-                jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
+                jenkins.createJob(name, new JobConfig(jenkinsfile.getScript(), pipeline.getTiming()).getXml());
             } else {
                 jenkins.deleteJob(name);
-                jenkins.createJob(name, new JobConfig(version, jenkinsfile.getScript()).getXml());
+                jenkins.createJob(name, new JobConfig(jenkinsfile.getScript(), pipeline.getTiming()).getXml());
             }
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -71,15 +71,14 @@ public class JenkinsService {
     /**
      * 根据jenkinsfile创建流水线
      */
-    public void createByJenkinsfile(String name, String git, String path) {
+    public void createByJenkinsfile(Pipeline pipeline) {
         try {
-            if (jenkins.getJob(name) == null) {
-                jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
+            if (jenkins.getJob(pipeline.getId()) == null) {
+                jenkins.createJob(pipeline.getId(), new JobConfig(pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath(), pipeline.getTiming()).getXml());
             } else {
-                jenkins.deleteJob(name);
-                jenkins.createJob(name, new JobConfig("1.0", git, path).getXml());
+                jenkins.deleteJob(pipeline.getId());
+                jenkins.createJob(pipeline.getId(), new JobConfig(pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath(), pipeline.getTiming()).getXml());
             }
-
         } catch (Exception e) {
             System.out.println(e.toString());
         }

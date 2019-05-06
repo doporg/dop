@@ -32,6 +32,7 @@ public class OrgUserMappingController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "组织不存在"));
         BizAssert.validParam(loginUserId != null && loginUserId != 0,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户未登录"));
+        this.orgUserMappingService.addOrgUserMapping(organizationId, userId, loginUserId);
     }
 
     @ApiOperation(value = "将用户从组织中删除", notes = "将用户从组织中删除")
@@ -45,5 +46,6 @@ public class OrgUserMappingController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "组织不存在"));
         BizAssert.validParam(loginUserId != null && loginUserId != 0,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户未登录"));
+        this.orgUserMappingService.deleteOrgUserMapping(organizationId, userId, loginUserId);
     }
 }
