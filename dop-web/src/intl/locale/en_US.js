@@ -4,6 +4,6 @@ import PIPELINE_EN_US from './en_US/pipeline_en_US';
 import PERMISSION_EN_US from "./en_US/permission_en_US";
 import PROJECTS_EN_US from "./en_US/projects_en_US";
 
-const en_US = {...BASE_EN_US, ...LOGIN_EN_US, ...PIPELINE_EN_US,  ...PROJECTS_EN_US, ...PROJECTS_ZH_ZN};
+const en_US = {...BASE_EN_US, ...LOGIN_EN_US, ...PIPELINE_EN_US,  ...PROJECTS_EN_US, ...PROJECTS_ZH_ZN,...CODE_EN_US};
 
 export default en_US;

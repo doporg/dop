@@ -44,7 +44,7 @@
 .btn-delete-merged-branches{
     font-size: 13px;
     height: 34px;
-    width: 150px;
+    padding: 0 30px;
     float: right;
     background-color: #fff;
     color: #db3b21;

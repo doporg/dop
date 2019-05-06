@@ -59,7 +59,7 @@
     background-color: #31af64;
     border-color: #2faa60;
     color: white;
-    width: 60px;
+    padding: 0 15px;
     height: 30px;
     border-radius: 2px;
     margin-left: 20px;
@@ -103,7 +103,7 @@
     background-color: #e52c5a;
     border-color: #e52c5a;
     color: white;
-    width: 70px;
+    padding: 0 15px;
     height: 30px;
     border-radius: 2px;
     font-size: 13px;

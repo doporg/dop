@@ -12,6 +12,8 @@ import imgPublic from './imgs/public.png'
 import imgStar from './imgs/star.png'
 import imgPrivate from './imgs/private.png'
 
+import {injectIntl,FormattedMessage} from 'react-intl';
+
 
 const spinner=(
     <Spinner/>
@@ -127,24 +129,24 @@ class ProjectList extends React.Component {
                     <ul className="center-top-menu">
                         <li>
                             <a className={this.selectClassPersonal()} onClick={this.changeSort.bind(this, "personal")}>
-                                <span>你的项目</span>
+                                <FormattedMessage id="code.projectlist.personal"/>
                             </a>
                         </li>
                         <li>
                             <a className={this.selectClassStarred()} onClick={this.changeSort.bind(this, "starred")}>
-                                <span>星标项目</span>
+                                <FormattedMessage id="code.projectlist.starred"/>
                             </a>
                         </li>
                         <li>
                             <a className={this.selectClassAll()} onClick={this.changeSort.bind(this, "all")}>
-                                <span>全部项目</span>
+                                <FormattedMessage id="code.projectlist.all"/>
                             </a>
                         </li>
                     </ul>
                     <div className="search-form">
-                        <input className="input_search" placeholder="根据项目名称过滤" onChange={this.handleInputChange.bind(this)}/>
+                        <input className="input_search" placeholder={this.props.intl.messages["code.projectlist.placeholder"]} onChange={this.handleInputChange.bind(this)}/>
                         <button onClick={this.newProjectLink.bind(this)} className="btn_add_project">
-                            <span className="text_new">+新建项目</span>
+                            <span className="text_new">+<FormattedMessage id="code.projectlist.new"/></span>
                         </button>
                     </div>
                     <Loading visible={this.state.loadingVisible} className="loading-project-list" tip={spinner}>
@@ -191,9 +193,9 @@ class ProjectList extends React.Component {
                 </div>
 
                 <div className="div_page">
-                    <button className="btn_page" onClick={this.nextPage.bind(this)}>下一页</button>
-                    <button className="btn_page">{this.state.pageNo}页/{this.state.pageTotal}页</button>
-                    <button className="btn_page" onClick={this.prePage.bind(this)}>上一页</button>
+                    <button className="btn_page" onClick={this.nextPage.bind(this)}><FormattedMessage id="code.projectlist.nextpage"/></button>
+                    <button className="btn_page">{this.state.pageNo}<FormattedMessage id="code.projectlist.page"/>/{this.state.pageTotal}<FormattedMessage id="code.projectlist.page"/></button>
+                    <button className="btn_page" onClick={this.prePage.bind(this)}><FormattedMessage id="code.projectlist.prepage"/></button>
                 </div>
 
             </div>
@@ -204,7 +206,7 @@ class ProjectList extends React.Component {
 
 }
 
-export default (props)=><ProjectList {...props} key={props.location.pathname} />
+export default injectIntl((props)=><ProjectList {...props} key={props.location.pathname} />)
 
 
 

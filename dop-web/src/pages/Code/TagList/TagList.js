@@ -3,6 +3,7 @@ import Axios from 'axios';
 import API from "../../API";
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl,FormattedRelative } from 'react-intl';
 
 import './TagList.css'
 
@@ -63,7 +64,7 @@ class TagList extends React.Component{
     }
 
     deleteTag(tag_name){
-        if(window.confirm("确认删除标签"+tag_name+"?")) {
+        if(window.confirm(this.props.intl.messages["code.taglist.delete.confirm"]+tag_name+"?")) {
             this.setState({
                 loadingVisible:true
             });
@@ -110,15 +111,15 @@ class TagList extends React.Component{
         return (
             <div className="tag-list-container">
                 <div className="div-tag-list-top">
-                    <span className="text-tag-list-top">Tag可以将历史中某个特定的提交标记为重要的</span>
+                    <span className="text-tag-list-top">{this.props.intl.messages["code.taglist.top"]}</span>
                     {
                         (()=>{
                             if(accessInfo.access_level>=30){
-                                return <button onClick={this.newTag.bind(this)} className="btn-new-tag">+ 新建标签</button>
+                                return <button onClick={this.newTag.bind(this)} className="btn-new-tag">+{this.props.intl.messages["code.taglist.new"]}</button>
                             }
                         })()
                     }
-                    <input value={this.state.nameInput} onChange={this.changetTagName.bind(this)} className="input-tag-list-name" placeholder="输入标签名称来搜索"/>
+                    <input value={this.state.nameInput} onChange={this.changetTagName.bind(this)} className="input-tag-list-name" placeholder={this.props.intl.messages["code.taglist.placeholder"]}/>
                 </div>
                 <Loading visible={this.state.loadingVisible} className="loading-tag-list" tip={spinner}>
                     <div>
@@ -136,7 +137,7 @@ class TagList extends React.Component{
                                                 <img className="img-tag-item-intro" src={imgCommit}/>
                                                 <a onClick={this.commitLink.bind(this,item.commit_id)} className="text-tag-item-primary">{item.commit_short_id}</a>
                                                 <a onClick={this.commitLink.bind(this,item.commit_id)}>&nbsp;·&nbsp;{item.commit_msg}&nbsp;·&nbsp;</a>
-                                                <label>{item.commit_time}</label>
+                                                <label><FormattedRelative value={new Date(parseInt(item.commit_time))}/></label>
                                             </div>
                                         </div>
                                         <div className="div-tag-item-operation">
@@ -166,4 +167,4 @@ class TagList extends React.Component{
     }
 }
 
-export default (props)=><TagList {...props} key={props.location.pathname} />
+export default injectIntl((props)=><TagList {...props} key={props.location.pathname} />)

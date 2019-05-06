@@ -4,6 +4,7 @@ import API from "../../API";
 import FoundationSymbol from 'foundation-symbol';
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './EditFile.css'
 import imgBranch from './imgs/branch.png';
@@ -112,7 +113,7 @@ class EditFile extends React.Component{
                         <div className="div-edit-file-top">
                             <span className="text-edit-file-title">
                                 <FoundationSymbol type="publish"/>
-                                &nbsp;编辑文件
+                                &nbsp;{this.props.intl.messages["code.editfile.top"]}
                             </span>
 
                             <img src={imgBranch}/>
@@ -137,14 +138,14 @@ class EditFile extends React.Component{
 
                     </div>
                     <div className="edit-file-commit-section">
-                        <div className="edit-file-commit-lable">提交信息</div>
+                        <div className="edit-file-commit-lable">{this.props.intl.messages["code.editfile.msg"]}</div>
                         <textarea className="edit-file-commit-input" onChange={this.setCommitMessage.bind(this)}/>
                     </div>
-                    <button className="btn-edit-file-commit" onClick={this.commitUpdate.bind(this)}>提交修改</button>
+                    <button className="btn-edit-file-commit" onClick={this.commitUpdate.bind(this)}>{this.props.intl.messages["code.editfile.commit"]}</button>
                 </div>
             </Loading>
         )
     }
 }
 
-export default (props)=><EditFile {...props} key={props.location.pathname} />
+export default injectIntl((props)=><EditFile {...props} key={props.location.pathname} />)

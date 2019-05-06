@@ -1,6 +1,7 @@
 import React from 'react'
 import Axios from 'axios';
 import API from "../../API";
+import {injectIntl,FormattedRelative } from 'react-intl';
 
 import './MergeRequest.css'
 
@@ -121,13 +122,13 @@ class MergeRequest extends React.Component{
                                 }
                             })()
                         }
-                        <span className="text-mr-author-time">{mrInfo.created_at}</span>创建由
+                        <span className="text-mr-author-time"><FormattedRelative value={new Date(parseInt(mrInfo.created_at))}/></span>{this.props.intl.messages["code.mergerequest.createdby"]}
                         <div className="div-mr-author-avatar">{mrInfo.created_by.charAt(0)}</div><b>{mrInfo.created_by}</b>
                     </div>
                     {
                         (()=>{
                             if(mrInfo.state==="opened"&&accessInfo.access_level>=30){
-                                return <button onClick={this.updateMR.bind(this,"close")} className="btn-mr-close">关闭合并请求</button>;
+                                return <button onClick={this.updateMR.bind(this,"close")} className="btn-mr-close">{this.props.intl.messages["code.mergerequest.close"]}</button>;
                             }
                         })()
                     }
@@ -139,7 +140,7 @@ class MergeRequest extends React.Component{
                     {mrInfo.description}
                 </div>
 
-                <div className="div-mr-msg">请求合并&nbsp;&nbsp;<b>{mrInfo.source_branch}</b>&nbsp;&nbsp;到&nbsp;&nbsp;<b>{mrInfo.target_branch}</b></div>
+                <div className="div-mr-msg">{this.props.intl.messages["code.mergerequest.requesttomerge"]}&nbsp;&nbsp;<b>{mrInfo.source_branch}</b>&nbsp;&nbsp;{this.props.intl.messages["code.mergerequest.to"]}&nbsp;&nbsp;<b>{mrInfo.target_branch}</b></div>
 
                 {
                     (()=>{
@@ -150,14 +151,14 @@ class MergeRequest extends React.Component{
                                         <div className="div-mr-operation">
                                             <img className="img-mr-tip" src={imgOk}/>
                                             <button onClick={this.acceptMR.bind(this)} className="btn-mr-merge">Merge</button>
-                                            此合并请求现在可以进行合并
+                                            {this.props.intl.messages["code.mergerequest.open.canbemerged"]}
                                         </div>
                                     )
                                 }else {
                                     return (
                                         <div className="div-mr-operation">
                                             <img className="img-mr-tip" src={imgWarning}/>
-                                            你没有权限合并该请求
+                                            {this.props.intl.messages["code.mergerequest.open.noaccess"]}
                                         </div>
                                     )
                                 }
@@ -166,14 +167,14 @@ class MergeRequest extends React.Component{
                                     return (
                                         <div className="div-mr-operation">
                                             <img className="img-mr-tip" src={imgWarning}/>
-                                            此合并请求不包含任何的改动
+                                            {this.props.intl.messages["code.mergerequest.open.nochanges"]}
                                         </div>
                                     )
                                 }else {
                                     return (
                                         <div className="div-mr-operation">
                                             <img className="img-mr-tip" src={imgWarning}/>
-                                            此合并请求存在冲突
+                                            {this.props.intl.messages["code.mergerequest.open.conflict"]}
                                         </div>
                                     )
                                 }
@@ -188,7 +189,7 @@ class MergeRequest extends React.Component{
                             return (
                                 <div className="div-mr-operation">
                                     <img className="img-mr-tip" src={imgOk}/>
-                                    <span className="text-mr-author-time">{mrInfo.merged_at}</span>合并由
+                                    <span className="text-mr-author-time"><FormattedRelative value={new Date(parseInt(mrInfo.merged_at))}/></span>{this.props.intl.messages["code.mergerequest.mergedby"]}
                                     <div className="div-mr-author-avatar">{mrInfo.merged_by.charAt(0)}</div><b>{mrInfo.merged_by}</b>
                                 </div>
                             )
@@ -209,7 +210,7 @@ class MergeRequest extends React.Component{
                                             }
                                         })()
                                     }
-                                    <span className="text-mr-author-time">{mrInfo.closed_at}</span>关闭由
+                                    <span className="text-mr-author-time"><FormattedRelative value={new Date(parseInt(mrInfo.closed_at))}/></span>{this.props.intl.messages["code.mergerequest.closedby"]}
                                     <div className="div-mr-author-avatar">{mrInfo.closed_by.charAt(0)}</div><b>{mrInfo.closed_by}</b>
                                 </div>
                             )
@@ -222,4 +223,4 @@ class MergeRequest extends React.Component{
     }
 }
 
-export default (props)=><MergeRequest {...props} key={props.location.pathname} />
+export default injectIntl((props)=><MergeRequest {...props} key={props.location.pathname} />)

@@ -5,6 +5,7 @@ import API from "../../API";
 import {Loading} from "@icedesign/base";
 import {Feedback} from '@icedesign/base';
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './NewBranch.css'
 
@@ -70,7 +71,6 @@ class NewBranch extends React.Component {
                 ref:this.state.ref
             },
         }).then(()=>{
-            toast.success("创建分支成功");
             this.props.history.push("/code/"+this.state.projectid+"/branches");
         })
     }
@@ -81,23 +81,23 @@ class NewBranch extends React.Component {
             <div className="new-branch-container">
                 <Loading className="creating-new-branch" visible={this.state.creatingVisible} tip={spinner}>
                     <div className="div-new-branch-top">
-                        新分支
+                        {this.props.intl.messages["code.newbranch.top"]}
                     </div>
                     <div>
                         <div className="div-new-branch-input">
-                            <span className="text-new-branch-name">分支名称</span>
+                            <span className="text-new-branch-name">{this.props.intl.messages["code.newbranch.name"]}</span>
                             <input onChange={this.changeBranchName.bind(this)} className="input-new-branch-name"/>
                         </div>
                         <div className="div-new-branch-input">
-                            <span className="text-new-branch-source">创建自</span>
+                            <span className="text-new-branch-source">{this.props.intl.messages["code.newbranch.source"]}</span>
                             <Loading className="loading-new-branch" visible={this.state.loadingVisible} tip={spinner}>
-                                <Select onChange={this.selectRef.bind(this)} className="select-new-branch" size='large' dataSource={this.state.refOptions}/>
+                                <Select language={this.props.intl.messages["code.language"]} onChange={this.selectRef.bind(this)} className="select-new-branch" size='large' dataSource={this.state.refOptions}/>
                             </Loading>
                         </div>
                     </div>
                     <div className="div-new-branch-submit">
-                        <button onClick={this.addBranch.bind(this)} className="btn-new-branch-add">创建分支</button>
-                        <button onClick={this.cancel.bind(this)} className="btn-new-branch-cancel">取消</button>
+                        <button onClick={this.addBranch.bind(this)} className="btn-new-branch-add">{this.props.intl.messages["code.newbranch.add"]}</button>
+                        <button onClick={this.cancel.bind(this)} className="btn-new-branch-cancel">{this.props.intl.messages["code.newbranch.cancel"]}</button>
                     </div>
                 </Loading>
             </div>
@@ -105,4 +105,4 @@ class NewBranch extends React.Component {
     }
 }
 
-export default (props) => <NewBranch {...props} key={props.location.pathname}/>
+export default injectIntl((props) => <NewBranch {...props} key={props.location.pathname}/>)

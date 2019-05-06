@@ -4,6 +4,7 @@ import Menu, { Item as MenuItem } from '@icedesign/menu';
 import { withRouter, Link } from 'react-router-dom';
 import FoundationSymbol from 'foundation-symbol';
 import { Icon } from '@icedesign/base';
+import {FormattedMessage} from 'react-intl';
 
 import './index.scss';
 
@@ -40,7 +41,7 @@ class CodeAside extends Component {
                     <FoundationSymbol size="small" type="home2" >
                         <Icon size="small" type="home2" />
                     </FoundationSymbol>
-                    <span className="ice-menu-item-text">{"首页"}</span>
+                    <span className="ice-menu-item-text"><FormattedMessage id="code.aside.home"/></span>
                 </Link>
             </MenuItem>
             <MenuItem key={projectsLink}>
@@ -48,7 +49,7 @@ class CodeAside extends Component {
                         <FoundationSymbol size="small" type="cascades" >
                             <Icon size="small" type="cascades" />
                         </FoundationSymbol>
-                    <span className="ice-menu-item-text">{"项目"}</span>
+                    <span className="ice-menu-item-text"><FormattedMessage id="code.aside.projects"/></span>
                 </Link>
             </MenuItem>
             {/*<MenuItem key={groupsLink}>*/}
@@ -64,7 +65,7 @@ class CodeAside extends Component {
                     <FoundationSymbol size="small" type="key" >
                         <Icon size="small" type="key" />
                     </FoundationSymbol>
-                    <span className="ice-menu-item-text">{"SSH 公钥"}</span>
+                    <span className="ice-menu-item-text"><FormattedMessage id="code.aside.sshkey"/></span>
                 </Link>
             </MenuItem>
         </Menu>

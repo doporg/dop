@@ -6,7 +6,7 @@ import {Feedback} from '@icedesign/base';
 import ReactMarkdown from 'react-markdown';
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
-
+import {injectIntl } from 'react-intl';
 
 
 import './ProjectOverview.css'
@@ -138,7 +138,7 @@ class ProjectOverview extends React.Component{
 
     copyUrl = () => {
         copy(this.state.url);
-        toast.success("已复制到剪贴板");
+        toast.success(this.props.intl.messages["code.projectoverview.copy.success"]);
     };
 
     editProjectLink(){
@@ -165,13 +165,13 @@ class ProjectOverview extends React.Component{
                             if(projectInfo.visibility==="public"){
                                 return (
                                     <button className="btn-project btn-project-visibility">
-                                        <img src={imgPublic}/>PUBLIC
+                                        <img src={imgPublic}/>{this.props.intl.messages["code.projectoverview.public"]}
                                     </button>
                                 )
                             }else {
                                 return (
                                     <button className="btn-project btn-project-visibility">
-                                        <img src={imgPrivate}/>PRIVATE
+                                        <img src={imgPrivate}/>{this.props.intl.messages["code.projectoverview.private"]}
                                     </button>
                                 )
                             }
@@ -223,9 +223,9 @@ class ProjectOverview extends React.Component{
                     </div>
 
                     <div className="div-project-2">
-                        <span>{projectInfo.commit_count}次提交</span>
-                        <span>{projectInfo.branch_count}个分支</span>
-                        <span>{projectInfo.tag_count}个标签</span>
+                        <span>{projectInfo.commit_count}{this.props.intl.messages["code.projectoverview.commits"]}</span>
+                        <span>{projectInfo.branch_count}{this.props.intl.messages["code.projectoverview.branches"]}</span>
+                        <span>{projectInfo.tag_count}{this.props.intl.messages["code.projectoverview.tags"]}</span>
                         <span>{projectInfo.file_size}</span>
                     </div>
                 </div>
@@ -248,5 +248,5 @@ class ProjectOverview extends React.Component{
 }
 
 
-export default (props)=><ProjectOverview {...props} key={props.location.pathname} />
+export default injectIntl((props)=><ProjectOverview {...props} key={props.location.pathname} />)
 
