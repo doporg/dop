@@ -7,11 +7,12 @@ import {RSA, Encryption, PublicKey} from '../index'
 import API from "../../API";
 import Axios from "axios/index";
 import jsonp from "jsonp";
+import {injectIntl} from "react-intl";
 
 const {Item: FormItem} = Form;
 const {toast} = Feedback;
 
-export default class Login extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.field = new Field(this);
@@ -56,7 +57,7 @@ export default class Login extends Component {
             if (errors) {
                 toast.show({
                     type: "error",
-                    content: "请正确填写信息",
+                    content: self.props.intl.messages["login.login.info.tip"],
                     duration: 1000
                 });
                 return;
@@ -123,7 +124,7 @@ export default class Login extends Component {
                     } else {
                         toast.show({
                             type: "error",
-                            content: "发生未知错误",
+                            content: self.props.intl.messages["login.login.info.error"],
                             duration: 1000
                         });
                         reject()
@@ -180,11 +181,14 @@ export default class Login extends Component {
                         >
                             <div className="form">
                                 <div className="title">
-                                    密码登陆
+                                    {this.props.intl.messages["login.login.title"]}
                                 </div>
                                 <Form field={this.field} className="form-body">
 
-                                    <FormItem label="邮箱：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.login.email"]+ "："}
+                                        {...formItemLayout} hasFeedback
+                                    >
                                         <Input
                                             type="email"
                                             placeholder=""
@@ -193,7 +197,7 @@ export default class Login extends Component {
                                                     {required: true, trigger: "onBlur"},
                                                     {
                                                         type: "email",
-                                                        message: <span>请输入正确的邮箱地址</span>,
+                                                        message: <span>{this.props.intl.messages["login.login.email.tip"]}</span>,
                                                         trigger: ["onBlur", "onChange"]
                                                     }
                                                 ]
@@ -201,12 +205,14 @@ export default class Login extends Component {
                                         />
                                     </FormItem>
 
-                                    <FormItem label="密码：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.login.password"]+ "："}
+                                        {...formItemLayout} hasFeedback>
                                         <Input
                                             htmlType="password"
                                             {...init("passwd", {
                                                 rules: [
-                                                    {required: true, whitespace: true, message: "请填写密码"},
+                                                    {required: true, whitespace: true, message: this.props.intl.messages["login.login.password.tip"]},
                                                 ]
                                             })}
                                         />
@@ -219,11 +225,11 @@ export default class Login extends Component {
                                                 size="large"
                                                 className="login-form-button"
                                         >
-                                            登陆
+                                            {this.props.intl.messages["login.login.login"]}
                                         </Button>
                                         <div className="register-content">
-                                            <span onClick={this.modify.bind(this)}>忘记密码</span>
-                                            <span onClick={this.register.bind(this)}>免费注册</span>
+                                            <span onClick={this.modify.bind(this)}>{this.props.intl.messages["login.login.forget"]}</span>
+                                            <span onClick={this.register.bind(this)}>{this.props.intl.messages["login.login.register"]}</span>
                                         </div>
                                     </FormItem>
                                 </Form>
@@ -237,3 +243,4 @@ export default class Login extends Component {
         )
     }
 }
+export default injectIntl(Login)

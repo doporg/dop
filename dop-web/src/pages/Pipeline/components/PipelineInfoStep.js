@@ -7,9 +7,8 @@ import './Styles.scss';
 import Pull from './chosenSteps/Pull'
 import Maven from './chosenSteps/Maven'
 import Node from './chosenSteps/Node'
-import Djanggo from './chosenSteps/Djanggo'
+import Djanggo from './chosenSteps/Django'
 import DockerImage from './chosenSteps/DockerImage'
-import PushDockerImage from './chosenSteps/PushDockerImage'
 import Shell from './chosenSteps/Shell'
 import Deployment from './chosenSteps/Deployment'
 import {injectIntl} from "react-intl";
@@ -242,7 +241,6 @@ class PipelineInfoStep extends Component {
                                                 return (
                                                     <div>
                                                         {(() => {
-                                                            console.log(this.state.chosenStep.taskName)
                                                             switch (this.state.chosenStep.taskName) {
                                                                 case 0:
                                                                     return (

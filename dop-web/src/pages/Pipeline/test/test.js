@@ -1,24 +1,11 @@
 import React, {Component} from 'react';
 import {injectIntl, FormattedMessage} from 'react-intl';
-import Axios from "axios/index";
-import API from "../../API";
+import Shell from '../components/chosenSteps/Shell'
 
 
 
 
 class PipelineTest extends Component {
-    componentWillMount(){
-        let url = API.pipeline + '/v1/resultOutput?id=5ccfae897169742b4cc87295';
-        Axios.post(url).then((response) => {
-        }).catch(() => {
-        })
-    }
-    componentDidMount(){
-        let url = API.pipeline + '/v1/resultOutput/notify/5ccfae897169742b4cc87295';
-        Axios.post(url).then((response) => {
-        }).catch(() => {
-        })
-    }
     render() {
         return (
             <div>
@@ -27,6 +14,7 @@ class PipelineTest extends Component {
                     id="pipeline.hello"
                     defaultMessage="你好"
                 />
+                <Shell />
             </div>
         )
     }

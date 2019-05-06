@@ -86,12 +86,14 @@ public class Jenkinsfile {
                     case BuildNode:
                         this.stages += "sh \'npm --version \' \n";
                         this.stages += "sh \'node --version \' \n";
-                        this.stages += "sh \'npm install \' \n";
+//                        this.stages += "sh \'npm install \' \n";
                         break;
                     case BuildDjanggo:
-                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
-                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
-                        this.stages += "sh \'python ./manage.py runserver \' \n";
+//                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
+//                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
+//                        this.stages += "sh \'python ./manage.py runserver \' \n";
+                        this.stages += "sh \'python --version \' \n";
+                        this.stages += "sh \'pip --version \' \n";
                         break;
                     case BuildDocker:
                         this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";

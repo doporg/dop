@@ -26,6 +26,15 @@ class Pull extends Component {
     componentWillMount() {
         this.getApplication();
     }
+    // componentWillUnmount(){
+    //     if(this.state.selectedApp === null){
+    //         toast.show({
+    //             type: "prompt",
+    //             content: "请选择应用",
+    //             duration: 1000
+    //         });
+    //     }
+    // }
 
     getApplication() {
         this.setState({
@@ -61,7 +70,7 @@ class Pull extends Component {
             }).catch(() => {
                 toast.show({
                     type: "error",
-                    content: "获取应用信息失败",
+                    content: self.props.intl.messages["pipeline.info.step.pull.apply.error"],
                     duration: 3000
                 });
                 reject()
@@ -113,13 +122,13 @@ class Pull extends Component {
         };
         return (
             <Loading shape="fusion-reactor" visible={this.state.visible}>
-                <h3 className="chosen-task-detail-title">拉取代码</h3>
+                <h3 className="chosen-task-detail-title">{this.props.intl.messages["pipeline.info.step.pull.title"]}</h3>
                 <Form
                     labelAlign="left"
                     labelTextAlign="left"
                 >
                     <FormItem
-                        label="应用设置："
+                        label={this.props.intl.messages["pipeline.info.step.pull.apply"] + "："}
                         {...formItemLayout}
                     >
                         <Combobox
@@ -132,7 +141,7 @@ class Pull extends Component {
                         </Combobox>
                     </FormItem>
                     <FormItem
-                        label="Git地址: "
+                        label={this.props.intl.messages["pipeline.info.step.pull.git"] + "："}
                         required
                         {...formItemLayout}
                     >
