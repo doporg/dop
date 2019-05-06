@@ -86,16 +86,17 @@ public class ResultOutputService {
         if (matcherRepository.find()) {
             repository = matcherRepository.group();
             repository = repository.split("\\s+")[2];
-            System.out.println(repository);
         }
 
+
+        String status = this.jenkinsService.getBuildResult(pipelineId);
         LogInfoV1 logInfoV1 = LogInfoV1.builder()
                 .runningId(running.getId().toString())
                 .commitUrl(git + "/" + commitId)
                 .imageUrl(repository)
                 .rtime(running.getCtime())
-                .ruser(pipeline.getCuser())
-                .Status(this.jenkinsService.getBuildResult(pipeline.getId()))
+                .ruser(loginUser)
+                .Status(status)
                 .build();
         this.applicationFeign.addLog(loginUser, pipeline.getAppEnvId(), logInfoV1);
     }

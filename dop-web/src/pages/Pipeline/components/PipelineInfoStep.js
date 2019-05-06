@@ -85,8 +85,12 @@ class PipelineInfoStep extends Component {
     closeTask(index) {
         let stage = this.state.stage;
         stage.steps.splice(index, 1);
+        let chosenStep = {
+            taskName: ""
+        };
         this.setState({
-            stage
+            stage,
+            chosenStep
         });
     }
 
@@ -94,7 +98,6 @@ class PipelineInfoStep extends Component {
      *  点击编辑task
      * */
     editTask(chosenStep) {
-        console.log(chosenStep)
         this.setState({
             chosenStep
         })
@@ -103,7 +106,6 @@ class PipelineInfoStep extends Component {
     onChangeApp(value) {
         this.props.onChangeApp(value)
     }
-
 
     onSelectEnv(value) {
         this.setState({

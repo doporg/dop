@@ -4,7 +4,7 @@
  *
  * */
 import React, {Component} from 'react';
-import {Button, Icon, Loading, Feedback} from '@icedesign/base';
+import {Button, Icon, Loading, Feedback, Progress} from '@icedesign/base';
 import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
@@ -30,16 +30,13 @@ export default class PipelineProject extends Component {
             },
             queue: [],
             time: "",
-            resultStatus: "RUN",
-            notRunning: true
+            resultStatus: "NOTBUILD",
+            notRunning: null
         }
     }
 
     componentDidMount() {
         let self = this;
-        self.setState({
-            visible: true
-        });
         self.getPipelineInfo();
         let time = setInterval(() => {
             this.getRuns().then((data) => {
@@ -54,7 +51,19 @@ export default class PipelineProject extends Component {
         });
     }
 
+    projectLoading(){
+        let progress = Math.round(Math.random()*50) + 50;
+        return (
+            <div className="project-progress">
+                正在加载...
+                <Progress percent={progress} size="large" showInfo={false} />
+            </div>
+        )
+    }
     getPipelineInfo() {
+        this.setState({
+            visible: true
+        });
         let url = API.pipeline + '/v1/pipeline/' + this.state.pipelineId;
         let self = this;
 
@@ -68,6 +77,9 @@ export default class PipelineProject extends Component {
     }
 
     getRuns() {
+        this.setState({
+            visible: true
+        });
         let url = API.pipeline + '/v1/jenkins/runs?id=' + this.state.pipelineId;
         let self = this;
         return new Promise((resolve, reject) => {
@@ -80,7 +92,8 @@ export default class PipelineProject extends Component {
                             duration: 3000
                         });
                         self.setState({
-                            notRunning: true
+                            notRunning: true,
+                            visible: false
                         });
                         resolve(response.data[0]);
                         self.setResult();
@@ -106,7 +119,6 @@ export default class PipelineProject extends Component {
                         resolve(response.data[0]);
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
-                            self.setResult();
                             if (self.state.resultStatus === "BUILD") {
                                 self.setResult();
                             }
@@ -154,7 +166,7 @@ export default class PipelineProject extends Component {
                     time: time
                 });
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             toast.show({
                 type: "error",
                 content: "启动运行失败",
@@ -162,14 +174,13 @@ export default class PipelineProject extends Component {
             });
             self.setState({
                 visible: false,
-                resultStatus: "RUN"
+                resultStatus: "NOTBUILD"
             });
         })
     }
 
     clear() {
         clearInterval(this.state.time);
-        this.setResult();
     }
 
     setResult() {
@@ -231,35 +242,34 @@ export default class PipelineProject extends Component {
     render() {
         return (
             <div className="project-body">
-                <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
-                    <div className="operate">
-                        <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
-                            <Icon type="play"/>
-                            <FormattedMessage
-                                id="pipeline.project.runPipeline"
-                                defaultMessage="运行流水线"
-                            />
-                        </Button>
-                        <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} disabled>
-                            <Icon type="edit"/>
-                            <FormattedMessage
-                                id="pipeline.project.editPipeline"
-                                defaultMessage=" 编辑流水线"
-                            />
-                        </Button>
-                        <Button type="secondary" shape="warning" className="button"
-                                onClick={this.deletePipeline.bind(this)}>
-                            <Icon type="ashbin"/>
-                            <FormattedMessage
-                                id="pipeline.project.deletePipeline"
-                                defaultMessage="删除流水线"
-                            />
-                        </Button>
-                    </div>
-
+                <div className="operate">
+                    <Button type="primary" className="button" onClick={this.buildPipeline.bind(this)}>
+                        <Icon type="play"/>
+                        <FormattedMessage
+                            id="pipeline.project.runPipeline"
+                            defaultMessage="运行流水线"
+                        />
+                    </Button>
+                    <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} disabled>
+                        <Icon type="edit"/>
+                        <FormattedMessage
+                            id="pipeline.project.editPipeline"
+                            defaultMessage=" 编辑流水线"
+                        />
+                    </Button>
+                    <Button type="secondary" shape="warning" className="button"
+                            onClick={this.deletePipeline.bind(this)}>
+                        <Icon type="ashbin"/>
+                        <FormattedMessage
+                            id="pipeline.project.deletePipeline"
+                            defaultMessage="删除流水线"
+                        />
+                    </Button>
+                </div>;
+                <Loading tip={this.projectLoading()} visible={this.state.visible} className="next-loading my-loading">
                     {(()=>{
                         if(this.state.notRunning){
-                            return <NotPermission />
+                            return <NotPermission/>
                         }else{
                             return  <RunResult runs={this.state.runs}/>
                         }

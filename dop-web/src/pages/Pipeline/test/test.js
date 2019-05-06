@@ -1,30 +1,31 @@
 import React, {Component} from 'react';
 import {injectIntl, FormattedMessage} from 'react-intl';
-import DockerImage from '../components/chosenSteps/DockerImage'
+import Axios from "axios/index";
+import API from "../../API";
 
 
 
 
 class PipelineTest extends Component {
-
-    handleChange(exp) {
-        this.setState({
-            cronExpression: exp.format()
-        });
-        console.log(exp, exp.format());
+    componentWillMount(){
+        let url = API.pipeline + '/v1/resultOutput?id=5ccfae897169742b4cc87295';
+        Axios.post(url).then((response) => {
+        }).catch(() => {
+        })
+    }
+    componentDidMount(){
+        let url = API.pipeline + '/v1/resultOutput/notify/5ccfae897169742b4cc87295';
+        Axios.post(url).then((response) => {
+        }).catch(() => {
+        })
     }
     render() {
-        console.log(this.props.intl);
         return (
             <div>
                 {this.props.intl.messages["pipeline.hello"]}
                 <FormattedMessage
                     id="pipeline.hello"
                     defaultMessage="你好"
-                />
-                <DockerImage
-                    onChangeApp = {(value)=>{console.log(value)}}
-                    onSelectEnv = {(value)=>{console.log(value)}}
                 />
             </div>
         )

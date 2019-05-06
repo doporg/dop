@@ -106,10 +106,11 @@ class DockerImage extends Component {
                     };
                     environments.push(environment);
                     if (self.props.selectEnvId === response.data[i].id) {
+                        self.selectEnv(response.data[i].id)
                         self.setState({
                             selectedEnv: response.data[i].title
                         });
-                        self.selectEnv(response.data[i].id)
+
                     }
                 }
                 self.setState({

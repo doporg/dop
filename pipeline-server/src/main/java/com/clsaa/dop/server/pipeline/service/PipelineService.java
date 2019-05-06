@@ -53,14 +53,18 @@ public class PipelineService {
         pipeline.setCtime(LocalDateTime.now());
         pipeline.setMtime(LocalDateTime.now());
         pipeline.setIsDeleted(false);
-        pipelineRepository.insert(pipeline);
 
-        //拿到 result output id
-        String resultOutputId = this.resultOutputService.create(id.toString());
-        //拿到 校验流水线信息完整
-        Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
-        this.jenkinsService.createJob(pipelineWithInfo);
-        return id.toString();
+        try{
+            pipelineRepository.insert(pipeline);
+            //拿到 result output id
+            String resultOutputId = this.resultOutputService.create(id.toString());
+            //拿到 校验流水线信息完整
+            Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
+            this.jenkinsService.createJob(pipelineWithInfo);
+            return id.toString();
+        }catch (Exception e){
+            return e.toString();
+        }
     }
 
     public void addPipelineWithJenkins(Pipeline pipeline, Long loginUser) {
@@ -180,7 +184,7 @@ public class PipelineService {
 
 
             if (pipeline.getAppId() != null) {
-                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(pipeline.getAppId());
+                AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(loginUser, pipeline.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
             }
