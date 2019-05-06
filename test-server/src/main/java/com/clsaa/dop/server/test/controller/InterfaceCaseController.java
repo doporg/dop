@@ -16,8 +16,8 @@ import com.clsaa.dop.server.test.service.create.InterfaceCaseCreateService;
 import com.clsaa.dop.server.test.service.create.InterfaceStageCreateService;
 import com.clsaa.dop.server.test.service.query.InterfaceCaseLogQueryService;
 import com.clsaa.dop.server.test.service.query.InterfaceCaseQueryService;
-import com.clsaa.dop.server.test.service.update.InterfaceCaseUpdateServiceImpl;
-import com.clsaa.dop.server.test.service.update.InterfaceStageUpdateServiceImpl;
+import com.clsaa.dop.server.test.service.update.InterfaceCaseUpdateService;
+import com.clsaa.dop.server.test.service.update.InterfaceStageUpdateService;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,10 +66,10 @@ public class InterfaceCaseController {
     private CaseParamCreateService caseParamCreateService;
 
     @Autowired
-    private InterfaceCaseUpdateServiceImpl interfaceCaseUpdateService;
+    private InterfaceCaseUpdateService interfaceCaseUpdateService;
 
     @Autowired
-    private InterfaceStageUpdateServiceImpl interfaceStageUpdateService;
+    private InterfaceStageUpdateService interfaceStageUpdateService;
 
     @Autowired
     private ImportService importService;

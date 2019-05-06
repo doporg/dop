@@ -16,7 +16,7 @@ import java.util.List;
  * @since 19/04/2019
  */
 @Component
-public class InterfaceStageUpdateServiceImpl implements UpdateService<InterfaceStageDto> {
+public class InterfaceStageUpdateService implements UpdateService<InterfaceStageDto> {
 
     @Autowired
     private InterfaceStageRepository stageRepository;
