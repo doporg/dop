@@ -37,12 +37,12 @@ class StepForm extends Component {
 
   componentWillReceiveProps(nextProps, nextContext) {
     this.setState({
-      step: 0,
+      step: this.state.step,
       caseId: nextProps.caseId,
       stages: nextProps.stages,
       operation: nextProps.operation,
       caseParams: nextProps.caseParams
-    }, this.nextStep);
+    });
   }
 
   nextStep = (stage) => {

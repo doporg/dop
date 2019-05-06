@@ -6,6 +6,7 @@ import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.matcher.ToStringMatcher;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
+import com.clsaa.dop.server.test.enums.ParamClass;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
@@ -23,14 +24,17 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.io.PrintStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.clsaa.dop.server.test.doExecute.TestManager.*;
 import static com.clsaa.dop.server.test.doExecute.Version.currentVersion;
@@ -127,6 +131,7 @@ public class RequestScriptDto implements Operation {
                     .config(RestAssured.config()
                             .logConfig(new LogConfig(captor, true)))
                     .headers(headers)
+                    .queryParams(getQueryParams(this.requestParams))
                     .body(requestBody);
 
             URL urlObj = new URL(url);
@@ -174,6 +179,19 @@ public class RequestScriptDto implements Operation {
                     endOperationLog(operationExecuteLog)
             );
         }
+    }
+
+    private Map<String, String> getQueryParams(List<RequestParamDto> requestParams) {
+        Map<String, String> result = new HashMap<>();
+        if (!CollectionUtils.isEmpty(requestParams)) {
+            List<RequestParamDto> queryParamDtos = requestParams.stream()
+                    .filter(script -> script.getParamClass() == ParamClass.GET_PARAM)
+                    .collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(queryParamDtos)) {
+                queryParamDtos.forEach(queryParam -> result.put(queryParam.getName(), queryParam.getValue()));
+            }
+        }
+        return result;
     }
 
     private void setResultFail() {
