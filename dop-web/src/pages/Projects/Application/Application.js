@@ -5,13 +5,14 @@ import CreateApplicationDialog
     from "../components/ApplicationManagement/CreateApplicationDialog/CreateApplicationDialog";
 import Pagination from "../components/ApplicationManagement/ApplicationPagination/ApplicationPagination";
 import "./Application.scss"
+import {injectIntl} from "react-intl";
 
 /**
  * 应用列表
  * @author Bowen
  *
  */
-export default class Application extends Component {
+class Application extends Component {
     static displayName = 'Application';
 
     constructor(props) {
@@ -53,9 +54,10 @@ export default class Application extends Component {
             <div>
                 {/*创建函数的对话框和搜索框*/}
                 <Breadcrumb className="Breadcrumb">
-                    <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                     <Breadcrumb.Item
-                        link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                        link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
                 </Breadcrumb>
                 <TopBar
                     extraBefore={
@@ -66,7 +68,7 @@ export default class Application extends Component {
                     extraAfter={
                         <Input className="TopBarInput"
                                size="large"
-                               placeholder="请输入应用名称进行搜索"
+                               placeholder={this.props.intl.messages['projects.search.application']}
                             // hasClear
                                onChange={this.onSearch.bind(this)}
                         />
@@ -82,3 +84,5 @@ export default class Application extends Component {
         );
     }
 }
+
+export default injectIntl(Application)

@@ -1,23 +1,15 @@
 import React, {Component} from 'react';
 
 import {Radio} from "@icedesign/base";
+import {injectIntl} from "react-intl";
 
 const {Group: RadioGroup} = Radio;
-const list = [
-    {
-        value: "FREE",
-        label: "自由模式"
-    },
-    {
-        value: "BRANCH",
-        label: "分支模式"
-    },
-];
+
 /**
  *    开发模式按钮
  *
  * */
-export default class ProductModeController extends Component {
+class ProductModeController extends Component {
     constructor(props) {
         super(props);
 
@@ -29,6 +21,7 @@ export default class ProductModeController extends Component {
 
         this.onChange = this.onChange.bind(this);
     }
+
 
     componentWillReceiveProps(nextProps) {
         if ("value" in nextProps) {
@@ -47,6 +40,16 @@ export default class ProductModeController extends Component {
     }
 
     render() {
+        const list = [
+            {
+                value: "FREE",
+                label: this.props.intl.messages['projects.radio.free']
+            },
+            {
+                value: "BRANCH",
+                label: this.props.intl.messages['projects.radio.branch']
+            },
+        ];
         return (
             <div>
                 <RadioGroup
@@ -59,3 +62,5 @@ export default class ProductModeController extends Component {
     }
 
 }
+
+export default injectIntl(ProductModeController)

@@ -4,6 +4,7 @@ import Axios from "axios";
 import API from "../../../../API";
 import K8sInfoPage from '../K8sInfoPage/K8sInfoPage'
 import "./ClusterInfoForm.scss"
+import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -11,7 +12,8 @@ const formItemLayout = {
     labelCol: {span: 8},
     wrapperCol: {span: 16}
 };
-export default class ClusterInfoForm extends Component {
+
+class ClusterInfoForm extends Component {
     constructor(props) {
         super(props)
         this.field = new Field(this)
@@ -40,8 +42,8 @@ export default class ClusterInfoForm extends Component {
 
     clusterInfoConfirm = () => {
         Dialog.confirm({
-            content: "你确定要保存提交集群信息吗？",
-            title: "确认提交",
+            content: this.props.intl.messages['projects.text.saveConfirmClusterInfo'],
+            title: this.props.intl.messages['projects.text.submitConfirm'],
             onOk: this.clusterInfoSubmit.bind(this)
         });
     };
@@ -64,7 +66,7 @@ export default class ClusterInfoForm extends Component {
                     targetClusterToken: _this.field.getValue("targetClusterToken")
                 })
                     .then((response) => {
-                            Toast.success("保存成功")
+                        Toast.success(_this.props.intl.messages['projects.text.submitSuccessful'])
                         _this.setState({
                             loading: false,
                             refreshK8sInfo: true
@@ -138,20 +140,20 @@ export default class ClusterInfoForm extends Component {
                 <Form className="card-form">
                     <Loading visible={this.state.loading} size='small' className="form-loading"
                              shape="dot-circle" color="#2077FF">
-                        <FormItem label="目标集群URL:"
+                        <FormItem label={this.props.intl.messages['projects.text.clusterUrl']}
                                   {...formItemLayout}
                                   validateStatus={getError("targetClusterUrl") ? "error" : ""}
-                                  help={getError("targetClusterUrl") ? "请检测集群Url是否正确" : ""}
+                                  help={getError("targetClusterUrl") ? this.props.intl.messages['projects.check.clusterUrl'] : ""}
                         >
                             <Input
                                 className={this.state.editMode ? "form-item-input" : "form-item-input hide"}
-                                placeholder="目标集群"
+                                placeholder={this.props.intl.messages['projects.placeholder.clusterUrl']}
                                 {...init('targetClusterUrl', {
                                     initValue: this.state.clusterData,
                                     rules: [{
                                         type: "url",
                                         required: true,
-                                        message: "该项不能为空"
+                                        message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}>
                             </Input>
@@ -168,16 +170,16 @@ export default class ClusterInfoForm extends Component {
                         </FormItem>
 
 
-                        <FormItem label="Token:"
+                        <FormItem label={this.props.intl.messages['projects.text.clusterToken']}
                                   className={this.state.editMode ? "form-item-input" : "form-item-input hide"}
                                   {...formItemLayout}
                                   validateStatus={getError("targetClusterToken") ? "error" : ""}
-                                  help={getError("targetClusterToken") ? "请输入Token" : ""}>
-                            <Input multiple placeholder="AccessToken"
+                                  help={getError("targetClusterToken") ? this.props.intl.messages['projects.check.clusterToken'] : ""}>
+                            <Input multiple placeholder={this.props.intl.messages['projects.placeholder.clusterToken']}
                                    {...init('targetClusterToken', {
                                        rules: [{
                                            required: true,
-                                           message: "该项不能为空"
+                                           message: this.props.intl.messages['projects.message.cantNull']
                                        }]
                                    })}>
                             </Input>
@@ -187,12 +189,12 @@ export default class ClusterInfoForm extends Component {
                                 type="primary"
                                 className={this.state.editMode ? "save-button" : "save-button hide"}
                         >
-                            提交
+                            {this.props.intl.messages['projects.button.submit']}
                         </Button>
 
                         < Button
                             className={this.state.editMode ? "cancel-button" : "cancel-button hide"}
-                            onClick={this.toggleEditMode.bind(this)}> 取消 </Button>
+                            onClick={this.toggleEditMode.bind(this)}>{this.props.intl.messages['projects.button.cancel']} </Button>
                     </Loading>
 
                 </Form>)
@@ -205,7 +207,7 @@ export default class ClusterInfoForm extends Component {
 
             <Card
                 className="card"
-                title={"Kubernetes环境信息"}
+                title={this.props.intl.messages['projects.text.kubernetesEnvInfo']}
                 bodyHeight="40%"
             >
 
@@ -222,3 +224,5 @@ export default class ClusterInfoForm extends Component {
     }
 
 }
+
+export default injectIntl(ClusterInfoForm)

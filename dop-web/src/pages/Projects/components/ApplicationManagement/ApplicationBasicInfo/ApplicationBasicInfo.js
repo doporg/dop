@@ -4,6 +4,7 @@ import Axios from "axios";
 import API from "../../../../API";
 import TopBar from "./topbar";
 import "./ApplicationBasicInfo.scss"
+import {injectIntl} from "react-intl";
 
 const Option = Select.Option;
 const {Combobox} = Select;
@@ -20,7 +21,7 @@ const formItemLayout = {
  * @author Bowen
  */
 
-export default class ApplicationBasicInfo extends Component {
+class ApplicationBasicInfo extends Component {
 
     constructor(props) {
         super(props);
@@ -150,16 +151,16 @@ export default class ApplicationBasicInfo extends Component {
 
     basicConfirm = () => {
         Dialog.confirm({
-            content: "你确定要保存修改吗？",
-            title: "确认修改",
+            content: this.props.intl.messages['projects.text.confirmSave'],
+            title: this.props.intl.messages['projects.title.confirmSave'],
             onOk: this.basicSubmit.bind(this)
         });
     };
 
     urlConfirm = () => {
         Dialog.confirm({
-            content: "你确定要保存修改吗？",
-            title: "确认修改",
+            content: this.props.intl.messages['projects.text.confirmSave'],
+            title: this.props.intl.messages['projects.title.confirmSave'],
             onOk: this.urlSubmit.bind(this)
         });
     };
@@ -193,7 +194,7 @@ export default class ApplicationBasicInfo extends Component {
                             loading: false
                         })
                         _this.getData()
-                        Toast.success("更新成功！")
+                        Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                     })
                     .catch(function (error) {
                         _this.setState({
@@ -238,7 +239,7 @@ export default class ApplicationBasicInfo extends Component {
                         })
                         //提交完成后刷新当前页面
                         _this.getData()
-                        Toast.success("更新成功！")
+                        Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                     })
                     .catch(function (error) {
                         _this.setState({
@@ -267,7 +268,7 @@ export default class ApplicationBasicInfo extends Component {
             if (!this.state.basicEditMode) {
                 return (
                     <div  {...init('title')}
-                          placeholder="应用名称"
+                          placeholder={this.props.intl.messages['projects.text.applicationName']}
                           className="form-item-text">{this.state.appBasicData.title}</div>)
             } else {
                 return (<Input defaultValue={this.state.appBasicData.title}
@@ -276,10 +277,10 @@ export default class ApplicationBasicInfo extends Component {
                                {...init('title', {
                     rules: [{
                         required: true,
-                        message: "该项不能为空"
+                        message: this.props.intl.messages['projects.message.cantNull']
                     }]
                 })}
-                               placeholder="应用标题"/>)
+                               placeholder={this.props.intl.messages['projects.placeholder.applicationName']}/>)
             }
 
         }
@@ -295,7 +296,7 @@ export default class ApplicationBasicInfo extends Component {
                         maxLength={50}
                         hasLimitHint
                         defaultValue={this.state.appBasicData.description} {...init('description')}
-                           placeholder="应用描述"/>)
+                        placeholder={this.props.intl.messages['projects.text.applicationDescription']}/>)
             }
         }
 
@@ -305,15 +306,19 @@ export default class ApplicationBasicInfo extends Component {
             if (this.state.urlEditMode) {
                 return (
                     <div>
-                        <FormItem{...formItemLayout} label="Git仓库地址："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.imageUrl']}
                                  validateStatus={this.urlField.getError("gitUrl") ? "error" : ""}
-                                 help={this.urlField.getError("gitUrl") ? "请检查镜像仓库地址（须以http/https开头）" : ""}
+                                 help={this.urlField.getError("gitUrl") ? this.props.intl.messages['projects.text.checkGitUrl'] : ""}
                                  required>
                             <Combobox  {...init('gitUrl', {
                                 initValue: this.state.appBasicData.warehouseUrl,
-                                rules: [{type: "url", required: true, message: "该项不能为空"}]
+                                rules: [{
+                                    type: "url",
+                                    required: true,
+                                    message: this.props.intl.messages['projects.message.cantNull']
+                                }]
                             })}
-                                       placeholder="git仓库地址"
+                                       placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
                                        onChange={this.onGitUrlChange.bind(this)}
                                        onInputBlur={this.onGitUrlChange.bind(this)}
                             >
@@ -323,16 +328,20 @@ export default class ApplicationBasicInfo extends Component {
                             </Combobox>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="镜像仓库地址："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.imageUrl']}
                                  validateStatus={this.urlField.getError("imageUrl") ? "error" : ""}
-                                 help={this.urlField.getError("imageUrl") ? "请检查镜像仓库地址（须以http/https开头）" : ""}
+                                 help={this.urlField.getError("imageUrl") ? this.props.intl.messages['projects.text.checkImageUrl'] : ""}
 
                                  required>
                             <Combobox className="form-item-input" {...init('imageUrl', {
                                 initValue: this.state.appBasicData.imageUrl,
-                                rules: [{type: "url", required: true, message: "该项不能为空"}]
+                                rules: [{
+                                    type: "url",
+                                    required: true,
+                                    message: this.props.intl.messages['projects.message.cantNull']
+                                }]
                             })}
-                                      placeholder="镜像仓库地址"
+                                      placeholder={this.props.intl.messages['projects.placeHolder.imageUrl']}
                                       onChange={this.onImageUrlChange.bind(this)}
                                       onInputBlur={this.onImageUrlChange.bind(this)}
                                 // onInputUpdate={this.onImageUrlChange.bind(this)}
@@ -344,55 +353,55 @@ export default class ApplicationBasicInfo extends Component {
 
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发数据库地址："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.DevelopDb']}
                                  validateStatus={this.urlField.getError("productionDbUrl") ? "error" : ""}
-                                 help={this.urlField.getError("productionDbUrl") ? "请检查开发数据库地址（须以http/https开头）" : ""}
+                                 help={this.urlField.getError("productionDbUrl") ? this.props.intl.messages['projects.text.checkDevelopDb'] : ""}
                         >
                             <Input defaultValue={this.state.appBasicData.productionDbUrl} {...init('productionDbUrl', {
                                 rules: [{
                                     type: "url",
-                                    message: "该项不能为空"
+                                    message: this.props.intl.messages['projects.message.cantNull']
                                 }]
                             })}
-                                   placeholder="开发数据库地址"/>
+                            />
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试数据库地址："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.TestDb']}
                                  validateStatus={this.urlField.getError("testDbUrl") ? "error" : ""}
-                                 help={this.urlField.getError("testDbUrl") ? "请检查测试数据库地址（须以http/https开头）" : ""}
+                                 help={this.urlField.getError("testDbUrl") ? this.props.intl.messages['projects.text.checkTestDb'] : ""}
                         >
                             <Input defaultValue={this.state.appBasicData.testDbUrl} {...init('testDbUrl', {
                                 rules: [{
                                     type: "url",
-                                    message: "该项不能为空"
+                                    message: this.props.intl.messages['projects.message.cantNull']
                                 }]
                             })}
-                                   placeholder="测试数据库地址"/>
+                            />
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发域名："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.developDomain']}
                                  validateStatus={this.urlField.getError("productionDomain") ? "error" : ""}
-                                 help={this.urlField.getError("productionDomain") ? "请检查开发域名" : ""}>
+                                 help={this.urlField.getError("productionDomain") ? this.props.intl.messages['projects.text.checkDevelopDomain'] : ""}>
                             <Input
                                 defaultValue={this.state.appBasicData.productionDomain}  {...init('productionDomain', {
                                 rules: [{
                                     pattern: "^([a-z0-9]+.?)+[a-z]+$",
-                                    message: "该项不能为空"
+                                    message: this.props.intl.messages['projects.message.cantNull']
                                 }]
                             })}
-                                placeholder="开发域名"/>
+                            />
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试域名："
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.testDomain']}
                                  validateStatus={this.urlField.getError("testDomain") ? "error" : ""}
-                                 help={this.urlField.getError("testDomain") ? "请检查测试域名" : ""}>
+                                 help={this.urlField.getError("testDomain") ? this.props.intl.messages['projects.text.checkTestDomain'] : ""}>
                             <Input defaultValue={this.state.appBasicData.testDomain} {...init('testDomain', {
                                 rules: [{
                                     pattern: "^([a-z0-9]+.?)+[a-z]+$",
-                                    message: "该项不能为空"
+                                    message: this.props.intl.messages['projects.message.cantNull']
                                 }]
                             })}
-                                   placeholder="测试域名"/>
+                            />
                         </FormItem>
 
                     </div>
@@ -403,29 +412,29 @@ export default class ApplicationBasicInfo extends Component {
 
                     <div>
 
-                        <FormItem{...formItemLayout} label="Git仓库地址：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.gitUrl']}>
                             <span className="form-item-text">{this.state.appBasicData.warehouseUrl}</span>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="镜像仓库地址：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.imageUrl']}>
                             <span className="form-item-text">{this.state.appBasicData.imageUrl}</span>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发数据库地址：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.DevelopDb']}>
                             <span
                                 className="form-item-text">{this.state.appBasicData.productionDbUrl}</span>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试数据库地址：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.TestDb']}>
                             <span className="form-item-text">{this.state.appBasicData.testDbUrl}</span>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="开发域名：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.developDomain']}>
                             <span
                                 className="form-item-text">{this.state.appBasicData.productionDomain}</span>
                         </FormItem>
 
-                        <FormItem{...formItemLayout} label="测试域名：">
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.testDomain']}>
                             <span className="form-item-text">{this.state.appBasicData.testDomain}</span>
                         </FormItem>
                     </div>
@@ -441,11 +450,12 @@ export default class ApplicationBasicInfo extends Component {
 
                 <TopBar
                     extraBefore={<Breadcrumb>
-                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                            link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
                 <div className="card-container "
@@ -455,8 +465,8 @@ export default class ApplicationBasicInfo extends Component {
                         className="user-card"
                         title={this.state.userData.name}
                         bodyHeight="100%"
-                        subTitle="应用拥有人"
-                        extra={<a href="">转交应用&gt;</a>}
+                        subTitle={this.props.intl.messages['projects.text.applicationOwner']}
+                        extra={<a href="">{this.props.intl.messages['projects.text.handOverApplication']}&gt;</a>}
                     >
                         <img alt="avatar"
                              src={this.state.userData.avatarURL === "" ? "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQBAMAAAB8P++eAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURcHBwb+/v7+/v76+vujo6OHh4cnJydTU1IOqnXYAAAADdFJOUxPppyMYpxkAAAD6SURBVEjH7dfbDYIwFAbguoHRCYwTKLcBOIUBaHQAIAxQwvwSEQpyaH/FFxP+5y89vacV4uQBOQix86DsxRmDV3HE4EV4YDa4QQRWSjYILKnNzQ0jekY7Yd3B1AVDeiV3wKCHsQPWPUwdkIbYYWSgtsLAwMwKfQNjFCZWWPwBhEcNz+NoZfLfrLXZPYkD+gtd/H6H97UT5+EK0FPY1ZbABaDYygysuTEvtqg9sI9AiyV/o8xgRNj0DLtHaiuszOahxgJLGueeL8Gpa8vnPHx30yEZGKo5lBwMiEnGwIKDKQMVB+UaSGzWwO2psMGPIfxgh78A8KcC/aY8ACmMo3JtJ3ljAAAAAElFTkSuQmCC" : this.state.userData.avatarURL}
@@ -465,7 +475,7 @@ export default class ApplicationBasicInfo extends Component {
 
                     <Card
                         className="basic-card"
-                        title={"基本信息"}
+                        title={this.props.intl.messages['projects.text.BasicInfo']}
                         bodyHeight="35%"
                         subTitle={
                             <div className="sub-title">
@@ -473,19 +483,19 @@ export default class ApplicationBasicInfo extends Component {
                                         className={this.state.basicEditMode === true ? "edit-button hide" : "edit-button"}
                                         onClick={this.basicEdit.bind(this)}
                                         size="small">
-                                    修改
+                                    {this.props.intl.messages['projects.button.edit']}
                                 </Button>
                                 <Button onClick={this.basicConfirm.bind(this)}
                                         type="primary"
                                         size="small"
                                         className={this.state.basicEditMode === true ? "save-button" : "save-button hide"}>
-                                    保存
+                                    {this.props.intl.messages['projects.button.Save']}
                                 </Button>
 
                                 < Button
                                     size="small"
                                     className={this.state.basicEditMode === true ? "cancel-button" : "cancel-button hide"}
-                                    onClick={this.basicEditCancel.bind(this)}> 取消 </Button>
+                                    onClick={this.basicEditCancel.bind(this)}> {this.props.intl.messages['projects.button.cancel']} </Button>
                             </div>}
                     >
                         <Form labelAlign={"left"}
@@ -494,20 +504,20 @@ export default class ApplicationBasicInfo extends Component {
 
                             <FormItem{...formItemLayout}
                                      validateStatus={this.field.getError("title") ? "error" : ""}
-                                     help={this.field.getError("title") ? "请输入应用名称" : ""}
+                                     help={this.field.getError("title") ? this.props.intl.messages['projects.placeholder.applicationName'] : ""}
                                      required
-                                     label="应用名称：">
+                                     label={this.props.intl.messages['projects.text.applicationName']}>
                                 {titleOpr()}
 
                             </FormItem>
 
                             <FormItem{...formItemLayout}
-                                     label="注册时间：">
+                                     label={this.props.intl.messages['projects.text.createTime']}>
                                 <div className="form-item-text">{this.state.appBasicData.ctime}</div>
                             </FormItem>
 
                             <FormItem  {...formItemLayout}
-                                       label="应用描述：">
+                                       label={this.props.intl.messages['projects.text.applicationDescription']}>
                                 {opr()}
                             </FormItem>
 
@@ -517,7 +527,7 @@ export default class ApplicationBasicInfo extends Component {
 
                     <Card
                         className="url-card"
-                        title={"URL信息"}
+                        title={this.props.intl.messages['projects.text.urlInfo']}
                         bodyHeight="45%"
                         subTitle={
                             <div className="sub-title">
@@ -525,19 +535,19 @@ export default class ApplicationBasicInfo extends Component {
                                         size="small"
                                         className={this.state.urlEditMode === true ? "edit-button hide" : "edit-button"}
                                         onClick={this.urlEdit.bind(this)}>
-                                    修改
+                                    {this.props.intl.messages['projects.button.edit']}
                                 </Button>
                                 <Button onClick={this.urlConfirm.bind(this)}
                                         type="primary"
                                         size="small"
                                         className={this.state.urlEditMode === true ? "save-button" : "save-button hide"}
                                 >
-                                    保存
+                                    {this.props.intl.messages['projects.button.Save']}
                                 </Button>
                                 <Button
                                     size="small"
                                     className={this.state.urlEditMode === true ? "cancel-button" : "cancel-button hide"}
-                                    onClick={this.urlEditCancel.bind(this)}>取消</Button>
+                                    onClick={this.urlEditCancel.bind(this)}>    {this.props.intl.messages['projects.button.cancel']}</Button>
                             </div>}
                     >
                         <Form labelAlign={"left"}
@@ -551,3 +561,5 @@ export default class ApplicationBasicInfo extends Component {
             </Loading>)
     }
 }
+
+export default injectIntl(ApplicationBasicInfo)

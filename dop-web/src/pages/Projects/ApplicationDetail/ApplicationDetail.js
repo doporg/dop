@@ -9,6 +9,7 @@ import ApplicationEnvironmentDetail
 import "./ApplicationDetail.scss"
 import ApplicationEnvironmentLog
     from "../components/ApplicationManagement/ApplicationEnvironmentLog/ApplicationEnvironmentLog";
+import {injectIntl} from "react-intl";
 
 const TabPane = Tab.TabPane;
 
@@ -18,7 +19,7 @@ const TabPane = Tab.TabPane;
  * 应用详情页面列表
  * @author Bowen
  */
-export default class ApplicationDetail extends Component {
+class ApplicationDetail extends Component {
     static displayName = 'ApplicationDetail';
 
     constructor(props) {
@@ -82,11 +83,11 @@ export default class ApplicationDetail extends Component {
             <div>
                 {/*<TopBar*/}
                 {/*extraBefore={  <Breadcrumb>*/}
-                {/*<Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>*/}
+                {/*<Breadcrumb.Item link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>*/}
                 {/*<Breadcrumb.Item*/}
-                {/*link={"#/application?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>*/}
+                {/*link={"#/application?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>*/}
                 {/*<Breadcrumb.Item*/}
-                {/*link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>*/}
+                {/*link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>*/}
                 {/*</Breadcrumb>}*/}
                 {/*// extraAfter={ <CreateApplicationVariableDialog*/}
                 {/*//*/}
@@ -99,7 +100,7 @@ export default class ApplicationDetail extends Component {
                      lazyLoad={false}>
 
 
-                    <TabPane tab={"基本信息"}
+                    <TabPane tab={this.props.intl.messages['projects.text.BasicInfo']}
                              key={"basic"}
                              className="TabPane"
                     >
@@ -109,7 +110,7 @@ export default class ApplicationDetail extends Component {
                             appId={this.state.appId}/>
                     </TabPane>
 
-                    <TabPane tab={"环境配置"}
+                    <TabPane tab={this.props.intl.messages['projects.text.EnvironmentProfile']}
                              key={"env"}
                              className="TabPane">
 
@@ -119,7 +120,7 @@ export default class ApplicationDetail extends Component {
                         {this.envDetailRender()}
                     </TabPane>
 
-                    <TabPane tab={"变量管理"}
+                    <TabPane tab={this.props.intl.messages['projects.text.variableManagement']}
                              key={"var"}
                              className="TabPane"
                     >
@@ -137,3 +138,5 @@ export default class ApplicationDetail extends Component {
 
     }
 }
+
+export default injectIntl(ApplicationDetail)

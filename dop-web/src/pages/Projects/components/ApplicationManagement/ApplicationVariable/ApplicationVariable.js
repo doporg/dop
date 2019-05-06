@@ -6,6 +6,7 @@ import CreateApplicationVariableDialog from "../CreateApplicationVariable/Create
 import Input from "@icedesign/base/lib/input";
 import TopBar from "./topbar";
 import "./ApplicationVariable.scss"
+import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 const Toast = Feedback.toast;
@@ -13,7 +14,7 @@ const Toast = Feedback.toast;
  * 应用变量管理页面
  * @author Bowen
  **/
-export default class ApplicationVariable extends Component {
+class ApplicationVariable extends Component {
     static displayName = 'ApplicationVariable';
 
     constructor(props) {
@@ -76,8 +77,8 @@ export default class ApplicationVariable extends Component {
     deleteConfirm = (id) => {
         console.log(id)
         Dialog.confirm({
-            content: "你确定要删除该变量吗？",
-            title: "确认删除",
+            content: this.props.intl.messages['projects.text.deleteConfirmVar'],
+            title: this.props.intl.messages['projects.text.deleteConfirm'],
             onOk: this.onDelete.bind(this, id)
         });
     };
@@ -95,7 +96,7 @@ export default class ApplicationVariable extends Component {
                 _this.setState({
                     loading: false
                 })
-                Toast.success("删除成功")
+                Toast.success(_this.props.intl.messages['projects.text.deleteSuccessful'])
                 _this.refreshApplicationVariableList();
             })
             .catch((response) => {
@@ -108,13 +109,13 @@ export default class ApplicationVariable extends Component {
     submitConfirm = (id) => {
         console.log(id)
         Dialog.confirm({
-            content: "你确定要提交修改吗？",
-            title: "确认修改",
+            content: this.props.intl.messages['projects.text.confirmSave'],
+            title: this.props.intl.messages['projects.title.confirmSave'],
             onOk: this.onSubmit.bind(this, id)
         });
     };
 
-//保存按钮响应函数
+//{this.props.intl.messages['projects.button.Save']}按钮响应函数
     onSubmit(id) {
         let putUrl = API.gateway + "/application-server/app/variable/" + id;
         let _this = this;
@@ -128,7 +129,7 @@ export default class ApplicationVariable extends Component {
                 _this.setState({
                     loading: false
                 })
-                Toast.success("修改成功")
+                Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
                 _this.refreshApplicationVariableList();
             })
             .catch((response) => {
@@ -138,7 +139,7 @@ export default class ApplicationVariable extends Component {
             })
     }
 
-    //取消按钮响应函数
+    //{this.props.intl.messages['projects.button.cancel']}按钮响应函数
     onCancel(name) {
         let temp = this.state.editMode
         temp[name] = false
@@ -181,8 +182,10 @@ export default class ApplicationVariable extends Component {
                             <Input {...init(record.id)} placeholder="Value"/>
                         </FormItem>
                     </Form>
-                    <div onClick={this.submitConfirm.bind(this, record.id)}>保存</div>
-                    <div onClick={this.onCancel.bind(this, record.varKey)}>取消</div>
+                    <div
+                        onClick={this.submitConfirm.bind(this, record.id)}>{this.props.intl.messages['projects.button.Save']}</div>
+                    <div
+                        onClick={this.onCancel.bind(this, record.varKey)}>{this.props.intl.messages['projects.button.cancel']}</div>
                 </div>
             } else {
                 return <div>
@@ -201,11 +204,12 @@ export default class ApplicationVariable extends Component {
                 <TopBar
 
                     extraBefore={<Breadcrumb>
-                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                            link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>
                     </Breadcrumb>}
                     extraAfter={<CreateApplicationVariableDialog
 
@@ -216,10 +220,10 @@ export default class ApplicationVariable extends Component {
                     <Table className="table"
                                dataSource={this.state.varData}>
                             <Table.Column cell={keyRender}
-                                          title="Key"
+                                          title={this.props.intl.messages['projects.text.Key']}
                                           dataIndex="key"/>
                             <Table.Column cell={valueRender}
-                                          title="Value"/>
+                                          title={this.props.intl.messages['projects.text.Value']}/>
                         </Table>
 
                 </div>
@@ -229,3 +233,5 @@ export default class ApplicationVariable extends Component {
 
 
 }
+
+export default injectIntl(ApplicationVariable)

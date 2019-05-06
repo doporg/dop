@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 
 import PrivateController from "../PrivateController"
 import "./CreateProjectForm.scss"
+import {FormattedMessage, injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 
@@ -18,7 +19,8 @@ const formItemLayout = {
  *    弹窗中的表单
  *
  * */
-export default class ProjectForm extends Component {
+
+class ProjectForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.field = new Field(this);
@@ -87,7 +89,7 @@ export default class ProjectForm extends Component {
     render() {
         const {init} = this.field;
         // const {init, getValue} = this.field;
-
+        console.log(this.props.intl)
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>
@@ -97,30 +99,44 @@ export default class ProjectForm extends Component {
                     >
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("title") ? "error" : ""}
-                                  help={this.field.getError("title") ? "请输入名称" : ""}
-                                  label="项目名称："
+                                  help={this.field.getError("title") ? this.props.intl.messages["projects.placeHolder.projectName"] : ""}
+                                  label={<FormattedMessage
+                                      id="projects.text.projectName"
+                                      defaultMessage="项目名称："
+                                  />}
                                   required>
                             <Input
                                 maxLength={25}
                                 hasLimitHint
-                                {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                                   placeholder="请输入项目名称"/>
+                                {...init('title', {
+                                    rules: [{
+                                        required: true, message: this.props.intl.messages["projects.messages.cantNull"]
+                                    }]
+                                })}
+                                placeholder={this.props.intl.messages["projects.placeHolder.projectName"]}/>
                         </FormItem>
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("private") ? "error" : ""}
-                                  help={this.field.getError("private") ? "请选择公开性" : ""}
-                                  label="公开性："
+                                  help={this.field.getError("private") ? this.props.intl.messages["projects.placeHolder.Openness"] : ""}
+                                  label={<FormattedMessage
+                                      id="projects.text.Openness"
+                                      defaultMessage="公开性："
+                                  />}
                                   required>
                             <PrivateController   {...init('private', {
                                 rules: [{required: true, initValue: "public"}]
                             })}/>
                         </FormItem>
                         <FormItem {...formItemLayout}
-                                  label="项目描述：">
+                                  label={<FormattedMessage
+                                      id="projects.placeHolder.projectDescription"
+                                      defaultMessage="项目描述"
+                                  />}>
                             <Input  {...init('description')}
                                     maxLength={50}
                                     hasLimitHint
-                                    multiple placeholder="项目描述"/>
+                                    multiple
+                                    placeholder={this.props.intl.messages["projects.text.projectDescription"]}/>
                         </FormItem>
                     </Form>
                 </div>
@@ -128,3 +144,5 @@ export default class ProjectForm extends Component {
         )
     }
 }
+
+export default injectIntl(ProjectForm)

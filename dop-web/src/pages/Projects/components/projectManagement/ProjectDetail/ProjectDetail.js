@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Tab} from "@icedesign/base";
 import ProjectBasicInfo from "../ProjectBasicInfo/ProjectBasicInfo"
 import Application from "../../../Application/Application"
+import {injectIntl} from "react-intl";
 
 const TabPane = Tab.TabPane;
 
@@ -10,7 +11,7 @@ const TabPane = Tab.TabPane;
  * 项目详情信息页面
  * @author Bowen
  */
-export default class ProjectDetail extends Component {
+class ProjectDetail extends Component {
     static displayName = 'ProjectDetail';
 
     constructor(props) {
@@ -29,7 +30,7 @@ export default class ProjectDetail extends Component {
                  lazyLoad={false}>
 
 
-                <TabPane tab={"项目信息"}
+                <TabPane tab={this.props.intl.messages["projects.text.projectInfo"]}
                          key={"info"}
                          className="TabPane"
                 >
@@ -39,7 +40,7 @@ export default class ProjectDetail extends Component {
                 </TabPane>
 
 
-                <TabPane tab={"应用"}
+                <TabPane tab={this.props.intl.messages["projects.text.application"]}
                          key={"app"}
                          className="TabPane"
                 >
@@ -54,3 +55,5 @@ export default class ProjectDetail extends Component {
 
     }
 }
+
+export default injectIntl(ProjectDetail)
