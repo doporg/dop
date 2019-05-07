@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import './RegisterTransfer.scss';
 import Logo from '../../../components/Logo'
 import Footer from "../../../components/Footer";
+import {injectIntl} from "react-intl";
 
 
-export default class LoginTransfer extends Component {
+class LoginTransfer extends Component {
     render() {
         return (
             <div className="register-body">
@@ -13,10 +14,10 @@ export default class LoginTransfer extends Component {
                 </div>
                 <div className="register-content">
                     <div className="title">
-                        欢迎访问DevopsPlatform
+                        {this.props.intl.messages["login.transfer.loginTransfer"]}
                     </div>
                     <div className="tip">
-                        正在跳转到登陆页面...
+                        {this.props.intl.messages["login.transfer.loginTransfer.tip"]}...
                     </div>
                 </div>
                 <Footer/>
@@ -24,3 +25,4 @@ export default class LoginTransfer extends Component {
         )
     }
 }
+export default injectIntl(LoginTransfer)

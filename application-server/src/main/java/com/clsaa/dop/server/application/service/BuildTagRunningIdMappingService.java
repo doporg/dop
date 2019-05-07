@@ -44,7 +44,7 @@ public class BuildTagRunningIdMappingService {
                 .is_deleted(false)
                 .appEnvId(appEnvId)
                 .runningId(runningId)
-                .buildTag(now.getYear() + now.getMonthValue() + now.getDayOfMonth() + now.getHour() + now.getMinute() + String.valueOf(appEnvId))
+                .buildTag(String.valueOf(now.getYear()) + String.valueOf(now.getMonthValue()) + String.valueOf(now.getDayOfMonth()) + String.valueOf(now.getHour()) + String.valueOf(now.getMinute()) + String.valueOf(appEnvId))
                 .build();
 
         this.buildTagRunningIdMappingRepository.saveAndFlush(buildTagRunningIdMapping);

@@ -61,13 +61,15 @@ public class ProjectController {
 
     }
 
-    @ApiOperation(value = "创建项目的成员", notes = "创建项目的成员")
+    @ApiOperation(value = "添加项目的成员", notes = "添加项目的成员")
     @PostMapping(value = "/project/{projectId}/members")
     public void addMemberToProject(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
                                    @PathVariable(value = "projectId") Long projectId,
-                                   @ApiParam(name = "userId", value = "userId", required = true) @RequestParam(value = "userId") Long userId,
+                                   //@RequestBody UserIdListV1 userIdList,
+                                   @ApiParam(name = "userIdList", value = "userIdList", required = true) @RequestParam(value = "userIdList") List<Long> userIdList,
                                    @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId) {
-        this.projectService.addMemberToProject(userId, projectId, loginUser);
+
+        this.projectService.addMemberToProject(userIdList, projectId, loginUser);
 
     }
 

@@ -3,13 +3,15 @@ import {
     Input,
     Button,
     Grid,
-    Icon
+    Icon,
+    Upload
 } from '@icedesign/base';
 import IcePanel from '@icedesign/panel';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
 import RequestScriptForm from "./RequestScriptForm";
 import WaitOperation from "./WaitOperation";
+import API from "../../../../API";
 
 const { Row, Col } = Grid;
 
@@ -43,26 +45,62 @@ export default class Operations extends Component{
             isSubmit: false,
             requestScripts: this.props.requestScripts,
             waitOperations: this.props.waitOperations,
-            operations: this.props.operations
-        }
+            operations: this.props.operations,
+            caseParams: []
+        };
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        /*if (nextProps.stage !== this.props.stage) {
-
-        }*/
         this.setState({
             requestScripts: nextProps.requestScripts,
             waitOperations: nextProps.waitOperations,
-            operations: nextProps.operations
+            operations: nextProps.operations,
+            caseParams: nextProps.caseParams
         })
     }
 
+    beforeUpload(info) {
+        // console.log("beforeUpload callback : ", info);
+    }
+
+    onChange(info) {
+        // console.log("onChane callback : ", info);
+    }
+
+    uploadSuccess(res, file) {
+        // console.log("I am success!");
+        // console.log(res);
+        // console.log(file);
+    };
+
+    onError = (file) => {
+        let data = file.response;
+        if (data) {
+            let case_id = this.props.caseId;
+            let case_params = data.caseParams;
+            if (case_params) {
+                case_params.forEach((param) => {
+                    param.caseId = case_id;
+                    this.props.addCaseParam(param);
+                    // this.props.caseParams.push(param);
+                });
+            }
+
+            let scripts = data.requestScripts;
+            if (scripts) {
+                scripts.forEach((script) => {
+                    this.props.addRequestScriptWithContent(script);
+                })
+            }
+        }
+    };
+
     render() {
+        let importApi = API.test + '/interfaceCases/import';
         return (
             <div>
                 <Row>
-                    <Col span="18"/>
+                    <Col span="15"/>
                     <Col span='3'>
                         <div style={styles.buttons}>
                             <Button type="secondary" onClick={this.props.addRequestScript.bind(this)}>添加HTTP请求</Button>
@@ -72,6 +110,22 @@ export default class Operations extends Component{
                         <div style={styles.buttons}>
                             <Button type="secondary" onClick={this.props.addWaitTime.bind(this)}>添加等待操作</Button>
                         </div>
+                    </Col>
+                    <Col span='3'>
+                        <Upload
+                            listType="text"
+                            action={importApi}
+                            accept=".json"
+                            beforeUpload={this.beforeUpload}
+                            onChange={this.onChange}
+                            showUploadList={false}
+                            onSuccess={this.uploadSuccess}
+                            onError={this.onError}
+                        >
+                            <Button type="primary" style={{ margin: "0 0 10px" }}>
+                                导入API
+                            </Button>
+                        </Upload>
                     </Col>
                 </Row>
                 <hr/>

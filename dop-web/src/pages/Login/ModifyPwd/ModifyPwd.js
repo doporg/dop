@@ -6,13 +6,14 @@ import {Form, Input, Button, Field, Feedback} from "@icedesign/base";
 import API from "../../API";
 import Axios from "axios/index";
 import {Encryption, PublicKey} from '../index'
+import {injectIntl} from "react-intl";
 
 
 const {Item: FormItem} = Form;
 const {toast} = Feedback;
 
 
-export default class ModifyPwd extends Component {
+class ModifyPwd extends Component {
     constructor(props) {
         super(props);
         this.field = new Field(this);
@@ -33,12 +34,11 @@ export default class ModifyPwd extends Component {
             if (errors) {
                 toast.show({
                     type: "error",
-                    content: "表单错误",
+                    content: self.props.intl.messages["login.forget.form.error"],
                     duration: 1000
                 });
                 return;
             }
-            console.log("Submit!!!");
             self.submit(values);
         });
     }
@@ -50,7 +50,7 @@ export default class ModifyPwd extends Component {
             if (errors) {
                 toast.show({
                     type: "error",
-                    content: "表单错误",
+                    content: self.props.intl.messages["login.forget.form.error"],
                     duration: 1000
                 });
                 return;
@@ -69,7 +69,7 @@ export default class ModifyPwd extends Component {
                 });
                 toast.show({
                     type: "success",
-                    content: "请注意检查邮箱获取验证码",
+                    content: self.props.intl.messages["login.forget.check.email"],
                     duration: 2000
                 });
             }
@@ -83,7 +83,6 @@ export default class ModifyPwd extends Component {
     }
 
     submit(data) {
-        console.log(data)
         let url = API.gateway + '/user-server/v1/users/password';
         let self = this;
         delete data.rePasswd;
@@ -92,11 +91,10 @@ export default class ModifyPwd extends Component {
             delete data.passwd;
             console.log(data);
             Axios.put(url, data).then((response) => {
-                console.log(response)
                 if (response.status === 200) {
                     toast.show({
                         type: "success",
-                        content: "修改成功",
+                        content: self.props.intl.messages["login.forget.reset.success"],
                         duration: 2000
                     })
                 }
@@ -121,20 +119,22 @@ export default class ModifyPwd extends Component {
 
     checkPass(rule, value, callback) {
         const {validate} = this.field;
+        let self = this
         let reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#.$%=-]).{8,20}$/;
         if (reg.test(value)) {
             validate(["rePasswd"]);
             callback();
         } else {
-            callback([new Error("长度至少为8个字符，最大长度为20, 必须包含一个数字 0-9、包含一个小写字符、包含一个大写字符、包含一个的特殊字符@#$%.-=")]);
+            callback([new Error(self.props.intl.messages["login.forget.password.tip"])]);
         }
 
     }
 
     checkPass2(rule, value, callback) {
+        let self = this
         const {getValue} = this.field;
         if (value && value !== getValue("passwd")) {
-            callback("两次输入密码不一致！");
+            callback(self.props.intl.messages["login.forget.password.same"]);
         } else {
             callback();
         }
@@ -157,22 +157,25 @@ export default class ModifyPwd extends Component {
                 </div>
                 <div className="register-content">
                     <div className="title">
-                        修改密码DevopsPlatform
+                        {this.props.intl.messages["login.forget.title"]}
                     </div>
                     {(() => {
                         if (this.state.visible) {
                             return (
                                 <Form field={this.field}>
-                                    <FormItem label="邮箱：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.forget.email"]+ "："}
+                                        {...formItemLayout}
+                                    >
                                         <Input
                                             type="email"
-                                            placeholder="请输入邮箱"
+                                            placeholder={this.props.intl.messages["login.forget.email.placeholder"]}
                                             {...init("email", {
                                                 rules: [
                                                     {required: true, trigger: "onBlur"},
                                                     {
                                                         type: "email",
-                                                        message: <span>请输入正确的邮箱地址</span>,
+                                                        message: <span>{this.props.intl.messages["login.forget.email.tip"]}</span>,
                                                         trigger: ["onBlur", "onChange"]
                                                     }
                                                 ]
@@ -182,7 +185,7 @@ export default class ModifyPwd extends Component {
 
                                     <FormItem wrapperCol={{offset: 6}}>
                                         <Button type="primary" onClick={this.reset.bind(this)}>
-                                            确定
+                                            {this.props.intl.messages["login.forget.confirm"]}
                                         </Button>
                                     </FormItem>
                                 </Form>
@@ -190,16 +193,20 @@ export default class ModifyPwd extends Component {
                         } else {
                             return (
                                 <Form field={this.field}>
-                                    <FormItem label="邮箱：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.forget.email"]+ "："}
+                                        {...formItemLayout}
+                                        hasFeedback
+                                    >
                                         <Input
                                             type="email"
-                                            placeholder="请输入邮箱"
+                                            placeholder={this.props.intl.messages["login.forget.email.placeholder"]}
                                             {...init("email", {
                                                 rules: [
                                                     {required: true, trigger: "onBlur"},
                                                     {
                                                         type: "email",
-                                                        message: <span>请输入正确的邮箱地址</span>,
+                                                        message: <span>{this.props.intl.messages["login.forget.email.tip"]}</span>,
                                                         trigger: ["onBlur", "onChange"]
                                                     }
                                                 ]
@@ -207,30 +214,38 @@ export default class ModifyPwd extends Component {
                                         />
                                     </FormItem>
 
-                                    <FormItem label="新密码：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.forget.newPassword"] + "："}
+                                        {...formItemLayout}
+                                        hasFeedback
+                                    >
                                         <Input
                                             maxLength={20}
-                                            placeholder="请输入密码"
+                                            placeholder={this.props.intl.messages["login.forget.newPassword.placeholder"]}
                                             htmlType="password"
                                             {...init("passwd", {
                                                 rules: [
-                                                    {required: true, whitespace: true, min: 6, message: "密码用至少为 6 个字符"},
+                                                    {required: true, whitespace: true, min: 8, message: this.props.intl.messages["login.forget.newPassword.min"]},
                                                     {validator: this.checkPass.bind(this)}
                                                 ]
                                             })}
                                         />
                                     </FormItem>
 
-                                    <FormItem label="确认密码：" {...formItemLayout} hasFeedback>
+                                    <FormItem
+                                        label={this.props.intl.messages["login.forget.confirmPassword"] + "："}
+                                        {...formItemLayout}
+                                        hasFeedback
+                                    >
                                         <Input
                                             htmlType="password"
-                                            placeholder="两次输入密码保持一致"
+                                            placeholder={this.props.intl.messages["login.forget.confirmPassword.placeholder"]}
                                             {...init("rePasswd", {
                                                 rules: [
                                                     {
                                                         required: true,
                                                         whitespace: true,
-                                                        message: "请再次输入密码"
+                                                        message: this.props.intl.messages["login.forget.confirmPassword.again"]
                                                     },
                                                     {
                                                         validator: this.checkPass2.bind(this)
@@ -241,15 +256,15 @@ export default class ModifyPwd extends Component {
                                     </FormItem>
 
                                     <FormItem
-                                        label="验证码："
+                                        label={this.props.intl.messages["login.forget.verification"] + "："}
                                         {...formItemLayout}
                                     >
                                         <Input
                                             hasLimitHint
-                                            placeholder="请检查您的邮箱获得验证码"
+                                            placeholder={this.props.intl.messages["login.forget.verification.placeholder"]}
                                             {...init("code", {
                                                 rules: [
-                                                    {required: true, message: "请检查您的邮箱获得验证码"},
+                                                    {required: true, message: this.props.intl.messages["login.forget.check.email"]},
                                                 ]
                                             })}
                                         />
@@ -257,10 +272,12 @@ export default class ModifyPwd extends Component {
 
                                     <FormItem wrapperCol={{offset: 6}}>
                                         <Button type="primary" onClick={this.handleSubmit.bind(this)}>
-                                            确定
+                                            {this.props.intl.messages["login.forget.confirm"]}
                                         </Button>
                                         &nbsp;&nbsp;&nbsp;
-                                        <Button onClick={this.handleReset.bind(this)}>重置</Button>
+                                        <Button onClick={this.handleReset.bind(this)}>
+                                            {this.props.intl.messages["login.forget.clear"]}
+                                        </Button>
                                     </FormItem>
                                 </Form>
                             )
@@ -274,3 +291,4 @@ export default class ModifyPwd extends Component {
         )
     }
 }
+export default injectIntl(ModifyPwd)

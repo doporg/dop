@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import TopBar from "./topbar";
 import {Breadcrumb, Button} from "@icedesign/base";
 import Pagination from "./ApplicationEnvironmentLogPagination";
+import {injectIntl} from "react-intl";
 
 /**
  * 应用列表
  * @author Bowen
  *
  */
-export default class ApplicationEnvironmentLog extends Component {
+class ApplicationEnvironmentLog extends Component {
     static displayName = 'ApplicationEnvironmentLog';
 
     constructor(props) {
@@ -31,19 +32,23 @@ export default class ApplicationEnvironmentLog extends Component {
                 {/*创建函数的对话框和搜索框*/}
                 <TopBar
                     extraBefore={<Breadcrumb>
-                        <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                            link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                         <Breadcrumb.Item
-                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
-                        <Breadcrumb.Item>{"应用环境：" + this.state.appEnvId + "日志"}</Breadcrumb.Item>
+                            link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
+                        <Breadcrumb.Item
+                            link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.props.intl.messages['projects.bread.appEnv'] + this.state.appEnvId + this.props.intl.messages['projects.bread.appEnvLog']}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
                 {/*应用列表及分页器*/}
                 <Pagination appEnvId={this.state.appEnvId}/>
-                <Button onClick={this.state.switchPage.bind(this, "envList")} type="primary">返回环境列表</Button>
+                <Button onClick={this.state.switchPage.bind(this, "envList")}
+                        type="primary">{this.props.intl.messages['projects.button.returnToEnvList']}</Button>
             </div>
 
         );
     }
 }
+
+export default injectIntl(ApplicationEnvironmentLog)

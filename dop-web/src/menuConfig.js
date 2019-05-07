@@ -1,18 +1,20 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
+import React, {Component} from 'react';
+import { FormattedMessage} from 'react-intl';
 
 
 const headerMenuConfig = [
     {
-        name: '反馈',
+        name:  <FormattedMessage id="base.feedback" defaultMessage="反馈"/>,
         // path: 'https://github.com/alibaba/ice',
         external: true,
         newWindow: true,
         icon: 'message',
     },
     {
-        name: '帮助',
+        name: <FormattedMessage id="base.help" defaultMessage="帮助"/>,
         // path: 'https://alibaba.github.io/ice',
         external: true,
         newWindow: true,
@@ -27,7 +29,7 @@ const asideMenuConfig = [
         icon: 'home2',
     },
     {
-        name: '流水线管理',
+        name: <FormattedMessage id="pipeline.name" defaultMessage="流水线管理"/>,
         path: '/pipeline',
         icon: 'ol-list',
     },

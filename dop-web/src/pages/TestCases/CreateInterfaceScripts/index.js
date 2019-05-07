@@ -54,6 +54,11 @@ export default class CreateInterfaceScripts extends Component {
     this.setState({ caseDto: this.state.caseDto });
   };
 
+  addItemWithContent (caseParam) {
+    this.state.caseDto.caseParams.push(caseParam);
+    this.setState({caseDto: this.state.caseDto});
+  };
+
   removeItem = (index) => {
     this.state.caseDto.caseParams.splice(index, 1);
     this.setState({
@@ -92,23 +97,26 @@ export default class CreateInterfaceScripts extends Component {
 
   render() {
     return (
-      <div className="create-interface-scripts-page">
-        <IceContainer>
-        <FormBinderWrapper
-            value={this.state.caseDto}
-            ref="form"
-        >
-          <CaseParams caseParams={this.state.caseDto.caseParams} caseDto={this.state.caseDto}
-                      addItem={this.addItem.bind(this)} removeItem={this.removeItem.bind(this)}
-                      submit={this.validateFields.bind(this)} disableSave={true}
-          />
-        </FormBinderWrapper>
-      </IceContainer>
+        <div className="create-interface-scripts-page">
+          <IceContainer>
+            <FormBinderWrapper
+                value={this.state.caseDto}
+                ref="form"
+            >
+              <CaseParams caseParams={this.state.caseDto.caseParams}
+                          addItem={this.addItem.bind(this)} removeItem={this.removeItem.bind(this)}
+                          submit={this.validateFields.bind(this)} disableSave={true}
+              />
+            </FormBinderWrapper>
+          </IceContainer>
 
-        <StepForm caseId={this.state.caseId} stages={this.state.stages} operation='INSERT' btnText='保存参数和脚本'
-            saveParams={this.validateFields}
-        />
-      </div>
+          <StepForm caseId={this.state.caseId} stages={this.state.stages}
+                    operation='INSERT' btnText='保存参数和脚本'
+                    saveParams={this.validateFields}
+                    addParam={this.addItemWithContent.bind(this)}
+                    caseParams={this.state.caseDto.caseParams}
+          />
+        </div>
     );
   }
 }

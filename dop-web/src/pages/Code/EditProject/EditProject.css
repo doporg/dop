@@ -106,7 +106,7 @@
     background-color: #31af64;
     border-color: #2faa60;
     color: white;
-    width: 100px;
+    padding: 0 30px;
     height: 40px;
     border-radius: 2px;
     margin-left: 15px;
@@ -117,7 +117,7 @@
     color: white;
     background-color: #e52c5a;
     border-color: #e52c5a;
-    width: 100px;
+    padding: 0 30px;
     height: 40px;
     border-radius: 2px;
     margin-left: 15px;

@@ -11,10 +11,12 @@ import Axios from "axios";
 import BalloonConfirm from "@icedesign/balloon-confirm";
 import {Link} from "react-router-dom";
 import Select from "@icedesign/base/lib/select";
+import {injectIntl} from "react-intl";
+import {UserRoleMapping} from "../Roles/UserRoleMapping/UserRoleMapping";
 const { Item: FormItem } = Form;
 
 
-export default class DataRules extends Component
+export class DataRules extends Component
 {
     constructor(props) {
         super(props);
@@ -53,6 +55,42 @@ export default class DataRules extends Component
                 selectedUserId: 0,
 
             },
+
+            dataRuleText:[
+                this.props.intl.messages[ 'permission.successCreateData'],
+                this.props.intl.messages[ 'permission.newDataRule'],
+                this.props.intl.messages[ 'permission.showUserPermission'],
+                this.props.intl.messages[ 'permission.fieldName:'],
+                this.props.intl.messages[ 'permission.rule:'],
+                this.props.intl.messages[ 'permission.defaultRule'],
+                this.props.intl.messages[ 'permission.correspondRole:'],
+                this.props.intl.messages[ 'permission.addUserData'],
+                this.props.intl.messages[ 'permission.user:'],
+                this.props.intl.messages[ 'permission.fieldValue:'],
+                this.props.intl.messages[ 'permission.defaultFieldValue'],
+                this.props.intl.messages[ 'permission.noFieldValueMessage'],
+                this.props.intl.messages[ 'permission.fieldName'],
+                this.props.intl.messages[ 'permission.rule'],
+                this.props.intl.messages[ 'permission.ruleDes'],
+
+                this.props.intl.messages[ 'permission.creator'],
+                this.props.intl.messages[ 'permission.createTime'],
+                this.props.intl.messages[ 'permission.deleteTitle'],
+                this.props.intl.messages[ 'permission.cancelDelete'],
+                this.props.intl.messages[ 'permission.repeatName'],
+                this.props.intl.messages[ 'permission.successDelete'],
+                this.props.intl.messages[ 'permission.successAdd'],
+                this.props.intl.messages[ 'permission.confirm'],
+                this.props.intl.messages[ 'permission.reset'],
+                this.props.intl.messages[ 'permission.cancel'],
+                this.props.intl.messages[ 'permission.add'],
+                this.props.intl.messages[ 'permission.delete'],
+                this.props.intl.messages[ 'permission.confirmDelete'],
+                this.props.intl.messages[ 'permission.inputName'],
+                this.props.intl.messages[ 'permission.nullNameWarning'],
+                this.props.intl.messages[ 'permission.nullDesWarning'],
+                this.props.intl.messages[ 'permission.defaultSearch']
+            ]
         };
 
     }
@@ -213,7 +251,7 @@ export default class DataRules extends Component
         Axios.delete(url,{params:(params)}
         )
             .then((response)=>{
-                Feedback.toast.success('成功删除！')
+                Feedback.toast.success(this.props.intl.messages[ 'permission.successDelete'])
                 this.onChange(this.state.currentPage)
             }).catch((error)=> {
             console.log(error);
@@ -222,7 +260,7 @@ export default class DataRules extends Component
     //取消删除操作
     onCancel = () => {
         console.log('取消删除');
-        Feedback.toast.error('删除已取消！')
+        Feedback.toast.error(this.props.intl.messages[ 'permission.cancelDelete'])
 
     }
 
@@ -291,7 +329,7 @@ export default class DataRules extends Component
             let params={ruleId:this.state.currentRuleId,userId:this.state.rowUserSelection.selectedUserId[0],fieldValue:values.fieldValue}
 
             Axios.post(url,{},{params:(params)}).then(response=>{
-                Feedback.toast.success("创建用户数据成功！")
+                Feedback.toast.success(this.props.intl.messages[ 'permission.successCreateData'])
             })
 
         })
@@ -314,12 +352,12 @@ export default class DataRules extends Component
         };
         const footer = (
             <a onClick={this.onRuleClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         );
         const footer2 = (
             <a onClick={this.onDataClose} href="javascript:">
-                取消
+                {this.props.intl.messages[ 'permission.cancel']}
             </a>
         );
 
@@ -329,13 +367,13 @@ export default class DataRules extends Component
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
                     onCancel={this.onCancel}
-                    title="您真的要删除吗？"
+                    title= {this.props.intl.messages[ 'permission.confirmDelete']}
                 >
                     <Button
                         type="primary"
                         shape="warning"
                         size="medium"
-                        className="button">删除</Button>
+                        className="button"> {this.props.intl.messages[ 'permission.delete']}</Button>
                 </BalloonConfirm>
             );
         }
@@ -348,22 +386,22 @@ export default class DataRules extends Component
                     shape="normal"
                     size="medium"
                     className="button"
-                    onClick={this.addUserData.bind(this,record)}>添加</Button>
+                    onClick={this.addUserData.bind(this,record)}> {this.props.intl.messages[ 'permission.add']}</Button>
             );
         }
         return (
         <div>
             <Button type="primary"
                     className="topButton"
-                    onClick={this.onRuleOpen} >创建数据规则</Button>
+                    onClick={this.onRuleOpen} > {this.props.intl.messages[ 'permission.newDataRule']}</Button>
 
             <Link to='/permission/roles/userwithrole'>
                 <Button type="primary"
                         className="topButton"
-                >查看用户权限</Button>
+                > {this.props.intl.messages[ 'permission.showUserPermission']}</Button>
             </Link>
             <Dialog
-                title="创建数据规则"
+                title= {this.props.intl.messages[ 'permission.newDataRule']}
                 visible={this.state.ruleVisible}
                 onClose={this.onRuleClose}
                 style={dialogStyle}
@@ -373,36 +411,36 @@ export default class DataRules extends Component
 
                 <Form field={this.field}>
                     <FormItem
-                        label="作用域参数名称："
+                        label= {this.props.intl.messages[ 'permission.fieldName:']}
                         {...formItemLayout}
                         hasFeedback
                     >
                         <Input
                             maxLength={30}
                             hasLimitHint
-                            placeholder="请输入名称"
+                            placeholder= {this.props.intl.messages[ 'permission.inputName']}
                             {...init("fieldName", {
                                 rules: [
-                                    { required: true, min: 1, message: "名称不能为空！" },
+                                    { required: true, min: 1, message:  this.props.intl.messages[ 'permission.nullNameWarning'] },
                                 ]
                             })}
                         />
                     </FormItem>
 
-                    <FormItem label="规则：" {...formItemLayout} required>
+                    <FormItem label= {this.props.intl.messages[ 'permission.rule:']} {...formItemLayout} required>
                         <Input
                             maxLength={10}
                             hasLimitHint
-                            placeholder="请输入规则"
+                            placeholder= {this.props.intl.messages[ 'permission.defaultRule']}
                             {...init("rule", {
                                 rules: [
-                                    { required: true, min: 1, message: "请输入规则！" },
+                                    { required: true, min: 1, message: this.props.intl.messages[ 'permission.defaultRule'] },
                                 ]
                             })}
                         />
                     </FormItem>
 
-                    <FormItem label="对应角色：" {...formItemLayout} required>
+                    <FormItem label= {this.props.intl.messages[ 'permission.correspondRole:']} {...formItemLayout} required>
                         <Table
                             hasBorder={false}
                             dataSource={this.state.roleList}
@@ -410,17 +448,17 @@ export default class DataRules extends Component
                             isTree
                             rowSelection={this.state.rowSelection}
                         >
-                            <Table.Column title="角色ID" dataIndex="id" />
-                            <Table.Column title="角色名称" dataIndex="name" />
+                            <Table.Column title={this.props.intl.messages[ 'permission.roleId']}  dataIndex="id" />
+                            <Table.Column title={this.props.intl.messages[ 'permission.roleName']}  dataIndex="name" />
                         </Table>
                     </FormItem>
 
                     <FormItem wrapperCol={{ offset: 6 }}>
                         <Button type="primary" onClick={this.handleSubmit.bind(this)}>
-                            确定
+                            {this.props.intl.messages[ 'permission.confirm']}
                         </Button>
                         &nbsp;&nbsp;&nbsp;
-                        <Button onClick={this.handleSubmit.bind(this)}>重置</Button>
+                        <Button onClick={this.handleSubmit.bind(this)}>{this.props.intl.messages[ 'permission.reset']} </Button>
                     </FormItem>
 
                 </Form>
@@ -428,7 +466,7 @@ export default class DataRules extends Component
             </Dialog>
 
             <Dialog
-                title="添加用户数据"
+                title={this.props.intl.messages[ 'permission.addUserData']}
                 visible={this.state.dataVisible}
                 onClose={this.onDataClose}
                 style={dialogStyle}
@@ -437,7 +475,7 @@ export default class DataRules extends Component
                 shouldUpdatePosition={true}
             >
                 <Form field={this.dataField}>
-                    <FormItem label="用户：" {...formItemLayout} required>
+                    <FormItem label={this.props.intl.messages[ 'permission.user:']}  {...formItemLayout} required>
                         <Table
                             isloading={this.state.userIsLoading}
                             hasBorder={false}
@@ -446,8 +484,8 @@ export default class DataRules extends Component
                             isTree
                             rowSelection={this.state.rowUserSelection}
                         >
-                            <Table.Column title="用户名称" dataIndex="name" />
-                            <Table.Column title="用户邮箱" dataIndex="email" />
+                            <Table.Column title={this.props.intl.messages[ 'permission.userName']}  dataIndex="name" />
+                            <Table.Column title={this.props.intl.messages[ 'permission.userEmail']}  dataIndex="email" />
                         </Table>
                         <Pagination total={this.state.userTotalCount}
                                     current={this.state.userPageNo}
@@ -456,14 +494,14 @@ export default class DataRules extends Component
                                     className="pagination" />
                     </FormItem>
 
-                    <FormItem label="作用域参数值：" {...formItemLayout} required>
+                    <FormItem label={this.props.intl.messages[ 'permission.fieldValue']}  {...formItemLayout} required>
                         <Input
                             maxLength={10}
                             hasLimitHint
-                            placeholder="请输入参数值(如想为projectId=1的项目添加，则输入1)"
+                            placeholder={this.props.intl.messages[ 'permission.defaultFieldValue']}
                             {...initData("fieldValue", {
                                 rules: [
-                                    { required: true, min: 1, message: "请输入参数值！" },
+                                    { required: true, min: 1, message: this.props.intl.messages[ 'permission.noFieldValueMessage'] },
                                 ]
                             })}
                         />
@@ -471,10 +509,10 @@ export default class DataRules extends Component
 
                     <FormItem wrapperCol={{ offset: 6 }}>
                         <Button type="primary" onClick={this.handleSubmitData.bind(this)}>
-                            确定
+                            {this.props.intl.messages[ 'permission.confirm']}
                         </Button>
                         &nbsp;&nbsp;&nbsp;
-                        <Button onClick={this.handleResetData.bind(this)}>重置</Button>
+                        <Button onClick={this.handleResetData.bind(this)}>{this.props.intl.messages[ 'permission.reset']}</Button>
                     </FormItem>
 
                 </Form>
@@ -484,13 +522,13 @@ export default class DataRules extends Component
                 hasBorder={false}
                 isLoading={this.state.isLoading}
                 dataSource={this.state.currentData}>
-                <Table.Column title="规则ID" dataIndex="id" width="10%"/>
-                <Table.Column title="角色名称"   dataIndex="roleName" width="10%"/>
-                <Table.Column title="权限作用域参数名" dataIndex="fieldName" width="15%"/>
-                <Table.Column title="规则" dataIndex="rule" width="10%"/>
-                <Table.Column title="规则描述" dataIndex="description" />
-                <Table.Column title="添加用户数据" cell={addUserData}  width="10%" />
-                <Table.Column title="删除操作" cell={deleteRule}  width="10%" />
+                <Table.Column title={this.props.intl.messages[ 'permission.ruleId']} dataIndex="id" width="10%"/>
+                <Table.Column title={this.props.intl.messages[ 'permission.roleName']}   dataIndex="roleName" width="10%"/>
+                <Table.Column title={this.props.intl.messages[ 'permission.fieldName']} dataIndex="fieldName" width="15%"/>
+                <Table.Column title={this.props.intl.messages[ 'permission.rule']} dataIndex="rule" width="10%"/>
+                <Table.Column title={this.props.intl.messages[ 'permission.ruleDes']} dataIndex="description" />
+                <Table.Column title={this.props.intl.messages[ 'permission.addUserData']} cell={addUserData}  width="10%" />
+                <Table.Column title={this.props.intl.messages[ 'permission.deleteTitle']} cell={deleteRule}  width="10%" />
 
 
             </Table>
@@ -504,3 +542,4 @@ export default class DataRules extends Component
         );
     }
 }
+export default injectIntl(DataRules)

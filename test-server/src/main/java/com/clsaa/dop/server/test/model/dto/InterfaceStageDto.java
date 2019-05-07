@@ -2,6 +2,7 @@ package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.doExecute.Operation;
 import com.clsaa.dop.server.test.enums.Stage;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ import static com.clsaa.dop.server.test.doExecute.TestManager.FAIL_RESULT;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(allowGetters = true, value = "operations")
 public class InterfaceStageDto {
 
     // ----------- main property ---------

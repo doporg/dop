@@ -4,6 +4,7 @@ import Axios from "axios";
 import React, {Component} from 'react';
 import ProductModeController from "../ProductModeController"
 import "./CreateApplicationForm.scss"
+import {injectIntl} from "react-intl";
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -17,7 +18,7 @@ const formItemLayout = {
  *    弹窗中的表单
  *
  * */
-export default class ApplicationForm extends Component {
+class ApplicationForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.field = new Field(this);
@@ -155,21 +156,26 @@ export default class ApplicationForm extends Component {
 
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("title") ? "error" : ""}
-                                      help={this.field.getError("title") ? "请输入名称" : ""}
-                                      label="应用名称："
+                                      help={this.field.getError("title") ? this.props.intl.messages['projects.placeholder.applicationName'] : ""}
+                                      label={this.props.intl.messages['projects.text.applicationName']}
                                       required>
                                 <Input
 
                                     maxLength={25}
                                     hasLimitHint
-                                    {...init('title', {rules: [{required: true, message: "该项不能为空"}]})}
-                                    placeholder="请输入项目名称"/>
+                                    {...init('title', {
+                                        rules: [{
+                                            required: true,
+                                            message: this.props.intl.messages[' projects.message.cantNull']
+                                        }]
+                                    })}
+                                    placeholder={this.props.intl.messages['projects.placeholder.applicationName']}/>
                             </FormItem>
 
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("productMode") ? "error" : ""}
-                                      help={this.field.getError("productMode") ? "请选择开发模式" : ""}
-                                      label="开发模式："
+                                      help={this.field.getError("productMode") ? this.props.intl.messages[' projects.placeHolder.developMode'] : ""}
+                                      label={this.props.intl.messages[' projects.text.developMode']}
                                       required>
 
                                 <ProductModeController {...init('productMode', {
@@ -178,17 +184,17 @@ export default class ApplicationForm extends Component {
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("gitUrl") ? "error" : ""}
-                                      label="git仓库地址："
-                                      help={this.field.getError("gitUrl") ? "请检查Git仓库地址（须以http/https开头）" : ""}
+                                      label={this.props.intl.messages[' projects.text.gitUrl']}
+                                      help={this.field.getError("gitUrl") ? this.props.intl.messages[' projects.text.checkGitUrl'] : ""}
                                       required>
                                 <Combobox className="form-item-input" {...init('gitUrl', {
                                     rules: [{
                                         type: "url",
                                         required: true,
-                                        message: "该项不能为空"
+                                        message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}
-                                          placeholder="git仓库地址"
+                                          placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
                                           onChange={this.onGitUrlChange.bind(this)}
                                           onInputBlur={this.onGitUrlChange.bind(this)}>
                                     {this.state.gitUrlData.length === 0 ? "" : this.state.gitUrlData.map((item) => {
@@ -198,17 +204,17 @@ export default class ApplicationForm extends Component {
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("imageUrl") ? "error" : ""}
-                                      help={this.field.getError("imageUrl") ? "请检查镜像仓库地址（须以http/https开头）" : ""}
-                                      label="镜像仓库地址："
+                                      help={this.field.getError("imageUrl") ? this.props.intl.messages[' projects.text.checkImageUrl'] : ""}
+                                      label={this.props.intl.messages[' projects.text.imageUrl']}
                                       required>
                                 <Combobox className="form-item-input" {...init('imageUrl', {
                                     rules: [{
                                         type: "url",
                                         required: true,
-                                        message: "该项不能为空"
+                                        message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}
-                                          placeholder="镜像仓库地址"
+                                          placeholder={this.props.intl.messages['projects.placeHolder.imageUrl']}
                                           onChange={this.onImageUrlChange.bind(this)}
                                           onInputBlur={this.onImageUrlChange.bind(this)}>
                                     {this.state.imageUrlData.length === 0 ? "" : this.state.imageUrlData.map((item) => {
@@ -216,11 +222,13 @@ export default class ApplicationForm extends Component {
                                     })}
                                 </Combobox>
                             </FormItem>
-                            <FormItem {...formItemLayout} label="应用描述：">
+                            <FormItem {...formItemLayout}
+                                      label={this.props.intl.messages['projects.text.applicationDescription']}>
                                 <Input
                                     maxLength={50}
                                     hasLimitHint
-                                    {...init('description')} multiple placeholder="应用描述"/>
+                                    {...init('description')} multiple
+                                    placeholder={this.props.intl.messages['projects.placeHolder.applicationDescription']}/>
                             </FormItem>
                         </Loading>
                     </Form>
@@ -231,3 +239,5 @@ export default class ApplicationForm extends Component {
         )
     }
 }
+
+export default injectIntl(ApplicationForm)

@@ -4,6 +4,7 @@ import Axios from 'axios';
 import API from "../../API";
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './FilePathList.css'
 
@@ -145,9 +146,9 @@ class FilePathList extends React.Component{
                     <Loading visible={this.state.loadingVisible} className="loading-ref-file-list" tip={spinner}>
                         <CascaderSelect className="select-ref-file-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
                     </Loading>
-                    <a onClick={this.treeRootLink.bind(this)}>根目录</a>
+                    <a onClick={this.treeRootLink.bind(this)}>{this.props.intl.messages["code.filepathlist.root"]}</a>
                     <span className="text-file-list-separator">/</span>
-                    <input className="input-file-list-search" placeholder="输入路径搜索文件" value={this.state.path} onChange={this.changePath.bind(this)}/>
+                    <input className="input-file-list-search" placeholder={this.props.intl.messages["code.filepathlist.placeholder"]} value={this.state.path} onChange={this.changePath.bind(this)}/>
                 </div>
                 <div>
                     {
@@ -166,4 +167,4 @@ class FilePathList extends React.Component{
     }
 }
 
-export default (props)=><FilePathList {...props} key={props.location.pathname} />
+export default injectIntl((props)=><FilePathList {...props} key={props.location.pathname} />)

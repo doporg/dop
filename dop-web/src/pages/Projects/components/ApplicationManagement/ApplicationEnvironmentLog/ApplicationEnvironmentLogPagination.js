@@ -102,6 +102,13 @@ export default class ApplicationEnvironmentLogPagination extends Component {
                 </Loading>
 
                 <Pagination
+                    locale={{
+                        prev: this.props.intl.messages["projects.text.prev"],
+                        next: this.props.intl.messages["projects.text.next"],
+                        goTo: this.props.intl.messages["projects.text.goto"],
+                        page: this.props.intl.messages["projects.text.page"],
+                        go: this.props.intl.messages["projects.text.go"],
+                    }}
                     className="pagination"
                     current={this.state.current}
                     onChange={this.handleChange}

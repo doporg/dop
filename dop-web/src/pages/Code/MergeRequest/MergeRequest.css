@@ -59,7 +59,7 @@
 .btn-mr-close{
     font-size: 13px;
     height: 34px;
-    width: 150px;
+    padding: 0 30px;
     float: right;
     background-color: #fff;
     color: #fc9403;

@@ -23,9 +23,9 @@ public class RequestHeaderParamResolvePlugin implements RequestHeaderPlugin {
     @Override
     public void apply(RequestContext requestContext) {
         Map<String, String> headers = requestContext.getRequestHeaders();
-        Map<String, String> params = requestContext.getParams();
+        Map<String, String> params = requestContext.getCaseParams();
         headers.forEach((name,value) -> {
-            String valueResolved = StringUtils.tryToResolve(value, params);
+            String valueResolved = StringUtils.tryToResolveDollar(value, params);
             if (!value.equals(valueResolved)) {
                 headers.put(name, valueResolved);
             }

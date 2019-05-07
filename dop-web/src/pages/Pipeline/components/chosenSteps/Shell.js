@@ -1,55 +1,70 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
-import {Input, Select} from '@icedesign/base';
+import {Input, Select, Form, Loading} from '@icedesign/base';
+import {Feedback} from "@icedesign/base/index";
+import {injectIntl} from "react-intl";
+
 const {Combobox} = Select;
+const {toast} = Feedback;
+const FormItem = Form.Item;
 
-
-
-export default class Shell extends Component {
-    constructor(props){
-        super(props)
+class Shell extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
+            visible: false,
             myScript: ["shell"]
         }
     }
-    buildShell(value){
+
+    buildShell(value) {
         this.props.onShellChange(value)
     }
+
     render() {
+        const formItemLayout = {
+            labelCol: {
+                span: 10
+            },
+            wrapperCol: {
+                span: 10
+            }
+        };
         return (
-            <div>
-                <div>
-                    <h3 className="chosen-task-detail-title">自定义脚本</h3>
-                    <div className="chosen-task-detail-body">
-                        <span className="item">
-                            <span className="must">*</span>
-                            <span>脚本类型: </span>
-                        </span>
+            <Loading shape="fusion-reactor" visible={this.state.visible}>
+                <h3 className="chosen-task-detail-title">{this.props.intl.messages["pipeline.info.step.shell.title"]}</h3>
+                <Form
+                    labelAlign="left"
+                    labelTextAlign="left"
+                >
+                    <FormItem
+                        label={this.props.intl.messages["pipeline.info.step.shell.type"]+ ": "}
+                        {...formItemLayout}
+                    >
                         <Combobox
-                            className="input"
+                            style={{'width': '200px'}}
                             filterLocal={false}
-                            placeholder="请脚本类型"
+                            placeholder={this.props.intl.messages["pipeline.info.step.shell.type.placeholder"]}
                             dataSource={this.state.myScript}
-                        /> <br/>
-
-
-                        <div className="textarea">
-                            <div className="title">
-                                <span className="must">*</span>
-                                脚本内容:
-                            </div>
-                            <div className="area-wrap">
-                                <Input
-                                    multiple
-                                    value={this.props.shell}
-                                    className="area"
-                                    onChange={this.buildShell.bind(this)}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={this.props.intl.messages["pipeline.info.step.shell.content"]+ ": "}
+                        {...formItemLayout}
+                        required
+                    >
+                        <Input
+                            multiple
+                            value={this.props.shell}
+                            className="area"
+                            onChange={this.buildShell.bind(this)}
+                            style={{'width': '200px'}}
+                        />
+                    </FormItem>
+                </Form>
+            </Loading>
         )
     }
 }
+
+export default injectIntl(Shell)

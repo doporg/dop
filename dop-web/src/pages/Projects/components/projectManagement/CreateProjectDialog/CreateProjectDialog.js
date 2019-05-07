@@ -2,13 +2,14 @@ import {Button, Dialog,} from "@icedesign/base";
 import ProjectForm from "../CreateProjectForm/CreateProjectForm"
 import React, {Component} from 'react'
 import "./CreateProjectDialog.scss"
+import {FormattedMessage, injectIntl} from "react-intl";
 
 /**
  *  创建项目的弹窗
  *  @author Bowen
  *
  * */
-export default class CreateProjectDialog extends Component {
+class CreateProjectDialog extends Component {
     constructor(props) {
         super(props);
 
@@ -69,14 +70,25 @@ export default class CreateProjectDialog extends Component {
         return (
             <span>
                 <Button onClick={this.onOpen} type="primary">
-          创建项目
+         <FormattedMessage
+             id="projects.button.createProject"
+             defaultMessage="新建项目"
+         />
         </Button>
         <Dialog
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="创建项目"
+            locale={{
+                ok: this.props.intl.messages["projects.button.confirm"],
+                cancel: this.props.intl.messages["projects.button.cancel"]
+            }}
+            footerAlign={this.state.footerAlign}
+            title={<FormattedMessage
+                id="projects.button.createProject"
+                defaultMessage="新建项目"
+            />}
             className="dialog"
         >
           <ProjectForm
@@ -88,10 +100,20 @@ export default class CreateProjectDialog extends Component {
         onOk={this.onCreateDialogClose}
         onCancel={this.onCreateDialogClose}
         onClose={this.onCreateDialogClose}
-        title="创建成功"
+        locale={{
+            ok: this.props.intl.messages["projects.button.confirm"],
+            cancel: this.props.intl.messages["projects.button.cancel"]
+        }}
+        title={<FormattedMessage
+            id="projects.text.createSuccess"
+            defaultMessage="创建成功"
+        />}
         className="success-dialog"
         footerAlign={this.state.footerAlign}>
-项目创建成功！
+<FormattedMessage
+    id="projects.text.createProjectSuccess"
+    defaultMessage="项目创建成果"
+/>
 </Dialog>
       </span>
         );
@@ -99,3 +121,5 @@ export default class CreateProjectDialog extends Component {
 
 
 }
+
+export default injectIntl(CreateProjectDialog)

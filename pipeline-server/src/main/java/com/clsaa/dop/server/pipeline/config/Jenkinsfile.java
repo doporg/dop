@@ -45,7 +45,7 @@ public class Jenkinsfile {
             for (int j = 0; j < steps.size(); j++) {
                 this.stages += "steps{\n";
                 Step task = steps.get(j);
-                String taskName = task.getTaskName();
+                Step.TaskType taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
                 this.git = task.getGitUrl();
                 String dockerUserName = task.getDockerUserName();
@@ -73,35 +73,38 @@ public class Jenkinsfile {
                     BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
                             , e.getMessage()));
                 }
+                System.out.println(Step.TaskType.PullCode.ordinal());
                 switch (taskName) {
-                    case ("拉取代码"):
+                    case PullCode:
                         this.stages += "deleteDir() \n";
                         this.stages += "git \"" + gitUrl + "\" \n";
                         break;
-                    case ("构建maven"):
+                    case BuildMaven:
                         this.stages += "sh \'mvn --version \' \n";
                         this.stages += "sh \"mvn -U -am clean package \" \n";
                         break;
-                    case ("构建node"):
+                    case BuildNode:
                         this.stages += "sh \'npm --version \' \n";
                         this.stages += "sh \'node --version \' \n";
-                        this.stages += "sh \'npm install \' \n";
+//                        this.stages += "sh \'npm install \' \n";
                         break;
-                    case ("构建djanggo"):
-                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
-                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
-                        this.stages += "sh \'python ./manage.py runserver \' \n";
+                    case BuildDjanggo:
+//                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
+//                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
+//                        this.stages += "sh \'python ./manage.py runserver \' \n";
+                        this.stages += "sh \'python --version \' \n";
+                        this.stages += "sh \'pip --version \' \n";
                         break;
-                    case ("构建docker镜像"):
+                    case BuildDocker:
                         this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
                         break;
-                    case ("推送docker镜像"):
+                    case PushDocker:
                         this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
                         this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
                         break;
-                    case ("自定义脚本"):
+                    case CustomScript:
                         this.stages += "sh \'" + shell + "\' \n";
-                    case ("部署"):
+                    case Deploy:
                         String[] deploys = deploy.split("---\n");
                         for (int z = 0; z < deploys.length; z++) {
                             Yaml yaml = new Yaml();

@@ -45,7 +45,7 @@
 
 .btn-blob-edit{
     height: 30px;
-    width: 50px;
+    width: 70px;
     background-color: white;
     border:0;
     border-right: 1px solid #e4e4e4;
@@ -54,7 +54,7 @@
 
 .btn-blob-delete{
     height: 30px;
-    width: 50px;
+    width: 70px;
     background-color: #e04f4f;
     color:white;
     border:0;
@@ -64,7 +64,7 @@
 
 .btn-blob-disabled{
     height: 30px;
-    width: 50px;
+    width: 70px;
     background-color: #eaeaea;
     color: #545454;
     border:0;

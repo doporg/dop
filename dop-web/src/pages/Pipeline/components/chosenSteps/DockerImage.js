@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
-import {Form, Select, Input, Loading} from "@icedesign/base";
+import {Form, Select, Loading} from "@icedesign/base";
 import Axios from "axios/index";
 import API from "../../../API";
 import {injectIntl} from "react-intl";
@@ -68,7 +68,7 @@ class DockerImage extends Component {
             }).catch(() => {
                 toast.show({
                     type: "error",
-                    content: "获取应用信息失败",
+                    content: self.props.intl.messages["pipeline.info.step.docker.apply.error"],
                     duration: 3000
                 });
                 reject()
@@ -106,10 +106,10 @@ class DockerImage extends Component {
                     };
                     environments.push(environment);
                     if (self.props.selectEnvId === response.data[i].id) {
+                        self.selectEnv(response.data[i].id)
                         self.setState({
                             selectedEnv: response.data[i].title
                         });
-                        self.selectEnv(response.data[i].id)
                     }
                 }
                 self.setState({
@@ -212,13 +212,13 @@ class DockerImage extends Component {
         };
         return (
             <Loading shape="fusion-reactor" visible={this.state.visible}>
-                <h3 className="chosen-task-detail-title">构建docker镜像</h3>
+                <h3 className="chosen-task-detail-title">{this.props.intl.messages["pipeline.info.step.docker.title"]}</h3>
                 <Form
                     labelAlign="left"
                     labelTextAlign="left"
                 >
                     <FormItem
-                        label="应用设置："
+                        label={this.props.intl.messages["pipeline.info.step.docker.apply"] + ": "}
                         {...formItemLayout}
                     >
                         <Combobox
@@ -231,7 +231,7 @@ class DockerImage extends Component {
                         />
                     </FormItem>
                     <FormItem
-                        label="环境设置："
+                        label={this.props.intl.messages["pipeline.info.step.docker.environment"] + ": "}
                         {...formItemLayout}
                         required
                     >
@@ -240,7 +240,7 @@ class DockerImage extends Component {
                             fillProps="label"
                             style={{'width': '200px'}}
                             onChange={this.selectEnv.bind(this)}
-                            placeholder={this.state.selectedEnv ? this.state.selectedEnv : "请选择环境"}
+                            placeholder={this.state.selectedEnv ? this.state.selectedEnv : this.props.intl.messages["pipeline.info.step.docker.environment.placeholder"]}
                             disabled={!this.state.selectedApp}
                             dataSource={this.state.environments}
                         />
@@ -256,7 +256,7 @@ class DockerImage extends Component {
                             dataSource={this.state.dockerUser}
                             style={{'width': '200px'}}
                             disabled={!this.state.selectedApp}
-                            placeholder={this.props.dockerUserName?this.props.dockerUserName:"请选择docker用户"}
+                            placeholder={this.props.dockerUserName?this.props.dockerUserName:this.props.intl.messages["pipeline.info.step.docker.dockerUser.placeholder"]}
                             onChange={this.selectDocker.bind(this)}
                         />
 
@@ -271,7 +271,7 @@ class DockerImage extends Component {
                             fillProps="label"
                             style={{'width': '200px'}}
                             onChange={this.selectRepository.bind(this)}
-                            placeholder={this.props.repository ? this.props.repository : "请选择镜像名称"}
+                            placeholder={this.props.repository ? this.props.repository : this.props.intl.messages["pipeline.info.step.docker.repository.placeholder"]}
                             disabled={!this.state.selectedEnv}
                             dataSource={this.state.repositories}
                         />

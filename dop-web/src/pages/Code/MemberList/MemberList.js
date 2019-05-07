@@ -4,6 +4,7 @@ import Axios from 'axios';
 import API from "../../API";
 import {Loading} from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './MemberList.css'
 
@@ -108,7 +109,7 @@ class MemberList extends React.Component{
 
 
     deleteMember(user_id,user_name){
-        if(window.confirm("确认删除成员:"+user_name+"?")) {
+        if(window.confirm(this.props.intl.messages["code.memberlist.delete.confirm"]+":"+user_name+"?")) {
             this.setState({
                 loadingVisible: true
             });
@@ -143,23 +144,23 @@ class MemberList extends React.Component{
             <div className="member-list-container">
                 <Loading className="loading-member-list" visible={this.state.loadingVisible} tip={spinner}>
                     <div className="div-member-list-top">
-                        成员管理
+                        {this.props.intl.messages["code.memberlist.top"]}
                     </div>
                     <div>
                         <div className="div-member-list-input">
-                            <span className="text-member-list-name">用户名</span>
+                            <span className="text-member-list-name">{this.props.intl.messages["code.memberlist.username"]}</span>
                             <input value={this.state.user_name} onChange={this.inputUser_name.bind(this)} className="input-member-list-name"/>
                         </div>
                         <div className="div-member-list-input">
-                            <span className="text-member-list-name">角色</span>
+                            <span className="text-member-list-name">{this.props.intl.messages["code.memberlist.role"]}</span>
                             <Select value={this.state.user_role} onChange={this.selectRole.bind(this)} className="select-member-list" size='large' dataSource={this.state.roleOptions} />
                         </div>
                         <div className="div-member-list-submit">
-                            <button onClick={this.addMember.bind(this)} className="btn-member-list-add">增加</button>
+                            <button onClick={this.addMember.bind(this)} className="btn-member-list-add">{this.props.intl.messages["code.memberlist.add"]}</button>
                         </div>
                     </div>
                     <div className="div-member-list-middle">
-                        项目成员
+                        {this.props.intl.messages["code.memberlist.list.top"]}
                     </div>
                     {
                         this.state.memberList.map(item=>{
@@ -200,5 +201,5 @@ class MemberList extends React.Component{
     }
 }
 
-export default (props) => <MemberList {...props} key={props.location.pathname}/>
+export default injectIntl((props) => <MemberList {...props} key={props.location.pathname}/>)
 

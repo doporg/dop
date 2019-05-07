@@ -2,12 +2,14 @@ import React from 'react'
 import Axios from 'axios';
 import API from "../../API";
 import {Feedback} from '@icedesign/base';
+import {injectIntl} from 'react-intl';
+
 
 import './NewSSH.css'
 
 const {toast} = Feedback;
 
-export default class NewSSH extends React.Component{
+class NewSSH extends React.Component{
 
     constructor(props){
         super(props);
@@ -52,7 +54,6 @@ export default class NewSSH extends React.Component{
                 userId:sessionStorage.getItem("user-id")
             },
         }).then(response=>{
-            toast.success("创建ssh成功");
             this.props.history.push("/code/ssh");
         })
     }
@@ -65,24 +66,26 @@ export default class NewSSH extends React.Component{
         return (
             <div className="new-ssh-container">
                 <div className="div-new-ssh-top">
-                    增加 SSH 密钥
+                    {this.props.intl.messages["code.newssh.top"]}
                 </div>
                 <div>
                     <div className="div-new-ssh-input">
-                        <span className="text-new-ssh-key">公钥</span>
+                        <span className="text-new-ssh-key">{this.props.intl.messages["code.newssh.key"]}</span>
                         <textarea onChange={this.changeKey.bind(this)} value={this.state.key} className="input-new-ssh-key"/>
                     </div>
                     <div className="div-new-ssh-input">
-                        <span className="text-new-ssh-title">标题</span>
+                        <span className="text-new-ssh-title">{this.props.intl.messages["code.newssh.title"]}</span>
                         <input onChange={this.changeTitle.bind(this)} value={this.state.title} className="input-new-ssh-title"/>
                     </div>
                 </div>
                 <div className="div-new-ssh-submit">
-                    <button onClick={this.addKey.bind(this)} className="btn-new-ssh-add">增加密钥</button>
-                    <button onClick={this.cancel.bind(this)} className="btn-new-ssh-cancel">取消</button>
+                    <button onClick={this.addKey.bind(this)} className="btn-new-ssh-add">{this.props.intl.messages["code.newssh.add"]}</button>
+                    <button onClick={this.cancel.bind(this)} className="btn-new-ssh-cancel">{this.props.intl.messages["code.newssh.cancel"]}</button>
                 </div>
             </div>
         )
     }
 
 }
+
+export default injectIntl(NewSSH)

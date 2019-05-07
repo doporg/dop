@@ -6,6 +6,7 @@ import {Checkbox} from '@icedesign/base';
 import {Feedback} from '@icedesign/base';
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './NewProject.css'
 
@@ -15,7 +16,7 @@ const spinner=(
     <Spinner/>
 );
 
-export default class NewProject extends React.Component {
+class NewProject extends React.Component {
 
     constructor(props) {
         super(props);
@@ -79,32 +80,32 @@ export default class NewProject extends React.Component {
             <Loading className="loading-new-project" visible={this.state.loadingVisible} tip={spinner}>
                 <div className="new-project-container">
                     <div className="div-new-project-top">
-                        新建项目
+                        {this.props.intl.messages["code.newproject.top"]}
                     </div>
                     <div className="div-new-project-input">
-                        <label className="label-new-project-left">名称</label>
+                        <label className="label-new-project-left">{this.props.intl.messages["code.newproject.name"]}</label>
                         <input className="input-new-project-name" onChange={this.setName.bind(this)}/>
                     </div>
                     <div className="div-new-project-input">
-                        <label className="label-new-project-left">描述</label>
+                        <label className="label-new-project-left">{this.props.intl.messages["code.newproject.description"]}</label>
                         <textarea className="input-new-project-description" onChange={this.setDescription.bind(this)}/>
                     </div>
                     <div className="div-new-project-input">
-                        <label className="label-new-project-left">可见等级</label>
+                        <label className="label-new-project-left">{this.props.intl.messages["code.newproject.visibility"]}</label>
                         <div className="div-new-project-visibility">
                             <RadioGroup value={this.state.visibility} onChange={this.changeVisibility.bind(this)}>
                                 <Radio id="private" value="private">
-                                    PRIVATE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    {this.props.intl.messages["code.newproject.private"]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 </Radio>
                                 <Radio id="public" value="public">
-                                    PUBLIC
+                                    {this.props.intl.messages["code.newproject.public"]}
                                 </Radio>
                             </RadioGroup>
                         </div>
                     </div>
                     <div className="div-new-project-submit">
-                        <button onClick={this.createProject.bind(this)} className="btn-new-project-create">创建项目</button>
-                        <button onClick={this.cancel.bind(this)} className="btn-new-project-cancel">取消</button>
+                        <button onClick={this.createProject.bind(this)} className="btn-new-project-create">{this.props.intl.messages["code.newproject.add"]}</button>
+                        <button onClick={this.cancel.bind(this)} className="btn-new-project-cancel">{this.props.intl.messages["code.newproject.cancel"]}</button>
                     </div>
 
                 </div>
@@ -112,3 +113,5 @@ export default class NewProject extends React.Component {
         );
     }
 }
+
+export default injectIntl(NewProject)

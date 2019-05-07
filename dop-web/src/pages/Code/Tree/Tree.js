@@ -11,6 +11,8 @@ import imgFile from './imgs/file.png';
 import imgFolder from './imgs/folder.png';
 import imgSearch from './imgs/search.png';
 
+import {injectIntl,FormattedRelative } from 'react-intl';
+
 const spinner=(
     <Spinner/>
 );
@@ -166,7 +168,7 @@ class Tree extends React.Component{
                                 let strs = path.split("/");
                                 let paths = [];
 
-                                paths.push(<a onClick={this.changePath.bind(this,"/")}>根目录</a>);
+                                paths.push(<a onClick={this.changePath.bind(this,"/")}>{this.props.intl.messages["code.tree.root"]}</a>);
 
                                 let temp_str = "";
                                 for (let i = 0; i < strs.length; i++) {
@@ -180,21 +182,21 @@ class Tree extends React.Component{
 
                                 return paths;
                             }else {
-                                return (<a onClick={this.changePath.bind(this,"/")}>根目录</a>);
+                                return (<a onClick={this.changePath.bind(this,"/")}>{this.props.intl.messages["code.tree.root"]}</a>);
                             }
                         })()
                     }
                     <button className="btn-search-file" onClick={this.findFile.bind(this)}>
                         <img src={imgSearch} className="img-tree-search"/>
-                        <span className="text-tree-search">查找文件</span>
+                        <span className="text-tree-search">{this.props.intl.messages["code.tree.findfile"]}</span>
                     </button>
                 </div>
 
 
                 <div className="div-tree-title">
-                    <span style={{marginRight:18}} className="text-tree-name-title">名称</span>
-                    <span className="text-tree-commit-title">最后提交</span>
-                    <span className="text-tree-update-title">最后更新</span>
+                    <span style={{marginRight:18}} className="text-tree-name-title">{this.props.intl.messages["code.tree.name"]}</span>
+                    <span className="text-tree-commit-title">{this.props.intl.messages["code.tree.lastcommit"]}</span>
+                    <span className="text-tree-update-title">{this.props.intl.messages["code.tree.lastupdate"]}</span>
                 </div>
 
 
@@ -284,13 +286,14 @@ class Tree extends React.Component{
                                                     if(index===0){
                                                         return [
                                                             <Loading className="loading-tree-update" tip={spinner}></Loading>,
-                                                            <span className="text-tree-update-loading">加载commit数据...</span>
+                                                            <span className="text-tree-update-loading">{this.props.intl.messages["code.tree.loadingcommit"]}</span>
                                                         ];
                                                     }else {
                                                         return <span className="text-tree-update"></span>;
                                                     }
                                                 }else {
-                                                    return <span className="text-tree-update">{treeCommitInfo[index].commit_time}</span>;
+                                                    // return <span className="text-tree-update">{treeCommitInfo[index].commit_time}</span>;
+                                                    return <span className="text-tree-update"><FormattedRelative value={new Date(parseInt(treeCommitInfo[index].commit_time))}/></span>
                                                 }
                                             })()
                                         }
@@ -307,4 +310,4 @@ class Tree extends React.Component{
     }
 }
 
-export default (props)=><Tree {...props} key={props.location.pathname} />
+export default injectIntl((props)=><Tree {...props} key={props.location.pathname} />)

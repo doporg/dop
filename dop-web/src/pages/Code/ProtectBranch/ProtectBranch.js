@@ -5,6 +5,7 @@ import API from "../../API";
 import {Loading} from "@icedesign/base";
 import {Checkbox} from '@icedesign/base';
 import Spinner from '../components/Spinner';
+import {injectIntl } from 'react-intl';
 
 import './ProtectBranch.css'
 
@@ -147,11 +148,11 @@ class ProjectBranch extends React.Component{
             <div className="protect-branch-container">
                 <Loading className="creating-protect-branch" visible={this.state.creatingVisible} tip={spinner}>
                     <div className="div-protect-branch-top">
-                        保护分支
+                        {this.props.intl.messages["code.protectbranch.top"]}
                     </div>
                     <div>
                         <div className="div-protect-branch-input">
-                            <span className="text-protect-branch-name">分支</span>
+                            <span className="text-protect-branch-name">{this.props.intl.messages["code.protectbranch.name"]}</span>
                             <Loading className="loading-protect-branch" visible={this.state.loadingVisible} tip={spinner}>
                                 <Select value={this.state.ref} onChange={this.selectRef.bind(this)} className="select-protect-branch" size='large' dataSource={this.state.refOptions} />
                             </Loading>
@@ -159,22 +160,22 @@ class ProjectBranch extends React.Component{
                         <div className="div-protect-branch-input">
                             <span className="text-protect-branch-name"/>
                             <div className="div-protect-branch-check">
-                                <Checkbox checked={this.state.developers_can_push} onChange={this.selectPush.bind(this)}><b>Develop角色可以推送</b></Checkbox>
-                                <Checkbox checked={this.state.developers_can_merge} onChange={this.selectMerge.bind(this)}><b>Develop角色可以合并</b></Checkbox>
+                                <Checkbox checked={this.state.developers_can_push} onChange={this.selectPush.bind(this)}><b>{this.props.intl.messages["code.protectbranch.canpush"]}</b></Checkbox>
+                                <Checkbox checked={this.state.developers_can_merge} onChange={this.selectMerge.bind(this)}><b>{this.props.intl.messages["code.protectbranch.canmerge"]}</b></Checkbox>
                             </div>
                         </div>
                         <div className="div-protect-branch-submit">
-                            <button onClick={this.addProtectedBranch.bind(this)} className="btn-protect-branch-add">保护</button>
+                            <button onClick={this.addProtectedBranch.bind(this)} className="btn-protect-branch-add">{this.props.intl.messages["code.protectbranch.protect"]}</button>
                         </div>
                     </div>
                     <div className="div-protect-branch-list-top">
-                        已经保护的
+                        {this.props.intl.messages["code.protectbranch.list.top"]}
                     </div>
                     <div>
                         <div className="div-protect-branch-list-head">
-                            <div>分支</div>
-                            <div>Develop角色可以推送</div>
-                            <div>Develop角色可以合并</div>
+                            <div>{this.props.intl.messages["code.protectbranch.name"]}</div>
+                            <div>{this.props.intl.messages["code.protectbranch.canpush"]}</div>
+                            <div>{this.props.intl.messages["code.protectbranch.canmerge"]}</div>
                             <div/>
                         </div>
                         {
@@ -194,7 +195,7 @@ class ProjectBranch extends React.Component{
                                             </div>
                                             <div><Checkbox defaultChecked={item.developers_can_push} onChange={this.changePush.bind(this,item.name,item.developers_can_merge)}/></div>
                                             <div><Checkbox defaultChecked={item.developers_can_merge} onChange={this.changeMerge.bind(this,item.name,item.developers_can_push)}/></div>
-                                            <div><button onClick={this.unprotectBranch.bind(this,item.name)} className="btn-unprotect-branch">取消保护</button></div>
+                                            <div><button onClick={this.unprotectBranch.bind(this,item.name)} className="btn-unprotect-branch">{this.props.intl.messages["code.protectbranch.unprotect"]}</button></div>
                                         </div>
                                     )
                                 }
@@ -211,4 +212,4 @@ class ProjectBranch extends React.Component{
 }
 
 
-export default (props) => <ProjectBranch {...props} key={props.location.pathname}/>
+export default injectIntl((props) => <ProjectBranch {...props} key={props.location.pathname}/>)

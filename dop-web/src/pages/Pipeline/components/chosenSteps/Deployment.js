@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
+import {injectIntl} from "react-intl";
 
 
-export default class Deployment extends Component{
+class Deployment extends Component{
     render(){
         return (
             <div>
-                <h3 className="chosen-task-detail-title">您将在您的集群上创建部署</h3>
+                <h3 className="chosen-task-detail-title">{this.props.intl.messages["pipeline.info.step.deploy.title"]}</h3>
                 <div
                     className="chosen-task-detail-body">
-                    我们会根据您环境中的配置进行部署
+                    {this.props.intl.messages["pipeline.info.step.deploy.tip"]}
                 </div>
             </div>
         )
     }
 }
+export default injectIntl(Deployment)

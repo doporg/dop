@@ -128,15 +128,19 @@ public class KubeYamlService {
 
         } else {
             String path = kubeYamlDataBoV1.getYamlFilePath();
-
-
-            String[] splitPath = path.split("blob/");
-            String finalPath = "https://raw.githubusercontent.com/" + splitPath[0].split("github.com/")[1] + splitPath[1];
+            String finalPath = "";
+            if (path.matches("giltab")) {
+                finalPath = path.replace("blob", "raw");
+            } else {
+                if (path.matches("github")) {
+                    String[] splitPath = path.split("blob/");
+                    finalPath = "https://raw.githubusercontent.com/" + splitPath[0].split("github.com/")[1] + splitPath[1];
+                }
+            }
 
             RestTemplate restTemplate = new RestTemplate();
             String yaml = restTemplate.getForObject(finalPath, String.class);
             String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(loginUser, runningId, appEnvId);
-
             yaml = yaml.replace("<IMAGE_URL>", buildTag);
             return yaml;
         }
@@ -311,7 +315,11 @@ public class KubeYamlService {
     public KubeYamlDataBoV1 findYamlDataByEnvId(Long loginUser, Long appEnvId) {
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewYamlData(), loginUser)
                 , BizCodes.NO_PERMISSION);
-        return BeanUtils.convertType(this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null), KubeYamlDataBoV1.class);
+        KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
+        if (kubeYamlData == null)
+            return null;
+        else
+            return BeanUtils.convertType(kubeYamlData, KubeYamlDataBoV1.class);
     }
 
 

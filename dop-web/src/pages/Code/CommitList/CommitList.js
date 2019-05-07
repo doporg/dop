@@ -8,6 +8,7 @@ import { Balloon } from "@icedesign/base";
 import ReactTooltip from 'react-tooltip'
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
+import {injectIntl,FormattedRelative } from 'react-intl';
 
 import imgCopy from './imgs/copy.png';
 import imgFolder from './imgs/folder.png';
@@ -135,7 +136,7 @@ class CommitList extends React.Component{
 
     copySha(sha){
         copy(sha);
-        toast.success("已将commit sha复制到剪贴板")
+        toast.success(this.props.intl.messages["code.commitlist.copied"])
     }
 
     browseFile(commit_id){
@@ -164,8 +165,8 @@ class CommitList extends React.Component{
                     <Loading visible={this.state.loadingVisible} className="loading-ref-commit-list" tip={spinner}>
                         <CascaderSelect className="select-ref-commit-list"  size='large' value={this.state.ref} dataSource={this.state.refOptions} onChange={this.changeRef.bind(this)}/>
                     </Loading>
-                    <a className="link-commit-root" onClick={this.rootLink.bind(this)}>根目录</a>
-                    <input value={this.state.msgInput} onChange={this.handleInputChange.bind(this)} className="input-commit-msg-right" placeholder="输入commit message查找commit"/>
+                    <a className="link-commit-root" onClick={this.rootLink.bind(this)}>{this.props.intl.messages["code.commitlist.root"]}</a>
+                    <input value={this.state.msgInput} onChange={this.handleInputChange.bind(this)} className="input-commit-msg-right" placeholder={this.props.intl.messages["code.commitlist.placeholder"]}/>
                 </div>
                 {
                     (()=>{
@@ -186,7 +187,7 @@ class CommitList extends React.Component{
                                 if(this.isSameDate(d1,d2)){
                                     count++;
                                 }else {
-                                    res.push(<div className="div-commit-date">{(d1.getMonth()+1)+"月"+d1.getDate()+ "日," + d1.getFullYear() + " " + count + "次提交"}</div>);
+                                    res.push(<div className="div-commit-date">{d1.getFullYear()+"-"+(d1.getMonth()+1)+"-"+d1.getDate()+ " " + count + this.props.intl.messages["code.commitlist.count"]}</div>);
                                     for(let j=i-count;j<i;j++){
                                         res.push(
                                             <div className="div-commit-item">
@@ -194,7 +195,8 @@ class CommitList extends React.Component{
                                                 <div className="div-commit-item-content">
                                                     <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[j].id)}>{commitList[j].message}</a></div>
                                                     <div className="div-commit-item-content-down">
-                                                        {commitList[j].author_name+" 提交在"+commitList[j].authored_time}
+                                                        {commitList[j].author_name+this.props.intl.messages["code.commitlist.committedat"]}
+                                                        <FormattedRelative value={new Date(parseInt(commitList[j].authored_time))}/>
                                                     </div>
                                                 </div>
                                                 <div className="div-commit-operation">
@@ -206,10 +208,10 @@ class CommitList extends React.Component{
                                                         <img src={imgFolder} className="img-commit-browse-file"/>
                                                     </button>
                                                     <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>
-                                                        <span>复制提交sha到剪贴板</span>
+                                                        <span>{this.props.intl.messages["code.commitlist.tip.copy"]}</span>
                                                     </ReactTooltip>
                                                     <ReactTooltip id='browse' place="bottom" type='dark' effect='solid'>
-                                                        <span>查看文件</span>
+                                                        <span>{this.props.intl.messages["code.commitlist.tip.browse"]}</span>
                                                     </ReactTooltip>
                                                 </div>
                                             </div>
@@ -222,7 +224,7 @@ class CommitList extends React.Component{
                         }
 
                         if(commitList.length!==0) {
-                            res.push(<div className="div-commit-date">{(d1.getMonth()+1)+"月"+d1.getDate()+ "日," + d1.getFullYear() + " " + count + "次提交"}</div>);
+                            res.push(<div className="div-commit-date">{d1.getFullYear()+"-"+(d1.getMonth()+1)+"-"+d1.getDate()+ " " + count + this.props.intl.messages["code.commitlist.count"]}</div>);
                             for (let i = commitList.length - count; i < commitList.length; i++) {
                                 res.push(
                                     <div className="div-commit-item">
@@ -230,7 +232,8 @@ class CommitList extends React.Component{
                                         <div className="div-commit-item-content">
                                             <div className="div-commit-item-content-up"><a onClick={this.commitLink.bind(this,commitList[i].id)}>{commitList[i].message}</a></div>
                                             <div className="div-commit-item-content-down">
-                                                {commitList[i].author_name+" 提交在"+commitList[i].authored_time}
+                                                {commitList[i].author_name+this.props.intl.messages["code.commitlist.committedat"]}
+                                                <FormattedRelative value={new Date(parseInt(commitList[i].authored_time))}/>
                                             </div>
                                         </div>
                                         <div className="div-commit-operation">
@@ -242,10 +245,10 @@ class CommitList extends React.Component{
                                                 <img src={imgFolder} className="img-commit-browse-file"/>
                                             </button>
                                             <ReactTooltip id='copy' place="bottom" type='dark' effect='solid'>
-                                                <span>复制提交sha到剪贴板</span>
+                                                <span>{this.props.intl.messages["code.commitlist.tip.copy"]}</span>
                                             </ReactTooltip>
                                             <ReactTooltip id='browse' place="bottom" type='dark' effect='solid'>
-                                                <span>查看文件</span>
+                                                <span>{this.props.intl.messages["code.commitlist.tip.browse"]}</span>
                                             </ReactTooltip>
                                         </div>
                                     </div>
@@ -267,4 +270,4 @@ class CommitList extends React.Component{
 
 }
 
-export default (props)=><CommitList {...props} key={props.location.pathname} />
+export default injectIntl((props)=><CommitList {...props} key={props.location.pathname} />)

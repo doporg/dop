@@ -1,6 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
 import API from "../../API";
+import {injectIntl,FormattedRelative } from 'react-intl';
 
 import { Loading } from "@icedesign/base";
 import Spinner from '../components/Spinner';
@@ -94,7 +95,7 @@ class BranchList extends React.Component{
     }
 
     deleteMergedBranch(){
-        if(window.confirm("确认删除所有合并分支?")) {
+        if(window.confirm(this.props.intl.messages["code.branchlist.deletemerged.confirm"])) {
             this.setState({
                 loadingVisible:true
             });
@@ -108,7 +109,7 @@ class BranchList extends React.Component{
     }
 
     deleteBranch(branch){
-        if(window.confirm("确认删除分支"+branch+"?")) {
+        if(window.confirm(this.props.intl.messages["code.branchlist.delete.confirm"]+branch+"?")) {
             this.setState({
                 loadingVisible:true
             });
@@ -138,7 +139,7 @@ class BranchList extends React.Component{
                     {
                         (()=>{
                             if(accessInfo.access_level===40){
-                                return <span className="text-branch-list-top">在<a onClick={this.settingsLink.bind(this)}>项目设置</a>里可以设置受保护的分支</span>
+                                return <span className="text-branch-list-top">{this.props.intl.messages["code.branchlist.delete.top"]}</span>
                             }
                         })()
                     }
@@ -146,14 +147,14 @@ class BranchList extends React.Component{
                         (()=>{
                             if(accessInfo.access_level>=30){
                                 return [
-                                    <button onClick={this.newBranch.bind(this)} className="btn-new-branch">+ 新建分支</button>,
-                                    <button onClick={this.deleteMergedBranch.bind(this)} className="btn-delete-merged-branches">删除合并分支</button>
+                                    <button onClick={this.newBranch.bind(this)} className="btn-new-branch">+{this.props.intl.messages["code.branchlist.btn.new"]}</button>,
+                                    <button onClick={this.deleteMergedBranch.bind(this)} className="btn-delete-merged-branches">{this.props.intl.messages["code.branchlist.btn.deletemerged"]}</button>
                                 ];
                             }
                         })()
                     }
 
-                    <input value={this.state.nameInput} onChange={this.changeBranchName.bind(this)} className="input-branch-list-name" placeholder="输入分支名称来搜索"/>
+                    <input value={this.state.nameInput} onChange={this.changeBranchName.bind(this)} className="input-branch-list-name" placeholder={this.props.intl.messages["code.branchlist.placeholder"]}/>
                 </div>
                 <Loading visible={this.state.loadingVisible} className="loading-branch-list" tip={spinner}>
                     <div>
@@ -187,7 +188,7 @@ class BranchList extends React.Component{
                                                 <img className="img-branch-item-intro" src={imgCommit}/>
                                                 <a className="text-branch-item-primary" onClick={this.commitLink.bind(this,item.commit_id)}>{item.commit_short_id}</a>
                                                 <a onClick={this.commitLink.bind(this,item.commit_id)}>&nbsp;·&nbsp;{item.commit_msg}&nbsp;·&nbsp;</a>
-                                                <label>{item.commit_time}</label>
+                                                <label><FormattedRelative value={new Date(parseInt(item.commit_time))}/></label>
                                             </div>
                                         </div>
                                         <div className="div-branch-item-operation">
@@ -217,7 +218,7 @@ class BranchList extends React.Component{
                                             {
                                                 (() => {
                                                     if (item.default_ === "false"&&accessInfo.access_level>=30) {
-                                                        return <a onClick={this.newMergeRequest.bind(this,item.name)} className="btn-branch-item-merge">Merge request</a>
+                                                        return <a onClick={this.newMergeRequest.bind(this,item.name)} className="btn-branch-item-merge">{this.props.intl.messages["code.branchlist.mergerequest"]}</a>
                                                     }
                                                 })()
                                             }
@@ -237,4 +238,4 @@ class BranchList extends React.Component{
     }
 }
 
-export default (props)=><BranchList {...props} key={props.location.pathname} />
+export default injectIntl((props)=><BranchList {...props} key={props.location.pathname} />)

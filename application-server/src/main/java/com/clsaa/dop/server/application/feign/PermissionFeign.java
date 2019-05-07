@@ -48,9 +48,9 @@ public interface PermissionFeign {
      */
     @GetMapping("/v1/userData/byField")
     List<Long> findUserByField(@ApiParam(name = "fieldName", value = "作用域参数名称", required = true)
-                               @RequestParam(value = "fieldName", required = true) String fieldName,
+                               @RequestParam(value = "fieldName") String fieldName,
                                @ApiParam(name = "fieldValue", value = "作用域参数值", required = true)
-                               @RequestParam(value = "fieldValue", required = true) Long fieldValue
+                               @RequestParam(value = "fieldValue") Long fieldValue
     );
 
     @PostMapping("/v1/userData")

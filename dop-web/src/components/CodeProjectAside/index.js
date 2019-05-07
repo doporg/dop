@@ -5,6 +5,7 @@ import { withRouter, Link } from 'react-router-dom';
 import { Icon } from '@icedesign/base';
 import Axios from 'axios';
 import API from "../../pages/API";
+import {FormattedMessage} from 'react-intl';
 
 import './index.scss';
 
@@ -119,13 +120,13 @@ class CodeProjectAside extends Component {
             <MenuItem key={backLink}>
                 <Link to={backLink} className="ice-menu-link">
                     <img src={imgBack}/>
-                    <span className="ice-menu-item-text">{"返回"}</span>
+                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.back"/></span>
                 </Link>
             </MenuItem>
             <MenuItem key={projectLink}>
                 <Link to={projectLink} className="ice-menu-link">
                         <img src={imgProject}/>
-                    <span className="ice-menu-item-text">{"项目"}</span>
+                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.project"/></span>
                 </Link>
             </MenuItem>
             {
@@ -136,7 +137,7 @@ class CodeProjectAside extends Component {
                             <MenuItem>
                                 <a onClick={this.getBranchAndJump.bind(this,this.fileLink.bind(this))} className="ice-menu-link">
                                     <img src={imgFile}/>
-                                    <span className="ice-menu-item-text">{"文件"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.files"/></span>
                                 </a>
                             </MenuItem>
                         );
@@ -144,7 +145,7 @@ class CodeProjectAside extends Component {
                             <MenuItem>
                                 <a onClick={this.getBranchAndJump.bind(this,this.commitLink.bind(this))} className="ice-menu-link">
                                     <img src={imgCommit}/>
-                                    <span className="ice-menu-item-text">{"提交"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.commits"/></span>
                                 </a>
                             </MenuItem>
                         );
@@ -152,7 +153,7 @@ class CodeProjectAside extends Component {
                             <MenuItem key={branchLink}>
                                 <Link to={branchLink} className="ice-menu-link">
                                     <img src={imgBranch}/>
-                                    <span className="ice-menu-item-text">{"分支"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.branches"/></span>
                                 </Link>
                             </MenuItem>
                         );
@@ -160,7 +161,7 @@ class CodeProjectAside extends Component {
                             <MenuItem key={tagLink}>
                                 <Link to={tagLink} className="ice-menu-link">
                                     <img src={imgTag}/>
-                                    <span className="ice-menu-item-text">{"标签"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.tags"/></span>
                                 </Link>
                             </MenuItem>
                         );
@@ -168,7 +169,7 @@ class CodeProjectAside extends Component {
                             <MenuItem key={mergeRequestLink}>
                                 <Link to={mergeRequestLink} className="ice-menu-link">
                                     <img src={imgMergeRequest}/>
-                                    <span className="ice-menu-item-text">{"合并请求"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.mergerequests"/></span>
                                 </Link>
                             </MenuItem>
                         );
@@ -187,7 +188,7 @@ class CodeProjectAside extends Component {
                             <MenuItem key={editLink}>
                                 <Link to={editLink} className="ice-menu-link">
                                     <img src={imgEdit}/>
-                                    <span className="ice-menu-item-text">{"设置"}</span>
+                                    <span className="ice-menu-item-text"><FormattedMessage id="code.projectaside.settings"/></span>
                                 </Link>
                             </MenuItem>
                         )

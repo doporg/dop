@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
+import {injectIntl} from "react-intl";
 
 
-export default class Node extends Component{
+class Node extends Component{
     render(){
         return (
             <div>
-                <h3 className="chosen-task-detail-title">构建node</h3>
+                <h3 className="chosen-task-detail-title">{this.props.intl.messages["pipeline.info.step.node.title"]}</h3>
                 <div
                     className="chosen-task-detail-body">
-                    默认执行 <br/>
-                    'npm install' <br/>
+                    {this.props.intl.messages["pipeline.info.step.node.tip"]} <br/><br/>
+                    {this.props.intl.messages["pipeline.info.step.node.npm.version"]}<br/>
+                    {this.props.intl.messages["pipeline.info.step.node.node.version"]}<br/>
                 </div>
             </div>
         )
     }
 }
+export default injectIntl(Node)

@@ -3,6 +3,7 @@ import {Balloon, Grid, Icon, Table} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
 import {Link} from "react-router-dom";
 import "./ApplicationEnvironmentLogList.scss"
+import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
 /**
@@ -10,7 +11,7 @@ const {Row} = Grid;
  * @author Bowen
  **/
 
-export default class ApplicationEnvironmentLogList extends Component {
+class ApplicationEnvironmentLogList extends Component {
 
     static displayName = 'ApplicationEnvironmentLogList';
 
@@ -36,12 +37,13 @@ export default class ApplicationEnvironmentLogList extends Component {
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
     codeIdRender(url) {
         let _this = this;
+        // https://github.com/zhangfuli/simple-maven-pipeline/dee981ce6640e3a0b115c8e784b78357f8f1ad15
         // github.com/clsaa/dop/commit/011fd4191f7c9b3e92539eb63152b8670b003253
         console.log(url.split("/"))
         let infoList = url.split("/")
         let userName = infoList[3]
         let projectName = infoList[4]
-        let commitId = infoList[6]
+        let commitId = infoList[infoList.length - 1]
         ///code/:username/:projectname/commit/:sha
         return <Link to={"/code/" + userName + "/" + projectName + "/commit/" + commitId}
         >{commitId}</Link>
@@ -66,7 +68,7 @@ export default class ApplicationEnvironmentLogList extends Component {
 
     render() {
         const defaultTrigger = (
-            <div>查看环境信息</div>
+            <div>{this.props.intl.messages['projects.text.viewEnvLog']}</div>
         );
         const renderOpr = (value, index, record) => {
             console.log("record:", record, value)
@@ -86,30 +88,30 @@ export default class ApplicationEnvironmentLogList extends Component {
             <Row wrap gutter="20">
                 <Col>
                     <Table dataSource={this.state.currentData}>
-                        <Table.Column title="运行ID"
+                        <Table.Column title={this.props.intl.messages['projects.text.runningId']}
                                       dataIndex="runningId"/>
 
                         <Table.Column
                             cell={this.codeIdRender.bind(this)}
-                            title="commitId"
+                            title={this.props.intl.messages['projects.text.commitId']}
                             dataIndex="commitUrl"/>
 
                         <Table.Column cell={this.imageIdRender.bind(this)}
-                                      title="版本号"
+                                      title={this.props.intl.messages['projects.text.buildTag']}
                                       dataIndex="imageUrl"/>
 
                         <Table.Column
                             cell={envRender.bind(this)}
-                            title="环境信息"
+                            title={this.props.intl.messages['projects.text.envInfo']}
                             dataIndex="appEnvLog"/>
 
-                        <Table.Column title="部署时间"
+                        <Table.Column title={this.props.intl.messages['projects.text.deploymentTime']}
                                       dataIndex="rtime"/>
 
-                        <Table.Column title="部署人"
+                        <Table.Column title={this.props.intl.messages['projects.text.deploymentMember']}
                                       dataIndex="ruserName"/>
 
-                        <Table.Column title="运行状态"
+                        <Table.Column title={this.props.intl.messages['projects.text.status']}
                                       dataIndex="status"/>
                     </Table>
                 </Col>
@@ -119,3 +121,4 @@ export default class ApplicationEnvironmentLogList extends Component {
 
 }
 
+export default injectIntl(ApplicationEnvironmentLogList)

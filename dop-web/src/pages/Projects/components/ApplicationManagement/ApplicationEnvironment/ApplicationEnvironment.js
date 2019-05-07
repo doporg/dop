@@ -6,10 +6,11 @@ import {Col, Row} from "@alifd/next/lib/grid";
 import CreateApplicationEnvironmentDialog from "../CreateApplicationEnvrionment/CreateApplicationEnvironment";
 import TopBar from "./topbar"
 import "./ApplicationEnvironment.scss"
+import {injectIntl} from "react-intl";
 
 const Toast = Feedback.toast;
 
-export default class ApplicationEnvironment extends Component {
+class ApplicationEnvironment extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -51,8 +52,8 @@ export default class ApplicationEnvironment extends Component {
     popupConfirm = (id) => {
         console.log(id)
         Dialog.confirm({
-            content: "你确定要删除该环境吗？",
-            title: "确认删除",
+            content: this.props.intl.messages['projects.text.deleteConfirmEnv'],
+            title: this.props.intl.messages['projects.text.deleteConfirm'],
             onOk: this.onDelete.bind(this, id)
         });
     };
@@ -66,7 +67,7 @@ export default class ApplicationEnvironment extends Component {
         Axios.delete(deleteUrl)
             .then(function (response) {
                 _this.getAppEnvData();
-                Toast.success("删除成功");
+                Toast.success(_this.props.intl.messages['projects.text.deleteSuccessful']);
             })
             .catch(function (response) {
 
@@ -124,11 +125,11 @@ export default class ApplicationEnvironment extends Component {
                             <Card style={{height: "70%"}}>
                                 {this.titleRender(item.title, item.id)}
                                 <Button onClick={this.showEnvLog.bind(this, item.id)}>
-                                    部署历史
+                                    {this.props.intl.messages['projects.button.deploymentHistory']}
                                 </Button>
                                 <Button onClick={this.showEnvDetailFun.bind(this, item.id)}
                                         style={{margin: "20px"}}>
-                                    配置部署
+                                    {this.props.intl.messages['projects.button.configuringDeployment']}
                                 </Button>
 
                             </Card>
@@ -160,17 +161,18 @@ export default class ApplicationEnvironment extends Component {
                 <div>
                     <TopBar
                         extraBefore={<Breadcrumb>
-                            <Breadcrumb.Item link="#/project">所有项目</Breadcrumb.Item>
                             <Breadcrumb.Item
-                                link={"#/projectDetail?projectId=" + this.state.projectId}>{"项目：" + this.state.projectId}</Breadcrumb.Item>
+                                link="#/project">{this.props.intl.messages['projects.bread.allProject']}</Breadcrumb.Item>
                             <Breadcrumb.Item
-                                link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{"应用：" + this.state.appId}</Breadcrumb.Item>
+                                link={"#/projectDetail?projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.project'] + this.state.projectId}</Breadcrumb.Item>
+                            <Breadcrumb.Item
+                                link={"#/applicationDetail?appId=" + this.state.appId + "&projectId=" + this.state.projectId}>{this.props.intl.messages['projects.bread.app'] + this.state.appId}</Breadcrumb.Item>
                         </Breadcrumb>}
                         extraAfter={<CreateApplicationEnvironmentDialog type="primary"
 
                                                                         refreshApplicationEnvironmentList={this.refreshApplicationEnvironmentList.bind(this)}
                                                                         appId={this.state.appId}>
-                            新建环境
+                            {this.props.intl.messages['projects.button.createEnv']}
                         </CreateApplicationEnvironmentDialog>}
                     />
 
@@ -185,3 +187,5 @@ export default class ApplicationEnvironment extends Component {
 
 
 }
+
+export default injectIntl(ApplicationEnvironment)

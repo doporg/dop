@@ -121,6 +121,11 @@ export default class EditCaseInfo extends Component {
     }
   };
 
+  addItemWithContent (caseParam) {
+    this.state.caseDto.caseParams.push(caseParam);
+    this.setState({caseDto: this.state.caseDto});
+  };
+
   render() {
     return (
         <div className="edit-case-info-page">
@@ -143,7 +148,11 @@ export default class EditCaseInfo extends Component {
             </FormBinderWrapper>
           </IceContainer>
 
-          <StepForm caseId={this.state.caseId} stages={this.state.caseDto.stages} operation='UPDATE' btnText='保存测试脚本'/>
+          <StepForm caseId={this.state.caseId} stages={this.state.caseDto.stages}
+                    operation='UPDATE' btnText='保存测试脚本'
+                    addParam={this.addItemWithContent.bind(this)}
+                    caseParams={this.state.caseDto.caseParams}
+          />
         </div>
     );
   }

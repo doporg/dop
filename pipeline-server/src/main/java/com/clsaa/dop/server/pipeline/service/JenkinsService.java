@@ -94,7 +94,7 @@ public class JenkinsService {
             Build builds = job.getLastBuild();
             return builds.details().getConsoleOutputText();
         } catch (Exception e) {
-            return e.toString();
+            return "没有该流水线";
         }
     }
 
