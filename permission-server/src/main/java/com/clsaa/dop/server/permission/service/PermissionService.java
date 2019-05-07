@@ -119,7 +119,6 @@ public class PermissionService {
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
 
-//
 //        可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
