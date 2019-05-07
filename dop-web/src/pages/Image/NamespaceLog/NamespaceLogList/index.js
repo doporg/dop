@@ -4,9 +4,10 @@ import IceContainer from '@icedesign/container';
 import {Grid} from "@icedesign/base/index";
 import API from "../../../API";
 import Axios from "axios/index";
+import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
-export default class NamespaceLogList extends Component{
+class NamespaceLogList extends Component{
     static displayName = "NamespaceLogList";
 
     constructor(props) {
@@ -101,30 +102,30 @@ export default class NamespaceLogList extends Component{
     render() {
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"日志信息"}>
+                <IceContainer title={this.props.intl.messages["image.accessLog"]}>
                     <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                         <Table dataSource={this.state.currentData}
                                isLoading={this.state.isLoading}
                                primaryKey="logId"
                         >
 
-                            <Table.Column title="用户名称"
+                            <Table.Column title={this.props.intl.messages["image.logTable.user"]}
                                           dataIndex="username"/>
 
-                            <Table.Column title="镜像名称"
+                            <Table.Column title={this.props.intl.messages["image.logTable.repoName"]}
                                           dataIndex="repoName"/>
 
-                            <Table.Column title="标签"
+                            <Table.Column title={this.props.intl.messages["image.logTable.tag"]}
                                           dataIndex="repoTag"/>
-                            <Table.Column title="操作"
+                            <Table.Column title={this.props.intl.messages["image.logTable.operation"]}
                                           dataIndex="operation"/>
-                            <Table.Column title="时间戳"
+                            <Table.Column title={this.props.intl.messages["image.logTable.time"]}
                                           dataIndex="opTime"/>
                         </Table>
                     </Loading>
@@ -140,3 +141,4 @@ export default class NamespaceLogList extends Component{
         )
     };
 }
+export default injectIntl(NamespaceLogList)

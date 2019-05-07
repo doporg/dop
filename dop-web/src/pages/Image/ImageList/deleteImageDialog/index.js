@@ -1,12 +1,12 @@
 import React,{Component} from 'react';
-import {Dialog,Feedback} from '@icedesign/base';
-import {Button} from "@alifd/next";
+import {Dialog,Feedback,Button} from '@icedesign/base';
 import Axios from "axios";
 import API from "../../../API";
+import {injectIntl,FormattedMessage} from "react-intl";
 
 
 const Toast = Feedback.toast;
-export default class DeleteImageDialog extends Component{
+class DeleteImageDialog extends Component{
 
 
     constructor(props){
@@ -17,7 +17,7 @@ export default class DeleteImageDialog extends Component{
                 width: "30%"
             },
             deleteDialogStyle: {
-                width: "10%"
+                width: "15%"
             },
             deleteDialogVisible: false,
             deleteKeys:[],
@@ -77,18 +77,22 @@ export default class DeleteImageDialog extends Component{
     render() {
         return (
             <span>
-                <Button onClick={this.onOpen} type="primary" warning>删除镜像</Button>
+                <Button onClick={this.onOpen} type="primary" shape="warning">
+                    <FormattedMessage id="image.imageInfo.delete" defaultMessage="删除镜像"/>
+                </Button>
 
-                <Dialog visible={this.state.deleteDialogVisible}
+                <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                        visible={this.state.deleteDialogVisible}
                         onOk={this.onDeleteRepo}
                         onCancel={this.onDeleteLogClose}
                         onClose={this.onDeleteLogClose}
                         style={this.state.deleteDialogStyle}
                         footerAlign={this.state.footerAlign}>
-                确定要删除已选择的镜像吗？
+                    <FormattedMessage id="image.imageInfo.deleteDecision" defaultMessage="确定要删除已选择的镜像？"/>
                 </Dialog>
             </span>
         );
     }
 
 }
+export default injectIntl(DeleteImageDialog)

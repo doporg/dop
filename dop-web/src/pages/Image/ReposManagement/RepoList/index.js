@@ -169,7 +169,8 @@ class RepoList extends Component {
                         </Table>
                     </Loading>
 
-                    <Pagination className={"body"}
+                    <Pagination language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                                className={"body"}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}

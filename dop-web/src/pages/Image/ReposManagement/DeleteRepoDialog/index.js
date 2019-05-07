@@ -40,7 +40,6 @@ const Toast = Feedback.toast;
                 .then(function (response) {
                     Toast.success(_this.props.intl.messages["image.namespace.deleteSuccess"]);
                     _this.state.refreshRepoList();
-                    console.log("删除镜像仓库");
                     console.log(response.status);
                 }).catch(function (error) {
                 console.log(error);
@@ -78,7 +77,8 @@ const Toast = Feedback.toast;
                     <FormattedMessage id="image.repository.delete"
                                       defaultMessage="删除镜像仓库"/></Button>
 
-                <Dialog visible={this.state.deleteDialogVisible}
+                <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                        visible={this.state.deleteDialogVisible}
                         onOk={this.onDeleteRepo}
                         onCancel={this.onDeleteLogClose}
                         onClose={this.onDeleteLogClose}

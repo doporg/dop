@@ -5,11 +5,10 @@ import {Col} from "@alifd/next/lib/grid";
 import API from "../../../API";
 import Axios from "axios";
 import IceContainer from '@icedesign/container';
-
+import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
-
-export default class ImagePagination extends Component{
+class ImagePagination extends Component{
 
     constructor(props){
         super(props);
@@ -114,13 +113,13 @@ export default class ImagePagination extends Component{
     render() {
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"镜像版本列表"}>
+                <IceContainer title={this.props.intl.messages["image.imageList"]}>
                     <Row wrap className="headRow">
                         <Col l="12">
                             <DeleteImageDialog repoName={this.state.repoName} deleteKeys={this.state.rowSelection.selectedRowKeys} refreshImageList={this.refreshImageList.bind(this)}/>
@@ -133,27 +132,28 @@ export default class ImagePagination extends Component{
                                primaryKey="name"
                         >
 
-                            <Table.Column title="标签"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.tag"]}
                                           dataIndex="name"/>
 
-                            <Table.Column title="大小"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.size"]}
                                           dataIndex="size"/>
 
-                            <Table.Column title="创建人"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.owner"]}
                                           dataIndex="author"/>
 
-                            <Table.Column title="docker版本"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.docker"]}
                                           dataIndex="dockerVersion"/>
-                            <Table.Column title="创建时间"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.time"]}
                                           dataIndex="created"/>
-                            <Table.Column title="标签"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.label"]}
                                           dataIndex="labels"/>
-                            <Table.Column title="摘要"
+                            <Table.Column title={this.props.intl.messages["image.imageTable.digest"]}
                                           dataIndex="digest"/>
                         </Table>
                     </Loading>
 
-                    <Pagination className={"body"}
+                    <Pagination language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                                className={"body"}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
@@ -164,3 +164,4 @@ export default class ImagePagination extends Component{
         )
     }
 }
+export default injectIntl(ImagePagination)

@@ -43,7 +43,30 @@ const IMAGE_ZH_CN ={
     'image.memberList':'成员列表',
     'image.memberTable.userName':'用户名称',
     'image.memberTable.role':'角色',
-
+    'image.memberTable.userType':'用户类型',
+    'image.addMember':'添加用户',
+    'image.addMember.title':'新建成员',
+    'image.addMember.addSuccess':'添加成功',
+    'image.addMember.successMessage':'成功添加成员到命名空间！',
+    'image.addMember.userName':'用户名称：',
+    'image.addMember.userRole':'角色：',
+    'image.addMember.userNameMessage':'请输入用户名称',
+    'image.accessLog':'日志信息',
+    'image.logTable.user':'用户名称',
+    'image.logTable.repoName':'镜像名称',
+    'image.logTable.tag':'镜像版本号',
+    'image.logTable.operation':'操作',
+    'image.logTable.time':'时间戳',
+    'image.imageList':'镜像版本列表',
+    'image.imageTable.tag':'版本号',
+    'image.imageTable.size':'大小',
+    'image.imageTable.owner':'创建人',
+    'image.imageTable.docker':'Docker版本',
+    'image.imageTable.time':'创建时间',
+    'image.imageTable.label':'标签',
+    'image.imageTable.digest':'摘要',
+    'image.imageInfo.delete':'删除镜像',
+    'image.imageInfo.deleteDecision':'确定要删除已选择的镜像?'
 
 
 };

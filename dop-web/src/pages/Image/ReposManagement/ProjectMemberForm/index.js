@@ -3,6 +3,7 @@ import API from "../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
 import RoleController from '../RoleController'
+import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
 const {Col} = Grid
@@ -21,7 +22,7 @@ const formItemLayout = {
  *    弹窗中的表单
  *
  * */
-export default class NamespaceForm extends Component {
+class ProjectMemberForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.field = new Field(this);
@@ -82,22 +83,23 @@ export default class NamespaceForm extends Component {
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>
                     <Form
+                        language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
                         labelAlign={"left"}
                         style={style}
                     >
                         <Col>
                             <FormItem {...formItemLayout}
-                                      validateStatus={this.field.getError("title") ? "error" : ""}
-                                      help={this.field.getError("title") ? "请输入名称" : ""}
-                                      label="用户名称："
+                                      validateStatus={this.field.getError("userName") ? "error" : ""}
+                                      help={this.field.getError("userName") ? this.props.intl.messages["image.addMember.userNameMessage"] : ""}
+                                      label={this.props.intl.messages["image.addMember.userName"]}
                                       required>
                                 <Input {...init('userName', {rules: [{required: true, message: "该项不能为空"}]})}
-                                       placeholder="请输入用户名称"/>
+                                       placeholder={this.props.intl.messages["image.addMember.userNameMessage"]}/>
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("role") ? "error" : ""}
                                       help={this.field.getError("role") ? "请选择用户角色" : ""}
-                                      label="角色："
+                                      label={this.props.intl.messages["image.addMember.userRole"]}
                                       required>
                                 <RoleController   {...init('role', {
                                     rules: [{required: true}],initValue:"0"
@@ -110,3 +112,4 @@ export default class NamespaceForm extends Component {
         )
     }
 }
+export default injectIntl(ProjectMemberForm)

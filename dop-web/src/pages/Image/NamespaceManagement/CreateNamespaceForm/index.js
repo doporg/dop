@@ -75,7 +75,7 @@ class NamespaceForm extends Component {
         return (
             <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
                 <div>
-                    <Form
+                    <Form language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
                         labelAlign={"left"}
                     >
                         <FormItem {...formItemLayout}

@@ -39,6 +39,36 @@ const IMAGE_EN_US = {
     'image.repository.delete':'Delete Repo',
     'image.repository.deleteDecision':'Are you sure to delete selected repositories?',
     'image.repository.deleteMessage':'Select repository first!',
+    'image.memberList':'Member List',
+    'image.memberTable.userName':'User-name',
+    'image.memberTable.role':'Role',
+    'image.memberTable.userType':'User-type',
+    'image.addMember':'Add member',
+    'image.addMember.title':'New member',
+    'image.addMember.addSuccess':'Add success',
+    'image.addMember.successMessage':'Add a member to namespace successfully!',
+    'image.addMember.userName':'User-name: ',
+    'image.addMember.userRole':'Role: ',
+    'image.addMember.userNameMessage':'Please input user name!',
+    'image.accessLog':'Access-Log List',
+    'image.logTable.user':'User-name',
+    'image.logTable.repoName':'Repo-name',
+    'image.logTable.tag':'Tag',
+    'image.logTable.operation':'Operation',
+    'image.logTable.time':'Operation-time',
+    'image.imageList':'Tag List',
+    'image.imageTable.tag':'Tag',
+    'image.imageTable.size':'Size',
+    'image.imageTable.owner':'Author',
+    'image.imageTable.docker':'Docker-version',
+    'image.imageTable.time':'Creation-time',
+    'image.imageTable.label':'Labels',
+    'image.imageTable.digest':'Digest',
+    'image.imageInfo.delete':'Delete tag',
+    'image.imageInfo.deleteDecision':'Are you sure to delete selected tags?'
+
+
+
 
 };
 export default IMAGE_EN_US;

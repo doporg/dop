@@ -75,6 +75,7 @@ class CreateNamespaceDialog extends Component {
                 </Button>
 
                 <Dialog
+                    language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
                     visible={this.state.visible}
                     onOk={this.onOk}
                     onCancel={this.onClose}
@@ -88,7 +89,9 @@ class CreateNamespaceDialog extends Component {
                         finished={this.finished.bind(this)}/>
                 </Dialog>
 
-                <Dialog visible={this.state.createDialogVisible}
+                <Dialog
+                    language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                    visible={this.state.createDialogVisible}
                     onOk={this.onCreateDialogClose}
                     onCancel={this.onCreateDialogClose}
                     onClose={this.onCreateDialogClose}

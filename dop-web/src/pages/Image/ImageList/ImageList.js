@@ -3,6 +3,7 @@ import {Breadcrumb} from '@icedesign/base';
 import ImagePagination from './ImagePagination'
 import API from "../../API";
 import Axios from "axios";
+import {FormattedMessage} from "react-intl";
 
 export default class ImageList extends Component {
     constructor(props) {
@@ -41,8 +42,14 @@ export default class ImageList extends Component {
         return (
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
-                    <Breadcrumb.Item link="#/image/projects">命名空间</Breadcrumb.Item>
-                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>镜像仓库</Breadcrumb.Item>
+                    <Breadcrumb.Item link="#/image/projects">
+                        <FormattedMessage id="image.namespace"
+                                          defaultMessage="命名空间"/>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>
+                        <FormattedMessage id="image.namespace.repository"
+                                          defaultMessage="镜像仓库"/>
+                    </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={"repoName"}>
                     {this.state.repoName}
