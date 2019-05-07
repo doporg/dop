@@ -66,7 +66,8 @@ const IMAGE_ZH_CN ={
     'image.imageTable.label':'标签',
     'image.imageTable.digest':'摘要',
     'image.imageInfo.delete':'删除镜像',
-    'image.imageInfo.deleteDecision':'确定要删除已选择的镜像?'
+    'image.imageInfo.deleteDecision':'确定要删除已选择的镜像?',
+    'image.imageInfo.deleteMessage':'请先选择镜像后再删除！'
 
 
 };

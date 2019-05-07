@@ -41,13 +41,13 @@ class DeleteImageDialog extends Component{
             url = API.image + "/v1/repositories/"+this.state.repoName+"/images/"+this.state.deleteKeys[i];
             Axios.delete(url, {})
                 .then(function (response) {
-                    Toast.success("删除成功");
+                    Toast.success(_this.props.intl.messages["image.namespace.deleteSuccess"]);
                     _this.state.refreshImageList(1,"");
                     console.log("删除镜像");
                     console.log(response.status);
                 }).catch(function (error) {
                 console.log(error);
-                Toast.error("删除失败,请确认权限后重试！");
+                Toast.error(_this.props.intl.messages["image.namespace.deleteFailed"]);
             });
         }
         this.setState({
@@ -59,7 +59,7 @@ class DeleteImageDialog extends Component{
 
     onOpen = () => {
         if(this.state.deleteKeys.length===0){
-            Toast.error("请先选择镜像后再删除！");
+            Toast.error(this.props.intl.messages["image.imageInfo.deleteMessage"]);
         }else {
             this.setState({
                 deleteDialogVisible: true

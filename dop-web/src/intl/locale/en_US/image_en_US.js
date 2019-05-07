@@ -65,7 +65,8 @@ const IMAGE_EN_US = {
     'image.imageTable.label':'Labels',
     'image.imageTable.digest':'Digest',
     'image.imageInfo.delete':'Delete tag',
-    'image.imageInfo.deleteDecision':'Are you sure to delete selected tags?'
+    'image.imageInfo.deleteDecision':'Are you sure to delete selected tags?',
+    'image.imageInfo.deleteMessage':'Please select tag first!'
 
 
 
