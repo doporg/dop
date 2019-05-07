@@ -1,7 +1,11 @@
 package com.clsaa.dop.server.test.dao;
 
 import com.clsaa.dop.server.test.model.po.ManualCase;
+import com.clsaa.dop.server.test.model.vo.SimpleCaseVo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @author xihao
@@ -10,4 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface ManualCaseRepository extends JpaRepository<ManualCase, Long> {
 
+    @Query(value = "select new com.clsaa.dop.server.test.model.vo.SimpleCaseVo(m.id, m.caseName, m.caseDesc, m.applicationId)" +
+            " from ManualCase m where m.applicationId=?1 and m.caseName like concat('%',?2,'%') and m.deleted = false ")
+    List<SimpleCaseVo> findSimpleCase(Long appId, String key);
 }

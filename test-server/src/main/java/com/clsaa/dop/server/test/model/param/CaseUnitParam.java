@@ -21,7 +21,7 @@ public class CaseUnitParam {
 
     private CaseType caseType;
 
-//    private Long caseId;
+    private Long caseId;
 
     private String caseName;
 }

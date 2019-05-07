@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import UserTable from './components/UserTable';
+import CustomTable from "./components/UserTable/CustomTable";
 
 export default class TestCases extends Component {
     constructor(props) {
@@ -10,7 +10,7 @@ export default class TestCases extends Component {
     render() {
         return (
             <div className="test-cases-page">
-                <UserTable />
+                <CustomTable />
             </div>
         );
     }
