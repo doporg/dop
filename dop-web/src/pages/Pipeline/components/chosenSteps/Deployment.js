@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import '../Styles.scss'
+import {injectIntl} from "react-intl";
 
 
-export default class Deployment extends Component{
+class Deployment extends Component{
     render(){
         return (
             <div>
@@ -15,3 +16,4 @@ export default class Deployment extends Component{
         )
     }
 }
+export default injectIntl(Deployment)
