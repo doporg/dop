@@ -143,18 +143,19 @@ class MemberList extends Component{
                                primaryKey="id"
                         >
 
-                            <Table.Column title="用户名称"
+                            <Table.Column title={this.props.intl.messages["image.memberTable.userName"]}
                                           dataIndex="entityName"/>
 
-                            <Table.Column title="角色"
+                            <Table.Column title={this.props.intl.messages["image.memberTable.role"]}
                                           dataIndex="roleName"/>
 
-                            <Table.Column title="成员类型"
+                            <Table.Column title={this.props.intl.messages["image.memberTable.userType"]}
                                           dataIndex="entityType"/>
                         </Table>
                     </Loading>
 
-                    <Pagination className={"body"}
+                    <Pagination language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                                className={"body"}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}

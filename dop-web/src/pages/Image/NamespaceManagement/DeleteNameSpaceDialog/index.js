@@ -74,7 +74,8 @@ class DeleteNameSpaceDialog extends Component{
                                       defaultMessage="删除命名空间"/>
                 </Button>
 
-                <Dialog visible={this.state.deleteDialogVisible}
+                <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                        visible={this.state.deleteDialogVisible}
                         onOk={this.onDeleteNamespace}
                         onCancel={this.onDeleteLogClose}
                         onClose={this.onDeleteLogClose}

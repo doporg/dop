@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
 import {Button,Dialog} from "@icedesign/base";
 import ProjectMemberForm from "../ProjectMemberForm"
-
-export default class AddMemberDialog extends Component{
+import {injectIntl,FormattedMessage} from "react-intl";
+ class AddMemberDialog extends Component{
 
     constructor(props) {
         super(props);
@@ -65,13 +65,16 @@ export default class AddMemberDialog extends Component{
     render() {
         return (
             <span className={"dialog"}>
-                <Button onClick={this.onOpen} type="primary">添加用户</Button>
-        <Dialog
+                <Button onClick={this.onOpen} type="primary">
+                    <FormattedMessage id="image.addMember"
+                                      defaultMessage="添加用户"/>
+                </Button>
+        <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
-            title="新建成员"
+            title={this.props.intl.messages["image.addMember.title"]}
             style={this.state.style}
             footerAlign={this.state.footerAlign}
         >
@@ -80,16 +83,20 @@ export default class AddMemberDialog extends Component{
               finished={this.finished.bind(this)} projectId={this.state.projectId}/>
         </Dialog>
 
-<Dialog visible={this.state.createDialogVisible}
+<Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+        visible={this.state.createDialogVisible}
         onOk={this.onCreateDialogClose}
         onCancel={this.onCreateDialogClose}
         onClose={this.onCreateDialogClose}
-        title="添加成功"
+        title={this.props.intl.messages["image.addMember.addSuccess"]}
         style={this.state.createDialogStyle}
         footerAlign={this.state.footerAlign}>
-成功添加成员到命名空间！
+    <FormattedMessage id="image.addMember.successMessage"
+                      defaultMessage="成功添加成员到命名空间！"/>
 </Dialog>
       </span>
         );
     }
 }
+
+export default injectIntl(AddMemberDialog);
