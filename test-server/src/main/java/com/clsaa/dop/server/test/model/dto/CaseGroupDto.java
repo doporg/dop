@@ -32,6 +32,8 @@ public class CaseGroupDto {
 
     private List<CaseUnitDto> caseUnits;
 
+    private String createUserName;
+
     // ----------- common property ---------
     private Long id;
 

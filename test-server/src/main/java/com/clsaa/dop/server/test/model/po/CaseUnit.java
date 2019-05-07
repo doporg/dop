@@ -20,9 +20,11 @@ import java.time.LocalDateTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "case_unit", schema = "db_dop_test",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "case_type"})},
-        indexes = {@Index(columnList = "case_id,case_type", unique = true)})
+@Table(name = "case_unit", schema = "db_dop_test"
+//        ,
+//        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "case_type"})},
+//        indexes = {@Index(columnList = "case_id,case_type", unique = true)}
+        )
 public class CaseUnit implements Po {
 
     // 类型

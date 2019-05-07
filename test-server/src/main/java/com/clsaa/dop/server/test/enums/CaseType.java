@@ -7,5 +7,15 @@ package com.clsaa.dop.server.test.enums;
  */
 public enum  CaseType {
 
-    MANUAL, INTERFACE
+    MANUAL("手工"), INTERFACE("接口");
+
+    private String comment;
+
+    CaseType(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return this.comment;
+    }
 }

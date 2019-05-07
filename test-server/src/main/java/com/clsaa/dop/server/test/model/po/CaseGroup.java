@@ -23,12 +23,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "case_group", schema = "db_dop_test"
-//        ,
-//        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "ref"})},
-//        indexes = {@Index(columnList = "case_id,ref", unique = true)}
+        ,
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"app_id", "group_name"})},
+        indexes = {@Index(columnList = "app_id,group_name", unique = true)}
         )
 public class CaseGroup implements Po{
 
+    @Column(name = "group_name")
     private String groupName;
 
     @Column(name = "app_id")
@@ -40,7 +41,7 @@ public class CaseGroup implements Po{
 
     private String comment;
 
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "case_group_id", referencedColumnName = "id"
             ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)

@@ -46,4 +46,10 @@ public class GroupController {
     public Pagination<CaseGroupDto> queryGroup(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize) {
         return caseGroupQueryService.selectByPage(pageNo, pageSize);
     }
+
+    @GetMapping("/{groupId}")
+    public CaseGroupDto queryGroupById(@PathVariable("groupId") Long groupId) {
+        return caseGroupQueryService.selectByIds(groupId).orElse(null);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.clsaa.dop.server.test.mapper.po2dto;
 import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
+import com.clsaa.dop.server.test.model.dto.CaseUnitDto;
 import com.clsaa.dop.server.test.model.po.CaseGroup;
 import com.clsaa.dop.server.test.model.po.CaseUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,17 @@ public class CaseGroupDtoMapper extends AbstractCommonServiceMapper<CaseGroup, C
     @Override
     public Class<CaseGroupDto> getTargetClass() {
         return CaseGroupDto.class;
+    }
+
+    @Override
+    public Optional<CaseGroupDto> convert(CaseGroup caseGroup) {
+        List<CaseUnitDto> unitDtos = caseUnitDtoMapper.convert(caseGroup.getCaseUnits());
+        return super.convert(caseGroup).map(caseGroupDto -> {
+            caseGroupDto.setCaseUnits(unitDtos);
+            Long cuserId = caseGroupDto.getCuser();
+            caseGroupDto.setCreateUserName(UserManager.getUserName(cuserId));
+            return caseGroupDto;
+        });
     }
 
     @Override
