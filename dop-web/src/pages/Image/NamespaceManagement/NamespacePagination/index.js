@@ -7,6 +7,8 @@ import IceContainer from '@icedesign/container';
 import DeleteNameSpaceDialog from "../DeleteNameSpaceDialog";
 import CreateNamespaceDialog from "../CreateNamespaceDialog";
 import "../../Style.scss"
+import {injectIntl,FormattedMessage} from 'react-intl';
+import PublicStatus from '../PublicStatus'
 
 const {Row,Col} = Grid;
 const Toast = Feedback.toast;
@@ -20,7 +22,7 @@ const styles = {
     }
 };
 
-export default class NamespacePagination extends Component {
+class NamespacePagination extends Component {
     //构造方法
     constructor(props) {
         super(props);
@@ -265,80 +267,39 @@ export default class NamespacePagination extends Component {
 
 
     //链接跳转到对应的命名空间
-    idRender = function (id) {
-        return <Link to={"/image/projects/" + id + "/repos"}
-        >{id}</Link>
+    nameRender = function (value,index,record) {
+        return <Link to={"/image/projects/" + record.projectId + "/repos"}
+        >{value}</Link>
     };
     //命名空间公开状态监听
     renderSwitch = (value,index,record) => {
-        if (value==="true"){
-            return <Switch onChange={(checked)=>{
-                let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
-                //修改命名空间状态
-                let temp = "";
-                if (checked){
-                    temp = "true";
-                }else {
-                    temp = "false";
-                }
-                Axios.put(url,{}, {
-                    params:{
-                        "publicStatus":temp
-                    }
-                }).then(function (response) {
-                    Toast.success("修改状态成功！");
-                    console.log(response.status);
-                }).catch(function (error) {
-                    console.log(error);
-                    Toast.error("修改失败,请确认权限后重试！");
-                });
-            }
-            } defaultChecked={true} />
-        }else {
-            return <Switch onChange={(checked)=>
-            {
-                let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
-                //修改命名空间状态
-                let temp = "";
-                if (checked){
-                    temp = "true";
-                }else {
-                    temp = "false";
-                }
-                Axios.put(url, {},{
-                    params:{
-                        "publicStatus":temp
-                    }
-                }).then(function (response) {
-                    Toast.success("修改状态成功！");
-                    console.log(response.status);
-                }).catch(function (error) {
-                    console.log(error);
-                    Toast.error("修改失败,请确认权限后重试！");
-                });
-            }
-            } defaultChecked={false}/>
-        }
-
+        return <PublicStatus refreshList={this.refreshList.bind(this)} value={value} record={record}/>
     };
 
     render() {
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                         <Select className={"select"} defaultValue={"all"} onChange={this.changeSelection.bind(this)}>
-                            <Select.Option value="all">所有命名空间</Select.Option>
-                            <Select.Option value="public">公开命名空间</Select.Option>
-                            <Select.Option value="private">私有命名空间</Select.Option>
+                            <Select.Option value="all">
+                                <FormattedMessage id="image.selectAll"
+                                defaultMessage="所有命名空间"/>
+                            </Select.Option>
+                            <Select.Option value="public">
+                                <FormattedMessage id="image.selectPublic"
+                                                  defaultMessage="公开命名空间"/>
+                            </Select.Option>
+                            <Select.Option value="private">
+                                <FormattedMessage id="image.selectPrivate"
+                                                  defaultMessage="私有命名空间"/>
+                            </Select.Option>
                         </Select>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"命名空间列表"}>
+                <IceContainer title={this.props.intl.messages["image.namespaceList"]}>
                     <Row wrap className="headRow">
                         <Col l="12">
                             <CreateNamespaceDialog refreshProjectList={this.refreshList.bind(this)}/>
@@ -350,27 +311,28 @@ export default class NamespacePagination extends Component {
                                rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
                                primaryKey='projectId'>
-                            <Table.Column cell={this.idRender}
-                                          title="命名空间ID"
+                            <Table.Column title={this.props.intl.messages["image.namespaceId"]}
                                           dataIndex="projectId"/>
 
-                            <Table.Column title="命名空间名称"
+                            <Table.Column cell={this.nameRender}
+                                          title={this.props.intl.messages["image.namespaceName"]}
                                           dataIndex="name"/>
 
-                            <Table.Column title="角色"
+                            <Table.Column title={this.props.intl.messages["image.role"]}
                                           dataIndex="currentUserRole"/>
 
-                            <Table.Column title="私有/公开"
-                                          dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>
+                            <Table.Column title={this.props.intl.messages["image.publicStatus"]}
+                                          dataIndex="metadata.public" width={130} cell={this.renderSwitch}/>
 
-                            <Table.Column title="镜像仓库数量"
+                            <Table.Column title={this.props.intl.messages["image.repoCount"]}
                                           dataIndex="repoCount"/>
-                            <Table.Column title="创建时间"
+                            <Table.Column title={this.props.intl.messages["image.creationTime"]}
                                           dataIndex="creationTime"/>
                         </Table>
                     </Loading>
 
-                    <Pagination style={styles.body}
+                    <Pagination language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                                style={styles.body}
                                 current={this.state.current}
                                 onChange={this.handleChange.bind(this)}
                                 pageSize={this.state.pageSize}
@@ -381,3 +343,4 @@ export default class NamespacePagination extends Component {
         )
     }
 }
+export default injectIntl(NamespacePagination);

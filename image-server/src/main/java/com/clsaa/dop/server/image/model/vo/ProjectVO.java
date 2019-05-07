@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.image.model.vo;
 
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -13,6 +15,8 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectVO {
     /**
      * 项目的id
