@@ -2,8 +2,9 @@ import {Dialog,Button,} from "@icedesign/base";
 import NamespaceForm from "../CreateNamespaceForm/index"
 import React, {Component} from 'react'
 import "../../Style.scss"
+import {injectIntl,FormattedMessage} from 'react-intl'
 
-export default class CreateNamespaceDialog extends Component {
+class CreateNamespaceDialog extends Component {
     constructor(props) {
         super(props);
 
@@ -13,7 +14,7 @@ export default class CreateNamespaceDialog extends Component {
             footerAlign: "center",
             visible: false,
             style: {
-                width: "30%"
+                width: "35%"
             },
             createDialogStyle: {
                 width: "10%"
@@ -69,34 +70,38 @@ export default class CreateNamespaceDialog extends Component {
         return (
             <span className={"dialog"}>
                 <Button onClick={this.onOpen} type="primary">
-          创建命名空间
-        </Button>
-        <Dialog
-            visible={this.state.visible}
-            onOk={this.onOk}
-            onCancel={this.onClose}
-            onClose={this.onClose}
-            title="创建命名空间"
-            style={this.state.style}
-            footerAlign={this.state.footerAlign}
-        >
-          <NamespaceForm
-              isSubmit={this.state.isSubmit}
-              finished={this.finished.bind(this)}/>
-        </Dialog>
+                    <FormattedMessage id="image.createNamespace"
+                            defaultMessage="创建命名空间"/>
+                </Button>
 
-<Dialog visible={this.state.createDialogVisible}
-        onOk={this.onCreateDialogClose}
-        onCancel={this.onCreateDialogClose}
-        onClose={this.onCreateDialogClose}
-        title="创建成功"
-        style={this.state.createDialogStyle}
-        footerAlign={this.state.footerAlign}>
-命名空间创建成功！
-</Dialog>
-      </span>
+                <Dialog
+                    visible={this.state.visible}
+                    onOk={this.onOk}
+                    onCancel={this.onClose}
+                    onClose={this.onClose}
+                    title={this.props.intl.messages["image.createNamespace"]}
+                    style={this.state.style}
+                    footerAlign={this.state.footerAlign}
+                >
+                    <NamespaceForm
+                        isSubmit={this.state.isSubmit}
+                        finished={this.finished.bind(this)}/>
+                </Dialog>
+
+                <Dialog visible={this.state.createDialogVisible}
+                    onOk={this.onCreateDialogClose}
+                    onCancel={this.onCreateDialogClose}
+                    onClose={this.onCreateDialogClose}
+                    title={this.props.intl.messages["image.createSuccess"]}
+                    style={this.state.createDialogStyle}
+                    footerAlign={this.state.footerAlign}>
+                    <FormattedMessage id="image.namespace.successMessage"
+                                defaultMessage="命名空间创建成功！"/>
+                </Dialog>
+            </span>
         );
     }
 
 
 }
+export default injectIntl(CreateNamespaceDialog)

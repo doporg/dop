@@ -5,10 +5,10 @@ import {Col} from "@alifd/next/lib/grid";
 import API from "../../../API";
 import Axios from "axios";
 import AddMemberDialog from "../AddMemberDialog";
-
+import {injectIntl,FormattedMessage} from 'react-intl'
 
 const {Row} = Grid;
-export default class MemberList extends Component{
+class MemberList extends Component{
 
     constructor(props) {
         super(props);
@@ -124,13 +124,13 @@ export default class MemberList extends Component{
     render() {
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"成员列表"}>
+                <IceContainer title={this.props.intl.messages["image.memberList"]}>
                     <Row wrap className="headRow">
                         <Col l="12">
                             <AddMemberDialog projectId={this.state.id} refreshList={this.refreshList.bind(this)}/>
@@ -166,3 +166,4 @@ export default class MemberList extends Component{
     }
 
 }
+export default injectIntl(MemberList)

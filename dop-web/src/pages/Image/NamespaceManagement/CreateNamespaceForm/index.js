@@ -2,18 +2,12 @@ import {Field, Form, Input, Loading} from "@icedesign/base";
 import API from "../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
-
 import PrivateController from "../PrivateController/index"
+import {injectIntl,FormattedMessage} from 'react-intl'
 
 const FormItem = Form.Item;
-const style = {
-    padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
-};
-
 const formItemLayout = {
-    labelCol: {span: 8},
+    labelCol: {span: 14},
     wrapperCol: {span: 16}
 };
 
@@ -21,7 +15,7 @@ const formItemLayout = {
  *    弹窗中的表单
  *
  * */
-export default class NamespaceForm extends Component {
+class NamespaceForm extends Component {
     constructor(props, context) {
         super(props, context);
         this.field = new Field(this);
@@ -83,20 +77,18 @@ export default class NamespaceForm extends Component {
                 <div>
                     <Form
                         labelAlign={"left"}
-                        style={style}
                     >
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("title") ? "error" : ""}
-                                  help={this.field.getError("title") ? "请输入名称" : ""}
-                                  label="命名空间名称："
+                                  help={this.field.getError("title") ? this.props.intl.messages["image.namespace.nameWarn"] : ""}
+                                  label={this.props.intl.messages["image.namespace.name"]}
                                   required>
                             <Input {...init('title', {rules: [{required: true,whiteSpace:true,trigger:["onBlur","onChange"]}]})}
-                                   placeholder="请输入命名空间名称"/>
+                                   placeholder={this.props.intl.messages["image.namespace.namePlaceholder"]}/>
                         </FormItem>
                         <FormItem {...formItemLayout}
                                   validateStatus={this.field.getError("private") ? "error" : ""}
-                                  help={this.field.getError("private") ? "请选择公开性" : ""}
-                                  label="公开性："
+                                  label={this.props.intl.messages["image.namespace.publicStatus"]}
                                   required>
                             <PrivateController {...init('private', {
                                 rules: [{required: true}],initValue:"true"
@@ -108,3 +100,4 @@ export default class NamespaceForm extends Component {
         )
     }
 }
+export default injectIntl(NamespaceForm);

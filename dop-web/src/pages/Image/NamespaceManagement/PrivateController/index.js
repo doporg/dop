@@ -1,28 +1,16 @@
 import React, {Component} from 'react';
 import {Radio} from "@icedesign/base";
-
+import {injectIntl} from 'react-intl'
 const {Group: RadioGroup} = Radio;
-const list = [
-    {
-        value: "true",
-        label: "公开"
-    },
-    {
-        value: 'false',
-        label: "私有"
-    },
-];
 
 
 /**
  *    私密性单选按钮
  *
  * */
-export default class PrivateController extends Component {
+class PrivateController extends Component {
     constructor(props) {
         super(props);
-
-
         //与Filed组件通信
         this.state = {
             value: typeof props.value === "undefined" ? [] : props.value
@@ -48,6 +36,16 @@ export default class PrivateController extends Component {
     }
 
     render() {
+        const list = [
+            {
+                value: "true",
+                label: this.props.intl.messages["image.namespace.public"]
+            },
+            {
+                value: 'false',
+                label: this.props.intl.messages["image.namespace.private"]
+            },
+        ];
         return (
             <div>
                 <RadioGroup
@@ -60,3 +58,4 @@ export default class PrivateController extends Component {
     }
 
 }
+export default injectIntl(PrivateController)

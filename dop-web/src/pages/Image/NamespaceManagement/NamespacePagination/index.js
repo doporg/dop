@@ -7,6 +7,7 @@ import IceContainer from '@icedesign/container';
 import DeleteNameSpaceDialog from "../DeleteNameSpaceDialog";
 import CreateNamespaceDialog from "../CreateNamespaceDialog";
 import "../../Style.scss"
+import {injectIntl,FormattedMessage} from 'react-intl';
 
 const {Row,Col} = Grid;
 const Toast = Feedback.toast;
@@ -20,7 +21,7 @@ const styles = {
     }
 };
 
-export default class NamespacePagination extends Component {
+class NamespacePagination extends Component {
     //构造方法
     constructor(props) {
         super(props);
@@ -325,20 +326,30 @@ export default class NamespacePagination extends Component {
     };
 
     render() {
+        console.log(this.props.intl);
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                         <Select className={"select"} defaultValue={"all"} onChange={this.changeSelection.bind(this)}>
-                            <Select.Option value="all">所有命名空间</Select.Option>
-                            <Select.Option value="public">公开命名空间</Select.Option>
-                            <Select.Option value="private">私有命名空间</Select.Option>
+                            <Select.Option value="all">
+                                <FormattedMessage id="image.selectAll"
+                                defaultMessage="所有命名空间"/>
+                            </Select.Option>
+                            <Select.Option value="public">
+                                <FormattedMessage id="image.selectPublic"
+                                                  defaultMessage="公开命名空间"/>
+                            </Select.Option>
+                            <Select.Option value="private">
+                                <FormattedMessage id="image.selectPrivate"
+                                                  defaultMessage="私有命名空间"/>
+                            </Select.Option>
                         </Select>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"命名空间列表"}>
+                <IceContainer title={this.props.intl.messages["image.namespaceList"]}>
                     <Row wrap className="headRow">
                         <Col l="12">
                             <CreateNamespaceDialog refreshProjectList={this.refreshList.bind(this)}/>
@@ -351,21 +362,21 @@ export default class NamespacePagination extends Component {
                                isLoading={this.state.isLoading}
                                primaryKey='projectId'>
                             <Table.Column cell={this.idRender}
-                                          title="命名空间ID"
+                                          title={this.props.intl.messages["image.namespaceId"]}
                                           dataIndex="projectId"/>
 
-                            <Table.Column title="命名空间名称"
+                            <Table.Column title={this.props.intl.messages["image.namespaceName"]}
                                           dataIndex="name"/>
 
-                            <Table.Column title="角色"
+                            <Table.Column title={this.props.intl.messages["image.role"]}
                                           dataIndex="currentUserRole"/>
 
-                            <Table.Column title="私有/公开"
-                                          dataIndex="metadata.public" width={100} cell={this.renderSwitch}/>
+                            <Table.Column title={this.props.intl.messages["image.publicStatus"]}
+                                          dataIndex="metadata.public" width={130} cell={this.renderSwitch}/>
 
-                            <Table.Column title="镜像仓库数量"
+                            <Table.Column title={this.props.intl.messages["image.repoCount"]}
                                           dataIndex="repoCount"/>
-                            <Table.Column title="创建时间"
+                            <Table.Column title={this.props.intl.messages["image.creationTime"]}
                                           dataIndex="creationTime"/>
                         </Table>
                     </Loading>
@@ -381,3 +392,4 @@ export default class NamespacePagination extends Component {
         )
     }
 }
+export default injectIntl(NamespacePagination);

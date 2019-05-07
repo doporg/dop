@@ -5,9 +5,9 @@ import NamespaceLogList from "../../NamespaceLog/NamespaceLogList";
 import API from "../../../API";
 import Axios from "axios/index";
 import MemberList from "../MemberList";
+import {injectIntl,FormattedMessage} from 'react-intl';
 
-
-export default class Repos extends Component {
+class Repos extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -40,22 +40,24 @@ export default class Repos extends Component {
         return (
                 <div>
                     <Breadcrumb style={{marginBottom: "10px"}}>
-                        <Breadcrumb.Item style={{color: "#5485F7"}} link="#/image/projects">命名空间</Breadcrumb.Item>
+                        <Breadcrumb.Item style={{color: "#5485F7"}} link="#/image/projects">
+                            <FormattedMessage id="image.namespace" defaultMessage="命名空间"/>
+                        </Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={"repoName"}>
                         {this.state.projectName}
                     </div>
                     <Tab>
-                        <Tab.TabPane key={"image"} tab={"镜像仓库"}>
+                        <Tab.TabPane key={"image"} tab={this.props.intl.messages["image.namespace.repository"]}>
                             <RepoList projectId={this.state.id} />
                         </Tab.TabPane>
-                        <Tab.TabPane key={"member"} tab={"成员"}>
+                        <Tab.TabPane key={"member"} tab={this.props.intl.messages["image.namespace.member"]}>
                             <MemberList projectId={this.state.id}/>
                         </Tab.TabPane>
-                        <Tab.TabPane key={"labels"} tab={"标签"}>
+                        <Tab.TabPane key={"labels"} tab={this.props.intl.messages["image.namespace.label"]}>
 
                         </Tab.TabPane>
-                        <Tab.TabPane key={"logs"} tab={"日志"}>
+                        <Tab.TabPane key={"logs"} tab={this.props.intl.messages["image.namespace.accessLog"]}>
                             <NamespaceLogList projectId={this.state.id} />
                         </Tab.TabPane>
                     </Tab>
@@ -66,6 +68,7 @@ export default class Repos extends Component {
 }
 
 
+export default injectIntl(Repos);
 
 
 

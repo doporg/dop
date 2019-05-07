@@ -1,15 +1,18 @@
 import React, {Component} from 'react';
-import {Grid, Input, Loading, Pagination, Table} from '@icedesign/base';
+import {Input, Loading, Pagination, Table} from '@icedesign/base';
+import {Grid} from '@icedesign/base';
 import {Col} from "@alifd/next/lib/grid";
+import {Link} from 'react-router-dom';
 import IceContainer from '@icedesign/container';
 import DeleteRepoDialog from "../DeleteRepoDialog";
 import "../../Style.scss"
 import API from "../../../API";
 import Axios from "axios";
+import {injectIntl} from 'react-intl';
 
 const {Row} = Grid;
 
-export default class RepoList extends Component {
+class RepoList extends Component {
 
     static displayName = 'RepoList';
 
@@ -127,20 +130,22 @@ export default class RepoList extends Component {
         this.refreshList(this.state.current,value)
     }
 
-    nameRender(value, index, record) {
-        console.log("namerender", value, index, record)
+    nameRender=(value, index, record)=> {
+        //链接到对应的镜像列表
+        return <Link to={"/repos/"+value+"/images"}
+        >{value}</Link>
     };
 
     render() {
         return (
             <div>
-                <IceContainer title={"检索条件"}>
+                <IceContainer title={this.props.intl.messages["image.search"]}>
                     <Row wrap>
-                        <Input placeholder={"请输入关键字"} onChange={this.onSearch.bind(this)}/>
+                        <Input placeholder={this.props.intl.messages["image.searchPlaceholder"]} onChange={this.onSearch.bind(this)}/>
                     </Row>
                 </IceContainer>
 
-                <IceContainer title={"镜像仓库列表"}>
+                <IceContainer title={this.props.intl.messages["image.repository"]}>
                     <Row wrap className="headRow">
                         <Col l="12">
                             <DeleteRepoDialog deleteKeys={this.state.rowSelection.selectedRowKeys} refreshRepoList={this.refreshList.bind(this)}/>
@@ -153,13 +158,13 @@ export default class RepoList extends Component {
                                primaryKey="name"
                         >
 
-                            <Table.Column title="镜像仓库名称" cell={this.nameRender}
+                            <Table.Column title={this.props.intl.messages["image.repoTable.name"]} cell={this.nameRender}
                                           dataIndex="name"/>
 
-                            <Table.Column title="标签数"
+                            <Table.Column title={this.props.intl.messages["image.repoTable.tagsCount"]}
                                           dataIndex="tagsCount"/>
 
-                            <Table.Column title="下载数"
+                            <Table.Column title={this.props.intl.messages["image.repoTable.pullCount"]}
                                           dataIndex="pullCount"/>
                         </Table>
                     </Loading>
@@ -176,3 +181,4 @@ export default class RepoList extends Component {
     }
 
 }
+export default injectIntl(RepoList);
