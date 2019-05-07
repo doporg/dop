@@ -1,5 +1,5 @@
 const IMAGE_EN_US = {
-    'image.namespace': 'namespace',
+    'image.namespace': '< namespace',
     'image.search' : 'Retrieval criteria',
     'image.namespaceList' : 'Namespace list',
     'image.createNamespace' : 'New namespace',
@@ -22,8 +22,8 @@ const IMAGE_EN_US = {
     'image.namespace.public':'public',
     'image.namespace.private':'private',
     'image.namespace.deleteMessage':'Select namespace first!',
-    'image.namespace.deleteSuccess':'Delete success!',
-    'image.namespace.deleteFailed':'Delete failed,make sure you have the delete Permissions!',
+    'image.namespace.deleteSuccess':'Deleted successfully!',
+    'image.namespace.deleteFailed':'Deletion failed,make sure you have the delete Permissions!',
     'image.namespace.deleteDecision':'Are you sure to delete selected namespaces?',
     'image.namespace.repository':'Repository',
     'image.namespace.member':'Member',
@@ -39,6 +39,9 @@ const IMAGE_EN_US = {
     'image.repository.delete':'Delete Repo',
     'image.repository.deleteDecision':'Are you sure to delete selected repositories?',
     'image.repository.deleteMessage':'Select repository first!',
+    'image.publicStatus.success':'Modified successfully!',
+    'image.publicStatus.failed':'Modification failed,make sure you have the delete Permissions!'
+
 
 };
 export default IMAGE_EN_US;

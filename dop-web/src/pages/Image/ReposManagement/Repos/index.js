@@ -41,7 +41,7 @@ class Repos extends Component {
                 <div>
                     <Breadcrumb style={{marginBottom: "10px"}}>
                         <Breadcrumb.Item style={{color: "#5485F7"}} link="#/image/projects">
-                            <FormattedMessage id="image.namespace" defaultMessage="命名空间"/>
+                            <FormattedMessage id="image.namespace" defaultMessage="< 命名空间"/>
                         </Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={"repoName"}>

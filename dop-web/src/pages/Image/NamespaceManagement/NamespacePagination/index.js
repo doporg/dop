@@ -8,6 +8,7 @@ import DeleteNameSpaceDialog from "../DeleteNameSpaceDialog";
 import CreateNamespaceDialog from "../CreateNamespaceDialog";
 import "../../Style.scss"
 import {injectIntl,FormattedMessage} from 'react-intl';
+import PublicStatus from '../PublicStatus'
 
 const {Row,Col} = Grid;
 const Toast = Feedback.toast;
@@ -266,67 +267,16 @@ class NamespacePagination extends Component {
 
 
     //链接跳转到对应的命名空间
-    idRender = function (id) {
-        return <Link to={"/image/projects/" + id + "/repos"}
-        >{id}</Link>
+    nameRender = function (value,index,record) {
+        return <Link to={"/image/projects/" + record.projectId + "/repos"}
+        >{value}</Link>
     };
     //命名空间公开状态监听
     renderSwitch = (value,index,record) => {
-        if (value==="true"){
-            return <Switch onChange={(checked)=>{
-                let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
-                //修改命名空间状态
-                let temp = "";
-                if (checked){
-                    temp = "true";
-                }else {
-                    temp = "false";
-                }
-                Axios.put(url,{}, {
-                    params:{
-                        "publicStatus":temp
-                    }
-                }).then(function (response) {
-                    Toast.success("修改状态成功！");
-                    console.log(response.status);
-                }).catch(function (error) {
-                    console.log(error);
-                    Toast.error("修改失败,请确认权限后重试！");
-                });
-            }
-            } defaultChecked={true} />
-        }else {
-            return <Switch onChange={(checked)=>
-            {
-                let namespaceId = record.projectId;
-                let url = API.image+"/v1/projects/"+namespaceId+"/metadatas/public";
-                //修改命名空间状态
-                let temp = "";
-                if (checked){
-                    temp = "true";
-                }else {
-                    temp = "false";
-                }
-                Axios.put(url, {},{
-                    params:{
-                        "publicStatus":temp
-                    }
-                }).then(function (response) {
-                    Toast.success("修改状态成功！");
-                    console.log(response.status);
-                }).catch(function (error) {
-                    console.log(error);
-                    Toast.error("修改失败,请确认权限后重试！");
-                });
-            }
-            } defaultChecked={false}/>
-        }
-
+        return <PublicStatus refreshList={this.refreshList.bind(this)} value={value} record={record}/>
     };
 
     render() {
-        console.log(this.props.intl);
         return (
             <div>
                 <IceContainer title={this.props.intl.messages["image.search"]}>
@@ -361,11 +311,11 @@ class NamespacePagination extends Component {
                                rowSelection={this.state.rowSelection}
                                isLoading={this.state.isLoading}
                                primaryKey='projectId'>
-                            <Table.Column cell={this.idRender}
-                                          title={this.props.intl.messages["image.namespaceId"]}
+                            <Table.Column title={this.props.intl.messages["image.namespaceId"]}
                                           dataIndex="projectId"/>
 
-                            <Table.Column title={this.props.intl.messages["image.namespaceName"]}
+                            <Table.Column cell={this.nameRender}
+                                          title={this.props.intl.messages["image.namespaceName"]}
                                           dataIndex="name"/>
 
                             <Table.Column title={this.props.intl.messages["image.role"]}

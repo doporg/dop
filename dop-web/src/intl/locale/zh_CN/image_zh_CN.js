@@ -1,7 +1,7 @@
 const IMAGE_ZH_CN ={
-    'image.namespace': '命名空间',
+    'image.namespace': '< 命名空间',
     'image.search' : '检索条件',
-    'image.namespaceList' : '命名空间列表',
+    'image.namespaceList' : '命名空间',
     'image.createNamespace' : '创建命名空间',
     'image.deleteNamespace' : '删除命名空间',
     'image.namespaceId' : '命名空间编号',
@@ -43,6 +43,8 @@ const IMAGE_ZH_CN ={
     'image.memberList':'成员列表',
     'image.memberTable.userName':'用户名称',
     'image.memberTable.role':'角色',
+    'image.publicStatus.success':'修改成功',
+    'image.publicStatus.failed':'修改失败,请确认权限后重试！',
 
 
 
