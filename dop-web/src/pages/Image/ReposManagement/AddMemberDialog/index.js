@@ -1,7 +1,8 @@
 import React,{Component} from 'react';
-import {Button,Dialog} from "@icedesign/base";
+import {Button,Dialog,Feedback} from "@icedesign/base";
 import ProjectMemberForm from "../ProjectMemberForm"
 import {injectIntl,FormattedMessage} from "react-intl";
+const Toast = Feedback.toast;
  class AddMemberDialog extends Component{
 
     constructor(props) {
@@ -13,7 +14,7 @@ import {injectIntl,FormattedMessage} from "react-intl";
             footerAlign: "center",
             visible: false,
             style: {
-                width: "35%"
+                width: "32%"
             },
             createDialogStyle: {
                 width: "15%"
@@ -31,9 +32,9 @@ import {injectIntl,FormattedMessage} from "react-intl";
     };
 
     onOk = () => {
+        console.log("提交表单");
         this.setState({
             isSubmit: true
-            // visible: false
         });
     }
 
@@ -50,15 +51,22 @@ import {injectIntl,FormattedMessage} from "react-intl";
         });
     };
 
-    finished() {
-        this.setState({
-            visible: false,
-            createDialogVisible: true,
-            isSubmit: false
-        })
+    finished(value) {
+        if (value==="success"){
+            this.setState({
+                visible: false,
+                createDialogVisible: true,
+                isSubmit: false
+            })
 
-        this.state.refreshMemberList();
-        console.log("finished");
+            this.state.refreshMemberList();
+        }else {
+            this.setState({
+                isSubmit: false
+            })
+            Toast.error(this.props.intl.messages["image.member.addFailed"])
+        }
+
     }
 
 
@@ -83,17 +91,17 @@ import {injectIntl,FormattedMessage} from "react-intl";
               finished={this.finished.bind(this)} projectId={this.state.projectId}/>
         </Dialog>
 
-<Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
-        visible={this.state.createDialogVisible}
-        onOk={this.onCreateDialogClose}
-        onCancel={this.onCreateDialogClose}
-        onClose={this.onCreateDialogClose}
-        title={this.props.intl.messages["image.addMember.addSuccess"]}
-        style={this.state.createDialogStyle}
-        footerAlign={this.state.footerAlign}>
-    <FormattedMessage id="image.addMember.successMessage"
-                      defaultMessage="成功添加成员到命名空间！"/>
-</Dialog>
+        <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
+                visible={this.state.createDialogVisible}
+                onOk={this.onCreateDialogClose}
+                onCancel={this.onCreateDialogClose}
+                onClose={this.onCreateDialogClose}
+                title={this.props.intl.messages["image.addMember.addSuccess"]}
+                style={this.state.createDialogStyle}
+                footerAlign={this.state.footerAlign}>
+            <FormattedMessage id="image.addMember.successMessage"
+                              defaultMessage="成功添加成员到命名空间！"/>
+        </Dialog>
       </span>
         );
     }

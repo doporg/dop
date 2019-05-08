@@ -77,7 +77,8 @@ const IMAGE_ZH_CN ={
     'image.log.selectAll':'所有操作',
     'image.log.selectPush':'推送',
     'image.log.selectPull':'拉取',
-    'image.log.selectCreate':'创建'
+    'image.log.selectCreate':'创建',
+    'image.member.addFailed':'添加失败，请确认输入了正确的用户名！'
 
 };
 export default IMAGE_ZH_CN;

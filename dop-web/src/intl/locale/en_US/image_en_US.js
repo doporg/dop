@@ -76,7 +76,8 @@ const IMAGE_EN_US = {
     'image.log.selectAll':'All operation',
     'image.log.selectPush':'Push operation',
     'image.log.selectPull':'Pull operation',
-    'image.log.selectCreate':'Create operation'
+    'image.log.selectCreate':'Create operation',
+    'image.member.addFailed':'Addition failed, make sure you input the right name'
 
 
 };
