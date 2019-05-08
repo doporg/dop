@@ -73,7 +73,11 @@ const IMAGE_ZH_CN ={
     'image.imageTable.digest':'摘要',
     'image.imageInfo.delete':'删除镜像',
     'image.imageInfo.deleteDecision':'确定要删除已选择的镜像?',
-    'image.imageInfo.deleteMessage':'请先选择镜像后再删除！'
+    'image.imageInfo.deleteMessage':'请先选择镜像后再删除！',
+    'image.log.selectAll':'所有操作',
+    'image.log.selectPush':'推送',
+    'image.log.selectPull':'拉取',
+    'image.log.selectCreate':'创建'
 
 };
 export default IMAGE_ZH_CN;
