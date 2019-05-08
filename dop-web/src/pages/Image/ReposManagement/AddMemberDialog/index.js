@@ -16,7 +16,7 @@ import {injectIntl,FormattedMessage} from "react-intl";
                 width: "35%"
             },
             createDialogStyle: {
-                width: "10%"
+                width: "15%"
             },
             createDialogVisible: false,
             refreshMemberList: this.props.refreshList,

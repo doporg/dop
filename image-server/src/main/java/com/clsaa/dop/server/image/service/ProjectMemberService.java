@@ -89,5 +89,32 @@ public class ProjectMemberService {
         projectFeign.projectsProjectIdMembersPost(projectId,projectMember,auth);
     }
 
+    /**
+     * @param projectId 项目id
+     * @param mid 成员id
+     * @param userId 登录用户id
+     */
+
+    public void deleteMember(Integer projectId,Long mid,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        projectFeign.projectsProjectIdMembersMidDelete(projectId,mid,auth);
+    }
+
+    /**
+     *
+     * @param projectId 项目id
+     * @param mid 成员id
+     * @param roleId 角色id
+     * @param userId 登录用户id
+     */
+    public void putMember(Integer projectId,Long mid,Integer roleId,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+        String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        RoleRequest roleRequest = new RoleRequest();
+        roleRequest.setRoleId(roleId);
+        projectFeign.projectsProjectIdMembersMidPut(projectId,mid,roleRequest,auth);
+    }
+
 
 }
