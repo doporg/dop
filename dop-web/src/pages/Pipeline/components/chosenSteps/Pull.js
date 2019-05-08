@@ -55,10 +55,11 @@ class Pull extends Component {
                             value: response.data[i].id
                         };
                         if (self.props.appId === response.data[i].id) {
+                            self.selectApplication(response.data[i].id)
                             self.setState({
                                 selectedApp: response.data[i].title
                             });
-                            self.selectApplication(response.data[i].id)
+
                         }
                         applications.push(application)
                     }
@@ -107,7 +108,11 @@ class Pull extends Component {
     }
 
     selectApplication(value) {
+        console.log(value)
         this.props.onChangeApp(value);
+        this.setState({
+            selectedApp: value
+        });
         this.getGit(value)
     }
 
@@ -132,10 +137,10 @@ class Pull extends Component {
                         {...formItemLayout}
                     >
                         <Combobox
+                            fillProps= "label"
                             onChange={this.selectApplication.bind(this)}
                             dataSource={this.state.applications}
                             value={this.state.selectedApp ? this.state.selectedApp : this.props.intl.messages["pipeline.info.apply.placeholder"]}
-                            fillProps="label"
                             style={{'width': '250px'}}
                         >
                         </Combobox>

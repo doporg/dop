@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.service;
 
 
+import com.clsaa.dop.server.pipeline.config.BizCodes;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
 import com.clsaa.dop.server.pipeline.feign.UserFeign;
@@ -13,10 +14,14 @@ import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -54,7 +59,7 @@ public class PipelineService {
         pipeline.setMtime(LocalDateTime.now());
         pipeline.setIsDeleted(false);
 
-        try{
+        try {
             pipelineRepository.insert(pipeline);
             //拿到 result output id
             String resultOutputId = this.resultOutputService.create(id.toString());
@@ -62,7 +67,7 @@ public class PipelineService {
             Pipeline pipelineWithInfo = this.setInfo(id.toString(), resultOutputId, loginUser);
             this.jenkinsService.createJob(pipelineWithInfo);
             return id.toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             return e.toString();
         }
     }
@@ -103,6 +108,7 @@ public class PipelineService {
         this.pipelineRepository.save(pipeline);
         return pipeline;
     }
+
     /**
      * 获得全部流水线信息, 存在返回全部流水线信息，若不存在返回null
      */
@@ -177,16 +183,35 @@ public class PipelineService {
             String token = null;
             //收集信息
 
-            UserCredentialV1 userCredentialV1 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
+            UserCredentialV1 userCredentialV11 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
 
-            dockerUserName = userCredentialV1.getIdentifier();
-            dockerPassword = userCredentialV1.getCredential();
-
+            dockerUserName = userCredentialV11.getIdentifier();
+            dockerPassword = userCredentialV11.getCredential();
 
             if (pipeline.getAppId() != null) {
                 AppBasicInfoV1 appBasicInfoV1 = this.applicationFeign.findAppById(loginUser, pipeline.getAppId());
                 gitUrl = appBasicInfoV1.getWarehouseUrl();
                 repository = appBasicInfoV1.getImageUrl();
+
+                try {
+                    if (gitUrl.startsWith("http")) {
+                        String gitMatchHost = "gitlab.dop.clsaa.com";
+                        String gitHost = new URL(gitUrl).getHost();
+                        String gitPath = new URL(gitUrl).getPath();
+                        if (gitHost.equals(gitMatchHost)) {
+                            UserCredentialV1 userCredentialV12 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_GITLAB_TOKEN);
+                            String accessToken = userCredentialV12.getCredential();
+                            gitUrl = "http://oauth2:" + accessToken + "@" + gitHost + gitPath;
+                        }
+                    } else {
+//                        dockerRepoHost = respository.split("/")[0];
+//                        imageName = respository;
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
+                            , e.getMessage()));
+                }
             }
 
             if (pipeline.getAppEnvId() != null) {
@@ -276,7 +301,6 @@ public class PipelineService {
         }
         return pipeline;
     }
-
 
 
 }

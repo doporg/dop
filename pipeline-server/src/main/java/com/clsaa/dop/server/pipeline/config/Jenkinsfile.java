@@ -1,10 +1,14 @@
 package com.clsaa.dop.server.pipeline.config;
 
 
+import com.clsaa.dop.server.pipeline.feign.UserFeign;
+import com.clsaa.dop.server.pipeline.model.dto.UserCredential;
+import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.MalformedURLException;
@@ -25,9 +29,11 @@ public class Jenkinsfile {
     private String stages;
     private Long appEnvId;
     private String git;
+    private String dir;
 
     public Jenkinsfile() {
     }
+
 
     public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage) {
         this.appEnvId = appEnvId;
@@ -47,7 +53,12 @@ public class Jenkinsfile {
                 Step task = steps.get(j);
                 Step.TaskType taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
-                this.git = task.getGitUrl();
+                if(!task.getGitUrl().isEmpty()){
+                    this.git = task.getGitUrl();
+                    String folderGit = this.git.split("/")[this.git.split("/").length-1];
+                    this.dir = folderGit.split("[.]")[0];
+                }
+
                 String dockerUserName = task.getDockerUserName();
                 String respository = task.getRepository();
                 String dockerPassword = task.getDockerPassword();
@@ -73,11 +84,11 @@ public class Jenkinsfile {
                     BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
                             , e.getMessage()));
                 }
-                System.out.println(Step.TaskType.PullCode.ordinal());
                 switch (taskName) {
                     case PullCode:
                         this.stages += "deleteDir() \n";
-                        this.stages += "git \"" + gitUrl + "\" \n";
+//                        this.stages += "git \"" + gitUrl + "\" \n";
+                        this.stages += "sh \'git clone \"" + gitUrl + "\" \'\n";
                         break;
                     case BuildMaven:
                         this.stages += "sh \'mvn --version \' \n";
@@ -96,11 +107,25 @@ public class Jenkinsfile {
                         this.stages += "sh \'pip --version \' \n";
                         break;
                     case BuildDocker:
-                        this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
+                        if(this.dir.isEmpty()){
+                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
+                        }else{
+                            this.stages += "dir(\"" + this.dir + "\"){ \n";
+                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
+                            this.stages += "}\n";
+                        }
+
                         break;
                     case PushDocker:
-                        this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
-                        this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
+                        if(this.dir.isEmpty()){
+                            this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
+                            this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
+                        }else{
+                            this.stages += "dir(\"" + this.dir + "\"){ \n";
+                            this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
+                            this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
+                            this.stages += "}\n";
+                        }
                         break;
                     case CustomScript:
                         this.stages += "sh \'" + shell + "\' \n";
