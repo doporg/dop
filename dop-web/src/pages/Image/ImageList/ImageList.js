@@ -25,7 +25,6 @@ export default class ImageList extends Component {
             }
         }).then(
             function (response) {
-                console.log("目前命名空间",response.data)
                 _this.setState({
                     namespaceId:response.data.pageList[0].projectId
                 })
@@ -43,7 +42,7 @@ export default class ImageList extends Component {
             <div>
                 <Breadcrumb style={{marginBottom: "10px"}}>
                     <Breadcrumb.Item link="#/image/projects">
-                        <FormattedMessage id="image.namespace"
+                        <FormattedMessage id="image.imageInfo.namespace"
                                           defaultMessage="命名空间"/>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item link={"#/image/projects/"+this.state.namespaceId+"/repos"}>

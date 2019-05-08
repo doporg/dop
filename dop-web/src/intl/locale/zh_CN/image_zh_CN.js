@@ -1,5 +1,6 @@
 const IMAGE_ZH_CN ={
     'image.namespace': '< 命名空间',
+    'image.imageInfo.namespace':'命名空间',
     'image.search' : '检索条件',
     'image.namespaceList' : '命名空间',
     'image.createNamespace' : '创建命名空间',

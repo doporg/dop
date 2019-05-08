@@ -1,5 +1,6 @@
 const IMAGE_EN_US = {
     'image.namespace': '< namespace',
+    'image.imageInfo.namespace':'namespace',
     'image.search' : 'Retrieval criteria',
     'image.namespaceList' : 'Namespace list',
     'image.createNamespace' : 'New namespace',

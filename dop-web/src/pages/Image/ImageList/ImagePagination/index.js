@@ -31,14 +31,16 @@ class ImagePagination extends Component{
         let url = API.image + '/v1/repositories/'+this.state.repoName+"/images";
         let _this = this;
         if (queryKey!==""){
+            console.log(queryKey)
             Axios.get(url, {
                 params:{
                     pageNo:current,
                     pageSize:10,
+                    tag:queryKey
                 }
             })
                 .then(function (response) {
-                    console.log("镜像信息");
+                    console.log("非空镜像信息");
                     console.log(response.data);
                     if (response.data.totalCount!==0){
                         _this.setState({
@@ -101,7 +103,7 @@ class ImagePagination extends Component{
         this.setState({
             queryKey: value
         })
-        this.refreshImageList(this.state.current,value);
+        this.refreshImageList(1,value);
     }
     handleChange(current,e){
         this.setState({
