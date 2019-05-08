@@ -6,17 +6,13 @@ import RoleController from '../RoleController'
 import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
-const {Col} = Grid
-const style = {
-    padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
-};
+const {Col} = Grid;
 
 const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
+    labelCol: {span: 14},
+    wrapperCol: {span: 20}
 };
+
 
 /**
  *    弹窗中的表单
@@ -85,7 +81,6 @@ class ProjectMemberForm extends Component {
                     <Form
                         language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
                         labelAlign={"left"}
-                        style={style}
                     >
                         <Col>
                             <FormItem {...formItemLayout}

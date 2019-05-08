@@ -13,7 +13,7 @@ import {injectIntl,FormattedMessage} from "react-intl";
             footerAlign: "center",
             visible: false,
             style: {
-                width: "30%"
+                width: "35%"
             },
             createDialogStyle: {
                 width: "10%"
@@ -67,7 +67,7 @@ import {injectIntl,FormattedMessage} from "react-intl";
             <span className={"dialog"}>
                 <Button onClick={this.onOpen} type="primary">
                     <FormattedMessage id="image.addMember"
-                                      defaultMessage="添加用户"/>
+                                      defaultMessage="添加成员"/>
                 </Button>
         <Dialog language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
             visible={this.state.visible}
