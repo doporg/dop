@@ -206,7 +206,7 @@ class DetailCaseLogTable extends Component {
 
                     {this.state.detailLogData.map((operationLog, index) => {
                         return (
-                            <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}}>
+                            <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}} key={index}>
                                 <IcePanel.Header>
                                     <Row>
                                         <Col span='23'>

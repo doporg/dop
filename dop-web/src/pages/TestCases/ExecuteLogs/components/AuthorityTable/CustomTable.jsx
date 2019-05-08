@@ -126,7 +126,7 @@ export default class Home extends Component {
 
   panel = (type) => {
     if (type === 'REQUEST') {
-      return 'primary';
+      return 'info';
     }
     if (type === 'WAIT') {
       return 'danger';
@@ -203,7 +203,7 @@ export default class Home extends Component {
 
           {this.state.detailLogData.map((operationLog, index) => {
             return (
-                <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}}>
+                <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}} key={index}>
                   <IcePanel.Header>
                     <Row>
                       <Col span='23'>

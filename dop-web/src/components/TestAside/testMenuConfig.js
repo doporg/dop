@@ -19,10 +19,5 @@ const testMenuConfig=[
         path: '/test/createGroup',
         icon: 'add',
     },
-    {
-        name: '分组日志',
-        path: '/test/groupLogs/12',
-        icon: 'add',
-    },
 ];
 export {testMenuConfig};
