@@ -1,11 +1,18 @@
 package com.clsaa.dop.server.test.doExecute;
 
 import com.clsaa.dop.server.test.doExecute.context.RequestContext;
+import com.clsaa.dop.server.test.doExecute.log.GroupLogConsumer;
+import com.clsaa.dop.server.test.doExecute.log.SingleCaseLogConsumer;
 import com.clsaa.dop.server.test.doExecute.plugin.PluginManager;
 import com.clsaa.dop.server.test.manager.UserManager;
+import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
+import com.clsaa.dop.server.test.model.po.GroupExecuteLog;
+import com.clsaa.dop.server.test.util.ExecutionLogUtils;
 import com.clsaa.dop.server.test.util.Services;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -44,9 +51,31 @@ public class TestManager {
 
     public static InterfaceCaseDto execute(InterfaceCaseDto interfaceCaseDto) {
         Long userId = UserManager.getCurrentUserId();
-        ExecuteTask executeTask = new ExecuteTask(interfaceCaseDto, userId);
+        ExecuteTask executeTask = new ExecuteTask(interfaceCaseDto, userId, new SingleCaseLogConsumer());
         testScriptExecutor.execute(executeTask);
         return interfaceCaseDto;
+    }
+
+    public static Boolean execute(CaseGroupDto caseGroupDto, List<InterfaceCaseDto> interfaceCases) {
+        LocalDateTime current = LocalDateTime.now();
+        Long user = UserManager.getCurrentUserId();
+        GroupExecuteLog groupExecuteLog = GroupExecuteLog.builder()
+                .groupId(caseGroupDto.getId())
+                .ctime(current)
+                .mtime(current)
+                .cuser(user)
+                .muser(user)
+                .deleted(false)
+                .build();
+        GroupExecuteLog savedGroup = ExecutionLogUtils.saveGroupLog(groupExecuteLog);
+        Long groupLogId = savedGroup.getId();
+        interfaceCases.forEach(interfaceCase -> {
+            ExecuteTask executeTask = new ExecuteTask(
+                    interfaceCase, user, caseGroupDto, savedGroup, new GroupLogConsumer(groupLogId)
+            );
+            testScriptExecutor.execute(executeTask);
+        });
+        return true;
     }
 
     public static String urlHandled(RequestContext requestContext) {

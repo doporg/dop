@@ -1,7 +1,5 @@
 package com.clsaa.dop.server.test.model.dto;
 
-import com.clsaa.dop.server.test.enums.ExecuteWay;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,28 +11,23 @@ import java.util.List;
 /**
  * @author xihao
  * @version 1.0
- * @since 06/05/2019
+ * @since 08/05/2019
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CaseGroupDto {
+public class GroupExecuteLogDto {
 
-    private Long appId;
+    private Long groupId;
 
-    private ExecuteWay executeWay;
+    private String executeInfo;
 
-    private String groupName;
+    private String jenkinsInfo;
 
-    private String comment;
-
-    private List<CaseUnitDto> caseUnits;
+    private List<InterfaceExecuteLogDto> logs;
 
     private String createUserName;
-
-    private Integer caseCount;
 
     // ----------- common property ---------
     private Long id;
@@ -48,8 +41,4 @@ public class CaseGroupDto {
     private Long muser;
 
     private boolean deleted;
-
-    public Integer getCaseCount() {
-        return caseUnits.size();
-    }
 }

@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
+import com.clsaa.dop.server.test.enums.CaseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InterfaceExecuteLogDto {
+
+    private CaseType caseType;
 
     private String jenkinsInfo;
 
