@@ -8,8 +8,22 @@ import TestLayout from "../../layouts/TestLayout";
 import GroupTable from "./components/GroupTable/GroupTable";
 import CreateGroup from "./CreateGroup";
 import EditGroup from "./EditGroup";
+import GroupLogTable from "./GroupLogs/GroupLogTable";
+import DetailCaseLogTable from "./GroupLogs/DetailCaseLogTable";
 
 const testConfig = [
+    {
+        path: "/test/groupLogs/detail/:groupLogId/:groupId",
+        layout: TestLayout,
+        component: DetailCaseLogTable,
+        isLogin: true
+    },
+    {
+        path: "/test/groupLogs/:groupId",
+        layout: TestLayout,
+        component: GroupLogTable,
+        isLogin: true
+    },
     {
         path: "/test/editGroups/:groupId",
         layout: TestLayout,

@@ -7,11 +7,13 @@ import com.clsaa.dop.server.test.model.dto.OperationExecuteLogDto;
 import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
 import com.clsaa.dop.server.test.manager.UserManager;
+import com.clsaa.dop.server.test.service.core.CaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +27,9 @@ public class InterfaceExecuteLogDtoMapper extends AbstractCommonServiceMapper<In
 
     @Autowired
     private OperationLogDtoMapper operationLogDtoMapper;
+
+    @Autowired
+    private CaseService caseService;
 
     @Override
     public Class<InterfaceExecuteLog> getSourceClass() {
@@ -55,6 +60,14 @@ public class InterfaceExecuteLogDtoMapper extends AbstractCommonServiceMapper<In
             // user name
             Long cuser = interfaceExecuteLogDto.getCuser();
             interfaceExecuteLogDto.setCreateUserName(UserManager.getUserName(cuser));
+
+            // case name
+            try {
+                String caseName = caseService.getCaseName(interfaceExecuteLog.getCaseType(), interfaceExecuteLog.getId());
+                interfaceExecuteLogDto.setCaseName(caseName);
+            } catch (ExecutionException e) {
+                log.error("Get CaseName Error!", e);
+            }
 
             return interfaceExecuteLogDto;
         });

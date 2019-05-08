@@ -94,7 +94,7 @@ export default class CaseUnit extends Component{
         let unitJson = JSON.parse(unitString);
         let type = unitJson['caseType'];
         let typeStr = type === 'MANUAL' ? '手工' : '接口';
-        return typeStr + '---' + unitJson['caseName'];
+        return typeStr + '---【' + unitJson['caseId'] + '】' + '---' + unitJson['caseName'];
     };
 
     render() {

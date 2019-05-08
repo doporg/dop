@@ -121,7 +121,7 @@ public class RequestScriptDto implements Operation {
             String url = urlHandled(requestContext);
             Map<String, String> headers = requestHeadersHandled(requestContext);
 
-            StringBuilder executionLog = executeContext.logRequestInfo(headers, requestBody, httpMethod, url);
+            StringBuilder executionLog = requestContext.logRequestInfo(headers, requestBody, httpMethod, url);
 
             // 3, http call and log response
             //string writer to store response info
@@ -139,7 +139,7 @@ public class RequestScriptDto implements Operation {
                     .then()
                     .log()
                     .everything(true);
-            executionLog = executeContext.logResponseInfo(executionLog, writer);
+            executionLog = requestContext.logResponseInfo(executionLog, writer);
 
             // 4, auto test
             for (RequestCheckPointDto checkPoint : requestCheckPoints) {

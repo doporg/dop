@@ -52,7 +52,7 @@ public class InterfaceExecuteLog implements Po {
     @Fetch(FetchMode.SUBSELECT)
     private List<OperationExecuteLog> operationExecuteLogs;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_log_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private GroupExecuteLog groupExecuteLog;
 
