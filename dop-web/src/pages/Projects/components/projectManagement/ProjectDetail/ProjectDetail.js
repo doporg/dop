@@ -3,6 +3,7 @@ import {Tab} from "@icedesign/base";
 import ProjectBasicInfo from "../ProjectBasicInfo/ProjectBasicInfo"
 import Application from "../../../Application/Application"
 import {injectIntl} from "react-intl";
+import ManageMember from "../ManageMember/ManageMember"
 
 const TabPane = Tab.TabPane;
 
@@ -45,6 +46,15 @@ class ProjectDetail extends Component {
                          className="TabPane"
                 >
                     <Application
+                        projectId={this.state.projectId}/>
+
+                </TabPane>
+
+                <TabPane tab={this.props.intl.messages["projects.text.manageMembers"]}
+                         key={"members"}
+                         className="TabPane"
+                >
+                    <ManageMember
                         projectId={this.state.projectId}/>
 
                 </TabPane>

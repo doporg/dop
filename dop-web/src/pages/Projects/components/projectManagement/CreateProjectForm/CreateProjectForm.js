@@ -91,8 +91,8 @@ class ProjectForm extends Component {
         // const {init, getValue} = this.field;
         console.log(this.props.intl)
         return (
-            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">
-                <div>
+            <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF" className="form-loading">
+                <div className="form-container">
                     <Form
                         labelAlign={"left"}
                         className="form"

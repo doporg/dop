@@ -166,7 +166,7 @@ class ApplicationForm extends Component {
                                     {...init('title', {
                                         rules: [{
                                             required: true,
-                                            message: this.props.intl.messages[' projects.message.cantNull']
+                                            message: this.props.intl.messages['projects.message.cantNull']
                                         }]
                                     })}
                                     placeholder={this.props.intl.messages['projects.placeholder.applicationName']}/>
@@ -174,8 +174,8 @@ class ApplicationForm extends Component {
 
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("productMode") ? "error" : ""}
-                                      help={this.field.getError("productMode") ? this.props.intl.messages[' projects.placeHolder.developMode'] : ""}
-                                      label={this.props.intl.messages[' projects.text.developMode']}
+                                      help={this.field.getError("productMode") ? this.props.intl.messages['projects.placeHolder.developMode'] : ""}
+                                      label={this.props.intl.messages['projects.text.developMode']}
                                       required>
 
                                 <ProductModeController {...init('productMode', {
@@ -184,8 +184,8 @@ class ApplicationForm extends Component {
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("gitUrl") ? "error" : ""}
-                                      label={this.props.intl.messages[' projects.text.gitUrl']}
-                                      help={this.field.getError("gitUrl") ? this.props.intl.messages[' projects.text.checkGitUrl'] : ""}
+                                      label={this.props.intl.messages['projects.text.gitUrl']}
+                                      help={this.field.getError("gitUrl") ? this.props.intl.messages['projects.text.checkGitUrl'] : ""}
                                       required>
                                 <Combobox className="form-item-input" {...init('gitUrl', {
                                     rules: [{
@@ -204,8 +204,8 @@ class ApplicationForm extends Component {
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("imageUrl") ? "error" : ""}
-                                      help={this.field.getError("imageUrl") ? this.props.intl.messages[' projects.text.checkImageUrl'] : ""}
-                                      label={this.props.intl.messages[' projects.text.imageUrl']}
+                                      help={this.field.getError("imageUrl") ? this.props.intl.messages['projects.text.checkImageUrl'] : ""}
+                                      label={this.props.intl.messages['projects.text.imageUrl']}
                                       required>
                                 <Combobox className="form-item-input" {...init('imageUrl', {
                                     rules: [{
