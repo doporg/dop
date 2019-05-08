@@ -67,7 +67,7 @@ class ApplicationBasicInfo extends Component {
                     let imageUrl = API.application + "/image_url_list"
                     Axios.get(imageUrl, {
                         params: {
-                            projectName: projectData.name
+                            projectName: "dop"
                         }
                     })
                         .then((response) => {
