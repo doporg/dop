@@ -30,11 +30,12 @@ public class ImageInfoController {
     @ApiOperation(value = "获取镜像信息",notes = "通过项目名称，镜像名，注意是没有/的，不存在返回null")
     public Pagination<ImageInfoVO> getImages(@ApiParam(value = "项目名称",required = true) @PathVariable(value = "projectName") String projectName,
                                              @ApiParam(value = "镜像仓库名称",required = true) @PathVariable(value = "repoName") String repoName,
+                                             @ApiParam(value = "版本名称") @RequestParam(value = "tag",required = false) String tag,
                                              @ApiParam(value = "标签") @RequestParam(value = "labels",required = false) String labels,
                                              @ApiParam(value = "页号",required = true) @RequestParam(value = "pageNo")Integer pageNo,
                                              @ApiParam(value = "页大小",required = true) @RequestParam(value = "pageSize") Integer pageSize,
                                              @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
-        Pagination<ImageInfoBO> pagination = imageService.getImages(pageNo,pageSize,projectName,repoName,labels,userId);
+        Pagination<ImageInfoBO> pagination = imageService.getImages(pageNo,pageSize,tag,projectName,repoName,labels,userId);
         Pagination<ImageInfoVO> pagination1 = new Pagination<>();
         pagination1.setTotalCount(pagination.getTotalCount());
         pagination1.setPageNo(pageNo);

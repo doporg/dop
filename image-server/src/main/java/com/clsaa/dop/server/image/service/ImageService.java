@@ -39,7 +39,7 @@ public class ImageService {
      * @param userId 访问用户名
      * @return {@link List<ImageInfoBO>} 镜像信息的list
      */
-    public Pagination<ImageInfoBO> getImages(int pageNo,int pageSize,String projectName, String repoName, String labels, Long userId){
+    public Pagination<ImageInfoBO> getImages(int pageNo,int pageSize,String tag,String projectName, String repoName, String labels, Long userId){
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
@@ -48,9 +48,18 @@ public class ImageService {
         List<DetailedTag> detailedTags = responseEntity.getBody();
 
         int count = 0;
-        if (detailedTags!=null){
-            count = detailedTags.size();
+        if(tag==null){
+            if (detailedTags!=null){
+                count = detailedTags.size();
+            }
+        }else {
+            for (DetailedTag detailedTag:detailedTags){
+                if(detailedTag.getName().startsWith(tag)){
+                    count++;
+                }
+            }
         }
+
         Pagination<ImageInfoBO> pagination = new Pagination<>();
         pagination.setTotalCount(count);
         pagination.setPageNo(pageNo);
@@ -67,15 +76,30 @@ public class ImageService {
             pagination.setPageList(Collections.emptyList());
             return pagination;
         }else {
-            List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
-            for (DetailedTag detailedTag:detailedTags){
-                ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
-                imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
-                imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
-                imageInfoBOS.add(imageInfo);
+            if (tag==null){
+                List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
+                for (DetailedTag detailedTag:detailedTags){
+                    ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
+                    imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
+                    imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
+                    imageInfoBOS.add(imageInfo);
+                }
+                pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
+                return pagination;
+            }else {
+                List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
+                for (DetailedTag detailedTag:detailedTags){
+                    if (detailedTag.getName().startsWith(tag)){
+                        ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
+                        imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
+                        imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
+                        imageInfoBOS.add(imageInfo);
+                    }
+                }
+                pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
+                return pagination;
             }
-            pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
-            return pagination;
+
         }
     }
 

@@ -1,5 +1,6 @@
 const IMAGE_ZH_CN ={
     'image.namespace': '< 命名空间',
+    'image.imageInfo.namespace':'命名空间',
     'image.search' : '检索条件',
     'image.namespaceList' : '命名空间',
     'image.createNamespace' : '创建命名空间',
@@ -35,7 +36,7 @@ const IMAGE_ZH_CN ={
     'image.repoTable.tagsCount':'镜像数量',
     'image.repoTable.pullCount':'下载数',
     'image.newMember.developer':'开发人员',
-    'image.newMember.manager':'命名空间管理员',
+    'image.newMember.manager':'管理员',
     'image.newMember.tourist':'游客',
     'image.repository.delete':'删除镜像仓库',
     'image.repository.deleteDecision':'确定要删除已选择的镜像仓库吗？',
@@ -46,13 +47,16 @@ const IMAGE_ZH_CN ={
     'image.publicStatus.success':'修改成功',
     'image.publicStatus.failed':'修改失败,请确认权限后重试！',
     'image.memberTable.userType':'用户类型',
-    'image.addMember':'添加用户',
-    'image.addMember.title':'新建成员',
+    'image.addMember':'添加成员',
+    'image.addMember.title':'新增成员',
     'image.addMember.addSuccess':'添加成功',
     'image.addMember.successMessage':'成功添加成员到命名空间！',
     'image.addMember.userName':'用户名称：',
     'image.addMember.userRole':'角色：',
     'image.addMember.userNameMessage':'请输入用户名称',
+    'image.member.deleteMember':'移除成员',
+    'image.member.deleteMessage':'请先选择成员后再进行删除',
+    'image.member.deleteDecision':'确认要移除已选择的成员？',
     'image.accessLog':'日志信息',
     'image.logTable.user':'用户名称',
     'image.logTable.repoName':'镜像名称',
@@ -69,7 +73,12 @@ const IMAGE_ZH_CN ={
     'image.imageTable.digest':'摘要',
     'image.imageInfo.delete':'删除镜像',
     'image.imageInfo.deleteDecision':'确定要删除已选择的镜像?',
-    'image.imageInfo.deleteMessage':'请先选择镜像后再删除！'
+    'image.imageInfo.deleteMessage':'请先选择镜像后再删除！',
+    'image.log.selectAll':'所有操作',
+    'image.log.selectPush':'推送',
+    'image.log.selectPull':'拉取',
+    'image.log.selectCreate':'创建',
+    'image.member.addFailed':'添加失败，请确认输入了正确的用户名！'
 
 };
 export default IMAGE_ZH_CN;

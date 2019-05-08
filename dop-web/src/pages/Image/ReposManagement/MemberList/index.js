@@ -1,11 +1,12 @@
 import React,{Component} from "react";
 import IceContainer from '@icedesign/container';
-import {Grid, Input, Loading, Pagination, Table} from "@icedesign/base";
+import {Grid, Input, Loading, Pagination, Table,Menu} from "@icedesign/base";
 import {Col} from "@alifd/next/lib/grid";
 import API from "../../../API";
 import Axios from "axios";
 import AddMemberDialog from "../AddMemberDialog";
-import {injectIntl,FormattedMessage} from 'react-intl'
+import {injectIntl} from 'react-intl'
+import DeleteMemberDialog from '../DeleteMemberDialog'
 
 const {Row} = Grid;
 class MemberList extends Component{
@@ -132,8 +133,9 @@ class MemberList extends Component{
 
                 <IceContainer title={this.props.intl.messages["image.memberList"]}>
                     <Row wrap className="headRow">
-                        <Col l="12">
+                        <Col l="16">
                             <AddMemberDialog projectId={this.state.id} refreshList={this.refreshList.bind(this)}/>
+                            <DeleteMemberDialog deleteKeys={this.state.rowSelection.selectedRowKeys} projectId={this.state.id}  refreshList={this.refreshList.bind(this)}/>
                         </Col>
                     </Row>
                     <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF">

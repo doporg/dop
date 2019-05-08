@@ -52,5 +52,23 @@ public class ProjectMemberController {
         projectMemberService.addMember(projectId,userName,roleId,userId);
     }
 
+    @DeleteMapping(value = "/v1/projects/{projectId}/members/{mid}")
+    @ApiOperation(value = "将项目成员从项目中移除")
+    public void deleteMember(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId") Integer projectId,
+                             @ApiParam(value = "成员id",required = true) @PathVariable(value = "mid")Long mid,
+                             @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        projectMemberService.deleteMember(projectId,mid,userId);
+    }
+
+    @PutMapping(value = "/v1/projects/{projectId}/members/{mid}")
+    @ApiOperation(value = "修改成员的角色")
+    public void putMember(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId") Integer projectId,
+                          @ApiParam(value = "成员id",required = true) @PathVariable(value = "mid")Long mid,
+                          @ApiParam(value = "角色id",required = true) @RequestParam(value = "roleId")Integer roleId,
+                          @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        projectMemberService.putMember(projectId,mid,roleId,userId);
+    }
+
+
 }
 

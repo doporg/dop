@@ -189,7 +189,7 @@ public interface ProjectFeign {
      * @param auth harbor的权限参数
      */
     @DeleteMapping(value = "/projects/{project_id}/members/{m_id}")
-    void projectsProjectIdMembersMidDelete( @PathVariable("project_id") Long projectId,
+    void projectsProjectIdMembersMidDelete( @PathVariable("project_id") Integer projectId,
                                             @PathVariable("m_id") Long mid,
                                             @RequestHeader(value = "Authorization") String auth);
 
@@ -213,7 +213,7 @@ public interface ProjectFeign {
      * @param auth harbor的权限参数
      */
     @PutMapping(value = "/projects/{project_id}/members/{m_id}")
-    void projectsProjectIdMembersMidPut(@PathVariable("project_id") Long projectId,
+    void projectsProjectIdMembersMidPut(@PathVariable("project_id") Integer projectId,
                                         @PathVariable("m_id") Long mid,
                                         @RequestBody RoleRequest role,
                                         @RequestHeader(value = "Authorization") String auth);
