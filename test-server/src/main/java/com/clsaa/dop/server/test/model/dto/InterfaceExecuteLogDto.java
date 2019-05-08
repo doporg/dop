@@ -34,6 +34,8 @@ public class InterfaceExecuteLogDto {
 
     private Long caseId;
 
+    private String caseName;
+
     private String createUserName;
 
     private List<OperationExecuteLogDto> operationExecuteLogs;

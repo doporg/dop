@@ -84,10 +84,16 @@ public class GroupController {
         return TestManager.execute(caseGroupDto, interfaceCaseDtos);
     }
 
-    @GetMapping("/logs/{groupId}")
-    public Pagination<GroupExecuteLogDto> getGroupLogById(@PathVariable("groupId") Long groupId,
-                                                          @RequestParam("pageNo")int pageNo, @RequestParam("pageSize")int pageSize) {
+    @GetMapping("/logs/page/{groupId}")
+    public Pagination<GroupExecuteLogDto> getGroupLogByGroupId(@PathVariable("groupId") Long groupId,
+                                                          @RequestParam("pageNo")int pageNo,
+                                                          @RequestParam("pageSize")int pageSize) {
 
         return groupLogQueryService.getGroupLogs(groupId, pageNo, pageSize);
+    }
+
+    @GetMapping("/logs/{id}")
+    public GroupExecuteLogDto getGroupLogById(@PathVariable("id") Long id) {
+        return groupLogQueryService.selectByIds(id).orElse(null);
     }
 }
