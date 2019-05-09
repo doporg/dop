@@ -1,8 +1,8 @@
 package com.clsaa.dop.server.test.doExecute;
 
 import com.clsaa.dop.server.test.doExecute.context.RequestContext;
-import com.clsaa.dop.server.test.doExecute.log.GroupLogConsumer;
-import com.clsaa.dop.server.test.doExecute.log.SingleCaseLogConsumer;
+import com.clsaa.dop.server.test.doExecute.consumer.GroupLogConsumer;
+import com.clsaa.dop.server.test.doExecute.consumer.SingleCaseLogConsumer;
 import com.clsaa.dop.server.test.doExecute.plugin.PluginManager;
 import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
