@@ -856,7 +856,7 @@ class K8sInfoPage extends Component {
         const {init} = this.yamlEditorfield
         if (!this.state.loading && this.state.yamlData.length !== 0 && this.state.yamlData.deploymentEditableYaml !== "") {
             return <Form className="yaml-editor-form">
-                <FormItem label="Deployment Yaml"
+                <FormItem label="Deployment Yaml:"
                           className="yaml-editor-form-item"
                           {...formItemLayout}
                           validateStatus={this.field.getError("deploymentYaml") ? "error" : ""}

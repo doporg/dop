@@ -17,14 +17,18 @@ import io.kubernetes.client.custom.IntOrString;
 import io.kubernetes.client.models.*;
 import io.kubernetes.client.util.Config;
 import io.kubernetes.client.util.Yaml;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,8 +56,13 @@ public class KubeYamlService {
     private PermissionService permissionService;
 
     public String readFile(String filePath) throws Exception {
-        File file = ResourceUtils.getFile(filePath);
-        FileReader reader = new FileReader(file); // 建立一个输入流对象reader
+        //File file = ResourceUtils.get(filePath);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource resource = resolver.getResource(filePath);
+        InputStream inputStream = resource.getInputStream();
+        File ttfFile = new File(filePath);
+        FileUtils.copyInputStreamToFile(inputStream, ttfFile);
+        FileReader reader = new FileReader(ttfFile); // 建立一个输入流对象reader
 
         BufferedReader br = new BufferedReader(reader);
         String content = "";

@@ -8,13 +8,17 @@ import com.clsaa.dop.server.application.model.po.AppEnvLog;
 import com.clsaa.dop.server.application.model.vo.AppEnvLogV1;
 import com.clsaa.dop.server.application.model.vo.LogInfoV1;
 import com.clsaa.rest.result.Pagination;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -94,8 +98,13 @@ public class AppEnvLogService {
     }
 
     public String readFile(String filePath) throws Exception {
-        File file = ResourceUtils.getFile(filePath);
-        FileReader reader = new FileReader(file);
+
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        Resource resource = resolver.getResource(filePath);
+        InputStream inputStream = resource.getInputStream();
+        File ttfFile = new File(filePath);
+        FileUtils.copyInputStreamToFile(inputStream, ttfFile);
+        FileReader reader = new FileReader(ttfFile); // 建
         BufferedReader br = new BufferedReader(reader);
         String content = "";
         StringBuilder sb = new StringBuilder();
