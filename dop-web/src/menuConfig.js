@@ -56,7 +56,7 @@ const asideMenuConfig = [
         icon: 'code',
     },
     {
-        name: '镜像管理',
+        name: <FormattedMessage id="image.name" defaultMessage="镜像管理"/>,
         path: '/image/projects',
         icon: 'image',
     }

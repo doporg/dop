@@ -1,4 +1,5 @@
 const IMAGE_ZH_CN ={
+    'image.name':'镜像管理',
     'image.namespace': '< 命名空间',
     'image.imageInfo.namespace':'命名空间',
     'image.search' : '检索条件',
@@ -78,7 +79,8 @@ const IMAGE_ZH_CN ={
     'image.log.selectPush':'推送',
     'image.log.selectPull':'拉取',
     'image.log.selectCreate':'创建',
-    'image.member.addFailed':'添加失败，请确认输入了正确的用户名！'
+    'image.member.addFailed':'添加失败，请确认输入了正确的用户名！',
+    'image.noAuth':'没有权限！'
 
 };
 export default IMAGE_ZH_CN;
