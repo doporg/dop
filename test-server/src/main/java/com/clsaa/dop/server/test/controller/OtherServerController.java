@@ -21,11 +21,13 @@ public class OtherServerController {
     @Autowired
     private ApplicationInterface applicationInterface;
 
+    private Long userIdForInfo = 24L;
+
     @GetMapping("/projects")
     public List<Project> getAllProjects(@RequestParam("queryKey") String queryKey) {
         int pageSize = Integer.MAX_VALUE;
         int pageNo = 1;
-        return applicationInterface.findProjectOrderByCtimeWithPage(pageNo, pageSize, true, queryKey).
+        return applicationInterface.findProjectOrderByCtimeWithPage(userIdForInfo, pageNo, pageSize, true, queryKey).
                 getPageList();
     }
 
@@ -33,6 +35,6 @@ public class OtherServerController {
     public List<Application> getAllApp(@RequestParam("projectId") Long projectId, @RequestParam("queryKey") String queryKey) {
         int pageSize = Integer.MAX_VALUE;
         int pageNo = 1;
-        return applicationInterface.findApplicationByProjectId(pageNo, pageSize, projectId, queryKey).getPageList();
+        return applicationInterface.findApplicationByProjectId(userIdForInfo, pageNo, pageSize, projectId, queryKey).getPageList();
     }
 }

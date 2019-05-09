@@ -195,8 +195,9 @@ export default class Home extends Component {
 
         <Dialog title="用例执行过程"
                 visible={this.state.showDetailLog}
-                isFullScreen
-                style={{width: '800px'}}
+                // isFullScreen
+                shouldUpdatePosition
+                style={{width: '1400px'}}
                 onOk={this.onClose}
                 onCancel={this.onClose}
                 onClose={this.onClose}>

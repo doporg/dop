@@ -7,6 +7,7 @@ import com.clsaa.rest.result.Pagination;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,14 +20,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ApplicationInterface {
 
     @GetMapping("/pagedapp")
-    Pagination<Application> findApplicationByProjectId(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                       @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                       @RequestParam(value = "projectId") Long projectId,
-                                                       @RequestParam(value = "queryKey", defaultValue = "") String queryKey);
+    Pagination<Application> findApplicationByProjectId(
+            @RequestHeader("x-login-user") Long loginUser,
+            @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "projectId") Long projectId,
+            @RequestParam(value = "queryKey", defaultValue = "") String queryKey);
 
     @GetMapping("/paged-project")
-    Pagination<Project> findProjectOrderByCtimeWithPage(@RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
-                                                        @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
-                                                        @RequestParam(value = "includeFinished", defaultValue = "false") Boolean includeFinished,
-                                                        @RequestParam(value = "queryKey", defaultValue = "") String queryKey);
+    Pagination<Project> findProjectOrderByCtimeWithPage(
+            @RequestHeader("x-login-user") Long loginUser,
+            @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(value = "includeFinished", defaultValue = "false") Boolean includeFinished,
+            @RequestParam(value = "queryKey", defaultValue = "") String queryKey);
+
 }
