@@ -48,7 +48,7 @@ class PublicStatus extends Component{
 
     }
     render(){
-        if (this.state.record.currentUserRole==="命名空间管理员"){
+        if (this.state.record.currentUserRole==="Project Manager"){
             if (this.state.value==="true"){
                 return(
                     <Switch onChange={this.onChange.bind(this)} defaultChecked={false}/>
