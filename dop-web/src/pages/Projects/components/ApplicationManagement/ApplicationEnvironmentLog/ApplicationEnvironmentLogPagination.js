@@ -4,13 +4,14 @@ import API from "../../../../API.js"
 import Axios from "axios";
 import ApplicationEnvironmentLogList from "./ApplicationEnvironmentLogList";
 import "./ApplicationEnvironmentLogPagination.scss"
+import {injectIntl} from "react-intl";
 
 
 /**
  * 部署历史翻页器
  * @author Bowen
  **/
-export default class ApplicationEnvironmentLogPagination extends Component {
+class ApplicationEnvironmentLogPagination extends Component {
     constructor(props) {
         super(props);
 
@@ -121,7 +122,6 @@ export default class ApplicationEnvironmentLogPagination extends Component {
 }
 
 
-
-
+export default injectIntl(ApplicationEnvironmentLogPagination)
 
 

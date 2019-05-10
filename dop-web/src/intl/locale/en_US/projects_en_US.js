@@ -35,7 +35,7 @@ const projects_EN_US = {
     'projects.placeHolder.gitUrl': 'Please enter the git url',
     'projects.placeHolder.imageUrl': 'Please enter the image url',
     'projects.text.checkGitUrl': 'Please check the git url(must start with http/https)',
-    'projects.text.checkImageUrl': 'Please check the image url(must start with http/https)',
+    'projects.text.checkImageUrl': 'Please check the image url',
     'projects.placeHolder.applicationDescription': 'Application Description',
     'projects.placeHolder.developMode': 'Please choose the develop mode',
     'projects.radio.free': 'Free Mode',
