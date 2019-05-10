@@ -55,7 +55,7 @@ class ApplicationForm extends Component {
         let imageUrl = API.application + "/image_url_list"
         Axios.get(imageUrl, {
             params: {
-                projectName: "dop"
+                projectName: _this.state.projectData.title
             }
         })
             .then((response) => {
@@ -209,7 +209,7 @@ class ApplicationForm extends Component {
                                       required>
                                 <Combobox className="form-item-input" {...init('imageUrl', {
                                     rules: [{
-                                        type: "url",
+                                        pattern: "[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
                                         required: true,
                                         message: this.props.intl.messages['projects.message.cantNull']
                                     }]
