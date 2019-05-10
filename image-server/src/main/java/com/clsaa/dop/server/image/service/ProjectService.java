@@ -75,11 +75,11 @@ public class ProjectService {
                     ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
                     projectBO.setCreationTime(TimeConvertUtil.convertTime(project.getCreationTime()));
                     if (project.getCurrentUserRoleId()==1) {
-                        projectBO.setCurrentUserRole("命名空间管理员");
+                        projectBO.setCurrentUserRole("Namespace Manager");
                     }else if(project.getCurrentUserRoleId()==0){
-                        projectBO.setCurrentUserRole("");
+                        projectBO.setCurrentUserRole("Tourist");
                     }else {
-                        projectBO.setCurrentUserRole("开发人员");
+                        projectBO.setCurrentUserRole("Developer");
                     }
                     projectBOS.add(projectBO);
                 }
@@ -100,11 +100,11 @@ public class ProjectService {
         Project project = projectFeign.projectsProjectIdGet(id,auth);
         ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
         if (project.getCurrentUserRoleId()==1) {
-            projectBO.setCurrentUserRole("命名空间管理员");
-        }else if(project.getCurrentUserRoleId()==0){
-            projectBO.setCurrentUserRole("");
-        }else {
-            projectBO.setCurrentUserRole("开发人员");
+            projectBO.setCurrentUserRole("Namespace Manager");
+        }else if(project.getCurrentUserRoleId()==2){
+            projectBO.setCurrentUserRole("Developer");
+        }else{
+            projectBO.setCurrentUserRole("Tourist");
         }
         return projectBO;
     }
