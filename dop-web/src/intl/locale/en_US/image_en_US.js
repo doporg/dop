@@ -1,4 +1,5 @@
 const IMAGE_EN_US = {
+    'image.name':'Image management',
     'image.namespace': '< namespace',
     'image.imageInfo.namespace':'namespace',
     'image.search' : 'Retrieval criteria',
@@ -77,7 +78,8 @@ const IMAGE_EN_US = {
     'image.log.selectPush':'Push operation',
     'image.log.selectPull':'Pull operation',
     'image.log.selectCreate':'Create operation',
-    'image.member.addFailed':'Addition failed, make sure you input the right name'
+    'image.member.addFailed':'Addition failed, make sure you input the right name',
+    'image.noAuth':'Without permission!'
 
 
 };
