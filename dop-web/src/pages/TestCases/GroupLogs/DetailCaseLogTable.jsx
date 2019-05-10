@@ -198,15 +198,16 @@ class DetailCaseLogTable extends Component {
 
                 <Dialog title="用例执行过程"
                         visible={this.state.showDetailLog}
-                        isFullScreen
-                        style={{width: '800px'}}
+                        // isFullScreen
+                        shouldUpdatePosition
+                        style={{width: '1400px'}}
                         onOk={this.onClose}
                         onCancel={this.onClose}
                         onClose={this.onClose}>
 
                     {this.state.detailLogData.map((operationLog, index) => {
                         return (
-                            <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}}>
+                            <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}} key={index}>
                                 <IcePanel.Header>
                                     <Row>
                                         <Col span='23'>
