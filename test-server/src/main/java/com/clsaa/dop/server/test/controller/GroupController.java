@@ -1,14 +1,25 @@
 package com.clsaa.dop.server.test.controller;
 
+import com.clsaa.dop.server.test.doExecute.TestManager;
+import com.clsaa.dop.server.test.enums.CaseType;
 import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
+import com.clsaa.dop.server.test.model.dto.CaseUnitDto;
+import com.clsaa.dop.server.test.model.dto.GroupExecuteLogDto;
+import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.param.CaseGroupParam;
 import com.clsaa.dop.server.test.service.create.CaseGroupCreateService;
 import com.clsaa.dop.server.test.service.query.CaseGroupQueryService;
+import com.clsaa.dop.server.test.service.query.GroupLogQueryService;
+import com.clsaa.dop.server.test.service.query.InterfaceCaseQueryService;
 import com.clsaa.dop.server.test.service.update.CaseGroupUpdateService;
 import com.clsaa.rest.result.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 测试分组相关接口
@@ -31,6 +42,12 @@ public class GroupController {
     @Autowired
     private CaseGroupQueryService caseGroupQueryService;
 
+    @Autowired
+    private InterfaceCaseQueryService interfaceCaseQueryService;
+
+    @Autowired
+    private GroupLogQueryService groupLogQueryService;
+
     @PostMapping
     public Long createGroup(@RequestBody CaseGroupParam param) {
         return caseGroupCreateService.create(param).orElse(null);
@@ -52,4 +69,31 @@ public class GroupController {
         return caseGroupQueryService.selectByIds(groupId).orElse(null);
     }
 
+    @GetMapping("/execute/{groupId}")
+    public Boolean executeGroup(@PathVariable("groupId") Long groupId) {
+        CaseGroupDto caseGroupDto = caseGroupQueryService.selectByIds(groupId).orElse(null);
+        if (caseGroupDto == null || CollectionUtils.isEmpty(caseGroupDto.getCaseUnits())) {
+            return Boolean.FALSE;
+        }
+        List<Long> interfaceCaseIds = caseGroupDto.getCaseUnits()
+                .stream()
+                .filter(unit -> unit.getCaseType() == CaseType.INTERFACE)
+                .map(CaseUnitDto::getCaseId)
+                .collect(Collectors.toList());
+        List<InterfaceCaseDto> interfaceCaseDtos = interfaceCaseQueryService.selectByIds(interfaceCaseIds);
+        return TestManager.execute(caseGroupDto, interfaceCaseDtos);
+    }
+
+    @GetMapping("/logs/page/{groupId}")
+    public Pagination<GroupExecuteLogDto> getGroupLogByGroupId(@PathVariable("groupId") Long groupId,
+                                                          @RequestParam("pageNo")int pageNo,
+                                                          @RequestParam("pageSize")int pageSize) {
+
+        return groupLogQueryService.getGroupLogs(groupId, pageNo, pageSize);
+    }
+
+    @GetMapping("/logs/{id}")
+    public GroupExecuteLogDto getGroupLogById(@PathVariable("id") Long id) {
+        return groupLogQueryService.selectByIds(id).orElse(null);
+    }
 }

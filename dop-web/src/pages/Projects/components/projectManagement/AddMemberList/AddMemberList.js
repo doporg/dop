@@ -154,6 +154,10 @@ class AddMemberList extends Component {
                     onCancel={this.onClose}
                     onClose={this.onClose}
                     className="dialog"
+                    locale={{
+                        ok: this.props.intl.messages["projects.button.confirm"],
+                        cancel: this.props.intl.messages["projects.button.cancel"]
+                    }}
             >
                 <p>
                     <Input

@@ -85,7 +85,7 @@ class GroupTable extends Component {
             size="small"
             style={{...styles.icon, ...styles.deleteIcon}}
             onClick={() => {
-                this.props.history.push('/test/showExecuteLogs/' + record.id);
+                this.props.history.push('/test/groupLogs/' + record.id);
             }}
         />;
 
@@ -114,11 +114,21 @@ class GroupTable extends Component {
         let groupId = record.id;
         return <Switch onChange={(checked) => {
             if (checked) {
-                Toast.success("测试用例开始执行，执行结果请在用例执行历史记录中查看!");
-                // this.execute(caseId);
+                Toast.success("测试分组开始执行，执行结果请在分组执行历史记录中查看!");
+                this.execute(groupId);
             }
         }
         }/>;
+    };
+
+    execute = (id) => {
+        // only interface script is executable
+        let url = API.test + '/group/execute/' + id;
+        Axios.get(url).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        });
     };
 
     renderWay = (value, index, record) => {
@@ -144,17 +154,6 @@ class GroupTable extends Component {
         this.setState({
             isSubmit: true
         })
-    };
-
-    execute = (id) => {
-        // only interface script is executable
-        let url = API.test + '/interfaceCases/execute/' + id;
-        let _this = this;
-        Axios.get(url).then(function (response) {
-            console.log(response);
-        }).catch(function (error) {
-            console.log(error);
-        });
     };
 
     render() {
@@ -243,6 +242,7 @@ class GroupTable extends Component {
                         <Table.Column title="备注" dataIndex="comment" width={100} />
                         <Table.Column title="执行方式" width={100} cell={this.renderWay}/>
                         <Table.Column title="创建者" dataIndex="createUserName" width={100} />
+                        <Table.Column title="用例个数" dataIndex="caseCount" width={100} />
                         <Table.Column title="执行/终止" width={100} cell={this.renderSwitch} />
                         <Table.Column title="操作" width={100} cell={this.renderOper} />
                     </Table>
