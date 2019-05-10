@@ -97,27 +97,40 @@ public class RepositoryService {
         harborRepoFeign.repositoriesRepoNameDelete(repo,auth);
     }
 
-    public List<String> getRepoAddress(String projectName,Long userId){
+    public List<String> getRepoAddress(Long userId){
+
         List<String> list = new ArrayList<>();
         String beginAddress = "registry.dop.clsaa.com/";
-        //通过项目名称获取项目id
-        Pagination<ProjectBO> pagination = projectService.getProjects(projectName,null,null,1,10,userId);
-        Integer projectId = pagination.getPageList().get(0).getProjectId();
-        Pagination<RepositoryBO> pagination1 = getRepositories(projectId,"","",null,1,10,userId);
-        int totalCount = pagination1.getTotalCount();
-        //不是最后一页的处理
-        while (!pagination1.isLastPage()){
-            for (int begin =0;begin<pagination1.getPageSize();begin++){
+        //获取用户可访问的项目
+        List<Integer> projectIds = new ArrayList<>();
+        int pageNo = 1;
+        Pagination<ProjectBO> pagination = new Pagination<>();
+        for (;!pagination.isLastPage();pageNo++){
+            pagination = projectService.getProjects(null,null,null,pageNo,10,userId);
+            for (ProjectBO projectBO:pagination.getPageList()){
+                projectIds.add(projectBO.getProjectId());
+            }
+        }
+
+        for (int i=0;i<projectIds.size();i++){
+            Integer projectId = projectIds.get(i);
+
+            Pagination<RepositoryBO> pagination1 = getRepositories(projectId,"","",null,1,10,userId);
+            int totalCount = pagination1.getTotalCount();
+            //不是最后一页的处理
+            while (!pagination1.isLastPage()){
+                for (int begin =0;begin<pagination1.getPageSize();begin++){
+                    String address = beginAddress+pagination1.getPageList().get(begin).getName();
+                    list.add(address);
+                }
+                pagination1 = getRepositories(projectId,"","",null,pagination1.getNextPage(),10,userId);
+            }
+            //对于最后一页的处理
+            int lastCount = totalCount - (pagination1.getPageNo()-1)*pagination1.getPageSize();
+            for (int begin=0;begin<lastCount;begin++){
                 String address = beginAddress+pagination1.getPageList().get(begin).getName();
                 list.add(address);
             }
-            pagination1 = getRepositories(projectId,"","",null,pagination1.getNextPage(),10,userId);
-        }
-        //对于最后一页的处理
-        int lastCount = totalCount - (pagination1.getPageNo()-1)*pagination1.getPageSize();
-        for (int begin=0;begin<lastCount;begin++){
-            String address = beginAddress+pagination1.getPageList().get(begin).getName();
-            list.add(address);
         }
         return  list;
     }
