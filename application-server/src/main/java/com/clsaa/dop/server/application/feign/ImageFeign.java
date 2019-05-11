@@ -5,7 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -19,7 +22,6 @@ public interface ImageFeign {
                            @ApiParam(value = "用户id", required = true) @RequestHeader(value = "x-login-user") Long userId);
 
     @ApiOperation(value = "通过项目名称获取镜像仓库地址")
-    @GetMapping(value = "/v1/projects/{projectName}/repoAddress")
-    public List<String> getRepoAddress(@ApiParam(value = "项目名称") @PathVariable(value = "projectName") String projectName,
-                                       @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user") Long userId);
+    @GetMapping(value = "/v1/repoAddress")
+    public List<String> getRepoAddress(@ApiParam(value = "用户id") @RequestHeader(value = "x-login-user") Long userId);
 }
