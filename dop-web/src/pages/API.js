@@ -20,7 +20,6 @@ const API = {
     user: host + user,
     image: host + image,
     test: host + test
-    // test: "http://localhost:13700"
 };
 
 export default API;
