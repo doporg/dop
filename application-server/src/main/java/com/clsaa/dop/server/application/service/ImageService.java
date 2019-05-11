@@ -15,7 +15,7 @@ public class ImageService {
         this.imageFeign.addProject(projectName, projectStatus, userId);
     }
 
-    public List<String> getImageUrls(String projectName, Long userId) {
-        return this.imageFeign.getRepoAddress(projectName, userId);
+    public List<String> getImageUrls(Long userId) {
+        return this.imageFeign.getRepoAddress(userId);
     }
 }
