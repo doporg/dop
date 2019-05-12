@@ -1,8 +1,15 @@
-.dialog {
+
+.dialog-container {
   width: 100%;
-  text-align: center;
+  text-align: left;
+
+  .dialog {
+    width: 50%;
+    text-align: center;
+  }
+
+  .success-dialog {
+    width: 20%;
+  }
 }
 
-.success-dialog {
-  width: 20%;
-}
