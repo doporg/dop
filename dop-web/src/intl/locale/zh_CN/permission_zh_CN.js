@@ -1,4 +1,11 @@
 const PERMISSION_ZH_CN = {
+    'permission.permissionManagement':'权限管理',
+    'permission.home':'首页',
+    'permission.pointManagement':'功能点管理',
+    'permission.roleManagement':'角色管理',
+    'permission.userManagement':'用户管理',
+    'permission.dataPermission':'数据权限',
+    
     'permission.newPermission': '创建功能点',
     'permission.permissionName': '功能点名称',
     'permission.isPrivate': '是否私有',

@@ -1,4 +1,12 @@
 const PERMISSION_EN_US = {
+
+    'permission.permissionManagement':'Permission Management',
+    'permission.home':'Home',
+    'permission.pointManagement':'Permission Management',
+    'permission.roleManagement':'Role Management',
+    'permission.userManagement':'User Management',
+    'permission.dataPermission':'Data Management',
+
     'permission.newPermission': 'create permission',
     'permission.permissionName': 'permission name',
     'permission.isPrivate': 'is private ?',
