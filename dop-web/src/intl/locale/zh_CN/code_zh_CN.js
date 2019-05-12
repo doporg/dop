@@ -1,4 +1,5 @@
 const CODE_ZH_CN = {
+    'code.name':'代码管理',
     'code.language':'zh-cn',
     'code.aside.home':'首页',
     'code.aside.projects':'项目',
