@@ -45,7 +45,7 @@ const asideMenuConfig = [
     },
     {
 
-        name: '权限管理',
+        name: <FormattedMessage id="permission.permissionManagement" defaultMessage="权限管理"/>,
         path: '/permission/permissions',
         icon: 'account' ,
     },
