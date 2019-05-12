@@ -126,11 +126,21 @@ class ApplicationForm extends Component {
 
     onGitUrlChange(e, value) {
         console.log("value0", value)
+        this.field.setValue("gitUrl", value.value)
+    }
+
+    onGitUrlInputBlur(e, value) {
+        console.log("value", value)
         this.field.setValue("gitUrl", value)
     }
 
     onImageUrlChange(e, value) {
         console.log("value0", value)
+        this.field.setValue("imageUrl", value.value)
+    }
+
+    onImageUrlInputBlur(e, value) {
+        console.log("value", value)
         this.field.setValue("imageUrl", value)
     }
     componentWillReceiveProps(nextProps, nextContext) {
@@ -196,7 +206,7 @@ class ApplicationForm extends Component {
                                 })}
                                           placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
                                           onChange={this.onGitUrlChange.bind(this)}
-                                          onInputBlur={this.onGitUrlChange.bind(this)}>
+                                          onInputBlur={this.onGitUrlInputBlur.bind(this)}>
                                     {this.state.gitUrlData.length === 0 ? "" : this.state.gitUrlData.map((item) => {
                                         return (<Option value={String(item)}>{String(item)}</Option>)
                                     })}
@@ -216,7 +226,7 @@ class ApplicationForm extends Component {
                                 })}
                                           placeholder={this.props.intl.messages['projects.placeHolder.imageUrl']}
                                           onChange={this.onImageUrlChange.bind(this)}
-                                          onInputBlur={this.onImageUrlChange.bind(this)}>
+                                          onInputBlur={this.onImageUrlInputBlur.bind(this)}>
                                     {this.state.imageUrlData.length === 0 ? "" : this.state.imageUrlData.map((item) => {
                                         return (<Option value={String(item)}>{String(item)}</Option>)
                                     })}

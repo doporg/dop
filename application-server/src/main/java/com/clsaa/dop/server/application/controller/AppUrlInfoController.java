@@ -47,7 +47,7 @@ public class AppUrlInfoController {
 
         BizAssert.validParam(Validator.isUrl(warehouseUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
-        BizAssert.validParam(Validator.isUrl(imageUrl),
+        BizAssert.validParam(Validator.isImageUrl(imageUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
         BizAssert.validParam(productionDbUrl.equals("") || Validator.isUrl(productionDbUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发数据库Url格式错误"));
