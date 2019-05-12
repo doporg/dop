@@ -86,7 +86,7 @@ public class AppController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         BizAssert.validParam(Validator.isUrl(gitUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
-        BizAssert.validParam(Validator.isUrl(imageUrl),
+        BizAssert.validParam(Validator.isImageUrl(imageUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
         this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl, imageUrl);
         return;
