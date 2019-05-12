@@ -17,7 +17,7 @@ import {Nav ,Icon , Menu} from "@icedesign/base";
 import '../Styles.scss'
 import Search from "@icedesign/base/lib/search";
 import {injectIntl, FormattedMessage} from 'react-intl';
-
+import AuthRequire from '../../../components/AuthRequire/AuthRequire' ;
 
 const { Item: FormItem } = Form;
 const { Group: RadioGroup } = Radio;
@@ -45,6 +45,8 @@ export  class Permission extends Component {
             pageNo:1,
             pageSize:8,
             totalCount:0,
+            
+            userPermissionList:[],
 
             permissionText:[
                 this.props.intl.messages['permission.newPermission'],
@@ -112,6 +114,13 @@ export  class Permission extends Component {
     //每次访问的刷新
     componentDidMount() {
         this.setState({isLoading:true})
+        let getPermissionUrl=API.permission+"/v1/users/permissions/ByCurrent"
+        Axios.get(getPermissionUrl).then(response=>
+        {
+            let permissionTmp= response.data.map(x=>{return x.name})
+            this.setState({userPermissionList:permissionTmp})
+        })
+
         let url = API.permission + "/v1/permissions" ;
         let params=
             {
@@ -282,20 +291,25 @@ export  class Permission extends Component {
                     onCancel={this.onCancel}
                     title={this.props.intl.messages['permission.confirmDelete']}
                 >
+                    <AuthRequire permissionList={this.state.userPermissionList} permissionName="删除功能点">
                     <Button
                         type="primary"
                         shape="warning"
                         size="medium"
                         className="button">{this.props.intl.messages['permission.delete']}</Button>
+                    </AuthRequire>
                 </BalloonConfirm>
 
             );
         }
         return (
         <div>
+            <AuthRequire permissionList={this.state.userPermissionList} permissionName="创建功能点">
             <Button type="primary"
                     className="topButton"
                     onClick={this.onOpen} > {this.props.intl.messages['permission.newPermission']}</Button>
+            </AuthRequire>
+
             <Dialog
                 title={this.props.intl.messages['permission.newPermission']}
                 visible={this.state.visible}
@@ -383,7 +397,6 @@ export  class Permission extends Component {
                 <Table.Column title={this.props.intl.messages['permission.creator']} dataIndex="userName"/>
                 <Table.Column title={this.props.intl.messages['permission.createTime']} dataIndex="ctime"/>
                 <Table.Column title={this.props.intl.messages['permission.deleteTitle']} cell={renderDelete} width="10%" />
-
             </Table>
             <Pagination total={this.state.totalCount}
                         current={this.state.pageNo}
