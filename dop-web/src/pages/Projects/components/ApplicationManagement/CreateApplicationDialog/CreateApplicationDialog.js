@@ -69,17 +69,18 @@ class CreateApplicationDialog extends Component {
 
     render() {
         return (
-            <span>
+            <span className="dialog-container">
                 <Button onClick={this.onOpen} type="primary">
         {this.props.intl.messages['projects.button.createApplication']}
         </Button>
         <Dialog
+            className="dialog"
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}
             onClose={this.onClose}
             title={this.props.intl.messages['projects.button.createApplication']}
-            className="dialog"
+
             footerAlign={this.state.footerAlign}
         >
           <CreateApplicationForm isSubmit={this.state.isSubmit} finished={this.finished.bind(this)}

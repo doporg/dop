@@ -9,7 +9,6 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
@@ -33,8 +32,7 @@ public class AppEnvLog {
      * ID
      */
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
     /**
      * 创建者
      */
@@ -76,11 +74,7 @@ public class AppEnvLog {
      */
     @Column(nullable = false, name = "is_deleted")
     private boolean is_deleted;
-    /**
-     * 运行id
-     */
-    @Column(nullable = false, name = "running_id")
-    private String runningId;
+
 
     /**
      * 代码仓库地址

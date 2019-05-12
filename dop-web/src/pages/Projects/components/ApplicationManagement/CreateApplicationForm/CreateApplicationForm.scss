@@ -1,6 +1,6 @@
 
 .form-container {
-  width: 90%;
+  width: 100%;
 
   .form {
     padding: 20px;
@@ -13,7 +13,11 @@
       width: 90%;
 
       .form-item-input {
-        width: 100%
+        width: 135%
+      }
+
+      .form-item-select {
+        width: 135%
       }
     }
 

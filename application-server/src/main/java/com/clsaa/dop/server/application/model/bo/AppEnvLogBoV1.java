@@ -7,7 +7,7 @@ public class AppEnvLogBoV1 {
      * ID
      */
 
-    private Long id;
+    private String id;
     /**
      * 创建者
      */
@@ -27,11 +27,6 @@ public class AppEnvLogBoV1 {
      * 修改时间
      */
     private LocalDateTime mtime;
-
-    /**
-     * 运行id
-     */
-    private String runningId;
 
 
     /**

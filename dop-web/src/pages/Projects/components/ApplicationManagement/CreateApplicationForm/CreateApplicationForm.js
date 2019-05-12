@@ -170,7 +170,7 @@ class ApplicationForm extends Component {
                                       label={this.props.intl.messages['projects.text.applicationName']}
                                       required>
                                 <Input
-
+                                    className="form-item-input"
                                     maxLength={25}
                                     hasLimitHint
                                     {...init('title', {
@@ -197,7 +197,7 @@ class ApplicationForm extends Component {
                                       label={this.props.intl.messages['projects.text.gitUrl']}
                                       help={this.field.getError("gitUrl") ? this.props.intl.messages['projects.text.checkGitUrl'] : ""}
                                       required>
-                                <Combobox className="form-item-input" {...init('gitUrl', {
+                                <Combobox className="form-item-select" {...init('gitUrl', {
                                     rules: [{
                                         type: "url",
                                         required: true,
@@ -213,11 +213,11 @@ class ApplicationForm extends Component {
                                 </Combobox>
                             </FormItem>
                             <FormItem {...formItemLayout}
-                                      validateStatus={this.field.getError("imageUrl") ? "error" : ""}
+                                      validateStatus={this.field.getError("form-item-select") ? "error" : ""}
                                       help={this.field.getError("imageUrl") ? this.props.intl.messages['projects.text.checkImageUrl'] : ""}
                                       label={this.props.intl.messages['projects.text.imageUrl']}
                                       required>
-                                <Combobox className="form-item-input" {...init('imageUrl', {
+                                <Combobox className="form-item-select" {...init('imageUrl', {
                                     rules: [{
                                         pattern: "[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
                                         required: true,
@@ -237,6 +237,7 @@ class ApplicationForm extends Component {
                                 <Input
                                     maxLength={50}
                                     hasLimitHint
+                                    className="form-item-input"
                                     {...init('description')} multiple
                                     placeholder={this.props.intl.messages['projects.placeHolder.applicationDescription']}/>
                             </FormItem>
