@@ -8,14 +8,14 @@ import {FormattedMessage} from 'react-intl';
 const headerMenuConfig = [
     {
         name:  <FormattedMessage id="base.feedback" defaultMessage="反馈"/>,
-        // path: 'https://github.com/alibaba/ice',
+        path: 'https://github.com/clsaa/dop/issues',
         external: true,
         newWindow: true,
         icon: 'message',
     },
     {
         name: <FormattedMessage id="base.help" defaultMessage="帮助"/>,
-        // path: 'https://alibaba.github.io/ice',
+        path: 'mailto:812022339@qq.com',
         external: true,
         newWindow: true,
         icon: 'bangzhu',
