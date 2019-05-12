@@ -39,11 +39,6 @@ const asideMenuConfig = [
         icon: 'repair',
     },
     {
-         name: '自调节集成',
-         path: '/ciadjust',
-         icon: 'cascades',
-    },
-    {
 
         name: <FormattedMessage id="permission.permissionManagement" defaultMessage="权限管理"/>,
         path: '/permission/permissions',
