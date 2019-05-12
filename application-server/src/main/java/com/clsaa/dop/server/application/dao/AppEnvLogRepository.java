@@ -9,8 +9,8 @@ public interface AppEnvLogRepository extends JpaRepository<AppEnvLog, Long> {
     /**
      * 根据appEnvId查询对应的environmentId
      *
-     * @param runningId appEnvId
+     * @param id id
      * @return {@link   Optional<AppEnvLog> } 对应关系
      */
-    Optional<AppEnvLog> findByRunningId(String runningId);
+    Optional<AppEnvLog> findById(String id);
 }

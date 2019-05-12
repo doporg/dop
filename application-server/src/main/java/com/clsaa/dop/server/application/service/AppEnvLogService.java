@@ -46,7 +46,7 @@ public class AppEnvLogService {
         Set userIdList = new HashSet();
         Map<Long, String> idNameMap = new HashMap<>();
         for (String runningId : runningIdList) {
-            AppEnvLog appEnvLog = this.appEnvLogRepository.findByRunningId(runningId).orElse(null);
+            AppEnvLog appEnvLog = this.appEnvLogRepository.findById(runningId).orElse(null);
             //BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
             if (appEnvLog != null) {
                 Long id = appEnvLog.getRuser();
@@ -71,7 +71,7 @@ public class AppEnvLogService {
                         .imageUrl(appEnvLog.getImageUrl())
                         .commitUrl(appEnvLog.getCommitUrl())
                         .appEnvLog(appEnvLog.getAppEnvLog())
-                        .runningId(appEnvLog.getRunningId())
+                        .id(appEnvLog.getId())
                         .rtime(appEnvLog.getRtime())
                         .ruserName(ruserName)
                         .build();
@@ -153,7 +153,7 @@ public class AppEnvLogService {
                 .mtime(now)
                 .cuser(loginUser)
                 .muser(loginUser)
-                .runningId(logInfoV1.getRunningId())
+                .id(logInfoV1.getRunningId())
                 .appEnvLog(logTemplate)
                 .build();
 

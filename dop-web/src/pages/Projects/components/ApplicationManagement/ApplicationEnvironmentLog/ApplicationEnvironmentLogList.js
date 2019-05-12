@@ -89,7 +89,7 @@ class ApplicationEnvironmentLogList extends Component {
                 <Col>
                     <Table dataSource={this.state.currentData}>
                         <Table.Column title={this.props.intl.messages['projects.text.runningId']}
-                                      dataIndex="runningId"/>
+                                      dataIndex="id"/>
 
                         <Table.Column
                             cell={this.codeIdRender.bind(this)}
