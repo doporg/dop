@@ -16,6 +16,7 @@ const projects_zh_CN = {
     'projects.button.createApplication': '创建应用',
     'projects.button.confirm': '确定',
     'projects.button.edit': '编辑',
+    'project.projectName': "全部项目",
     'projects.button.Save': '保存',
     'projects.button.cancel': '取消',
     'projects.button.submit': '提交',

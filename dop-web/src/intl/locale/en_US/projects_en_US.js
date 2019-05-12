@@ -10,7 +10,7 @@ const projects_EN_US = {
     'projects.text.createSuccess': 'Creating successful',
     'projects.text.createApplicationSuccess': 'Successfully created the application',
     'projects.text.createProjectSuccess': 'Successfully created the project',
-
+    'project.projectName': "All Projects",
     'projects.message.cantNull': 'This item cannot be empty',
     'projects.button.confirm': 'Confirm',
     'projects.button.edit': 'Edit',
