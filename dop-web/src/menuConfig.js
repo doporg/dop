@@ -46,7 +46,7 @@ const asideMenuConfig = [
     },
 
     {
-        name: '代码管理',
+        name: <FormattedMessage id="code.name" defaultMessage="代码管理"/>,
         path: '/code/projects/personal',
         icon: 'code',
     },
