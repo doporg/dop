@@ -25,5 +25,7 @@ public class KubernetesDefaultConfig {
     private String ingressApiVersion;
     private String ingressKind;
     private String virtualServiceVersionLabel;
+    private String serviceTypeNodeport;
+    private String serviceNodeportHttpName;
 
 }

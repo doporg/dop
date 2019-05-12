@@ -744,7 +744,7 @@ class K8sInfoPage extends Component {
                                            required: true,
                                            message: this.props.intl.messages['projects.message.cantNull']
                                        }, {
-                                           pattern: "^[0-9]{4,5}$"
+                                           pattern: "^[0-9]{2,5}$"
                                        }]
                                    })}/>
 
