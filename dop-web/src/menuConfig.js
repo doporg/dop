@@ -1,8 +1,8 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
-import React, {Component} from 'react';
-import { FormattedMessage} from 'react-intl';
+import React from 'react';
+import {FormattedMessage} from 'react-intl';
 
 
 const headerMenuConfig = [
@@ -24,7 +24,7 @@ const headerMenuConfig = [
 
 const asideMenuConfig = [
     {
-        name: '全部项目',
+        name: <FormattedMessage id="project.projectName" defaultMessage="全部项目"/>,
         path: '/project',
         icon: 'home2',
     },
