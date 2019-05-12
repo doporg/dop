@@ -224,19 +224,19 @@ class Header extends Component {
                                 <li className="user-profile-menu-item">
                                     <Link to="/">
                                         <FoundationSymbol type="person" size="small"/>
-                                        <FormattedMessage id="base.myPage" defaultMessage="我的主页"/>,
+                                        <FormattedMessage id="base.myPage" defaultMessage="我的主页"/>
                                     </Link>
                                 </li>
                                 <li className="user-profile-menu-item">
                                     <Link to="/">
                                         <FoundationSymbol type="repair" size="small"/>
-                                        <FormattedMessage id="base.settings" defaultMessage="设置"/>,
+                                        <FormattedMessage id="base.settings" defaultMessage="设置"/>
                                     </Link>
                                 </li>
                                 <li className="user-profile-menu-item" onClick={this.logout.bind(this)}>
                                     <Link to="/login">
                                         <FoundationSymbol type="compass" size="small"/>
-                                        <FormattedMessage id="base.logout" defaultMessage="登出"/>,
+                                        <FormattedMessage id="base.logout" defaultMessage="登出"/>
                                     </Link>
                                 </li>
                             </ul>
