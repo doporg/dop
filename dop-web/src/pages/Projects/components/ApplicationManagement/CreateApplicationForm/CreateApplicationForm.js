@@ -55,7 +55,7 @@ class ApplicationForm extends Component {
         let imageUrl = API.application + "/image_url_list"
         Axios.get(imageUrl, {
             params: {
-                projectName: "dop"
+                projectName: _this.state.projectData.title
             }
         })
             .then((response) => {
@@ -126,11 +126,21 @@ class ApplicationForm extends Component {
 
     onGitUrlChange(e, value) {
         console.log("value0", value)
+        this.field.setValue("gitUrl", value.value)
+    }
+
+    onGitUrlInputBlur(e, value) {
+        console.log("value", value)
         this.field.setValue("gitUrl", value)
     }
 
     onImageUrlChange(e, value) {
         console.log("value0", value)
+        this.field.setValue("imageUrl", value.value)
+    }
+
+    onImageUrlInputBlur(e, value) {
+        console.log("value", value)
         this.field.setValue("imageUrl", value)
     }
     componentWillReceiveProps(nextProps, nextContext) {
@@ -160,13 +170,13 @@ class ApplicationForm extends Component {
                                       label={this.props.intl.messages['projects.text.applicationName']}
                                       required>
                                 <Input
-
+                                    className="form-item-input"
                                     maxLength={25}
                                     hasLimitHint
                                     {...init('title', {
                                         rules: [{
                                             required: true,
-                                            message: this.props.intl.messages[' projects.message.cantNull']
+                                            message: this.props.intl.messages['projects.message.cantNull']
                                         }]
                                     })}
                                     placeholder={this.props.intl.messages['projects.placeholder.applicationName']}/>
@@ -174,8 +184,8 @@ class ApplicationForm extends Component {
 
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("productMode") ? "error" : ""}
-                                      help={this.field.getError("productMode") ? this.props.intl.messages[' projects.placeHolder.developMode'] : ""}
-                                      label={this.props.intl.messages[' projects.text.developMode']}
+                                      help={this.field.getError("productMode") ? this.props.intl.messages['projects.placeHolder.developMode'] : ""}
+                                      label={this.props.intl.messages['projects.text.developMode']}
                                       required>
 
                                 <ProductModeController {...init('productMode', {
@@ -184,10 +194,10 @@ class ApplicationForm extends Component {
                             </FormItem>
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("gitUrl") ? "error" : ""}
-                                      label={this.props.intl.messages[' projects.text.gitUrl']}
-                                      help={this.field.getError("gitUrl") ? this.props.intl.messages[' projects.text.checkGitUrl'] : ""}
+                                      label={this.props.intl.messages['projects.text.gitUrl']}
+                                      help={this.field.getError("gitUrl") ? this.props.intl.messages['projects.text.checkGitUrl'] : ""}
                                       required>
-                                <Combobox className="form-item-input" {...init('gitUrl', {
+                                <Combobox className="form-item-select" {...init('gitUrl', {
                                     rules: [{
                                         type: "url",
                                         required: true,
@@ -196,27 +206,27 @@ class ApplicationForm extends Component {
                                 })}
                                           placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
                                           onChange={this.onGitUrlChange.bind(this)}
-                                          onInputBlur={this.onGitUrlChange.bind(this)}>
+                                          onInputBlur={this.onGitUrlInputBlur.bind(this)}>
                                     {this.state.gitUrlData.length === 0 ? "" : this.state.gitUrlData.map((item) => {
                                         return (<Option value={String(item)}>{String(item)}</Option>)
                                     })}
                                 </Combobox>
                             </FormItem>
                             <FormItem {...formItemLayout}
-                                      validateStatus={this.field.getError("imageUrl") ? "error" : ""}
-                                      help={this.field.getError("imageUrl") ? this.props.intl.messages[' projects.text.checkImageUrl'] : ""}
-                                      label={this.props.intl.messages[' projects.text.imageUrl']}
+                                      validateStatus={this.field.getError("form-item-select") ? "error" : ""}
+                                      help={this.field.getError("imageUrl") ? this.props.intl.messages['projects.text.checkImageUrl'] : ""}
+                                      label={this.props.intl.messages['projects.text.imageUrl']}
                                       required>
-                                <Combobox className="form-item-input" {...init('imageUrl', {
+                                <Combobox className="form-item-select" {...init('imageUrl', {
                                     rules: [{
-                                        type: "url",
+                                        pattern: "[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
                                         required: true,
                                         message: this.props.intl.messages['projects.message.cantNull']
                                     }]
                                 })}
                                           placeholder={this.props.intl.messages['projects.placeHolder.imageUrl']}
                                           onChange={this.onImageUrlChange.bind(this)}
-                                          onInputBlur={this.onImageUrlChange.bind(this)}>
+                                          onInputBlur={this.onImageUrlInputBlur.bind(this)}>
                                     {this.state.imageUrlData.length === 0 ? "" : this.state.imageUrlData.map((item) => {
                                         return (<Option value={String(item)}>{String(item)}</Option>)
                                     })}
@@ -227,6 +237,7 @@ class ApplicationForm extends Component {
                                 <Input
                                     maxLength={50}
                                     hasLimitHint
+                                    className="form-item-input"
                                     {...init('description')} multiple
                                     placeholder={this.props.intl.messages['projects.placeHolder.applicationDescription']}/>
                             </FormItem>

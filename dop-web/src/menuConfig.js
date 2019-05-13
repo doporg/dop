@@ -1,21 +1,21 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
-import React, {Component} from 'react';
-import { FormattedMessage} from 'react-intl';
+import React from 'react';
+import {FormattedMessage} from 'react-intl';
 
 
 const headerMenuConfig = [
     {
         name:  <FormattedMessage id="base.feedback" defaultMessage="反馈"/>,
-        // path: 'https://github.com/alibaba/ice',
+        path: 'https://github.com/clsaa/dop/issues',
         external: true,
         newWindow: true,
         icon: 'message',
     },
     {
         name: <FormattedMessage id="base.help" defaultMessage="帮助"/>,
-        // path: 'https://alibaba.github.io/ice',
+        path: 'mailto:812022339@qq.com',
         external: true,
         newWindow: true,
         icon: 'bangzhu',
@@ -24,7 +24,7 @@ const headerMenuConfig = [
 
 const asideMenuConfig = [
     {
-        name: '全部项目',
+        name: <FormattedMessage id="project.projectName" defaultMessage="全部项目"/>,
         path: '/project',
         icon: 'home2',
     },
@@ -39,24 +39,19 @@ const asideMenuConfig = [
         icon: 'repair',
     },
     {
-         name: '自调节集成',
-         path: '/ciadjust',
-         icon: 'cascades',
-    },
-    {
 
-        name: '权限管理',
+        name: <FormattedMessage id="permission.permissionManagement" defaultMessage="权限管理"/>,
         path: '/permission/permissions',
         icon: 'account' ,
     },
 
     {
-        name: '代码管理',
+        name: <FormattedMessage id="code.name" defaultMessage="代码管理"/>,
         path: '/code/projects/personal',
         icon: 'code',
     },
     {
-        name: '镜像管理',
+        name: <FormattedMessage id="image.name" defaultMessage="镜像管理"/>,
         path: '/image/projects',
         icon: 'image',
     }

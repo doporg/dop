@@ -378,12 +378,12 @@ class K8sInfoPage extends Component {
                                     loading: true
                                 })
                                 let createServiceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/service"
-                                Axios.post(createServiceUrl, {}, {
+                                if (this.state.useIngress === "ingress") {
+                                    Axios.post(createServiceUrl, {}, {
                                     params: {
                                         name: this.field.getValue("service"),
                                         namespace: this.field.getValue("nameSpace"),
                                         targetPort: this.editField.getValue('targetPort'),
-                                        nodePort: this.editField.getValue('nodePort'),
                                         host: this.editField.getValue('host')
                                     }
                                 })
@@ -458,6 +458,89 @@ class K8sInfoPage extends Component {
 
 
                                     })
+                                } else {
+                                    Axios.post(createServiceUrl, {}, {
+                                        params: {
+                                            name: this.field.getValue("service"),
+                                            namespace: this.field.getValue("nameSpace"),
+                                            targetPort: this.editField.getValue('targetPort'),
+                                            nodePort: this.editField.getValue('nodePort'),
+
+                                        }
+                                    })
+                                        .then(() => {
+                                            Toast.success(_this.props.intl.messages['projects.text.createServiceSuccessful'])
+
+                                            //然后判断是否存在yaml属性
+                                            let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
+
+                                            let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
+                                            Axios.get(existUrl)
+                                                .then((response) => {
+                                                    console.log("responsssss", response)
+                                                    if (response.data) {
+                                                        //存在则更新
+                                                        Axios.put(url, {}, {
+                                                                params: {
+                                                                    deploymentStrategy: "KUBERNETES",
+                                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                                    service: this.field.getValue('service'),
+                                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                                    replicas: this.editField.getValue('replicas'),
+                                                                    // imageUrl: this.field.getValue('imageUrl'),
+                                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                                }
+                                                            }
+                                                        )
+                                                            .then(function (response) {
+                                                                Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                                //提交完成后刷新当前页面
+                                                                _this.getYamlData()
+                                                            })
+                                                            .catch(function (error) {
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                            });
+
+                                                    }
+                                                    //不存在则新建
+                                                    else {
+                                                        Axios.post(url, {}, {
+                                                                params: {
+                                                                    deploymentStrategy: "KUBERNETES",
+                                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                                    service: this.field.getValue('service'),
+                                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                                    replicas: this.editField.getValue('replicas'),
+                                                                    // imageUrl: this.field.getValue('imageUrl'),
+                                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                                }
+                                                            }
+                                                        )
+                                                            .then(function (response) {
+                                                                Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                                //提交完成后刷新当前页面
+                                                                _this.getYamlData()
+                                                            })
+                                                            .catch(function (error) {
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                            });
+                                                    }
+                                                })
+
+
+                                        })
+                                }
+
                             }
                         })
 
@@ -661,7 +744,7 @@ class K8sInfoPage extends Component {
                                            required: true,
                                            message: this.props.intl.messages['projects.message.cantNull']
                                        }, {
-                                           pattern: "^[0-9]{4,5}$"
+                                           pattern: "^[0-9]{2,5}$"
                                        }]
                                    })}/>
 
@@ -856,7 +939,7 @@ class K8sInfoPage extends Component {
         const {init} = this.yamlEditorfield
         if (!this.state.loading && this.state.yamlData.length !== 0 && this.state.yamlData.deploymentEditableYaml !== "") {
             return <Form className="yaml-editor-form">
-                <FormItem label="Deployment Yaml"
+                <FormItem label="Deployment Yaml:"
                           className="yaml-editor-form-item"
                           {...formItemLayout}
                           validateStatus={this.field.getError("deploymentYaml") ? "error" : ""}

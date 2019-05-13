@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
+import com.clsaa.dop.server.test.enums.CaseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class InterfaceExecuteLogDto {
 
+    private CaseType caseType;
+
     private String jenkinsInfo;
 
     private String executeInfo;
@@ -30,6 +33,8 @@ public class InterfaceExecuteLogDto {
     private LocalDateTime end;
 
     private Long caseId;
+
+    private String caseName;
 
     private String createUserName;
 

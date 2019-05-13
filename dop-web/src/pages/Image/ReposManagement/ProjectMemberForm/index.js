@@ -1,4 +1,4 @@
-import {Field, Form, Input, Loading,Select,Grid} from "@icedesign/base";
+import {Field, Form, Input, Loading,Grid,Feedback} from "@icedesign/base";
 import API from "../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
@@ -6,18 +6,14 @@ import RoleController from '../RoleController'
 import {injectIntl} from "react-intl";
 
 const FormItem = Form.Item;
-const {Col} = Grid
-const style = {
-    padding: "20px",
-    background: "#F7F8FA",
-    margin: "20px"
-};
+const {Col} = Grid;
 
 const formItemLayout = {
-    labelCol: {span: 8},
-    wrapperCol: {span: 16}
+    labelCol: {span: 14},
+    wrapperCol: {span: 20}
 };
 
+const Toast =Feedback.toast;
 /**
  *    弹窗中的表单
  *
@@ -57,9 +53,10 @@ class ProjectMemberForm extends Component {
                         _this.setState({
                             loading: false
                         })
-                        props.finished();
+                        props.finished("success");
                     })
                     .catch(function (error) {
+                        props.finished("failed");
                         console.log(error);
                         _this.setState({
                             loading: false
@@ -85,7 +82,6 @@ class ProjectMemberForm extends Component {
                     <Form
                         language={this.props.intl.locale==='zh-CN'?'zh-cn':'en-us'}
                         labelAlign={"left"}
-                        style={style}
                     >
                         <Col>
                             <FormItem {...formItemLayout}

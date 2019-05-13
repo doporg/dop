@@ -10,7 +10,7 @@ const projects_EN_US = {
     'projects.text.createSuccess': 'Creating successful',
     'projects.text.createApplicationSuccess': 'Successfully created the application',
     'projects.text.createProjectSuccess': 'Successfully created the project',
-
+    'project.projectName': "All Projects",
     'projects.message.cantNull': 'This item cannot be empty',
     'projects.button.confirm': 'Confirm',
     'projects.button.edit': 'Edit',
@@ -35,7 +35,7 @@ const projects_EN_US = {
     'projects.placeHolder.gitUrl': 'Please enter the git url',
     'projects.placeHolder.imageUrl': 'Please enter the image url',
     'projects.text.checkGitUrl': 'Please check the git url(must start with http/https)',
-    'projects.text.checkImageUrl': 'Please check the image url(must start with http/https)',
+    'projects.text.checkImageUrl': 'Please check the image url',
     'projects.placeHolder.applicationDescription': 'Application Description',
     'projects.placeHolder.developMode': 'Please choose the develop mode',
     'projects.radio.free': 'Free Mode',

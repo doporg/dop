@@ -66,5 +66,59 @@ eureka:
     serviceUrl:
       defaultZone: http://discovery.dop.clsaa.com/eureka/
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
-
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
+
+k8s:
+  deploymentApiVersion: "apps/v1beta1"
+  deploymentKind: "Deployment"
+  deploymentLabelPrefix: "app"
+  deploymentContainerPortProtocol: "TCP"
+  deploymentImagePullPolicy: "Always"
+  deploymentLocalTimeMountPath: "/etc/localtime"
+  deploymentLocalTimeMountName: "host-time"
+  deploymentTimeZoneMountPath: "/etc/timezone"
+  deploymentTimeZoneMountName: "host-timezone"
+  deploymentDnsPolicy: "ClusterFirst"
+  serviceApiVersion: "v1"
+  serviceKind: "Service"
+  ingressApiVersion: "extensions/v1beta1"
+  ingressKind: "Ingress"
+  virtualServiceVersionLabel: "version"
+  serviceTypeNodeport: "NodePort"
+  serviceNodeportHttpName: "http"
+permission:
+  createProject: "创建项目"
+  viewProject: "查看项目"
+  createApp: "创建应用"
+  viewApp: "查看应用"
+  editApp: "编辑应用"
+  deleteApp: "删除应用"
+  viewAppUrl: "查看应用url"
+  editAppUrl: "编辑应用url"
+  createAppEnv: "创建应用环境"
+  viewAppEnv: "查看应用环境"
+  viewAppEnvDetail: "查看应用环境详情"
+  viewPipeline: "查看pipeline"
+  deleteAppEnv: "删除应用环境"
+  createVar: "创建环境变量"
+  viewVar: "查看环境变量"
+  editVar: "编辑环境变量"
+  deleteVar: "删除环境变量"
+  viewCluster: "查看集群信息"
+  editCluster: "编辑集群信息"
+  createYamlData: "创建yaml信息"
+  editYamlData: "编辑yaml信息"
+  viewYamlData: "查看yaml信息"
+  editDeploymentYaml: "编辑yaml文件"
+  viewNameSpace: "查看命名空间"
+  viewService: "查看服务"
+  createService: "创建服务"
+  viewDeployment: "查看部署"
+  projectRuleId: 11
+  projectRuleFieldName: "projectId"
+  appRuleId: 12
+  appRuleFieldName: "appId"

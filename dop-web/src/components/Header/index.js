@@ -7,7 +7,7 @@ import IceImg from '@icedesign/img';
 import {headerMenuConfig} from '../../menuConfig';
 import Logo from '../Logo/index';
 import './index.scss';
-
+import {FormattedMessage} from 'react-intl';
 
 // @withRouter
 class Header extends Component {
@@ -238,6 +238,7 @@ class Header extends Component {
                                     <Link to="/login">
                                         <FoundationSymbol type="compass" size="small"/>
                                         {this.props.intl.messages["base.logout"]}
+
                                     </Link>
                                 </li>
                             </ul>

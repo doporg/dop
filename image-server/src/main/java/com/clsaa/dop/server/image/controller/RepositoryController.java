@@ -55,11 +55,10 @@ public class RepositoryController {
         repositoryService.deleteRepository(projectName,repoName,userId);
     }
 
-    @ApiOperation(value = "通过项目名称获取镜像仓库地址")
-    @GetMapping(value = "/v1/projects/{projectName}/repoAddress")
-    public List<String> getRepoAddress(@ApiParam(value = "项目名称") @PathVariable(value = "projectName") String projectName,
-                                       @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
-        return repositoryService.getRepoAddress(projectName,userId);
+    @ApiOperation(value = "获取镜像仓库地址")
+    @GetMapping(value = "/v1/repoAddress")
+    public List<String> getRepoAddress(@ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        return repositoryService.getRepoAddress(userId);
     }
 
 

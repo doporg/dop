@@ -1,9 +1,13 @@
 package com.clsaa.dop.server.test.doExecute;
 
 import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.consumer.LogConsumer;
+import com.clsaa.dop.server.test.enums.CaseType;
 import com.clsaa.dop.server.test.manager.UserManager;
+import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
+import com.clsaa.dop.server.test.model.po.GroupExecuteLog;
 import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 
 import java.time.LocalDateTime;
@@ -26,9 +30,25 @@ public class ExecuteTask implements Runnable {
 
     private Long userId;
 
-    public ExecuteTask(InterfaceCaseDto interfaceCaseDto, Long userId) {
+    private CaseGroupDto caseGroupDto;
+
+    private GroupExecuteLog groupExecuteLog;
+
+    private LogConsumer logConsumer;
+
+    public ExecuteTask(InterfaceCaseDto interfaceCaseDto, Long userId, LogConsumer logConsumer) {
         this.interfaceCaseDto = interfaceCaseDto;
         this.userId = userId;
+        this.logConsumer = logConsumer;
+    }
+
+    public ExecuteTask(InterfaceCaseDto interfaceCaseDto, Long userId,
+                       CaseGroupDto caseGroupDto, GroupExecuteLog groupExecuteLog, LogConsumer logConsumer) {
+        this.interfaceCaseDto = interfaceCaseDto;
+        this.userId = userId;
+        this.caseGroupDto = caseGroupDto;
+        this.groupExecuteLog = groupExecuteLog;
+        this.logConsumer = logConsumer;
     }
 
     @Override
@@ -50,9 +70,12 @@ public class ExecuteTask implements Runnable {
                 .caseParams(interfaceCaseDto.getParamsMap())
                 .build();
         List<InterfaceStageDto> stages = interfaceCaseDto.getStages();
+
         sort(stages, new StageSorter())
                 .forEach(stage -> doExecute(stage, executeContext));
-        executeContext.logAfterExecution();
+
+        InterfaceExecuteLog caseLog = executeContext.logAfterExecution();
+        this.logConsumer.consume(caseLog);
     }
 
     private InterfaceExecuteLog initExecuteLog(InterfaceCaseDto interfaceCaseDto) {
@@ -61,6 +84,7 @@ public class ExecuteTask implements Runnable {
                         .operationExecuteLogs(new ArrayList<>())
                         .caseId(interfaceCaseDto.getId())
                         .begin(LocalDateTime.now())
+                        .caseType(CaseType.INTERFACE)
                         .build()
         );
     }

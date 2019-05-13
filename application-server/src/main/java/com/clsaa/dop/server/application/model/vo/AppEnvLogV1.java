@@ -15,7 +15,7 @@ public class AppEnvLogV1 {
     /**
      * 运行id
      */
-    private String runningId;
+    private String id;
 
     /**
      * 代码仓库地址

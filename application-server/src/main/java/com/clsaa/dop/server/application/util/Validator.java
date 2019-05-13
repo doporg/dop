@@ -37,7 +37,10 @@ public class Validator {
      * 正则表达式：验证URL
      */
     public static final String REGEX_URL = "(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
-
+    /**
+     * 正则表达式：验证URL
+     */
+    public static final String REGEX_IMAGE_URL = "[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]";
     /**
      * 正则表达式：验证IP地址
      */
@@ -115,6 +118,16 @@ public class Validator {
      */
     public static boolean isUrl(String url) {
         return Pattern.matches(REGEX_URL, url);
+    }
+
+    /**
+     * 校验URL
+     *
+     * @param imageUrl URL
+     * @return 校验通过返回true，否则返回false
+     */
+    public static boolean isImageUrl(String imageUrl) {
+        return Pattern.matches(REGEX_IMAGE_URL, imageUrl);
     }
 
     /**

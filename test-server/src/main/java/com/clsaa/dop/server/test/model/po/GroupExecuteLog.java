@@ -28,13 +28,16 @@ import java.util.List;
 )
 public class GroupExecuteLog implements Po{
 
+    @Column(name = "group_id")
+    private Long groupId;
+
     @Column(name = "execute_info")
     private String executeInfo;
 
     @Column(name = "jenkins_info")
     private String jenkinsInfo;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "group_log_id", referencedColumnName = "id"
             ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)

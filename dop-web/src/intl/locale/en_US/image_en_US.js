@@ -1,5 +1,7 @@
 const IMAGE_EN_US = {
+    'image.name':'Image management',
     'image.namespace': '< namespace',
+    'image.imageInfo.namespace':'namespace',
     'image.search' : 'Retrieval criteria',
     'image.namespaceList' : 'Namespace list',
     'image.createNamespace' : 'New namespace',
@@ -36,6 +38,9 @@ const IMAGE_EN_US = {
     'image.newMember.developer':'Developer',
     'image.newMember.manager':'Manager',
     'image.newMember.tourist':'Tourist',
+    'image.member.deleteMember':'Remove member',
+    'image.member.deleteMessage':'Please select member first!',
+    'image.member.deleteDecision':'Are you sure to remove selected members from project?',
     'image.repository.delete':'Delete Repo',
     'image.repository.deleteDecision':'Are you sure to delete selected repositories?',
     'image.repository.deleteMessage':'Select repository first!',
@@ -68,7 +73,13 @@ const IMAGE_EN_US = {
     'image.imageTable.digest':'Digest',
     'image.imageInfo.delete':'Delete tag',
     'image.imageInfo.deleteDecision':'Are you sure to delete selected tags?',
-    'image.imageInfo.deleteMessage':'Please select tag first!'
+    'image.imageInfo.deleteMessage':'Please select tag first!',
+    'image.log.selectAll':'All operation',
+    'image.log.selectPush':'Push operation',
+    'image.log.selectPull':'Pull operation',
+    'image.log.selectCreate':'Create operation',
+    'image.member.addFailed':'Addition failed, make sure you input the right name',
+    'image.noAuth':'Without permission!'
 
 
 };

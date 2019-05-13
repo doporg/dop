@@ -34,6 +34,8 @@ public class CaseGroupDto {
 
     private String createUserName;
 
+    private Integer caseCount;
+
     // ----------- common property ---------
     private Long id;
 
@@ -46,4 +48,8 @@ public class CaseGroupDto {
     private Long muser;
 
     private boolean deleted;
+
+    public Integer getCaseCount() {
+        return caseUnits.size();
+    }
 }

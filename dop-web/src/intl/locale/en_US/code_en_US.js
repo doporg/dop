@@ -1,4 +1,5 @@
 const CODE_EN_US = {
+    'code.name':'Code Management',
     'code.language':'en-us',
     'code.aside.home':'Home',
     'code.aside.projects':'Projects',

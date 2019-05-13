@@ -67,7 +67,7 @@ class ApplicationBasicInfo extends Component {
                     let imageUrl = API.application + "/image_url_list"
                     Axios.get(imageUrl, {
                         params: {
-                            projectName: projectData.name
+                            projectName: projectData.title
                         }
                     })
                         .then((response) => {
@@ -306,11 +306,12 @@ class ApplicationBasicInfo extends Component {
             if (this.state.urlEditMode) {
                 return (
                     <div>
-                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.imageUrl']}
+                        <FormItem{...formItemLayout} label={this.props.intl.messages['projects.text.gitUrl']}
                                  validateStatus={this.urlField.getError("gitUrl") ? "error" : ""}
                                  help={this.urlField.getError("gitUrl") ? this.props.intl.messages['projects.text.checkGitUrl'] : ""}
                                  required>
-                            <Combobox  {...init('gitUrl', {
+                            <Combobox className="form-item-input"
+                                      {...init('gitUrl', {
                                 initValue: this.state.appBasicData.warehouseUrl,
                                 rules: [{
                                     type: "url",
@@ -318,9 +319,9 @@ class ApplicationBasicInfo extends Component {
                                     message: this.props.intl.messages['projects.message.cantNull']
                                 }]
                             })}
-                                       placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
-                                       onChange={this.onGitUrlChange.bind(this)}
-                                       onInputBlur={this.onGitUrlChange.bind(this)}
+                                      placeholder={this.props.intl.messages['projects.placeHolder.gitUrl']}
+                                      onChange={this.onGitUrlChange.bind(this)}
+                                      onInputBlur={this.onGitUrlChange.bind(this)}
                             >
                                 {this.state.gitUrlData.length === 0 ? "" : this.state.gitUrlData.map((item) => {
                                     return (<Option value={String(item)}>{String(item)}</Option>)
@@ -333,10 +334,11 @@ class ApplicationBasicInfo extends Component {
                                  help={this.urlField.getError("imageUrl") ? this.props.intl.messages['projects.text.checkImageUrl'] : ""}
 
                                  required>
-                            <Combobox className="form-item-input" {...init('imageUrl', {
+                            <Combobox className="form-item-input"
+                                      {...init('imageUrl', {
                                 initValue: this.state.appBasicData.imageUrl,
                                 rules: [{
-                                    type: "url",
+                                    pattern: "[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]",
                                     required: true,
                                     message: this.props.intl.messages['projects.message.cantNull']
                                 }]

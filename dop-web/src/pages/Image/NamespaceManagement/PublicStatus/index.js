@@ -45,17 +45,31 @@ class PublicStatus extends Component{
             Toast.error(_this.props.intl.messages["image.publicStatus.failed"]);
             _this.state.refreshList(1,"");
         });
+
     }
     render(){
-        if (this.state.value==="true"){
-            return(
-                <Switch onChange={this.onChange.bind(this)} defaultChecked={false}/>
-            )
+        if (this.state.record.currentUserRole==="Namespace Manager"){
+            if (this.state.value==="true"){
+                return(
+                    <Switch onChange={this.onChange.bind(this)} defaultChecked={false}/>
+                )
+            }else {
+                return(
+                    <Switch onChange={this.onChange.bind(this)} defaultChecked={true}/>
+                )
+            }
         }else {
-            return(
-                <Switch onChange={this.onChange.bind(this)} defaultChecked={true}/>
-            )
+            if (this.state.value==="true"){
+                return(
+                    <Switch onChange={this.onChange.bind(this)} disabled={true} defaultChecked={false}/>
+                )
+            }else {
+                return(
+                    <Switch onChange={this.onChange.bind(this)} disabled={true} defaultChecked={true}/>
+                )
+            }
         }
+
     }
 }
 

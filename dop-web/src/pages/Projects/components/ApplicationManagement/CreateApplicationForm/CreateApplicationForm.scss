@@ -6,14 +6,18 @@
     padding: 20px;
     background: #FFF;
     margin: 20px;
-    width: 100%;
+    width: 90%;
     text-align: left;
 
     .form-loading {
-      width: 100%;
+      width: 90%;
 
       .form-item-input {
-        width: 100%
+        width: 135%
+      }
+
+      .form-item-select {
+        width: 135%
       }
     }
 
