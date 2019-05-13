@@ -128,7 +128,7 @@ export default class RunResult extends Component {
                         let self = this;
                         if (self.state.stages.length && self.state.stages[self.state.currentStage].steps.length) {
                             return (
-                                this.state.stages[self.state.currentStage].steps.map((step, index) => {
+                                this.state.stages[self.state.currentStage].steps.map((step) => {
                                     return (
                                         <Log
                                             key={step.displayDescription}
