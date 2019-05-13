@@ -7,7 +7,7 @@ import IceImg from '@icedesign/img';
 import {headerMenuConfig} from '../../menuConfig';
 import Logo from '../Logo/index';
 import './index.scss';
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, IntlProvider} from 'react-intl';
 
 // @withRouter
 class Header extends Component {
@@ -224,21 +224,29 @@ class Header extends Component {
                                 <li className="user-profile-menu-item">
                                     <Link to="/">
                                         <FoundationSymbol type="person" size="small"/>
-                                        {this.props.intl.messages["base.myHome"]}
+                                        <FormattedMessage
+                                            id="base.myHome"
+                                            defaultMessage="我的主页"
+                                        />
                                     </Link>
                                 </li>
 
                                 <li className="user-profile-menu-item">
                                     <Link to="/">
                                         <FoundationSymbol type="repair" size="small"/>
-                                        {this.props.intl.messages["base.setting"]}
+                                        <FormattedMessage
+                                            id="base.setting"
+                                            defaultMessage="设置"
+                                        />
                                     </Link>
                                 </li>
                                 <li className="user-profile-menu-item" onClick={this.logout.bind(this)}>
                                     <Link to="/login">
                                         <FoundationSymbol type="compass" size="small"/>
-                                        {this.props.intl.messages["base.logout"]}
-
+                                        <FormattedMessage
+                                            id="base.logout"
+                                            defaultMessage="退出"
+                                        />
                                     </Link>
                                 </li>
                             </ul>
