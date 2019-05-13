@@ -227,6 +227,7 @@ class Header extends Component {
                                         {this.props.intl.messages["base.myHome"]}
                                     </Link>
                                 </li>
+
                                 <li className="user-profile-menu-item">
                                     <Link to="/">
                                         <FoundationSymbol type="repair" size="small"/>
