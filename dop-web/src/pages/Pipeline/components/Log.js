@@ -7,7 +7,7 @@ import API from '../../API'
 
 export default class Log extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             content: false,
             title: this.props.title ? this.props.title : null,
@@ -17,10 +17,17 @@ export default class Log extends Component {
     }
 
     componentWillMount() {
-        let title = this.state.title.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+        console.log("log")
+        let title = this.hide(this.state.title)
+        console.log(title)
         this.setState({
             title
         })
+    }
+    hide(data){
+        data = data.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+        data = data.replace(/http:[/][/]oauth2:(\S+)@(\S+)/, "http://oauth2:****$2");
+        return data;
     }
 
     clickTitle(href) {
@@ -35,7 +42,7 @@ export default class Log extends Component {
                 if (response.status === 200) {
                     let logs = response.data.split('\n');
                     for (let i = 0; i < logs.length; i++) {
-                        logs[i] = logs[i].replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+                         logs[i] = self.hide(logs[i])
                     }
                     logs.pop();
                     self.setState({
