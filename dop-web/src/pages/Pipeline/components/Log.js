@@ -17,16 +17,19 @@ export default class Log extends Component {
     }
 
     componentWillMount() {
+        console.log("log")
         let title = this.hide(this.state.title)
+        console.log(title)
         this.setState({
             title
         })
     }
     hide(data){
-       data = data.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
-       data = data.replace(/http:[/][/]oauth2:(\S+)@(\S+)/, "http://oauth2:****$2");
-       return data;
+        data = data.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
+        data = data.replace(/http:[/][/]oauth2:(\S+)@(\S+)/, "http://oauth2:****$2");
+        return data;
     }
+
     clickTitle(href) {
         this.setState({
             content: !this.state.content,
@@ -39,7 +42,7 @@ export default class Log extends Component {
                 if (response.status === 200) {
                     let logs = response.data.split('\n');
                     for (let i = 0; i < logs.length; i++) {
-                        logs[i] = self.hide(logs[i])
+                         logs[i] = self.hide(logs[i])
                     }
                     logs.pop();
                     self.setState({

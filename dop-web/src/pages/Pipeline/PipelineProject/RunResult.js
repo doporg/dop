@@ -22,7 +22,7 @@ export default class RunResult extends Component {
     componentWillReceiveProps(nextProps) {
         let self = this;
         if (nextProps.runs) {
-            if(nextProps.runs._links.self.href !== ""){
+            if (nextProps.runs._links.self.href !== "") {
                 this.stage(nextProps.runs._links.self.href + 'nodes/').then((stages) => {
                     self.step(stages[self.state.currentStage])
                 })
@@ -41,6 +41,7 @@ export default class RunResult extends Component {
         this.setState({
             currentStage: data
         });
+        console.log(data)
     }
 
     //获取stage
@@ -125,19 +126,20 @@ export default class RunResult extends Component {
                 <div className="run-detail-stap">
                     {(() => {
                         let self = this;
-                        if (this.state.stages.length && this.state.stages[this.state.currentStage].steps.length) {
-                            return (this.state.stages[this.state.currentStage].steps.map((step, index) => {
-                                return (
-                                    <Log key={index}
-                                         result={step.result}
-                                         href={step.logHref}
-                                         authorization={self.props.authorization}
-                                         title={step.displayDescription ? step.displayDescription : step.displayName}
-                                         prop={step.displayDescription ? step.displayName : null}
-                                         currentStage={this.state.currentStage?this.state.currentStage:null}
-                                    />
-                                )
-                            }))
+                        if (self.state.stages.length && self.state.stages[self.state.currentStage].steps.length) {
+                            return (
+                                this.state.stages[self.state.currentStage].steps.map((step, index) => {
+                                    return (
+                                        <Log
+                                            key={step.displayDescription}
+                                            result={step.result}
+                                            href={step.logHref}
+                                            authorization={self.props.authorization}
+                                            title={step.displayDescription ?step.displayDescription :step.displayName}
+                                            prop={step.displayDescription ? step.displayName : null}
+                                        />
+                                    )
+                                }))
                         }
                     })()}
                 </div>
