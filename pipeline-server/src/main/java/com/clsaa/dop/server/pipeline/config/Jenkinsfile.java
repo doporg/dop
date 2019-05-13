@@ -141,8 +141,20 @@ public class Jenkinsfile {
                             Object kind = map.get("kind");
                             Map metadata = (Map) map.get("metadata");
                             Object namespace = metadata.get("namespace");
+                            Object deploymentName = metadata.get("name");
                             if (kind.toString().equals("Deployment")) {
                                 // apiVersion: apps/v1beta1
+                                this.stages += "sh \'\'\'\n" +
+                                        "curl -X PUT -H \'Content-Type:application/yaml\' " +
+                                        "-k -H \'Bearer " + token + "\' " +
+                                        ip +
+                                        "/apis/" + apiVersion +
+                                        "/namespaces/" + namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s/" + deploymentName.toString() + " " +
+                                        "-d \'\n" +
+                                        deploys[z].trim() + "\n" +
+                                        "\'\n" +
+                                        " \'\'\'" + "\n";
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
                                         "-k -H \'Bearer " + token + "\' " +
@@ -155,6 +167,17 @@ public class Jenkinsfile {
                                         "\'\n" +
                                         " \'\'\'" + "\n";
                             } else {
+                                this.stages += "sh \'\'\'\n" +
+                                        "curl -X PUT -H \'Content-Type:application/yaml\' " +
+                                        "-k -H \'Bearer " + token + "\' " +
+                                        ip +
+                                        "/api/" + apiVersion +
+                                        "/namespaces/" + namespace.toString() +
+                                        "/" + kind.toString().toLowerCase() + "s/" + deploymentName.toString() + " " +
+                                        "-d \'\n" +
+                                        deploys[z].trim() + "\n" +
+                                        "\'\n" +
+                                        " \'\'\'" + "\n";
                                 this.stages += "sh \'\'\'\n" +
                                         "curl -X POST -H \'Content-Type:application/yaml\' " +
                                         "-k -H \'Bearer " + token + "\' " +
