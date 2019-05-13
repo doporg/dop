@@ -126,6 +126,7 @@ export default class RunResult extends Component {
                 <div className="run-detail-stap">
                     {(() => {
                         let self = this;
+                        console.log(self.state.stages[self.state.currentStage])
                         if (self.state.stages.length && self.state.stages[self.state.currentStage].steps.length) {
                             return (
                                 this.state.stages[self.state.currentStage].steps.map((step) => {
