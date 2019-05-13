@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Input, Select } from '@icedesign/base';
+import {injectIntl} from "react-intl";
 
-export default class TableFilter extends Component {
+class TableFilter extends Component {
   static displayName = 'TableFilter';
 
   constructor(props) {
@@ -12,30 +13,22 @@ export default class TableFilter extends Component {
   render() {
     return (
       <div style={styles.tableFilter}>
-        <div style={styles.title}>用例执行日志</div>
+        <div style={styles.title}>{this.props.intl.messages['test.exeLogs.search.title']}</div>
         <div style={styles.filter}>
           <div style={styles.filterItem}>
-            <span style={styles.filterLabel}>名称：</span>
+            <span style={styles.filterLabel}>{this.props.intl.messages['test.exeLogs.search.testManager']}</span>
             <Input />
           </div>
           <div style={styles.filterItem}>
-            <span style={styles.filterLabel}>角色：</span>
+            <span style={styles.filterLabel}>{this.props.intl.messages['test.exeLogs.search.status']}</span>
             <Select style={{ width: '200px' }}>
-              <Select.Option value="all">全部</Select.Option>
-              <Select.Option value="admin">管理员</Select.Option>
-              <Select.Option value="dbo">运营</Select.Option>
-            </Select>
-          </div>
-          <div style={styles.filterItem}>
-            <span style={styles.filterLabel}>状态：</span>
-            <Select style={{ width: '200px' }}>
-              <Select.Option value="all">全部</Select.Option>
-              <Select.Option value="checked">已审核</Select.Option>
-              <Select.Option value="unCheck">未审核</Select.Option>
+              <Select.Option value="all">{this.props.intl.messages['test.exeLogs.search.status.all']}</Select.Option>
+              <Select.Option value="checked">{this.props.intl.messages['test.exeLogs.search.status.success']}</Select.Option>
+              <Select.Option value="unCheck">{this.props.intl.messages['test.exeLogs.search.status.fail']}</Select.Option>
             </Select>
           </div>
           <Button type="primary" style={styles.submitButton}>
-            查询
+            {this.props.intl.messages['test.exeLogs.search']}
           </Button>
         </div>
       </div>
@@ -77,3 +70,4 @@ const styles = {
     marginLeft: '20px',
   },
 };
+export default injectIntl(TableFilter);

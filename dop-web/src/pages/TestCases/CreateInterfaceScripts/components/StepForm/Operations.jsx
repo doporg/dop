@@ -7,13 +7,18 @@ import {
     Upload
 } from '@icedesign/base';
 import IcePanel from '@icedesign/panel';
+import {Feedback} from "@icedesign/base";
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
 import RequestScriptForm from "./RequestScriptForm";
 import WaitOperation from "./WaitOperation";
 import API from "../../../../API";
+import Axios from "axios";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
+
+const {toast} = Feedback;
 
 const styles = {
     formItem: {
@@ -37,7 +42,7 @@ const styles = {
     }
 };
 
-export default class Operations extends Component{
+class Operations extends Component{
 
     constructor(props) {
         super(props);
@@ -82,7 +87,6 @@ export default class Operations extends Component{
                 case_params.forEach((param) => {
                     param.caseId = case_id;
                     this.props.addCaseParam(param);
-                    // this.props.caseParams.push(param);
                 });
             }
 
@@ -97,18 +101,31 @@ export default class Operations extends Component{
 
     render() {
         let importApi = API.test + '/interfaceCases/import';
+        let autho = null;
+        let x_login = null;
+        if (window.sessionStorage.getItem('Authorization') && window.sessionStorage.getItem('x-login-token')) {
+            autho = "Bearer " + window.sessionStorage.getItem('Authorization');
+            x_login = window.sessionStorage.getItem('x-login-token');
+        }else {
+            toast.error(this.props.intl.messages['test.operations.loginFail']);
+            return;
+        }
         return (
             <div>
                 <Row>
                     <Col span="15"/>
                     <Col span='3'>
                         <div style={styles.buttons}>
-                            <Button type="secondary" onClick={this.props.addRequestScript.bind(this)}>添加HTTP请求</Button>
+                            <Button type="secondary" onClick={this.props.addRequestScript.bind(this)}>
+                                {this.props.intl.messages['test.operations.addHttp']}
+                            </Button>
                         </div>
                     </Col>
                     <Col span='3'>
                         <div style={styles.buttons}>
-                            <Button type="secondary" onClick={this.props.addWaitTime.bind(this)}>添加等待操作</Button>
+                            <Button type="secondary" onClick={this.props.addWaitTime.bind(this)}>
+                                {this.props.intl.messages['test.operations.addWait']}
+                            </Button>
                         </div>
                     </Col>
                     <Col span='3'>
@@ -121,9 +138,15 @@ export default class Operations extends Component{
                             showUploadList={false}
                             onSuccess={this.uploadSuccess}
                             onError={this.onError}
+                            headers={
+                                {
+                                    Authorization: autho,
+                                    'x-login-token': x_login
+                                }
+                            }
                         >
                             <Button type="primary" style={{ margin: "0 0 10px" }}>
-                                导入API
+                                {this.props.intl.messages['test.operations.import']}
                             </Button>
                         </Upload>
                     </Col>
@@ -137,7 +160,7 @@ export default class Operations extends Component{
                                     <IcePanel.Header>
                                         <Row>
                                             <Col span='23'>
-                                                HTTP请求
+                                                {this.props.intl.messages['test.operations.http.title']}
                                             </Col>
                                             <Col span='1'>
                                                 {/*<Button type="text" size='large' shape='ghost' onClick={this.props.removeOperation.bind(this,index)} style={{marginHeight: '20px'}}>*/}
@@ -166,7 +189,7 @@ export default class Operations extends Component{
                                     <IcePanel.Header>
                                         <Row>
                                             <Col span='23'>
-                                                等待
+                                                {this.props.intl.messages['test.operations.wait.title']}
                                             </Col>
                                             <Col span='1'>
                                                 {/*<Button size='large' onClick={this.props.removeOperation.bind(this,index)}>*/}
@@ -194,3 +217,5 @@ export default class Operations extends Component{
         );
     }
 }
+
+export default injectIntl(Operations);

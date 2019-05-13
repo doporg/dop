@@ -10,6 +10,7 @@ import RequestStageForm from "./RequestStageForm";
 import API from "../../../../API";
 import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 const { Row, Col } = Grid;
 const Toast = Feedback.toast;
@@ -72,7 +73,7 @@ class StepForm extends Component {
         }
       })
           .then(function (response) {
-            Toast.success("修改测试脚本成功！");
+            Toast.success(_this.props.intl.messages['test.stepForm.saveTextSuccessfully']);
             _this.props.history.push('/testCases');
           }).catch(function (error) {
         console.log(error);
@@ -120,7 +121,7 @@ class StepForm extends Component {
   render() {
     return (
       <div className="step-form">
-        <IceContainer title='测试脚本'>
+        <IceContainer title={this.props.intl.messages['test.stepForm.title']}>
           <Row wrap>
             <Col xxs="24" s="5" l="5" style={styles.formLabel}>
               <Step
@@ -130,9 +131,9 @@ class StepForm extends Component {
                 animation={false}
                 style={styles.step}
               >
-                <Step.Item title="准备" content="" onClick={this.clickStep.bind(this)}/>
-                <Step.Item title="测试" content="" onClick={this.clickStep.bind(this)}/>
-                <Step.Item title="测试后" content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title={this.props.intl.messages['test.stepForm.step.prepare']} content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title={this.props.intl.messages['test.stepForm.step.test']} content="" onClick={this.clickStep.bind(this)}/>
+                <Step.Item title={this.props.intl.messages['test.stepForm.step.destroy']} content="" onClick={this.clickStep.bind(this)}/>
               </Step>
             </Col>
 
@@ -174,4 +175,4 @@ const styles = {
   },
 };
 
-export default withRouter(StepForm);
+export default injectIntl(withRouter(StepForm));

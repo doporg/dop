@@ -104,7 +104,7 @@ export default class CaseUnit extends Component{
                     return (
                         <Row key={index} style={{marginBottom: '5px', marginTop: '5px',marginRight: '10px'}}>
                             <Col l='1'>
-                                <span style={styles.formItemLabel}>用例{index+1}：</span>
+                                <span style={styles.formItemLabel}>Case {index+1}：</span>
                             </Col>
                             <Col l='8'>
                                 <FormBinder required message="请选择一个测试用例" name={`caseUnits[${index}]`} >

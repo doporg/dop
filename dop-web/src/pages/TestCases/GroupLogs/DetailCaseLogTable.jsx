@@ -8,7 +8,7 @@ import IcePanel from '@icedesign/panel';
 import IceContainer from '@icedesign/container';
 import {withRouter} from "react-router-dom";
 import API from "../../API";
-
+import {injectIntl} from "react-intl";
 
 class DetailCaseLogTable extends Component {
     static displayName = 'DetailCaseLogTable';
@@ -44,14 +44,14 @@ class DetailCaseLogTable extends Component {
             return (
                 <div style={styles.state}>
                     <span style={styles.circle} />
-                    <span style={styles.stateText}>成功</span>
+                    <span style={styles.stateText}>{this.props.intl.messages['test.exeLogs.search.status.success']}</span>
                 </div>
             );
         }else {
             return (
                 <div style={styles.state}>
                     <span style={styles.circleFail} />
-                    <span style={styles.stateTextFail}>失败</span>
+                    <span style={styles.stateTextFail}>{this.props.intl.messages['test.exeLogs.search.status.fail']}</span>
                 </div>
             )
         }
@@ -59,9 +59,9 @@ class DetailCaseLogTable extends Component {
 
     renderType = (value, index, record) => {
         if (value === 'INTERFACE') {
-            return '接口用例';
+            return this.props.intl.messages['test.caseLists.table.type.interface'];
         }else {
-            return '手工用例';
+            return this.props.intl.messages['test.caseLists.table.type.manual'];
         }
     };
 
@@ -91,11 +91,11 @@ class DetailCaseLogTable extends Component {
         return (
             <div>
                 <Balloon.Tooltip trigger={info} triggerType="hover" align='l'>
-                    查看用例详情
+                    {this.props.intl.messages['test.groupLogs.detail.view']}
                 </Balloon.Tooltip>
 
                 <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='lt'>
-                    查看详细日志
+                    {this.props.intl.messages['test.groupLogs.detail.viewLog']}
                 </Balloon.Tooltip>
             </div>
         );
@@ -126,13 +126,13 @@ class DetailCaseLogTable extends Component {
     };
 
     renderHeader = (operationLog) => {
-        let stage = '准备阶段';
+        let stage = this.props.intl.messages['test.exeLogs.stage.prepare'];
         let stageEnum = operationLog.stage;
         if (stageEnum === 'TEST') {
-            stage = '测试阶段';
+            stage = this.props.intl.messages['test.exeLogs.stage.test'];
         }
         if (stageEnum === 'DESTROY') {
-            stage = '测试后阶段';
+            stage = this.props.intl.messages['test.exeLogs.stage.destroy'];
         }
 
         let begin = operationLog.begin.replace('T', ' ');
@@ -149,7 +149,7 @@ class DetailCaseLogTable extends Component {
             <div style={styles.tableContainer}>
                 <IceContainer>
                     <Button style={styles.button} onClick={this.onBack.bind(this)} >
-                        <Icon type="arrow-left" size="xs" style={{ marginRight: '4px' }} />返回上一页
+                        <Icon type="arrow-left" size="xs" style={{ marginRight: '4px' }} />{this.props.intl.messages['test.groupLogs.detail.back']}
                     </Button>
                 </IceContainer>
 
@@ -160,9 +160,9 @@ class DetailCaseLogTable extends Component {
                     className="custom-table"
                 >
                     <Table.Column
-                        width={100}
+                        width={150}
                         lock="left"
-                        title="用例类型"
+                        title={this.props.intl.messages['test.caseLists.table.type']}
                         dataIndex="caseType"
                         align="center"
                         cell={this.renderType}
@@ -170,40 +170,45 @@ class DetailCaseLogTable extends Component {
                     <Table.Column
                         width={200}
                         // lock="left"
-                        title="用例名"
+                        title={this.props.intl.messages['test.caseLists.table.name']}
                         dataIndex="caseName"
                         align="center"
                     />
-                    <Table.Column width={200} title="开始执行时间" dataIndex="begin"/>
-                    <Table.Column width={200} title="结束执行时间" dataIndex="end"/>
+                    <Table.Column width={200} title={this.props.intl.messages['test.exeLogs.table.begin']} dataIndex="begin"/>
+                    <Table.Column width={200} title={this.props.intl.messages['test.exeLogs.table.end']} dataIndex="end"/>
                     <Table.Column
                         width={200}
-                        title="测试负责人"
+                        title={this.props.intl.messages['test.exeLogs.table.testManager']}
                         dataIndex="createUserName"
                     />
                     <Table.Column
                         width={100}
-                        title="状态"
+                        title={this.props.intl.messages['test.exeLogs.table.status']}
                         dataIndex="success"
                         cell={this.renderState}
                     />
                     <Table.Column
                         width={200}
-                        title="操作"
+                        title={this.props.intl.messages['test.createGroup.table.operations']}
                         cell={this.renderOper}
                         lock="right"
                         align="center"
                     />
                 </Table>
 
-                <Dialog title="用例执行过程"
+                <Dialog title={this.props.intl.messages['test.exeLogs.table.detail.title']}
                         visible={this.state.showDetailLog}
                         // isFullScreen
                         shouldUpdatePosition
                         style={{width: '1400px'}}
                         onOk={this.onClose}
                         onCancel={this.onClose}
-                        onClose={this.onClose}>
+                        onClose={this.onClose}
+                        locale={{
+                            'ok': 'Confirm',
+                            'cancel': 'Cancel'
+                        }}
+                >
 
                     {this.state.detailLogData.map((operationLog, index) => {
                         return (
@@ -278,4 +283,4 @@ const styles = {
     },
 };
 
-export default withRouter(DetailCaseLogTable);
+export default injectIntl(withRouter(DetailCaseLogTable));

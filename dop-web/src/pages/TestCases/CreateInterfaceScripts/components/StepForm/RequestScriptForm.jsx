@@ -18,6 +18,7 @@ import {Option} from "@icedesign/base/lib/select";
 import Select from "@icedesign/base/lib/select";
 import ResultParam from "./ResultParam";
 import RequestParam from "./RequestParam";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 const demo = JSON.stringify({
@@ -25,39 +26,7 @@ const demo = JSON.stringify({
     "b": "2"
 });
 
-const paramTab = (
-    <div>
-        添加参数&nbsp;
-        <Balloon trigger={
-            <Icon type="help" size='xs'/>
-        } triggerType="hover" align='r'>
-            选择当前请求的响应数据作为后续请求的参数, 对于形如
-            <code>
-                {demo}
-            </code>
-            的JSON响应体数据，添加参数名:paramA ， 值:a ，在后续请求中用$&#123;paramA&#125;引用参数即可.
-        </Balloon>
-    </div>
-);
-
-
-const checkPointTab = (
-    <div>
-        检查点&nbsp;
-        <Balloon trigger={
-            <Icon type="help" size='xs'/>
-        } triggerType="hover" align='r'>
-            自动校验响应体的JSON数据, 对于形如
-            <code>
-                {demo}
-            </code>
-            的JSON响应体数据，可设置属性a等于1，作为测试用例是否执行成功的依据。
-        </Balloon>
-    </div>
-);
-
-
-export default class RequestScriptForm extends Component{
+class RequestScriptForm extends Component{
 
     constructor(props) {
         super(props);
@@ -193,10 +162,45 @@ export default class RequestScriptForm extends Component{
 
 
     render() {
+        const paramTab = (
+            <div>
+                {this.props.intl.messages['test.requestScript.resultParam.add']}&nbsp;
+                <Balloon trigger={
+                    <Icon type="help" size='xs'/>
+                } triggerType="hover" align='r'>
+                    {this.props.intl.messages['test.requestScript.resultParam.info1']}
+                    <code>
+                        {demo}
+                    </code>
+                    {this.props.intl.messages['test.requestScript.resultParam.info2']}
+                </Balloon>
+            </div>
+        );
+
+
+        const checkPointTab = (
+            <div>
+                {this.props.intl.messages['test.requestScript.checkPoint.add']}&nbsp;
+                <Balloon trigger={
+                    <Icon type="help" size='xs'/>
+                } triggerType="hover" align='r'>
+                    {this.props.intl.messages['test.requestScript.checkPoint.info1']}
+                    <code>
+                        {demo}
+                    </code>
+                    {this.props.intl.messages['test.requestScript.checkPoint.info2']}
+                </Balloon>
+            </div>
+        );
+
+        let header = this.props.intl.messages['test.requestScript.header'];
+        let param = this.props.intl.messages['test.requestScript.param'];
+        let body = this.props.intl.messages['test.requestScript.body'];
+
         const tabs = [
-            { tab: "请求头", key: "header", content: "这里是首页内容" },
-            { tab: "请求参数", key: "param", content: "这里是首页内容" },
-            { tab: "请求体", key: "body", content: "这里是文档内容" },
+            { tab: header, key: "header", content: "这里是首页内容" },
+            { tab: param, key: "param", content: "这里是首页内容" },
+            { tab: body, key: "body", content: "这里是文档内容" },
             { tab: checkPointTab, key: "checkPoint", content: "这里是 API 内容" },
             { tab: paramTab, key: "requestParam", content: "这里是 API 内容" }
         ];
@@ -209,7 +213,7 @@ export default class RequestScriptForm extends Component{
                     <Row>
                         <Col span="4">
                             <FormBinder name="httpMethod" >
-                                <Select placeholder="选择请求方法" style={{width: '100%'}}
+                                <Select placeholder={this.props.intl.messages['test.requestScript.method.select']} style={{width: '100%'}}
                                 >
                                     <Option value="GET">GET</Option>
                                     <Option value="POST">POST</Option>
@@ -220,7 +224,7 @@ export default class RequestScriptForm extends Component{
                         </Col>
                         <Col span="20">
                             <FormBinder name="rawUrl" >
-                                <Input placeholder="请输入请求url" style={{width: '100%'}}/>
+                                <Input placeholder={this.props.intl.messages['test.requestScript.url.input']} style={{width: '100%'}}/>
                             </FormBinder>
                         </Col>
                     </Row>
@@ -245,3 +249,5 @@ export default class RequestScriptForm extends Component{
 
 
 }
+
+export default injectIntl(RequestScriptForm);

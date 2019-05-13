@@ -12,8 +12,10 @@ import API from "../../../../API";
 import Axios from "axios";
 import React, {Component} from 'react';
 import { FormBinderWrapper, FormBinder, FormError } from '@icedesign/form-binder';
-import {TestSteps} from "../TestStep";
+import TestSteps from "../TestStep";
 import IceContainer from '@icedesign/container';
+import {injectIntl, FormattedMessage} from 'react-intl';
+const { Row, Col } = Grid;
 
 const styles = {
     formItem: {
@@ -22,7 +24,7 @@ const styles = {
         alignItems: 'center',
     },
     formItemLabel: {
-        width: '70px',
+        width: '110px',
         mariginRight: '10px',
         display: 'inline-block',
         textAlign: 'right',
@@ -45,7 +47,7 @@ const Toast = Feedback.toast;
  *    弹窗中的表单
  *
  * */
-export default class CreateManualCaseFrom extends Component {
+class CreateManualCaseFrom extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -106,7 +108,7 @@ export default class CreateManualCaseFrom extends Component {
         Axios.post(url, content)
             .then(function (response) {
                 if (response.data) {
-                    Toast.success("添加手工测试用例成功！");
+                    Toast.success(_this.props.intl.messages["test.caseLists.table.message.createManSuc"]);
                 }
                 _this.props.close();
                 _this.props.refresh();
@@ -126,7 +128,7 @@ export default class CreateManualCaseFrom extends Component {
 
     render() {
         return (
-            <IceContainer title="创建手工测试用例">
+            <IceContainer title={this.props.intl.messages['test.caseLists.add.manual.dialog.title']}>
                 <FormBinderWrapper
                     value={this.state.value}
                     ref="form"
@@ -134,32 +136,39 @@ export default class CreateManualCaseFrom extends Component {
                     <div style={styles.content}>
 
                         <div style={styles.formItem}>
-                            <span style={styles.formItemLabel}>用例名称：</span>
-                            <FormBinder name="caseName" required message="请输入正确的用例名称" >
+                            <Row>
+                                <Col>
+                            <span style={styles.formItemLabel}>{this.props.intl.messages['test.caseLists.add.manual.dialog.caseName']}</span>
+                                </Col>
+                                <Col>
+                            <FormBinder name="caseName" required message={this.props.intl.messages['test.caseLists.add.manual.dialog.caseNameWarn']} >
                                 <Input placeholder="case name" style={styles.formCommonWidth}/>
                             </FormBinder>
                             <FormError style={styles.formItemError} name="caseName" />
+                                </Col>
+                            </Row>
                         </div>
 
                         <div style={styles.formItem}>
-                            <span style={styles.formItemLabel}>用例描述：</span>
-                            <FormBinder name="caseDesc" required message="请输入用例描述" >
+                            <span style={styles.formItemLabel}>{this.props.intl.messages['test.caseLists.add.manual.dialog.caseDesc']}</span>
+                            <FormBinder name="caseDesc" required message={this.props.intl.messages['test.caseLists.add.manual.dialog.caseDescWarn']} >
                                 <Input placeholder="case description" style={styles.formCommonWidth}/>
                             </FormBinder>
                             <FormError style={styles.formItemError} name="caseDesc" />
                         </div>
 
                         <div style={styles.formItem}>
-                            <span style={styles.formItemLabel}>前置条件：</span>
-                            <FormBinder name="preCondition" required message="请输入前置条件" >
+                            <span style={styles.formItemLabel}>{this.props.intl.messages['test.caseLists.add.manual.dialog.preCondition']}</span>
+                            <FormBinder name="preCondition" required message={this.props.intl.messages['test.caseLists.add.manual.dialog.preConditionWarn']} >
                                 <Input multiple placeholder="pre condition" style={styles.formCommonWidth}/>
                             </FormBinder>
                             <FormError style={styles.formItemError} name="caseDesc" />
                         </div>
 
                         <div style={styles.formItem}>
-                            <span style={styles.formItemLabel}>应用ID：</span>
-                            <FormBinder name="applicationId" required format="number" message="请绑定用例对应的应用id" >
+                            <span style={styles.formItemLabel}>{this.props.intl.messages['test.caseLists.add.manual.dialog.appId']}</span>
+                            <FormBinder name="applicationId" required format="number"
+                                        message={this.props.intl.messages['test.caseLists.add.manual.dialog.appIdWarn']} >
                                 <Input placeholder="application id" style={styles.formCommonWidth}/>
                             </FormBinder>
                             <FormError style={styles.formItemError} name="application id" />
@@ -178,3 +187,5 @@ export default class CreateManualCaseFrom extends Component {
         )
     }
 }
+
+export default injectIntl(CreateManualCaseFrom);

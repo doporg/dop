@@ -1,21 +1,23 @@
+import React, {Component} from 'react';
+import { FormattedMessage} from 'react-intl';
 const testMenuConfig=[
     {
-        name: '首页',
+        name: <FormattedMessage id="permission.home" defaultMessage="首页"/>,
         path: '/',
         icon: 'home2'
     },
     {
-        name: '用例管理',
+        name: <FormattedMessage id="test.menu.caseManage" defaultMessage="用例管理"/>,
         path: '/testCases',
         icon: 'repair' ,
     },
     {
-        name: '分组管理',
+        name: <FormattedMessage id="test.menu.groupManage" defaultMessage="分组管理"/>,
         path: '/test/testGroups',
         icon: 'box',
     },
     {
-        name: '新建分组',
+        name: <FormattedMessage id="test.menu.newGroup" defaultMessage="新建分组"/>,
         path: '/test/createGroup',
         icon: 'add',
     },

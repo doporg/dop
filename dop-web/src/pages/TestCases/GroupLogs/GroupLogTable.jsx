@@ -8,7 +8,7 @@ import IcePanel from '@icedesign/panel';
 import API from "../../API";
 import {withRouter} from "react-router-dom";
 import IceContainer from '@icedesign/container';
-
+import {injectIntl} from "react-intl";
 
 class GroupLogTable extends Component {
     static displayName = 'GroupLogTable';
@@ -88,14 +88,14 @@ class GroupLogTable extends Component {
             return (
                 <div style={styles.state}>
                     <span style={styles.circle} />
-                    <span style={styles.stateText}>成功</span>
+                    <span style={styles.stateText}>{this.props.intl.messages['test.exeLogs.search.status.success']}</span>
                 </div>
             );
         }else {
             return (
                 <div style={styles.state}>
                     <span style={styles.circleFail} />
-                    <span style={styles.stateTextFail}>失败</span>
+                    <span style={styles.stateTextFail}>{this.props.intl.messages['test.exeLogs.search.status.fail']}</span>
                 </div>
             )
         }
@@ -123,7 +123,7 @@ class GroupLogTable extends Component {
         />;
         return (
             <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='l'>
-                用例详细执行日志
+                {this.props.intl.messages['test.groupLogs.allLog']}
             </Balloon.Tooltip>
         );
     };
@@ -152,25 +152,10 @@ class GroupLogTable extends Component {
         }
     };
 
-    renderHeader = (operationLog) => {
-        let stage = '准备阶段';
-        let stageEnum = operationLog.stage;
-        if (stageEnum === 'TEST') {
-            stage = '测试阶段';
-        }
-        if (stageEnum === 'DESTROY') {
-            stage = '测试后阶段';
-        }
-
-        let begin = operationLog.begin.replace('T', ' ');
-        let end = operationLog.end.replace('T', ' ');
-        return stage + ' ' + operationLog.operationType + ' ' + begin + ' to ' + end;
-    };
-
     render() {
         return (
             <div style={styles.tableContainer}>
-                <IceContainer title={'【' + this.state.caseGroupDto.groupName + '】的执行日志'}>
+                <IceContainer title={'【' + this.state.caseGroupDto.groupName + '】' + this.props.intl.messages['test.groupLogs.info']}>
                     {this.state.caseGroupDto.comment}
                 </IceContainer>
 
@@ -185,32 +170,32 @@ class GroupLogTable extends Component {
                     <Table.Column
                         width={100}
                         lock="left"
-                        title="序列号"
+                        title={this.props.intl.messages['test.exeLogs.table.id']}
                         dataIndex="id"
                         sortable
                         align="center"
                     />
-                    <Table.Column width={200} title="开始执行时间" dataIndex="ctime" cell={this.renderTime}/>
+                    <Table.Column width={200} title={this.props.intl.messages['test.exeLogs.table.begin']} dataIndex="ctime" cell={this.renderTime}/>
                     <Table.Column
                         width={200}
-                        title="测试负责人"
+                        title={this.props.intl.messages['test.exeLogs.table.testManager']}
                         dataIndex="createUserName"
                     />
                     <Table.Column
                         width={100}
-                        title="状态"
+                        title={this.props.intl.messages['test.exeLogs.table.status']}
                         dataIndex="success"
                         cell={this.renderState}
                     />
                     <Table.Column
                         width={100}
-                        title="已执行用例"
+                        title={this.props.intl.messages['test.groupLogs.runCount']}
                         dataIndex='logs'
                         cell={this.renderRun}
                     />
                     <Table.Column
                         width={100}
-                        title="所有用例日志"
+                        title={this.props.intl.messages['test.groupLogs.allLog']}
                         cell={this.renderOper}
                         lock="right"
                         align="center"
@@ -222,42 +207,6 @@ class GroupLogTable extends Component {
                     onChange={this.handlePagination}
                     total={this.state.total}
                 />
-
-                <Dialog title="用例执行过程"
-                        visible={this.state.showDetailLog}
-                        isFullScreen
-                        style={{width: '800px'}}
-                        onOk={this.onClose}
-                        onCancel={this.onClose}
-                        onClose={this.onClose}>
-
-                    {this.state.detailLogData.map((operationLog, index) => {
-                        return (
-                            <IcePanel status={this.panel(operationLog.operationType)} style={{marginBottom: '10px'}}>
-                                <IcePanel.Header>
-                                    <Row>
-                                        <Col span='23'>
-                                            {this.renderHeader(operationLog)}
-                                        </Col>
-                                        <Col span='1'>
-                                        </Col>
-                                    </Row>
-                                </IcePanel.Header>
-                                <IcePanel.Body>
-                                    <Row>
-                                        <Col span="22" style={{whiteSpace: 'pre-line'}}>
-                                            {operationLog.executeInfo}
-                                        </Col>
-                                        <Col span="2">
-
-                                        </Col>
-                                    </Row>
-                                </IcePanel.Body>
-                            </IcePanel>
-                        );
-                    })}
-
-                </Dialog>
             </div>
         );
     }
@@ -304,4 +253,4 @@ const styles = {
     },
 };
 
-export default withRouter(GroupLogTable);
+export default injectIntl(withRouter(GroupLogTable));

@@ -6,6 +6,7 @@ import {
 } from '@icedesign/base';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -32,14 +33,14 @@ const styles = {
     }
 };
 
-export default class CaseParams extends Component{
+class CaseParams extends Component{
 
     render() {
         return (
             <div>
                 <Row style={{marginBottom: '10px'}}>
                     <Col style={{color: '#999999'}}>
-                        用例参数:
+                        {this.props.intl.messages['test.caseParams.title']}
                     </Col>
                     <Col>
                     </Col>
@@ -55,14 +56,14 @@ export default class CaseParams extends Component{
                         <Row key={index} style={{marginBottom: '10px'}}>
                             <Col>
                                 <span style={styles.formItemLabel}>name：</span>
-                                <FormBinder required message="参数名必填" name={`caseParams[${index}].ref`}>
+                                <FormBinder required message={this.props.intl.messages['test.caseParams.nameWarn']} name={`caseParams[${index}].ref`}>
                                     <Input  style={{width: '60%'}}/>
                                 </FormBinder>
                                 <FormError name={`caseParams[${index}].ref`} />
                             </Col>
                             <Col>
                                 <span style={styles.formItemLabel}>value：</span>
-                                <FormBinder name={`caseParams[${index}].value`} required message="请输入参数值">
+                                <FormBinder name={`caseParams[${index}].value`} required message={this.props.intl.messages['test.caseParams.valueWarn']}>
                                     <Input  style={{width: '60%'}}/>
                                 </FormBinder>
                                 <FormError name={`caseParams[${index}].value`} />
@@ -79,10 +80,12 @@ export default class CaseParams extends Component{
                     <Button type="secondary" onClick={this.props.submit} style={{marginTop: '20px'}}
                             disabled={this.props.disableSave}>
                         <Icon type="success" size='xxl'/>
-                        保存详情和参数
+                        {this.props.intl.messages['test.caseParams.saveText']}
                     </Button>
                 </div>
             </div>
         );
     }
 }
+
+export default injectIntl(CaseParams);

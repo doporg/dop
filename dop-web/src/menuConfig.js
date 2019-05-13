@@ -34,7 +34,7 @@ const asideMenuConfig = [
         icon: 'ol-list',
     },
     {
-        name: '测试管理',
+        name: <FormattedMessage id="test.name" defaultMessage="测试管理"/>,
         path: '/testCases',
         icon: 'repair',
     },

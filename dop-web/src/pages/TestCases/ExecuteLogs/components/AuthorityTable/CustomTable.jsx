@@ -6,9 +6,9 @@ import Balloon from "@alifd/next/lib/balloon";
 import Dialog from "@alifd/next/lib/dialog";
 import {Col, Row} from "@alifd/next/lib/grid";
 import IcePanel from '@icedesign/panel';
+import {injectIntl} from "react-intl";
 
-
-export default class Home extends Component {
+class Home extends Component {
   static displayName = 'Home';
 
   constructor(props) {
@@ -72,14 +72,14 @@ export default class Home extends Component {
       return (
           <div style={styles.state}>
             <span style={styles.circle} />
-            <span style={styles.stateText}>成功</span>
+            <span style={styles.stateText}>{this.props.intl.messages['test.exeLogs.success']}</span>
           </div>
       );
     }else {
       return (
           <div style={styles.state}>
             <span style={styles.circleFail} />
-            <span style={styles.stateTextFail}>失败</span>
+            <span style={styles.stateTextFail}>{this.props.intl.messages['test.exeLogs.fail']}</span>
           </div>
       )
     }
@@ -104,7 +104,7 @@ export default class Home extends Component {
     />;
     return (
         <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='l'>
-          查看详细日志
+          {this.props.intl.messages['test.exeLogs.detail']}
         </Balloon.Tooltip>
     );
   };
@@ -134,13 +134,13 @@ export default class Home extends Component {
   };
 
   renderHeader = (operationLog) => {
-    let stage = '准备阶段';
+    let stage = this.props.intl.messages['test.exeLogs.stage.prepare'];
     let stageEnum = operationLog.stage;
     if (stageEnum === 'TEST') {
-      stage = '测试阶段';
+      stage = this.props.intl.messages['test.exeLogs.stage.test'];
     }
     if (stageEnum === 'DESTROY') {
-      stage = '测试后阶段';
+      stage = this.props.intl.messages['test.exeLogs.stage.destroy'];
     }
 
     let begin = operationLog.begin.replace('T', ' ');
@@ -160,27 +160,27 @@ export default class Home extends Component {
           <Table.Column
             width={100}
             lock="left"
-            title="序列号"
+            title={this.props.intl.messages['test.exeLogs.table.id']}
             dataIndex="id"
             sortable
             align="center"
           />
-          <Table.Column width={200} title="开始执行时间" dataIndex="begin" cell={this.renderTime}/>
-          <Table.Column width={200} title="结束执行时间" dataIndex="end" cell={this.renderTime}/>
+          <Table.Column width={200} title={this.props.intl.messages['test.exeLogs.table.begin']} dataIndex="begin" cell={this.renderTime}/>
+          <Table.Column width={200} title={this.props.intl.messages['test.exeLogs.table.end']} dataIndex="end" cell={this.renderTime}/>
           <Table.Column
             width={200}
-            title="测试负责人"
+            title={this.props.intl.messages['test.exeLogs.table.testManager']}
             dataIndex="createUserName"
           />
           <Table.Column
             width={200}
-            title="状态"
+            title={this.props.intl.messages['test.exeLogs.table.status']}
             dataIndex="success"
             cell={this.renderState}
           />
           <Table.Column
             width={100}
-            title="详细日志"
+            title={this.props.intl.messages['test.exeLogs.table.detail']}
             cell={this.renderOper}
             lock="right"
             align="center"
@@ -193,7 +193,7 @@ export default class Home extends Component {
           total={this.state.total}
         />
 
-        <Dialog title="用例执行过程"
+        <Dialog title={this.props.intl.messages['test.exeLogs.table.detail.table']}
                 visible={this.state.showDetailLog}
                 // isFullScreen
                 shouldUpdatePosition
@@ -233,6 +233,8 @@ export default class Home extends Component {
     );
   }
 }
+
+export default injectIntl(Home);
 
 const styles = {
   icon: {

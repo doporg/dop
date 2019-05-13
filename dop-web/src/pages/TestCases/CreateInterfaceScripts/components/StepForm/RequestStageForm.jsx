@@ -17,6 +17,7 @@ import RequestCheckPoint from "./RequestCheckPoint";
 import {Option} from "@icedesign/base/lib/select";
 import Select from "@icedesign/base/lib/select";
 import Operations from "./Operations";
+import {injectIntl,FormattedMessage} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -28,8 +29,7 @@ const styles = {
     },
 };
 
-
-export default class RequestStageForm extends Component{
+class RequestStageForm extends Component{
 
     constructor(props) {
         super(props);
@@ -149,7 +149,7 @@ export default class RequestStageForm extends Component{
         if (stage !== 'PREPARE') {
             return (
                 <Button onClick={this.lastStep.bind(this)} type="primary">
-                    上一步
+                    {this.props.intl.messages['test.stageForm.last']}
                 </Button>
             );
         }
@@ -159,13 +159,13 @@ export default class RequestStageForm extends Component{
         if (stage !== 'DESTROY') {
             return (
                 <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
-                    下一步
+                    {this.props.intl.messages['test.stageForm.next']}
                 </Button>
             );
         }else {
             return (
                 <Button onClick={this.submit.bind(this)} type="primary" style={{marginLeft: '10px'}}>
-                    保存
+                    {this.props.intl.messages['test.stageForm.save']}
                 </Button>
             );
         }
@@ -216,3 +216,5 @@ export default class RequestStageForm extends Component{
         );
     }
 }
+
+export default injectIntl(RequestStageForm);
