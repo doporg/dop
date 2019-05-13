@@ -27,6 +27,7 @@ export default class Log extends Component {
     hide(data){
         data = data.replace(/docker login -u ([^\s]*) -p ([^\s])*/, "docker login -u **** -p ****");
         data = data.replace(/http:[/][/]oauth2:(\S+)@(\S+)/, "http://oauth2:****$2");
+        data = data.replace(/'Bearer \S+'/, "Bearer ****");
         return data;
     }
 
