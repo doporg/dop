@@ -68,7 +68,8 @@ class ApplicationEnvironmentLogList extends Component {
 
     render() {
         const defaultTrigger = (
-            <div>{this.props.intl.messages['projects.text.viewEnvLog']}</div>
+
+            <h3>{this.props.intl.messages['projects.text.viewEnvLog']}</h3>
         );
         const renderOpr = (value, index, record) => {
             console.log("record:", record, value)
@@ -79,10 +80,18 @@ class ApplicationEnvironmentLogList extends Component {
             </div>
         };
         const envRender = (envData) => {
-            return (<Balloon trigger={defaultTrigger} closable={false}>
-                {envData}
+            console.log("envData", envData)
+            return (<Balloon align="rt" trigger={defaultTrigger} closable={false}>
+                <pre>{envData}</pre>
             </Balloon>)
         };
+        // const Content = (envData) => (
+        //     <div>
+        //         <h4 style={{ marginTop: 0 }}>balloon title</h4>
+        //         <hr />
+        //         <p>{envData}</p>
+        //     </div>
+        // );
 
         return (
             <Row wrap gutter="20">

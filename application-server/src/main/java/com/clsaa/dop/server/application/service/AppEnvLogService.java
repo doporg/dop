@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -40,13 +44,16 @@ public class AppEnvLogService {
     public Pagination<AppEnvLogV1> getLogByAppEnvId(Long loginUser, Integer pageNo, Integer pageSize, Long appEnvId) {
         Pagination<AppEnvLogV1> pagination = new Pagination<>();
 
+        Sort sort = new Sort(Sort.Direction.DESC, "rtime");
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         //List<LogInfoV1> logInfoV1List=this.pipelineService.findPipelineLogByEnvId(appEnvId);
         List<String> runningIdList = this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);
         List<AppEnvLogV1> appEnvLogV1List = new ArrayList<>();
         Set userIdList = new HashSet();
         Map<Long, String> idNameMap = new HashMap<>();
-        for (String runningId : runningIdList) {
-            AppEnvLog appEnvLog = this.appEnvLogRepository.findById(runningId).orElse(null);
+        Page<AppEnvLog> appEnvLogPage = this.appEnvLogRepository.findAllByIdIn(pageable, runningIdList);
+        List<AppEnvLog> appEnvLogList = appEnvLogPage.getContent();
+        for (AppEnvLog appEnvLog : appEnvLogList) {
             //BeanUtils.convertType(appEnvLog, AppEnvLogV1.class);
             if (appEnvLog != null) {
                 Long id = appEnvLog.getRuser();
@@ -82,6 +89,7 @@ public class AppEnvLogService {
                 appEnvLogV1List.add(appEnvLogV1);
             }
         }
+
         //List<String> runningIdList= this.buildTagRunningIdMappingService.findRunningIdByAppEnvId(appEnvId);
         //
         //for(String runningId:runningIdList) {
@@ -92,7 +100,7 @@ public class AppEnvLogService {
 
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-        pagination.setTotalCount(appEnvLogV1List.size());
+        pagination.setTotalCount(Long.valueOf(appEnvLogPage.getTotalElements()).intValue());
         pagination.setPageList(appEnvLogV1List);
         return pagination;
     }
@@ -116,7 +124,7 @@ public class AppEnvLogService {
                 break;
             }
 
-            sb.append(content);
+            sb.append(content + '\n');
         }
 
         br.close();

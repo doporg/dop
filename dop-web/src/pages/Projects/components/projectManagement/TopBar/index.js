@@ -10,10 +10,10 @@ export default class TopBar extends PureComponent {
 
         return (
             <div style={{...styles.container, ...style}}>
-                {extraBefore || <div style={styles.title}>{title || ''}</div>}
+                {extraBefore || <div>{title || ''}</div>}
 
                 {extraAfter || (
-                    <div style={styles.buttons}>
+                    <div>
                         {buttonText ? (
                             <Button size="large" type="primary">
                                 {buttonText}
