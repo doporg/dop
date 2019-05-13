@@ -65,7 +65,7 @@ public class ResultOutputService {
         Pipeline pipeline = this.pipelineService.findById(pipelineId);
 
         String git = null;
-        Pattern patternGit = Pattern.compile("http(?:s)://(.*)+.git");
+        Pattern patternGit = Pattern.compile("http(s)*://\\S+.git");
         Matcher matcherGit = patternGit.matcher(output);
         if (matcherGit.find()) {
             git = matcherGit.group();
