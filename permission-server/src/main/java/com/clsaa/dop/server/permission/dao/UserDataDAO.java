@@ -82,7 +82,7 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
 
     @Transactional
     @Modifying
-    @Query(value = "update t_user_data d inner join t_user_rule r on d.rule_id=r.id set d.is_deleted = 1"
+    @Query(value = "update t_user_data d inner join t_user_rule r on d.rule_id=r.id set d.is_deleted = 1,user_id = uuid_short()"
             +" where d.field_value=:fieldValue and r.field_name=:fieldName and d.user_id=:userId and d.is_deleted = 0",
             nativeQuery = true)
 
