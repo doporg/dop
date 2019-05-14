@@ -175,7 +175,8 @@ class ClusterInfoForm extends Component {
                                   {...formItemLayout}
                                   validateStatus={getError("targetClusterToken") ? "error" : ""}
                                   help={getError("targetClusterToken") ? this.props.intl.messages['projects.check.clusterToken'] : ""}>
-                            <Input multiple placeholder={this.props.intl.messages['projects.placeholder.clusterToken']}
+                            <Input className="form-item-input"
+                                   multiple placeholder={this.props.intl.messages['projects.placeholder.clusterToken']}
                                    {...init('targetClusterToken', {
                                        rules: [{
                                            required: true,

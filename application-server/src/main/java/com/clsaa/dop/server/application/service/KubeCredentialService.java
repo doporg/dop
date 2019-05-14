@@ -23,8 +23,6 @@ public class KubeCredentialService {
     @Autowired
     private PermissionConfig permissionConfig;
     @Autowired
-    private KubeYamlService kubeYamlService;
-    @Autowired
     private PermissionService permissionService;
     @Autowired
     AppEnvCredentialMappingService appEnvCredentialMappingService;

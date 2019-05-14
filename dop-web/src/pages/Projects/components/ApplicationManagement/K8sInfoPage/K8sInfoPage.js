@@ -716,6 +716,7 @@ class K8sInfoPage extends Component {
                             label={this.props.intl.messages['projects.text.exportStrategy']}
                             {...formItemLayout}>
                             <Select
+                                className="form-item-select"
                                 defaultValue="ingress"
                                 fillProps="label"
                                 onChange={this.switchIngress.bind(this)}>
@@ -1062,6 +1063,7 @@ class K8sInfoPage extends Component {
                         <Select
                             fillProps="label"
                             onChange={this.switchYamlMode.bind(this)}
+                            className="form-item-select"
                             defaultValue={(this.state.yamlData.length === 0 || this.state.yamlFilePath === "") ? "profile" : "path"}>
                             <Option value="profile">
                                 {this.props.intl.messages['projects.text.userProfile']}

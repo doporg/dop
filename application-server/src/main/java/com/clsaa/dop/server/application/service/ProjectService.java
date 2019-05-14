@@ -29,8 +29,7 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ImageService imageService;
+
     @Autowired
     private PermissionConfig permissionConfig;
 
@@ -38,6 +37,8 @@ public class ProjectService {
     private PermissionService permissionService;
 
     public void deleteMemberFromProject(Long userId, Long projectId, Long loginUser) {
+        //BizAssert.authorized(this.permissionService.check(permissionConfig.get(), loginUser)
+        //        , BizCodes.NO_PERMISSION);
         this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
     }
 
@@ -48,6 +49,7 @@ public class ProjectService {
         for (Long userId : userIdList) {
             BizAssert.validParam(!existUserIdList.contains(userId), new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "已在项目中"));
             this.permissionService.addData(this.permissionConfig.getProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
+            //this.permissionService.addRoleToUser(userId,this.permissionConfig.get);
         }
 
     }

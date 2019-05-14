@@ -5,12 +5,14 @@
 
   .card-form {
     width: 100%;
-
+    //padding:20px;
+    margin-left: 20px;
     .form-loading {
-      width: 70%;
-      margin-bottom: 3%;
-
+      width: 48%;
+      //margin-bottom: 3%;
+      //text-align: center;
       .form-item-input {
+        width: 100%;
         &.hide {
           display: none
         }
@@ -26,7 +28,8 @@
         }
 
         .edit-icon {
-          float: right
+          float: right;
+          //margin-left: 10%;
         }
       }
 

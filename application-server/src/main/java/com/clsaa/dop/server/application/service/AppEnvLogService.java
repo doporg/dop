@@ -38,8 +38,7 @@ public class AppEnvLogService {
     private AppEnvLogRepository appEnvLogRepository;
     @Autowired
     private BuildTagRunningIdMappingService buildTagRunningIdMappingService;
-    @Autowired
-    private PipelineService pipelineService;
+
 
     public Pagination<AppEnvLogV1> getLogByAppEnvId(Long loginUser, Integer pageNo, Integer pageSize, Long appEnvId) {
         Pagination<AppEnvLogV1> pagination = new Pagination<>();
