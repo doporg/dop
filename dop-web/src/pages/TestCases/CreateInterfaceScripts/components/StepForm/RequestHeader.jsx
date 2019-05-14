@@ -6,6 +6,7 @@ import {
 } from '@icedesign/base';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -31,7 +32,7 @@ const styles = {
     }
 };
 
-export default class RequestHeader extends Component{
+class RequestHeader extends Component{
 
     render() {
         return (
@@ -40,16 +41,17 @@ export default class RequestHeader extends Component{
                     return (
                         <Row key={index} style={{marginBottom: '10px'}}>
                             <Col>
-                                <span style={styles.formItemLabel}>名称：</span>
-                                <FormBinder required message="请求头名称必填" name={`requestHeaders[${index}].name`} >
+                                <span style={styles.formItemLabel}>{this.props.intl.messages['test.requestHeader.name']}</span>
+                                <FormBinder required message={this.props.intl.messages['test.requestHeader.nameWarn']} name={`requestHeaders[${index}].name`} >
                                     <Input />
                                 </FormBinder>
                                 <FormError name={`requestHeaders[${index}].name`} />
                             </Col>
                             &nbsp;
                             <Col>
-                                <span style={styles.formItemLabel}>值：</span>
-                                <FormBinder name={`requestHeaders[${index}].value`} required message="请输入请求头值" >
+                                <span style={styles.formItemLabel}>{this.props.intl.messages['test.requestHeader.value']}</span>
+                                <FormBinder name={`requestHeaders[${index}].value`} required
+                                            message={this.props.intl.messages['test.requestHeader.valueWarn']} >
                                     <Input/>
                                 </FormBinder>
                                 <FormError name={`requestHeaders[${index}].value`} />
@@ -71,3 +73,5 @@ export default class RequestHeader extends Component{
         );
     }
 }
+
+export default injectIntl(RequestHeader);

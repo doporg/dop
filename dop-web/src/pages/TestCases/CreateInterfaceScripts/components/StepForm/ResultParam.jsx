@@ -6,6 +6,7 @@ import {
 } from '@icedesign/base';
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -31,7 +32,7 @@ const styles = {
     }
 };
 
-export default class ResultParam extends Component{
+class ResultParam extends Component{
 
     render() {
         return (
@@ -40,7 +41,7 @@ export default class ResultParam extends Component{
                     return (
                         <Row key={index} style={{marginBottom: '10px'}}>
                             <Col>
-                                <span style={styles.formItemLabel}>名称：</span>
+                                <span style={styles.formItemLabel}>{this.props.intl.messages['test.requestHeader.name']}</span>
                                 <FormBinder required message="参数名称必填" name={`resultParams[${index}].name`} >
                                     <Input />
                                 </FormBinder>
@@ -48,7 +49,7 @@ export default class ResultParam extends Component{
                             </Col>
                             &nbsp;
                             <Col>
-                                <span style={styles.formItemLabel}>值：</span>
+                                <span style={styles.formItemLabel}>{this.props.intl.messages['test.requestHeader.value']}</span>
                                 <FormBinder name={`resultParams[${index}].rawValue`} required message="参数表达式必填" >
                                     <Input/>
                                 </FormBinder>
@@ -71,3 +72,5 @@ export default class ResultParam extends Component{
         );
     }
 }
+
+export default injectIntl(ResultParam);

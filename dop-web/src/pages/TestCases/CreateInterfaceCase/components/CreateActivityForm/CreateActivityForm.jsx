@@ -14,6 +14,7 @@ import Axios from "axios";
 import {Link, withRouter} from "react-router-dom";
 import API from "../../../../API";
 import {FormBinder, FormBinderWrapper, FormError} from '@icedesign/form-binder';
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -97,12 +98,12 @@ class CreateActivityForm extends Component {
       let url = API.test + '/interfaceCases';
       Axios.post(url, this.state.value)
           .then(function (response) {
-            Toast.success("添加接口测试用例成功！");
+            Toast.success(_this.props.intl.messages['test.createInterface.successInfo']);
             let route = '/test/createInterfaceScripts/' + response.data;
             _this.props.history.push(route);
           }).catch(function (error) {
         console.log(error);
-        Toast.error("创建用例失败!\n请确保相同应用下的测试用例名称是唯一的");
+        Toast.error(_this.props.intl.messages['test.createInterface.successInfo']);
       });
     }
   };
@@ -110,7 +111,7 @@ class CreateActivityForm extends Component {
   render() {
     return (
       <div className="create-activity-form">
-        <IceContainer title="创建接口测试用例" style={styles.container}>
+        <IceContainer title={this.props.intl.messages['test.createInterface.title']} style={styles.container}>
             <FormBinderWrapper
                 value={this.state.value}
                 ref="form"
@@ -118,14 +119,14 @@ class CreateActivityForm extends Component {
             <div>
               <Row style={styles.formItem}>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  用例名称：
+                  {this.props.intl.messages['test.createInterface.caseName']}
                 </Col>
 
                 <Col s="12" l="10">
                   <FormBinder
                     name="caseName"
                     required
-                    message="用例名称必须填写"
+                    message={this.props.intl.messages['test.createInterface.caseNameWarn']}
                   >
                     <Input style={{ width: '100%' }} />
                   </FormBinder>
@@ -135,14 +136,14 @@ class CreateActivityForm extends Component {
 
               <Row style={styles.formItem}>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  应用ID：
+                  {this.props.intl.messages['test.createInterface.appId']}
                 </Col>
 
                 <Col s="12" l="10">
                   <FormBinder
                       name="applicationId"
                       required
-                      message="必须输入关联的应用ID"
+                      message={this.props.intl.messages['test.createInterface.appIdWarn']}
                   >
                     <Input style={{ width: '100%' }} />
                   </FormBinder>
@@ -152,10 +153,10 @@ class CreateActivityForm extends Component {
 
               <Row>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  用例描述：
+                  {this.props.intl.messages['test.createInterface.caseDesc']}
                 </Col>
                 <Col s="12" l="10">
-                  <FormBinder name="caseDesc" required message="用例描述必须填写">
+                  <FormBinder name="caseDesc" required message={this.props.intl.messages['test.createInterface.caseDescWarn']}>
                     <Input multiple style={{ width: '100%' }} />
                   </FormBinder>
                   <FormError name="caseDesc" />
@@ -164,18 +165,18 @@ class CreateActivityForm extends Component {
 
               <Row>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  前置条件：
+                  {this.props.intl.messages['test.createInterface.preCondition']}
                 </Col>
                 <Col s="12" l="10">
                   <FormBinder name="preCondition">
-                    <Input multiple style={{ width: '100%' }} placeholder="执行当前用例的测试步骤的必备前提条件，如部署被测服务系统" />
+                    <Input multiple style={{ width: '100%' }} placeholder={this.props.intl.messages['test.createInterface.preCondition.place']} />
                   </FormBinder>
                 </Col>
               </Row>
 
               <Row>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  测试步骤：
+                  {this.props.intl.messages['test.createInterface.testSteps']}
                 </Col>
                 <Col s="12" l="10">
                   <FormBinder name="steps">
@@ -186,7 +187,7 @@ class CreateActivityForm extends Component {
 
               <Row>
                 <Col xxs="6" s="2" l="2" style={styles.formLabel}>
-                  预期结果：
+                  {this.props.intl.messages['test.createInterface.expectedResult']}
                 </Col>
                 <Col s="12" l="10">
                   <FormBinder name="predicateResult">
@@ -201,16 +202,16 @@ class CreateActivityForm extends Component {
                 </Col>
                 <Col s="12" l="10">
                   <Button style={{marginRight: '20px'}} onClick={this.back}>
-                    取消
+                    {this.props.intl.messages['test.createInterface.cancel']}
                   </Button>
 
                   <Button onClick={this.submit} type='secondary'>
-                    创建并编写脚本
+                    {this.props.intl.messages['test.createInterface.yes']}
                     {/* <Link to='/test/createInterfaceScripts'>
                     </Link>*/}
                   </Button>
                   <Button style={styles.resetBtn} onClick={this.reset}>
-                    重置
+                    {this.props.intl.messages['test.createInterface.reset']}
                   </Button>
                 </Col>
               </Row>
@@ -242,4 +243,4 @@ const styles = {
   },
 };
 
-export default withRouter(CreateActivityForm);
+export default injectIntl(withRouter(CreateActivityForm));

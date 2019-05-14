@@ -7,6 +7,7 @@ import {
 
 import {  FormBinder, FormError } from '@icedesign/form-binder';
 import Select, {Option} from "@icedesign/base/lib/select";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -32,7 +33,7 @@ const styles = {
     }
 };
 
-export default class RequestParam extends Component{
+class RequestParam extends Component{
 
     render() {
         return (
@@ -42,9 +43,9 @@ export default class RequestParam extends Component{
                         <Row key={index} >
 
                             <Col>
-                                <FormBinder required message='参数类型' name={`requestParams[${index}].paramClass`}>
+                                <FormBinder required message={this.props.intl.messages['test.requestParam.type']} name={`requestParams[${index}].paramClass`}>
                                     <Select style={{width: '100%'}}
-                                            placeholder="选择参数类型"
+                                            placeholder={this.props.intl.messages['test.requestParam.place']}
                                     >
                                         <Option value="GET_PARAM">GET PARAM</Option>
                                         <Option value="PATH_PARAM">PATH PARAM</Option>
@@ -55,7 +56,7 @@ export default class RequestParam extends Component{
                             &nbsp;
 
                             <Col>
-                                <FormBinder required message="参数名称必填" name={`requestParams[${index}].name`} >
+                                <FormBinder required message={this.props.intl.messages['test.requestParam.nameWarn']} name={`requestParams[${index}].name`} >
                                     <Input placeholder="name" style={{width: '100%'}} />
                                 </FormBinder>
                                 <FormError name={`requestParams[${index}].name`} />
@@ -63,8 +64,8 @@ export default class RequestParam extends Component{
                             &nbsp;
 
                             <Col>
-                                <FormBinder name={`requestParams[${index}].value`} required message="请输入预测值" >
-                                    <Input placeholder="值" style={{width: '100%'}}/>
+                                <FormBinder name={`requestParams[${index}].value`} required message={this.props.intl.messages['test.requestParam.valueWarn']} >
+                                    <Input placeholder="value" style={{width: '100%'}}/>
                                 </FormBinder>
                                 <FormError name={`requestParams[${index}].value`} />
                             </Col>
@@ -85,3 +86,5 @@ export default class RequestParam extends Component{
         );
     }
 }
+
+export default injectIntl(RequestParam);

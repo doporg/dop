@@ -7,11 +7,11 @@ import {Feedback} from "@icedesign/base";
 import CaseParams from "../CreateInterfaceScripts/components/CaseParam/CaseParams";
 import {FormBinderWrapper} from "@icedesign/form-binder";
 import IceContainer from '@icedesign/container/lib/index';
-
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 const Toast = Feedback.toast;
 
-export default class EditCaseInfo extends Component {
+class EditCaseInfo extends Component {
   constructor(props) {
     super(props);
     const case_Id = this.props.match.params.caseId;
@@ -112,8 +112,8 @@ export default class EditCaseInfo extends Component {
       let url = API.test + '/interfaceCases';
       Axios.put(url, caseDto)
           .then(function (response) {
-            Toast.success("修改成功！");
-            _this.doGetCase(_this.state.caseId);
+            Toast.success(_this.props.intl.messages['test.editCase.info.successInfo']);
+            // _this.doGetCase(_this.state.caseId);
           }).catch(function (error) {
         console.log(error);
         Toast.error(error);
@@ -122,14 +122,24 @@ export default class EditCaseInfo extends Component {
   };
 
   addItemWithContent (caseParam) {
-    this.state.caseDto.caseParams.push(caseParam);
-    this.setState({caseDto: this.state.caseDto});
+    let data = this.state.caseDto.caseParams;
+    let contains = null;
+    data.forEach((param) => {
+      if (param.ref === caseParam.ref) {
+        contains = true;
+      }
+    });
+
+    if (!contains) {
+      this.state.caseDto.caseParams.push(caseParam);
+      this.setState({caseDto: this.state.caseDto});
+    }
   };
 
   render() {
     return (
         <div className="edit-case-info-page">
-          <IceContainer title="测试详情">
+          <IceContainer title={this.props.intl.messages['test.editCase.info.title']}>
             <FormBinderWrapper
                 value={this.state.caseDto}
                 ref="caseInfo"
@@ -149,7 +159,7 @@ export default class EditCaseInfo extends Component {
           </IceContainer>
 
           <StepForm caseId={this.state.caseId} stages={this.state.caseDto.stages}
-                    operation='UPDATE' btnText='保存测试脚本'
+                    operation='UPDATE' btnText={this.props.intl.messages['test.editCase.info.saveBtnText']}
                     addParam={this.addItemWithContent.bind(this)}
                     caseParams={this.state.caseDto.caseParams}
           />
@@ -157,3 +167,4 @@ export default class EditCaseInfo extends Component {
     );
   }
 }
+export default injectIntl(EditCaseInfo);

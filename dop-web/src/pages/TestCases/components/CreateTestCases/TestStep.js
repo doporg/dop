@@ -5,10 +5,11 @@ import {
 }
     from "@icedesign/base";
 import IceContainer from '@icedesign/container';
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 const { Row, Col } = Grid;
 
-export class TestSteps extends Component {
+class TestSteps extends Component {
     render() {
         return (
             <IceContainer>
@@ -16,26 +17,28 @@ export class TestSteps extends Component {
                     return (
                         <Row key={index} >
                             <Col>
-                                <FormBinder required message="测试步骤必填" name={`testSteps[${index}].stepDesc`} >
-                                    <Input multiple placeholder={'测试步骤'+(index+1)} style={{width: '100%'}}/>
+                                <FormBinder required message={this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.descWarn']} name={`testSteps[${index}].stepDesc`} >
+                                    <Input multiple placeholder={this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.desc']+(index+1)} style={{width: '100%'}}/>
                                     {/*<TextArea />*/}
                                 </FormBinder>
                                 <FormError name={`testSteps[${index}].stepDesc`} style={styles.formError} />
                             </Col>
                             &nbsp;
                             <Col>
-                                <FormBinder name={`testSteps[${index}].expectResult`} required message="请输入预期结果" >
-                                    <Input multiple placeholder="预期结果" style={{width: '100%'}}/>
+                                <FormBinder name={`testSteps[${index}].expectResult`} required message={this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.resultWarn']} >
+                                    <Input multiple placeholder={this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.result']} style={{width: '100%'}}/>
                                     {/*<TextArea/>*/}
                                 </FormBinder>
                                 <FormError name={`testSteps[${index}].expectResult`} style={styles.formError} />
                             </Col>
-                            <Button type="secondary" style={{margin: 'auto', marginLeft: '10px'}} onClick={this.props.removeItem.bind(this, index)}>删除</Button>
+                            <Button type="secondary" style={{margin: 'auto', marginLeft: '10px'}} onClick={this.props.removeItem.bind(this, index)}>{this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.delete']}</Button>
                         </Row>
                     );
                 })}
                 <div style={styles.buttons}>
-                    <Button type="secondary" onClick={this.props.addItem}>添加测试步骤</Button>
+                    <Button type="secondary" onClick={this.props.addItem}>
+                        {this.props.intl.messages['test.caseLists.add.manual.dialog.testSteps.add']}
+                    </Button>
                 </div>
             </IceContainer>
         );
@@ -63,3 +66,4 @@ const styles = {
         padding: 10
     }
 };
+export default injectIntl(TestSteps);

@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import {FormBinder, FormBinderWrapper} from "@icedesign/form-binder";
 import {withRouter} from "react-router-dom";
 import Balloon from "@alifd/next/lib/balloon";
+import {injectIntl, FormattedMessage} from 'react-intl';
 
 const { Row, Col } = Grid;
 const Toast = Feedback.toast;
@@ -104,10 +105,16 @@ class CustomTable extends Component {
     return (
         <div style={styles.oper}>
           <Balloon.Tooltip trigger={edit} triggerType="hover" align='l'>
-            修改测试用例
+            <FormattedMessage
+                id="test.caseLists.table.edit"
+                defaultMessage="编辑测试用例"
+            />
           </Balloon.Tooltip>
           <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='r'>
-            查看执行日志
+            <FormattedMessage
+                id="test.caseLists.table.logs"
+                defaultMessage="查看执行日志"
+            />
           </Balloon.Tooltip>
         </div>
     );
@@ -116,9 +123,15 @@ class CustomTable extends Component {
   renderCaseType = () => {
     let type = this.state.searchValue.type;
     if (type === 'interface') {
-      return '接口测试';
+      return  <FormattedMessage
+          id='test.caseLists.table.type.interface'
+          defaultMessage="接口测试"
+      />;
     }else {
-      return '手工测试';
+      return <FormattedMessage
+          id='test.caseLists.table.type.manual'
+          defaultMessage="手工测试"
+      />;
     }
   };
 
@@ -127,11 +140,17 @@ class CustomTable extends Component {
     return <Switch onChange={(checked) => {
       let type = this.state.searchValue.type;
       if (type === 'manual') {
-        Toast.error("手工用例暂不支持执行！");
+        Toast.error(<FormattedMessage
+            id='test.caseLists.table.message.manNotRun'
+            defaultMessage="手工测试用例暂不支持执行！"
+        />);
         return;
       }
       if (checked) {
-        Toast.success("测试用例开始执行，执行结果请在用例执行历史记录中查看!");
+        Toast.success(<FormattedMessage
+            id='test.caseLists.table.message.inRun'
+            defaultMessage="测试用例开始执行，执行结果请在用例执行历史记录中查看!"
+        />);
         this.execute(caseId);
       }
     }
@@ -173,55 +192,55 @@ class CustomTable extends Component {
 
     return (
         <div>
-          <IceContainer title="搜索">
+          <IceContainer title={this.props.intl.messages["test.search.searchTitle"]}>
             <FormBinderWrapper value={this.state.searchValue} onChange={this.formChange}>
               <Row wrap>
                 <Col xxs="24" l="8" style={styles.formCol}>
-                  <span style={styles.label}>用例归属:</span>
+                  <span style={styles.label}>{this.props.intl.messages["test.search.caseOwner"]}</span>
                   <FormBinder name="owner">
-                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                      <Select.Option value="mine">我的用例</Select.Option>
-                      <Select.Option value="all">所有用例</Select.Option>
+                    <Select placeholder={this.props.intl.messages["test.search.pleaseSelect"]} style={{ width: '200px' }}>
+                      <Select.Option value="mine">{this.props.intl.messages["test.search.caseOwner.mine"]}</Select.Option>
+                      <Select.Option value="all">{this.props.intl.messages["test.search.caseOwner.all"]}</Select.Option>
                     </Select>
                   </FormBinder>
                 </Col>
 
                 <Col xxs="24" l="8" style={styles.formCol}>
-                  <span style={styles.label}>类型:</span>
+                  <span style={styles.label}>{this.props.intl.messages["test.search.caseType"]}</span>
                   <FormBinder name="type">
-                    <Select placeholder="请选择" style={{ width: '200px' }} defaultValue="interface" onClose={this.refreshList.bind(this, 1)}>
-                      <Select.Option value="manual">手工测试</Select.Option>
-                      <Select.Option value="interface">接口测试</Select.Option>
+                    <Select placeholder={this.props.intl.messages["test.search.pleaseSelect"]} style={{ width: '200px' }} defaultValue="interface" onClose={this.refreshList.bind(this, 1)}>
+                      <Select.Option value="manual">{this.props.intl.messages["test.search.caseType.manual"]}</Select.Option>
+                      <Select.Option value="interface">{this.props.intl.messages["test.search.caseType.interface"]}</Select.Option>
                     </Select>
                   </FormBinder>
                 </Col>
 
                 <Col xxs="24" l="8" style={styles.formCol}>
-                  <span style={styles.label}>所属分组:</span>
+                  <span style={styles.label}>{this.props.intl.messages["test.search.testGroup"]}</span>
                   <FormBinder name="group">
-                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                      <Select.Option value="success">分组1</Select.Option>
-                      <Select.Option value="fail">分组2</Select.Option>
-                      <Select.Option value="block">分组3</Select.Option>
-                      <Select.Option value="all">所有</Select.Option>
+                    <Select placeholder={this.props.intl.messages["test.search.pleaseSelect"]} style={{ width: '200px' }}>
+                      <Select.Option value="success">{this.props.intl.messages["test.search.testGroup.demo1"]}</Select.Option>
+                      <Select.Option value="fail">{this.props.intl.messages["test.search.testGroup.demo2"]}</Select.Option>
+                      <Select.Option value="block">{this.props.intl.messages["test.search.testGroup.demo3"]}</Select.Option>
+                      <Select.Option value="all">{this.props.intl.messages["test.search.testGroup.all"]}</Select.Option>
                     </Select>
                   </FormBinder>
                 </Col>
 
-                <Col xxs="24" l="8" style={styles.formCol}>
-                  <span style={styles.label}>执行结果:</span>
-                  <FormBinder name="result">
-                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                      <Select.Option value="success">成功</Select.Option>
-                      <Select.Option value="fail">失败</Select.Option>
-                      <Select.Option value="block">阻塞</Select.Option>
-                      <Select.Option value="all">所有</Select.Option>
-                    </Select>
-                  </FormBinder>
-                </Col>
+                {/*<Col xxs="24" l="8" style={styles.formCol}>*/}
+                {/*  <span style={styles.label}>执行结果:</span>*/}
+                {/*  <FormBinder name="result">*/}
+                {/*    <Select placeholder="请选择" style={{ width: '200px' }}>*/}
+                {/*      <Select.Option value="success">成功</Select.Option>*/}
+                {/*      <Select.Option value="fail">失败</Select.Option>*/}
+                {/*      <Select.Option value="block">阻塞</Select.Option>*/}
+                {/*      <Select.Option value="all">所有</Select.Option>*/}
+                {/*    </Select>*/}
+                {/*  </FormBinder>*/}
+                {/*</Col>*/}
 
                 <Col xxs="24" l="8" style={styles.formCol}>
-                  <span style={styles.label}>创建者:</span>
+                  <span style={styles.label}>{this.props.intl.messages["test.search.creator"]}</span>
                   <FormBinder name="cuser">
                     <Input />
                   </FormBinder>
@@ -230,19 +249,24 @@ class CustomTable extends Component {
             </FormBinderWrapper>
           </IceContainer>
 
-          <IceContainer title="用例列表">
+          <IceContainer title={this.props.intl.messages['test.caseLists.title']}>
             <Row wrap style={styles.headRow}>
               <Col l="12">
                 <Button style={styles.button} onClick={this.onOpen.bind(this)} >
-                  <Icon type="add" size="xs" style={{ marginRight: '4px' }} />手工测试用例
+                  <Icon type="add" size="xs" style={{ marginRight: '4px' }} />
+                  {this.props.intl.messages["test.caseLists.add.manual"]}
                 </Button>
                 <Dialog
                     visible={this.state.createManualDialogVisiable}
                     onOk={this.onOk.bind(this)}
                     onCancel={this.onClose.bind(this)}
                     onClose={this.onClose.bind(this)}
-                    title="创建手工测试用例"
+                    title={this.props.intl.messages["test.caseLists.add.manual.dialog.title"]}
                     isFullScreen
+                    locale={{
+                      ok: 'Confirm',
+                      cancel: 'Cancel'
+                    }}
                 >
                   <CreateManualCaseFrom
                       isSubmit={this.state.isSubmit}
@@ -253,13 +277,14 @@ class CustomTable extends Component {
 
                 <Button style={{ ...styles.button, marginLeft: 10}}>
                   <Link to="/test/createInterfaceCase">
-                    <Icon type="add" size="xs" style={{ marginRight: '4px' }} />接口测试用例
+                    <Icon type="add" size="xs" style={{ marginRight: '4px' }} />
+                    {this.props.intl.messages["test.caseLists.add.interface"]}
                   </Link>
                 </Button>
               </Col>
               <Col l="12" style={styles.center}>
                 <Button type="normal" style={styles.button}>
-                  删除
+                  {this.props.intl.messages["test.caseLists.delete"]}
                 </Button>
               </Col>
             </Row>
@@ -268,14 +293,14 @@ class CustomTable extends Component {
                 dataSource={this.state.currentData}
                 rowSelection={{ onChange: this.onChange }}
             >
-              <Table.Column title="用例编号" dataIndex="id" width={100} />
-              <Table.Column title="用例名称" dataIndex="caseName" width={100} />
-              <Table.Column title="类型" cell={this.renderCaseType} width={100} />
-              <Table.Column title="状态" dataIndex="status" width={100} />
-              <Table.Column title="执行结果" dataIndex="executeResult" width={100} />
-              <Table.Column title="创建者" dataIndex="createUserName" width={100} />
-              <Table.Column title="执行/终止" width={100} cell={this.renderSwitch} />
-              <Table.Column title="操作" width={100} cell={this.renderOper} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.caseId"]} dataIndex="id" width={100} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.name"]} dataIndex="caseName" width={100} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.type"]} cell={this.renderCaseType} width={100} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.status"]} dataIndex="status" width={100} />
+              {/*<Table.Column title="执行结果" dataIndex="executeResult" width={100} />*/}
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.creator"]} dataIndex="createUserName" width={100} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.run"]} width={100} cell={this.renderSwitch} />
+              <Table.Column title={this.props.intl.messages["test.caseLists.table.operations"]} width={100} cell={this.renderOper} />
             </Table>
             <Pagination
                 style={styles.pagination}
@@ -325,4 +350,4 @@ const styles = {
   },
 };
 
-export default withRouter(CustomTable)
+export default injectIntl(withRouter(CustomTable));

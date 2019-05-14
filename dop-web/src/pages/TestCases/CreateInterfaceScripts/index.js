@@ -6,10 +6,11 @@ import IceContainer from "@icedesign/container";
 import API from "../../API";
 import Axios from "axios";
 import {Feedback} from "@icedesign/base";
+import {injectIntl} from "react-intl";
 
 const Toast = Feedback.toast;
 
-export default class CreateInterfaceScripts extends Component {
+class CreateInterfaceScripts extends Component {
   constructor(props) {
     super(props);
     const case_Id = this.props.match.params.caseId;
@@ -79,11 +80,11 @@ export default class CreateInterfaceScripts extends Component {
       let _this = this;
       Axios.post(url, caseParams)
           .then(function (response) {
-            Toast.success("保存参数成功！");
+            Toast.success(_this.props.intl.messages['test.createInterface.saveParam.message']);
             let stageUrl = API.test + '/interfaceCases/stages';
             Axios.post(stageUrl, _this.state.stages)
                 .then(function (response) {
-                  Toast.success("添加测试脚本成功！");
+                  Toast.success(_this.props.intl.messages['test.createInterface.saveScript.message']);
                   _this.props.history.push('/testCases');
                 }).catch(function (error) {
               console.log(error);
@@ -111,7 +112,7 @@ export default class CreateInterfaceScripts extends Component {
           </IceContainer>
 
           <StepForm caseId={this.state.caseId} stages={this.state.stages}
-                    operation='INSERT' btnText='保存参数和脚本'
+                    operation='INSERT' btnText={this.props.intl.messages['test.createInterface.btnText']}
                     saveParams={this.validateFields}
                     addParam={this.addItemWithContent.bind(this)}
                     caseParams={this.state.caseDto.caseParams}
@@ -120,3 +121,5 @@ export default class CreateInterfaceScripts extends Component {
     );
   }
 }
+
+export default injectIntl(CreateInterfaceScripts);

@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 import {FormBinder, FormBinderWrapper} from "@icedesign/form-binder";
 import {withRouter} from "react-router-dom";
 import Balloon from "@alifd/next/lib/balloon";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 const Toast = Feedback.toast;
@@ -100,10 +101,10 @@ class GroupTable extends Component {
         return (
             <div style={styles.oper}>
                 <Balloon.Tooltip trigger={edit} triggerType="hover" align='l'>
-                    编辑
+                    {this.props.intl.messages['test.createGroup.edit']}
                 </Balloon.Tooltip>
                 <Balloon.Tooltip trigger={MoveTarget} triggerType="hover" align='r'>
-                    查看执行记录
+                    {this.props.intl.messages['test.createGroup.logs']}
                 </Balloon.Tooltip>
             </div>
         );
@@ -112,9 +113,10 @@ class GroupTable extends Component {
 
     renderSwitch = (value,index,record) => {
         let groupId = record.id;
+        let _this = this;
         return <Switch onChange={(checked) => {
             if (checked) {
-                Toast.success("测试分组开始执行，执行结果请在分组执行历史记录中查看!");
+                Toast.success(_this.props.intl.messages['test.createGroup.execute.message']);
                 this.execute(groupId);
             }
         }
@@ -133,14 +135,12 @@ class GroupTable extends Component {
 
     renderWay = (value, index, record) => {
         let way = record.executeWay;
-        if (way === 'SERIAL') return '串行';
-        else return '并行';
+        if (way === 'SERIAL') return this.props.intl.messages['test.createGroup.executeWay.serial'];
+        else return this.props.intl.messages['test.createGroup.executeWay.parallel'];
     };
 
     onOpen = () =>{
-        this.setState({
-            createManualDialogVisiable: true
-        })
+        this.props.history.push('/test/createGroup');
     };
 
     onClose = () =>{
@@ -161,74 +161,43 @@ class GroupTable extends Component {
 
         return (
             <div>
-                <IceContainer title="搜索">
+                <IceContainer title={this.props.intl.messages['test.createGroup.search.title']}>
                     <FormBinderWrapper value={this.state.searchValue} onChange={this.formChange}>
                         <Row wrap>
                             <Col xxs="24" l="8" style={styles.formCol}>
-                                <span style={styles.label}>用例归属:</span>
-                                <FormBinder name="owner">
-                                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                                        <Select.Option value="mine">我的用例</Select.Option>
-                                        <Select.Option value="all">所有用例</Select.Option>
-                                    </Select>
-                                </FormBinder>
-                            </Col>
-
-                            <Col xxs="24" l="8" style={styles.formCol}>
-                                <span style={styles.label}>类型:</span>
-                                <FormBinder name="type">
-                                    <Select placeholder="请选择" style={{ width: '200px' }} defaultValue="interface" onClose={this.refreshList.bind(this, 1)}>
-                                        <Select.Option value="manual">手工测试</Select.Option>
-                                        <Select.Option value="interface">接口测试</Select.Option>
-                                    </Select>
-                                </FormBinder>
-                            </Col>
-
-                            <Col xxs="24" l="8" style={styles.formCol}>
-                                <span style={styles.label}>所属分组:</span>
-                                <FormBinder name="group">
-                                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                                        <Select.Option value="success">分组1</Select.Option>
-                                        <Select.Option value="fail">分组2</Select.Option>
-                                        <Select.Option value="block">分组3</Select.Option>
-                                        <Select.Option value="all">所有</Select.Option>
-                                    </Select>
-                                </FormBinder>
-                            </Col>
-
-                            <Col xxs="24" l="8" style={styles.formCol}>
-                                <span style={styles.label}>执行结果:</span>
-                                <FormBinder name="result">
-                                    <Select placeholder="请选择" style={{ width: '200px' }}>
-                                        <Select.Option value="success">成功</Select.Option>
-                                        <Select.Option value="fail">失败</Select.Option>
-                                        <Select.Option value="block">阻塞</Select.Option>
-                                        <Select.Option value="all">所有</Select.Option>
-                                    </Select>
-                                </FormBinder>
-                            </Col>
-
-                            <Col xxs="24" l="8" style={styles.formCol}>
-                                <span style={styles.label}>创建者:</span>
+                                <span style={styles.label}>{this.props.intl.messages['test.createGroup.search.title']}</span>
                                 <FormBinder name="cuser">
                                     <Input />
                                 </FormBinder>
                             </Col>
+
+                            <Col xxs="24" l="8" style={styles.formCol}>
+                                <span style={styles.label}>{this.props.intl.messages['test.createGroup.search.creator']}</span>
+                                <FormBinder name="cuser">
+                                    <Input />
+                                </FormBinder>
+                            </Col>
+                            <Col xxs="24" l="8" style={styles.formCol}>
+                                <Button type="primary" style={styles.submitButton}>
+                                    {this.props.intl.messages['test.exeLogs.search']}
+                                </Button>
+                            </Col>
+
                         </Row>
                     </FormBinderWrapper>
                 </IceContainer>
 
-                <IceContainer title="用例列表">
+                <IceContainer title={this.props.intl.messages['test.createGroup.table.title']}>
                     <Row wrap style={styles.headRow}>
                         <Col l="12">
                             <Button style={styles.button} onClick={this.onOpen.bind(this)} >
-                                <Icon type="add" size="xs" style={{ marginRight: '4px' }} />分组
+                                <Icon type="add" size="xs" style={{ marginRight: '4px' }} />{this.props.intl.messages['test.createGroup.table.createGroup']}
                             </Button>
 
                         </Col>
                         <Col l="12" style={styles.center}>
                             <Button type="normal" style={styles.button}>
-                                删除
+                                {this.props.intl.messages['test.createGroup.table.delete']}
                             </Button>
                         </Col>
                     </Row>
@@ -237,14 +206,14 @@ class GroupTable extends Component {
                         dataSource={this.state.currentData}
                         rowSelection={{ onChange: this.onChange }}
                     >
-                        <Table.Column title="分组编号" dataIndex="id" width={100} />
-                        <Table.Column title="分组名称" dataIndex="groupName" width={100} />
-                        <Table.Column title="备注" dataIndex="comment" width={100} />
-                        <Table.Column title="执行方式" width={100} cell={this.renderWay}/>
-                        <Table.Column title="创建者" dataIndex="createUserName" width={100} />
-                        <Table.Column title="用例个数" dataIndex="caseCount" width={100} />
-                        <Table.Column title="执行/终止" width={100} cell={this.renderSwitch} />
-                        <Table.Column title="操作" width={100} cell={this.renderOper} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.id']} dataIndex="id" width={100} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.groupName']} dataIndex="groupName" width={100} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.comment']} dataIndex="comment" width={100} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.executeWay']} width={100} cell={this.renderWay}/>
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.creator']} dataIndex="createUserName" width={100} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.caseCount']} dataIndex="caseCount" width={100} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.execute']} width={100} cell={this.renderSwitch} />
+                        <Table.Column title={this.props.intl.messages['test.createGroup.table.operations']} width={100} cell={this.renderOper} />
                     </Table>
                     <Pagination
                         style={styles.pagination}
@@ -294,4 +263,4 @@ const styles = {
     },
 };
 
-export default withRouter(GroupTable)
+export default injectIntl(withRouter(GroupTable));

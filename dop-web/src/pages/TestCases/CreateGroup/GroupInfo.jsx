@@ -15,6 +15,7 @@ import {Link, withRouter} from "react-router-dom";
 import {FormBinder, FormBinderWrapper, FormError} from '@icedesign/form-binder';
 import API from "../../API";
 import CaseUnit from "./CaseUnit";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -104,20 +105,19 @@ class GroupInfo extends Component {
             if (this.state.operation === 'UPDATE'){
                 Axios.put(url, param)
                     .then(function (response) {
-                        Toast.success("编辑分组成功！");
+                        Toast.success(_this.props.intl.messages['test.newGroup.success.mes']);
                         _this.props.history.push('/test/testGroups');
                     }).catch(function (error) {
-                    console.log(error);
-                    Toast.error("编辑分组失败!请重新尝试！");
+                    Toast.error(_this.props.intl.messages['test.newGroup.error.mes']);
                 });
             } else if(this.state.operation === 'INSERT'){
                 Axios.post(url, param)
                     .then(function (response) {
-                        Toast.success("添加分组成功！");
+                        Toast.success(_this.props.intl.messages['test.newGroup.success.add.mes']);
                         _this.props.history.push('/test/testGroups');
                     }).catch(function (error) {
                     console.log(error);
-                    Toast.error("创建分组失败!请重新尝试！");
+                    Toast.error(_this.props.intl.messages['test.newGroup.error.add.mes']);
                 });
             }
         }
@@ -127,7 +127,7 @@ class GroupInfo extends Component {
         let newUnit = {
             "caseId": '',
             "caseType": 'MANUAL',
-            "caseName": '请选择该应用下的测试用例'
+            "caseName": this.props.intl.messages['test.newGroup.default.name']
         };
         this.state.value.caseUnits.push(JSON.stringify(newUnit));
         this.setState({ value: this.state.value });
@@ -150,7 +150,7 @@ class GroupInfo extends Component {
     render() {
         return (
             <div className="create-activity-form">
-                <IceContainer title="创建分组" style={styles.container}>
+                <IceContainer title={this.props.intl.messages['test.newGroup.title']} style={styles.container}>
                     <FormBinderWrapper
                         value={this.state.value}
                         ref="form"
@@ -158,14 +158,14 @@ class GroupInfo extends Component {
                         <div>
                             <Row style={styles.formItem}>
                                 <Col xxs="6" s="2" l="3" style={styles.formLabel}>
-                                    分组名称：
+                                    {this.props.intl.messages['test.newGroup.name']}
                                 </Col>
 
                                 <Col s="12" l="7">
                                     <FormBinder
                                         name="groupName"
                                         required
-                                        message="分组名称必须填写"
+                                        message={this.props.intl.messages['test.newGroup.nameWarn']}
                                     >
                                         <Input style={{ width: '100%' }} />
                                     </FormBinder>
@@ -175,14 +175,14 @@ class GroupInfo extends Component {
 
                             <Row style={styles.formItem}>
                                 <Col xxs="6" s="2" l="3" style={styles.formLabel}>
-                                    应用ID：
+                                    {this.props.intl.messages['test.createInterface.appId']}
                                 </Col>
 
                                 <Col s="12" l="7">
                                     <FormBinder
                                         name="appId"
                                         required
-                                        message="必须输入关联的应用ID"
+                                        message={this.props.intl.messages['test.createInterface.appIdWarn']}
                                     >
                                         <Input style={{ width: '100%' }} />
                                     </FormBinder>
@@ -192,10 +192,10 @@ class GroupInfo extends Component {
 
                             <Row>
                                 <Col xxs="6" s="2" l="3" style={styles.formLabel}>
-                                    分组描述：
+                                    {this.props.intl.messages['test.newGroup.desc']}
                                 </Col>
                                 <Col s="12" l="7">
-                                    <FormBinder name="comment" required message="分组描述必须填写">
+                                    <FormBinder name="comment" required message={this.props.intl.messages['test.newGroup.descWarn']}>
                                         <Input multiple style={{ width: '100%' }} />
                                     </FormBinder>
                                     <FormError name="comment" />
@@ -204,13 +204,13 @@ class GroupInfo extends Component {
 
                             <Row>
                                 <Col xxs="6" s="2" l="3" style={styles.formLabel}>
-                                    接口测试执行方式：
+                                    {this.props.intl.messages['test.newGroup.executeWay']}
                                 </Col>
                                 <Col s="12" l="7">
                                     <FormBinder name="executeWay">
                                         <Select placeholder="请选择" style={{ width: '200px' }}>
-                                            <Select.Option value="PARALLEL">并行</Select.Option>
-                                            <Select.Option value="SERIAL">串行</Select.Option>
+                                            <Select.Option value="PARALLEL">{this.props.intl.messages['test.createGroup.executeWay.parallel']}</Select.Option>
+                                            <Select.Option value="SERIAL">{this.props.intl.messages['test.createGroup.executeWay.serial']}</Select.Option>
                                         </Select>
                                     </FormBinder>
                                 </Col>
@@ -220,7 +220,7 @@ class GroupInfo extends Component {
                     </FormBinderWrapper>
                 </IceContainer>
 
-                <IceContainer title="添加用例" style={styles.container}>
+                <IceContainer title={this.props.intl.messages['test.newGroup.case.title']} style={styles.container}>
                     <FormBinderWrapper
                         value={this.state.value}
                         ref="ax"
@@ -237,14 +237,14 @@ class GroupInfo extends Component {
                         </Col>
                         <Col s="12" l="10">
                             <Button style={{marginRight: '20px'}} onClick={this.back}>
-                                取消
+                                {this.props.intl.messages['test.createInterface.cancel']}
                             </Button>
 
                             <Button onClick={this.submit} type='secondary'>
-                                {this.state.operation === 'INSERT'? '创建' : '修改'}
+                                {this.state.operation === 'INSERT'? this.props.intl.messages['test.newGroup.case.create'] : this.props.intl.messages['test.newGroup.case.update']}
                             </Button>
                             <Button style={styles.resetBtn} onClick={this.reset}>
-                                重置
+                                {this.props.intl.messages['test.createInterface.reset']}
                             </Button>
                         </Col>
                     </Row>
@@ -274,4 +274,4 @@ const styles = {
     },
 };
 
-export default withRouter(GroupInfo);
+export default injectIntl(withRouter(GroupInfo));

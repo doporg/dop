@@ -8,7 +8,7 @@ import {
   FormError
 } from "@icedesign/form-binder";
 import {Button, Feedback, Grid, Input, Icon} from "@icedesign/base";
-import {TestSteps} from "../../../components/CreateTestCases/TestStep";
+import {injectIntl} from "react-intl";
 
 const { Row, Col } = Grid;
 
@@ -20,7 +20,7 @@ const styles = {
     color: '#999999'
   },
   formItemLabel: {
-    width: '70px',
+    width: '120px',
     mariginRight: '10px',
     display: 'inline-block',
     textAlign: 'right',
@@ -57,7 +57,7 @@ const styles = {
 
 const Toast = Feedback.toast;
 
-export default class DetailTable extends Component {
+class DetailTable extends Component {
   static displayName = 'DetailTable';
 
   static propTypes = {};
@@ -84,49 +84,49 @@ export default class DetailTable extends Component {
             <div style={styles.content}>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>用例名称：</span>
-                <FormBinder name="caseName" required message="请输入正确的用例名称" >
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.caseName']}</span>
+                <FormBinder name="caseName" required message={this.props.intl.messages['test.createInterface.caseNameWarn']} >
                   <Input placeholder="case name" style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="caseName" />
               </div>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>应用ID：</span>
-                <FormBinder name="applicationId" required format="number" message="请绑定用例对应的应用id" >
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.appId']}</span>
+                <FormBinder name="applicationId" required format="number" message={this.props.intl.messages['test.createInterface.appIdWarn']} >
                   <Input placeholder="application id" style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="application id" />
               </div>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>用例描述：</span>
-                <FormBinder name="caseDesc" required  message="用例描述必须填写" >
-                  <Input multiple placeholder="用例描述" style={styles.formCommonWidth}/>
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.caseDesc']}</span>
+                <FormBinder name="caseDesc" required  message={this.props.intl.messages['test.createInterface.caseDescWarn']} >
+                  <Input multiple style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="caseDesc" />
               </div>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>前置条件：</span>
-                <FormBinder name="preCondition" required  message="前置条件必须填写" >
-                  <Input multiple placeholder="前置条件" style={styles.formCommonWidth}/>
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.preCondition']}</span>
+                <FormBinder name="preCondition"  >
+                  <Input multiple placeholder={this.props.intl.messages['test.createInterface.preCondition.place']} style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="preCondition" />
               </div>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>测试步骤：</span>
-                <FormBinder name="steps" required format="number" message="测试步骤必须填写" >
-                  <Input multiple placeholder="测试步骤" style={styles.formCommonWidth}/>
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.testSteps']}</span>
+                <FormBinder name="steps" >
+                  <Input multiple style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="steps" />
               </div>
 
               <div style={styles.formItem}>
-                <span style={styles.formItemLabel}>预期结果：</span>
-                <FormBinder name="predicateResult" required format="number" message="预期结果必须填写" >
-                  <Input multiple placeholder="预期结果" style={styles.formCommonWidth}/>
+                <span style={styles.formItemLabel}>{this.props.intl.messages['test.createInterface.expectedResult']}</span>
+                <FormBinder name="predicateResult" >
+                  <Input multiple style={styles.formCommonWidth}/>
                 </FormBinder>
                 <FormError style={styles.formItemError} name="predicateResult" />
               </div>
@@ -136,3 +136,4 @@ export default class DetailTable extends Component {
   }
 }
 
+export default injectIntl(DetailTable);
