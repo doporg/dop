@@ -118,7 +118,11 @@ permission:
   viewService: "查看服务"
   createService: "创建服务"
   viewDeployment: "查看部署"
-  projectRuleId: 11
+  projectManagerAndProjectRuleId: 11
+  developerAndProjectRuleId: 13
   projectRuleFieldName: "projectId"
-  appRuleId: 12
+  projectManagerAndAppRuleId: 12
+  developerAndAppRuleId: 14
   appRuleFieldName: "appId"
+  deleteMemberFromProject: "移除项目成员"
+  addMemberToProject: "添加项目成员"

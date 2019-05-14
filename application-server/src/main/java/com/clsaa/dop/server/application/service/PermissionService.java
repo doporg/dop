@@ -32,7 +32,6 @@ public class PermissionService {
 
     public void addData(Long ruleId, Long userId, Long fieldValue, Long loginUser) {
         this.permissionFeign.addData(ruleId, userId, fieldValue, loginUser);
-
     }
 
     public List<Long> findAllIds(String permissionName, Long userId, String fieldName) {

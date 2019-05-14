@@ -116,6 +116,8 @@ class AddMemberList extends Component {
         addUrl = addUrl + param + userListParam
         console.log(userListParam, addUrl)
         let _this = this
+        let row = this.state.rowSelection
+        row.selectedRowKeys = []
         console.log(this.state.rowSelection.selectedRowKeys)
         Axios.post(addUrl
             , {}, {
@@ -129,14 +131,16 @@ class AddMemberList extends Component {
                 Toast.success(_this.props.intl.messages['projects.text.addSuccessful'])
                 _this.setState({
                     loading: false,
-                    visible: false
+                    visible: false,
+                    rowSelection: row
                 })
-                this.state.getMemberData()
+                _this.state.getMemberData()
             })
             .catch((response) => {
                 _this.setState({
                     loading: false,
-                    visible: false
+                    visible: false,
+                    rowSelection: row
                 })
             })
 
