@@ -89,6 +89,11 @@ public class Jenkinsfile {
                         this.stages += "deleteDir() \n";
 //                        this.stages += "git \"" + gitUrl + "\" \n";
                         this.stages += "sh \'git clone \"" + gitUrl + "\" \'\n";
+                        if(!this.dir.isEmpty()){
+                            this.stages += "dir(\"" + this.dir + "\"){ \n";
+                            this.stages += "sh \'echo commitId `git rev-parse HEAD`\' \n";
+                            this.stages += "}\n";
+                        }
                         break;
                     case BuildMaven:
                         this.stages += "sh \'mvn --version \' \n";
