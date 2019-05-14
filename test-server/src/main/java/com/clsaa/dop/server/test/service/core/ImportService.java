@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.service.core;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.clsaa.dop.server.test.enums.HttpMethod;
 import com.clsaa.dop.server.test.enums.OperationType;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -46,57 +48,62 @@ public class ImportService {
         addCaseParam("host", host, caseParams);
         String basePath = apiJson.getString(BASE_PATH_KEY);
         addCaseParam("basePath", basePath, caseParams);
-
-        JSONObject pathsJson = apiJson.getJSONObject(PATHS_KEY);
         List<RequestScriptParam> requestScriptParams = new ArrayList<>();
         AtomicReference<Integer> order = new AtomicReference<>(0);
-        pathsJson.getInnerMap().forEach(
-                (rawUrl, object) ->
-                    ensureJson(object)
-                    .getInnerMap()
-                    .forEach((method, apiInfo) -> {
-                        HttpMethod httpMethod = HttpMethod.from(method);
-                        JSONObject infoObject = ensureJson(apiInfo);
 
-                        List<RequestParamCreateParam> requestParams = new ArrayList<>();
-                        infoObject.getJSONArray(PARAMS_KEY).forEach(param -> {
-                            JSONObject paramJson = ensureJson(param);
-                            ParamClass paramClass = ParamClass.from(paramJson.getString(PARAM_TYPE_KEY));
-                            // skip body param
-                            if (paramClass == ParamClass.BODY_PARAM) return;
-                            String name = paramJson.getString("name");
-                            RequestParamCreateParam requestParam = RequestParamCreateParam.builder()
-                                    .paramClass(paramClass)
-                                    .name(name)
-                                    .value("")
-                                    .build();
-                            requestParams.add(requestParam);
-                        });
+        Optional.of(apiJson.getJSONObject(PATHS_KEY))
+                .ifPresent(pathsJson -> {
+                    pathsJson.getInnerMap().forEach(
+                            (rawUrl, object) ->
+                                    ensureJson(object)
+                                            .getInnerMap()
+                                            .forEach((method, apiInfo) -> {
+                                                HttpMethod httpMethod = HttpMethod.from(method);
+                                                List<RequestParamCreateParam> requestParams = new ArrayList<>();
+                                                Optional.of(ensureJson(apiInfo))
+                                                        .ifPresent(info -> {
+                                                            JSONArray paramArray = info.getJSONArray(PARAMS_KEY);
+                                                            if (paramArray == null) return;
+                                                            paramArray.forEach(param -> {
+                                                                JSONObject paramJson = ensureJson(param);
+                                                                ParamClass paramClass = ParamClass.from(paramJson.getString(PARAM_TYPE_KEY));
+                                                                // skip body param
+                                                                if (paramClass == ParamClass.BODY_PARAM) return;
+                                                                String name = paramJson.getString("name");
+                                                                RequestParamCreateParam requestParam = RequestParamCreateParam.builder()
+                                                                        .paramClass(paramClass)
+                                                                        .name(name)
+                                                                        .value("")
+                                                                        .build();
+                                                                requestParams.add(requestParam);
+                                                            });
+                                                        });
 
-                        String url = "http://" + "${host}" + "${basePath}";
-                        if (rawUrl.startsWith("/")) {
-                            url += rawUrl.substring(1);
-                        }else {
-                            url += rawUrl;
-                        }
+                                                String url = "http://" + "${host}" + "${basePath}";
+                                                if (rawUrl.startsWith("/")) {
+                                                    url += rawUrl.substring(1);
+                                                }else {
+                                                    url += rawUrl;
+                                                }
 
-                        RequestScriptParam requestScript = RequestScriptParam.builder()
-                                .rawUrl(url)
-                                .httpMethod(httpMethod)
-                                .requestParams(requestParams)
-                                .requestHeaders(new ArrayList<>())
-                                .requestCheckPoints(new ArrayList<>())
-                                .resultParams(new ArrayList<>())
-                                .requestBody("")
-                                .retryTimes(0)
-                                .retryInterval(0L)
-                                .operationType(OperationType.REQUEST)
-                                .order(order.getAndUpdate(i -> i + 1))
-                                .build();
+                                                RequestScriptParam requestScript = RequestScriptParam.builder()
+                                                        .rawUrl(url)
+                                                        .httpMethod(httpMethod)
+                                                        .requestParams(requestParams)
+                                                        .requestHeaders(new ArrayList<>())
+                                                        .requestCheckPoints(new ArrayList<>())
+                                                        .resultParams(new ArrayList<>())
+                                                        .requestBody("")
+                                                        .retryTimes(0)
+                                                        .retryInterval(0L)
+                                                        .operationType(OperationType.REQUEST)
+                                                        .order(order.getAndUpdate(i -> i + 1))
+                                                        .build();
 
-                        requestScriptParams.add(requestScript);
-                    })
-        );
+                                                requestScriptParams.add(requestScript);
+                                            })
+                    );
+                });
 
         return ImportApiVo.builder()
                 .caseParams(caseParams)
