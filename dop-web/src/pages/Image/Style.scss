@@ -37,3 +37,19 @@
 .datePicker{
   margin-left: 10px;
 }
+.imgStyle{
+  width:25px;
+  height: 25px;
+}
+
+.imgStyle:hover{
+  cursor: pointer;
+}
+
+.copy span{
+  display: none;
+}
+
+.copy:hover span{
+  display: block;
+}
