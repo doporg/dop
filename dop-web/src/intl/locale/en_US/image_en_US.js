@@ -79,7 +79,11 @@ const IMAGE_EN_US = {
     'image.log.selectPull':'Pull operation',
     'image.log.selectCreate':'Create operation',
     'image.member.addFailed':'Addition failed, make sure you input the right name',
-    'image.noAuth':'Without permission!'
+    'image.noAuth':'Without permission!',
+    'image.imageInfo.imageList':'Images',
+    'image.imageInfo.imageInfo':'Image Information',
+    'image.imageTable.pullOperation':'Pull-operation',
+    'image.copySuccess':'Copy successfully!',
 
 
 };

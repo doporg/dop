@@ -80,7 +80,11 @@ const IMAGE_ZH_CN ={
     'image.log.selectPull':'拉取',
     'image.log.selectCreate':'创建',
     'image.member.addFailed':'添加失败，请确认输入了正确的用户名！',
-    'image.noAuth':'没有权限！'
+    'image.noAuth':'没有权限！',
+    'image.imageInfo.imageList':'镜像',
+    'image.imageInfo.imageInfo':'镜像信息',
+    'image.imageTable.pullOperation':'Pull 命令',
+    'image.copySuccess':'复制成功！'
 
 };
 export default IMAGE_ZH_CN;

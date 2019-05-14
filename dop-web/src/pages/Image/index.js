@@ -3,6 +3,7 @@ import BasicLayout from '../../layouts/BasicLayout';
 import Image from './Image';
 import ImageList from "./ImageList/ImageList";
 import NamespaceLogList from "./NamespaceLog/NamespaceLogList";
+import ImageInfo from './ImageInfo'
 
 const imageConfig =[
     {
@@ -24,6 +25,11 @@ const imageConfig =[
         path: '/image/projects/:projectId/logs',
         layout: BasicLayout,
         component: NamespaceLogList
+    },
+    {
+        path:'/repos/:project/:repo/images/:tag',
+        layout: BasicLayout,
+        component: ImageInfo
     }
 ];
 
