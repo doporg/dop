@@ -218,7 +218,7 @@ public class AppService {
                 .warehouseUrl(gitUrl)
                 .build();
         this.appUrlInfoService.createAppUrlInfo(appUrlInfo);
-        this.permissionService.addData(permissionConfig.getAppRuleId(), loginUser, app.getId(), loginUser);
+        this.permissionService.addData(permissionConfig.getProjectManagerAndAppRuleId(), loginUser, app.getId(), loginUser);
 
     }
 

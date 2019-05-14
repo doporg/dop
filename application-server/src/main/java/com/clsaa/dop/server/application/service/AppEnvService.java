@@ -17,8 +17,7 @@ import java.util.stream.Collectors;
 
 @Service(value = "AppEnvService")
 public class AppEnvService {
-    @Autowired
-    KubeYamlService kubeYamlService;
+
 
     @Autowired
     AppEnvRepository appEnvRepository;
@@ -89,9 +88,6 @@ public class AppEnvService {
     }
 
 
-    //public String updateBuildTag(Long appEnvId){
-    //    this.kubeYamlService.updateBuildTag
-    //}
     /**
      * 创建环境
      *

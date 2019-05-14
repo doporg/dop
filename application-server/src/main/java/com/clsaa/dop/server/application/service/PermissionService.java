@@ -26,11 +26,12 @@ public class PermissionService {
         return this.permissionFeign.findUserByField(fieldName, fieldValue);
     }
 
-    ;
+    //void addRoleToUser(Long userId,Long roleId,Long loginUser){
+    //   this.permissionFeign.addRoleToUser(userId,roleId,loginUser);
+    //}
 
     public void addData(Long ruleId, Long userId, Long fieldValue, Long loginUser) {
         this.permissionFeign.addData(ruleId, userId, fieldValue, loginUser);
-
     }
 
     public List<Long> findAllIds(String permissionName, Long userId, String fieldName) {

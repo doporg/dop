@@ -50,8 +50,7 @@ public class KubeYamlService {
     AppUrlInfoService appUrlInfoService;
     @Autowired
     private PermissionConfig permissionConfig;
-    @Autowired
-    private AppEnvLogService appEnvLogService;
+
     @Autowired
     private PermissionService permissionService;
 

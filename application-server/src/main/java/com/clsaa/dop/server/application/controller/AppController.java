@@ -5,7 +5,6 @@ import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.service.AppService;
-import com.clsaa.dop.server.application.service.AppUrlInfoService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.dop.server.application.util.Validator;
 import com.clsaa.rest.result.Pagination;
@@ -35,8 +34,6 @@ import java.util.stream.Collectors;
 public class AppController {
     @Autowired
     private AppService appService;
-    @Autowired
-    private AppUrlInfoService appUrlInfoService;
 
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")

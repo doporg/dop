@@ -86,6 +86,16 @@ public interface PermissionFeign {
             @RequestParam(value = "userId") Long userId
     );
 
+    ////添加一个关联关系
+    //@ApiOperation(value = "创建用户角色关联关系", notes = "创建用户角色关联关系")
+    //@PostMapping("/v1/users/rolemap")
+    // void addRoleToUser(
+    //        @ApiParam(name = "userId",value = "用户ID",required = true)
+    //        @RequestParam(value = "userId", required = true)Long userId,
+    //        @ApiParam(name = "roleId",value = "角色ID",required = true)
+    //        @RequestParam(value = "roleId", required = true)Long roleId,
+    //        @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER)Long loginUser);
+
 
 
 }

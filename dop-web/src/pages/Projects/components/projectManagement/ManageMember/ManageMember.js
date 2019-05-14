@@ -5,6 +5,7 @@ import React, {Component} from 'react';
 import API from "../../../../API";
 import Axios from "axios/index";
 import TopBar from "../ProjectBasicInfo/topbar";
+import "./ManageMember.scss"
 
 const Toast = Feedback.toast;
 
@@ -22,9 +23,14 @@ class ManageMember extends Component {
 
     nameRender(value, index, record) {
         console.log("nameRender", value, index, record)
+        console.log(String(record.id) === String(window.sessionStorage.getItem("user-id")) ? "delete-icon hide" : "delete-icon")
         return (
-            <div className="name-render-div">{value} <Icon onClick={this.popupConfirm.bind(this, record.id)}
-                                                           type="ashbin" className="name-render-delete-icon"/></div>
+
+            <div className="name-render-div">{value}
+                <Icon
+                    className={String(record.id) === String(window.sessionStorage.getItem("user-id")) ? "delete-icon hide" : "delete-icon"}
+                    onClick={this.popupConfirm.bind(this, record.id)}
+                    type="ashbin"/></div>
         )
 
     }

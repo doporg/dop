@@ -7,8 +7,6 @@ import com.clsaa.dop.server.application.model.vo.AppEnvV1;
 import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
 import com.clsaa.dop.server.application.service.AppEnvService;
 import com.clsaa.dop.server.application.service.BuildTagRunningIdMappingService;
-import com.clsaa.dop.server.application.service.KubeCredentialService;
-import com.clsaa.dop.server.application.service.KubeYamlService;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
@@ -36,10 +34,7 @@ import java.util.stream.Collectors;
 public class AppEnvController {
     @Autowired
     AppEnvService appEnvService;
-    @Autowired
-    KubeYamlService kubeYamlService;
-    @Autowired
-    KubeCredentialService kubeCredentialService;
+
     @Autowired
     BuildTagRunningIdMappingService buildTagRunningIdMappingService;
 

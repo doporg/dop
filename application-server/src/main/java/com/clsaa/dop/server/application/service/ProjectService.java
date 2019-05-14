@@ -30,7 +30,7 @@ public class ProjectService {
     @Autowired
     private UserService userService;
     @Autowired
-    private ImageService imageService;
+    ImageService imageService;
     @Autowired
     private PermissionConfig permissionConfig;
 
@@ -38,16 +38,25 @@ public class ProjectService {
     private PermissionService permissionService;
 
     public void deleteMemberFromProject(Long userId, Long projectId, Long loginUser) {
+        BizAssert.authorized(this.permissionService.check(permissionConfig.getDeleteMemberFromProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
+                , BizCodes.NO_PERMISSION);
         this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
     }
 
     public void addMemberToProject(List<Long> userIdList, Long projectId, Long loginUser) {
+        BizAssert.authorized(this.permissionService.check(permissionConfig.getAddMemberToProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
+                , BizCodes.NO_PERMISSION);
         List<Long> existUserIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
         Set<Long> userIdSet = new HashSet<>(existUserIdList);
 
         for (Long userId : userIdList) {
             BizAssert.validParam(!existUserIdList.contains(userId), new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "已在项目中"));
-            this.permissionService.addData(this.permissionConfig.getProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
+            try {
+                this.permissionService.addData(this.permissionConfig.getDeveloperAndProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
+            } catch (Exception e) {
+                BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "添加失败，请检查该用户的角色"));
+            }
+            //this.permissionService.addRoleToUser(userId,this.permissionConfig.get);
         }
 
     }
@@ -68,9 +77,9 @@ public class ProjectService {
      */
     public Pagination<ProjectV1> findProjectOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Boolean includeFinished, String queryKey) {
 
-
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
-                , BizCodes.NO_PERMISSION);
+        //
+        //BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
+        //        , BizCodes.NO_PERMISSION);
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
@@ -185,8 +194,8 @@ public class ProjectService {
                 .mtime(mtime)
                 .build();
         this.projectRepository.saveAndFlush(project);
-        //this.imageService.createProject(title,status,loginUser);
-        this.permissionService.addData(permissionConfig.getProjectRuleId(), loginUser, project.getId(), loginUser);
+        this.imageService.createProject(title, status, loginUser);
+        this.permissionService.addData(permissionConfig.getProjectManagerAndProjectRuleId(), loginUser, project.getId(), loginUser);
 
 
     }
