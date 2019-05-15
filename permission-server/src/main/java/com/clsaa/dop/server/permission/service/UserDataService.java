@@ -35,6 +35,8 @@ public class UserDataService {
     private PermissionService permissionService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RolePermissionMappingService rolePermissionMappingService;
 
 
 
@@ -99,10 +101,15 @@ public class UserDataService {
     //验证某个功能点操作的数据是否允许操作
     public boolean check(String permissionName,Long userId,String fieldName,Long fieldValue)
     {
-        List<Long> IdList =findAllIds(permissionName,userId,fieldName);
-        if(IdList.contains(fieldValue))
+        List<Object> roleIdList=userDataDAO.findRoleByUserAndRule(fieldValue,userId,fieldName);
+
+        for(Object roleId :roleIdList)
         {
-            return true;
+            if(rolePermissionMappingService.findByRoleIdAndPermissionId
+                    (Long.parseLong(roleId.toString()),permissionService.findByName(permissionName).getId())!=null)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -112,13 +119,18 @@ public class UserDataService {
     {
         Set<Long> IdSet=new HashSet<>();
         List<Long> IdList=new ArrayList<>();
-        List<UserData> userDataList=userDataDAO.findAllIds(permissionName,userId,fieldName);
-        for(UserData userData:userDataList)
+        if(permissionService.checkUserPermission(permissionName,userId))
         {
-            IdSet.add(userData.getFieldValue());
+            List<UserData> userDataList=userDataDAO.findAllIds(permissionName,userId,fieldName);
+            for(UserData userData:userDataList)
+            {
+                IdSet.add(userData.getFieldValue());
+            }
+            IdList.addAll(IdSet);
+            return IdList;
         }
-        IdList.addAll(IdSet);
         return IdList;
+
     }
 
     //根据用户ID查找数据
