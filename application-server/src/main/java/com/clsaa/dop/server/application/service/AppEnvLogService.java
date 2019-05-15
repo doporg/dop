@@ -164,7 +164,6 @@ public class AppEnvLogService {
                 .appEnvLog(logTemplate)
                 .build();
 
-
         appEnvLogRepository.saveAndFlush(appEnvLog);
     }
 }
