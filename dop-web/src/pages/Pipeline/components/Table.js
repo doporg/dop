@@ -175,7 +175,6 @@ class PipelineTable extends Component {
                 <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
                     <Table
                         dataSource={this.state.dataSource}
-                        language={window.sessionStorage.getItem('language').toLocaleLowerCase()}
                     >
                         {columns.map((item, index) => {
                             return (
