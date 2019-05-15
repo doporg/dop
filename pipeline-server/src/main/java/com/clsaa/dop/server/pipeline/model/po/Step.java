@@ -32,7 +32,7 @@ public class Step {
         BuildDocker,
         PushDocker,
         CustomScript,
-        Deploy;
+        Deploy
     }
 
     /**

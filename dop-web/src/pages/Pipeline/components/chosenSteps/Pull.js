@@ -108,7 +108,6 @@ class Pull extends Component {
     }
 
     selectApplication(value) {
-        console.log(value)
         this.props.onChangeApp(value);
         this.setState({
             selectedApp: value

@@ -168,6 +168,7 @@ class PipelineInfo extends Component {
             repository: value
         })
     }
+
     copy(data){
         const input = document.createElement('input')
         document.body.appendChild(input);
@@ -196,6 +197,7 @@ class PipelineInfo extends Component {
         }
         document.body.removeChild(input)
     }
+
     onCancel(){
         toast.show({
             type: "error",
@@ -283,7 +285,6 @@ class PipelineInfo extends Component {
             });
         })
     }
-
 
     render() {
         return (
