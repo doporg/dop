@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Grid, Input, Loading, Pagination, Table,Feedback} from "@icedesign/base";
+import {Grid, Input, Loading, Pagination, Table,Feedback,Balloon} from "@icedesign/base";
 import DeleteImageDialog from "../deleteImageDialog";
 import {Col} from "@alifd/next/lib/grid";
 import API from "../../../API";
@@ -122,12 +122,27 @@ class ImagePagination extends Component{
         Toast.success(this.props.intl.messages["image.copySuccess"]);
     }
     pullRender=(value,index,record)=>{
-        return(<CopyToClipboard className={"copy"} onCopy={this.onCopy} text={"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}>
-            <div>
+        let pull = <CopyToClipboard onCopy={this.onCopy} text={"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}>
+                         <img className={"imgStyle"} src={require('../../img/copy.png')} alt="" />
+                    </CopyToClipboard>
+        return(
+            <Balloon trigger={pull} triggerType="hover">
+                {"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}
+            </Balloon>
+        );
+    }
+    digestRender=(value)=> {
+        let digest = <CopyToClipboard className="copyDigest" onCopy={this.onCopy} text={value}>
+            <span>
+                <span>{value.toString().substr(0,10)+'...'}</span>
                 <img className={"imgStyle"} src={require('../../img/copy.png')} alt="" />
-                <span>{"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}</span>
-            </div>
-        </CopyToClipboard>);
+            </span>
+        </CopyToClipboard>;
+        return (
+            <Balloon trigger={digest} triggerType={"hover"}>
+                {value}
+            </Balloon>
+        )
     }
     //image列表
     render() {
@@ -171,7 +186,8 @@ class ImagePagination extends Component{
                                           dataIndex="created"/>
                             <Table.Column title={this.props.intl.messages["image.imageTable.label"]}
                                           dataIndex="labels"/>
-                            <Table.Column title={this.props.intl.messages["image.imageTable.digest"]}
+                            <Table.Column cell={this.digestRender}
+                                          title={this.props.intl.messages["image.imageTable.digest"]}
                                           dataIndex="digest"/>
                         </Table>
                     </Loading>
