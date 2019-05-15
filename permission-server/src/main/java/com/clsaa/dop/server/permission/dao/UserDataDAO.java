@@ -110,5 +110,22 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
                               @Param("userId") Long userId,
                               @Param("fieldName") String fieldName);
 
+    /**
+     * 得到用户在某条数据上使用的角色ID
+     *
+     * @param fieldValue  作用域值
+     * @param fieldName 作用域名称
+     * @param userId 用户ID
+     *
+     * @return {Long}
+     */
+
+    @Query(value = "select role_id from t_user_rule ur inner join t_user_data ud on ud.rule_id=ur.id "
+            +"where ud.field_value=:fieldValue and ud.user_id=:userId and ur.field_name=:fieldName and " +
+            "ur.rule='in' and ud.is_deleted = 0",nativeQuery = true)
+    List<Object> findRoleByUserAndRule(@Param("fieldValue") Long fieldValue,
+                                         @Param("userId") Long userId,
+                                         @Param("fieldName") String fieldName);
+
 
 }
