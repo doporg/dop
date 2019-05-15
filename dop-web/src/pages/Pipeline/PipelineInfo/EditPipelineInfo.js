@@ -88,7 +88,7 @@ class EditPipelineInfo extends Component {
                     visible: false,
                     // haveJenkinsFile: response.data.config
                 });
-            }else{
+            } else {
                 toast.show({
                     type: "error",
                     content: "获取信息失败",
@@ -165,7 +165,8 @@ class EditPipelineInfo extends Component {
             currentStage: currentStage
         })
     }
-    onChangeApp(value){
+
+    onChangeApp(value) {
         let pipeline = this.state.pipeline;
         pipeline.appId = value;
         this.setState({
@@ -181,38 +182,38 @@ class EditPipelineInfo extends Component {
         })
     }
 
-    onChangeDockerUserName(value){
+    onChangeDockerUserName(value) {
         this.setStages({
             dockerUserName: value
         })
     }
 
-    onChangeRepository(value){
+    onChangeRepository(value) {
         this.setStages({
             repository: value
         })
     }
 
-    copy(data){
+    copy(data) {
         const input = document.createElement('input')
         document.body.appendChild(input);
         input.setAttribute('value', API.pipeline + '/v1/jenkins/build/' + data);
         input.select();
-        try{
-            if(document.execCommand("copy","false",null)){
+        try {
+            if (document.execCommand("copy", "false", null)) {
                 toast.show({
                     type: "success",
                     content: "复制成功",
                     duration: 1000
                 });
-            }else{
+            } else {
                 toast.show({
                     type: "error",
                     content: "复制失败请手动复制",
                     duration: 1000
                 });
             }
-        }catch(err){
+        } catch (err) {
             toast.show({
                 type: "error",
                 content: "复制失败请手动复制",
@@ -222,7 +223,7 @@ class EditPipelineInfo extends Component {
         document.body.removeChild(input)
     }
 
-    onCancel(){
+    onCancel() {
         toast.show({
             type: "error",
             content: "不进行设置将不会进行自动触发",
@@ -230,39 +231,47 @@ class EditPipelineInfo extends Component {
         });
     }
 
+    deletePipeline() {
+        let url = API.pipeline + "/v1/delete/" + this.state.pipelineId;
+        return new Promise((resolve, reject) => {
+            Axios.put(url).then((response) => {
+                resolve()
+            }).catch(() => {
+                reject()
+            })
+        })
+    }
+
+
     saveJenkinsfile() {
         let pipeline = this.state.pipeline;
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
         let self = this;
         pipeline.jenkinsfile = jenkinsFileInfo;
-        let url = API.pipeline + "/v1/pipeline";
-        Axios.put(url, pipeline).then((response) => {
-            if (response.status === 200) {
-                toast.show({
-                    type: "success",
-                    content: "保存成功",
-                    duration: 1000
-                });
-                if (self.state.pipeline.monitor === 0) {
-                    Dialog.confirm({
-                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
-                        content: <div>
-                            <p>请复制以下链接到webhook: </p>
-                            <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
-                        </div>,
-                        title: "提示",
-                        onOk: self.copy.bind(this, self.state.pipeline.id),
-                        onCancel: self.onCancel.bind(this)
+        this.deletePipeline().then(() => {
+            let url = API.pipeline + "/v1/pipeline/jenkinsfile";
+            Axios.post(url, pipeline).then((response) => {
+                if (response.status === 200) {
+                    toast.show({
+                        type: "success",
+                        content: "保存成功",
+                        duration: 1000
                     });
+                    if (self.state.pipeline.monitor === 0) {
+                        Dialog.confirm({
+                            language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                            content: <div>
+                                <p>请复制以下链接到webhook: </p>
+                                <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
+                            </div>,
+                            title: "提示",
+                            onOk: self.copy.bind(this, self.state.pipeline.id),
+                            onCancel: self.onCancel.bind(this)
+                        });
+                    }
+                    self.props.history.push('/pipeline')
                 }
-                self.props.history.push('/pipeline')
-            }
-        }).catch(() => {
-            toast.show({
-                type: "error",
-                content: "请检查您的路径",
-                duration: 1000
-            });
+            })
         })
     }
 
@@ -274,39 +283,36 @@ class EditPipelineInfo extends Component {
             content: "正在提交请稍后",
             duration: 4000
         });
-        console.log(self.state.pipeline);
-        Axios({
-            method: 'post',
-            url: url,
-            data: self.state.pipeline
-        }).then((response) => {
-            if (response.status === 200) {
+        this.deletePipeline().then(() => {
+            Axios.post(url,self.state.pipeline).then((response) => {
+                if (response.status === 200) {
+                    toast.show({
+                        type: "success",
+                        content: "保存成功",
+                        duration: 1000
+                    });
+
+                    if (self.state.pipeline.monitor === 0) {
+                        Dialog.confirm({
+                            language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
+                            content: <div>
+                                <p>请复制以下链接到webhook: </p>
+                                <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
+                            </div>,
+                            title: "提示",
+                            onOk: self.copy.bind(this, self.state.pipeline.id),
+                            onCancel: self.onCancel.bind(this)
+                        });
+                    }
+                    self.props.history.push('/pipeline')
+                }
+            }).catch((error) => {
                 toast.show({
-                    type: "success",
-                    content: "保存成功",
+                    type: "error",
+                    content: "保存失败",
                     duration: 1000
                 });
-
-                if (self.state.pipeline.monitor === 0) {
-                    Dialog.confirm({
-                        language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
-                        content: <div>
-                            <p>请复制以下链接到webhook: </p>
-                            <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
-                        </div>,
-                        title: "提示",
-                        onOk: self.copy.bind(this, self.state.pipeline.id),
-                        onCancel: self.onCancel.bind(this)
-                    });
-                }
-                self.props.history.push('/pipeline')
-            }
-        }).catch((error) => {
-            toast.show({
-                type: "error",
-                content: "保存失败",
-                duration: 1000
-            });
+            })
         })
     }
 
@@ -402,7 +408,7 @@ class EditPipelineInfo extends Component {
                                         stages={this.state.pipeline.stages}
                                         currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
-                                        appEnvId = {this.state.pipeline.appEnvId}
+                                        appEnvId={this.state.pipeline.appEnvId}
                                         onChange={this.setStages.bind(this)}
                                         onChangeApp={this.onChangeApp.bind(this)}
                                         onSelectEnv={this.onSelectEnv.bind(this)}
@@ -449,4 +455,5 @@ class EditPipelineInfo extends Component {
         );
     }
 }
+
 export default injectIntl(EditPipelineInfo)
