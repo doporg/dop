@@ -150,7 +150,7 @@ public class PipelineService {
             }
             StageVoV1 stageVoV1 = StageVoV1.builder()
                     .name(stage.getName())
-                    .steps((ArrayList)stepVoV1s)
+                    .steps((ArrayList) stepVoV1s)
                     .build();
             stageVoV1s.add(stageVoV1);
         }
@@ -162,7 +162,7 @@ public class PipelineService {
                 .timing(pipeline.getTiming())
                 .config(pipeline.getConfig().ordinal())
                 .jenkinsfile(pipeline.getJenkinsfile())
-                .stages((ArrayList)stageVoV1s)
+                .stages((ArrayList) stageVoV1s)
                 .appId(pipeline.getAppId())
                 .appEnvId(pipeline.getAppEnvId()).build();
         return pipelineVoV1;
@@ -265,9 +265,7 @@ public class PipelineService {
 
             if (repositoryVersion != null) {
                 deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipeline.getAppEnvId(), resultOutputId);
-//                if (deploy == null) {
-//                    deploy = ;
-//                }
+                BizAssert.found(deploy != null, BizCodes.NOT_FOUND.getCode(), "无法获取Deployment文件");
                 KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipeline.getAppEnvId());
                 if (kubeCredentialWithTokenV1 == null) {
                     ip = "https://121.43.191.226:6443";
