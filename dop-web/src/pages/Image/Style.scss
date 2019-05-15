@@ -46,10 +46,7 @@
   cursor: pointer;
 }
 
-.copy span{
-  display: none;
+.copyDigest:hover{
+  cursor: pointer;
 }
 
-.copy:hover span{
-  display: block;
-}
