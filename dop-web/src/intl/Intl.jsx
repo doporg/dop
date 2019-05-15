@@ -19,7 +19,6 @@ export default class Intl extends Component {
         window.sessionStorage.setItem('language', navigator.language);
         window.addEventListener('setItemEvent', function(event) {
             let rlanguage;
-            console.log(event.newValue);
             switch (event.newValue) {
                 case "zh-CN":
                     rlanguage = 'zh-CN';

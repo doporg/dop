@@ -22,8 +22,12 @@ class PipelineInfoStage extends Component {
     componentWillReceiveProps(nextProps){
         this.setState({
             stages: nextProps.stages,
-            currentStage: nextProps.currentStage
-        })
+        });
+        if(nextProps.currentStage){
+            this.setState({
+                currentStage: nextProps.currentStage
+            })
+        }
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.stages !== this.state.stages) {
@@ -70,6 +74,7 @@ class PipelineInfoStage extends Component {
      * 切换stage, 将新信息放到currentStage
      * */
     changeStage(currentStage) {
+        console.log(currentStage)
         this.setState({
             currentStage
         });
@@ -101,6 +106,7 @@ class PipelineInfoStage extends Component {
     step(value) {
         let stages = this.state.stages;
         stages[this.state.currentStage] = value;
+        console.log(this.state.currentStage)
         this.setState({
             stages
         });
@@ -131,6 +137,7 @@ class PipelineInfoStage extends Component {
                 <PipelineInfoStep
                     stage={this.state.stages[this.state.currentStage]}
                     appId = {this.props.appId}
+                    appEnvId = {this.props.appEnvId}
                     onChange={this.step.bind(this)}
                     onChangeApp={this.onChangeApp.bind(this)}
                     onSelectEnv = {this.onSelectEnv.bind(this)}

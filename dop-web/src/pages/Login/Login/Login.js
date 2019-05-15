@@ -171,7 +171,18 @@ class Login extends Component {
                 <div className="login-content">
                     <div className="left">
                         <div className="img">
-                            <img src={require('./images/logo.png')} alt="logo" width="100%"/>
+                            {(()=>{
+                                if(window.sessionStorage.getItem('language') === "zh-CN"){
+                                    return (
+                                        <img src={require('./images/logo-zh.png')} alt="logo" width="100%"/>
+                                    )
+                                }else{
+                                    return (
+                                        <img src={require('./images/logo-en.png')} alt="logo" width="100%"/>
+                                    )
+                                }
+                            })()}
+
                         </div>
                     </div>
                     <div className="right">

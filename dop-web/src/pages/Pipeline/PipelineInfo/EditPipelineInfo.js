@@ -74,7 +74,6 @@ class EditPipelineInfo extends Component {
         });
         Axios.get(url).then((response) => {
             if (response.status === 200) {
-                console.log(response);
                 // if(response.data.stages === null){
                 //     response.data.stages = []
                 // }
@@ -236,8 +235,8 @@ class EditPipelineInfo extends Component {
         let jenkinsFileInfo = this.state.jenkinsFileInfo;
         let self = this;
         pipeline.jenkinsfile = jenkinsFileInfo;
-        let url = API.pipeline + "/v1/pipeline/jenkinsfile";
-        Axios.post(url, pipeline).then((response) => {
+        let url = API.pipeline + "/v1/pipeline";
+        Axios.put(url, pipeline).then((response) => {
             if (response.status === 200) {
                 toast.show({
                     type: "success",
@@ -403,6 +402,7 @@ class EditPipelineInfo extends Component {
                                         stages={this.state.pipeline.stages}
                                         currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
+                                        appEnvId = {this.state.pipeline.appEnvId}
                                         onChange={this.setStages.bind(this)}
                                         onChangeApp={this.onChangeApp.bind(this)}
                                         onSelectEnv={this.onSelectEnv.bind(this)}

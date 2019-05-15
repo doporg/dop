@@ -122,7 +122,6 @@ class PipelineTable extends Component {
                         type="normal"
                         size="small"
                         className="button"
-                        disabled
                     >
                         <FormattedMessage
                             id="pipeline.table.operation.edit"

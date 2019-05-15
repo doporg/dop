@@ -102,7 +102,7 @@ public class PipelineController {
     }
 
     @ApiOperation(value = "根据id更新流水线信息")
-    @PutMapping("/v1/pipeline/update")
+    @PutMapping("/v1/pipeline")
     public void update(@RequestBody Pipeline pipeline) {
         this.pipelineService.update(pipeline);
     }

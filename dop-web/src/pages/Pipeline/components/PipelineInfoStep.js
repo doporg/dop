@@ -34,22 +34,29 @@ class PipelineInfoStep extends Component {
             currentStep: null,
             selectEnvId: null,
             chosenStep: {
-                taskName: ""
+                taskName: null
             }
         }
     }
 
     componentWillReceiveProps(nextProps) {
         let self = this;
-        if (this.props.currentStage !== nextProps.currentStage) {
+        if (nextProps.currentStage !== undefined && this.props.currentStage !== nextProps.currentStage) {
             let chosenStep = {
-                taskName: ""
+                taskName: null
             };
+            if (nextProps.stage) {
+                if (nextProps.stage.steps.length) {
+                    chosenStep = nextProps.stage.steps[0]
+                }
+            }
             self.setState({chosenStep})
         }
-        self.setState({
-            stage: nextProps.stage,
-        })
+        if (nextProps.stage) {
+            self.setState({
+                stage: nextProps.stage,
+            })
+        }
     }
 
     formChange(value) {
@@ -70,7 +77,7 @@ class PipelineInfoStep extends Component {
             ip: "",
             token: ""
         };
-        let chosenStep = newTask
+        let chosenStep = newTask;
         let steps = this.state.stage.steps;
         steps.push(newTask);
         let stage = Object.assign({}, this.state.stage, {steps: steps});
@@ -87,7 +94,7 @@ class PipelineInfoStep extends Component {
         let stage = this.state.stage;
         stage.steps.splice(index, 1);
         let chosenStep = {
-            taskName: ""
+            taskName: null
         };
         this.setState({
             stage,
@@ -128,6 +135,7 @@ class PipelineInfoStep extends Component {
     }
 
     buildDockerUserName(value) {
+        console.log(value)
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
         });
@@ -142,7 +150,6 @@ class PipelineInfoStep extends Component {
     }
 
     buildRepository(value) {
-
         let findIndex = this.state.stage.steps.findIndex((item) => {
             return item.taskName === this.state.chosenStep.taskName
         });
@@ -237,7 +244,7 @@ class PipelineInfoStep extends Component {
                                             })()}
                                         </div>
                                         {(() => {
-                                            if (this.state.chosenStep.taskName != undefined) {
+                                            if (this.state.chosenStep.taskName !== undefined) {
                                                 return (
                                                     <div>
                                                         {(() => {
@@ -276,6 +283,7 @@ class PipelineInfoStep extends Component {
                                                                         <div className="chosen-task-detail">
                                                                             <DockerImage
                                                                                 appId={this.props.appId}
+                                                                                appEnvId={this.props.appEnvId}
                                                                                 onChangeApp={this.onChangeApp.bind(this)}
                                                                                 onSelectEnv={this.onSelectEnv.bind(this)}
                                                                                 onUserNameChange={this.buildDockerUserName.bind(this)}
@@ -292,6 +300,7 @@ class PipelineInfoStep extends Component {
                                                                         <div className="chosen-task-detail">
                                                                             <DockerImage
                                                                                 appId={this.props.appId}
+                                                                                appEnvId={this.props.appEnvId}
                                                                                 onChangeApp={this.onChangeApp.bind(this)}
                                                                                 onSelectEnv={this.onSelectEnv.bind(this)}
                                                                                 onUserNameChange={this.buildDockerUserName.bind(this)}

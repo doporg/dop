@@ -28,9 +28,7 @@ class DockerImage extends Component {
     }
 
     componentWillMount() {
-        this.getApplication()
-
-
+        this.getApplication();
     }
 
     getApplication() {
@@ -111,6 +109,12 @@ class DockerImage extends Component {
                             selectedEnv: response.data[i].title
                         });
                     }
+                    if (self.props.appEnvId === response.data[i].id) {
+                        self.selectEnv(response.data[i].id)
+                        self.setState({
+                            selectedEnv: response.data[i].title
+                        });
+                    }
                 }
                 self.setState({
                     environments:[...new Set(environments)],
@@ -136,6 +140,7 @@ class DockerImage extends Component {
                 let user = {
                     label: response.data.identifier,
                     value: response.data.id,
+                    id: response.data.id,
                     credential: response.data.credential,
                     identifier: response.data.identifier,
                 };
@@ -193,6 +198,7 @@ class DockerImage extends Component {
             if (value === dockerUser[i].id) {
                 self.props.onUserNameChange(dockerUser[i].identifier);
                 self.props.onDockerPasswordChange(dockerUser[i].credential)
+                console.log(dockerUser[i].identifier)
             }
         }
     }

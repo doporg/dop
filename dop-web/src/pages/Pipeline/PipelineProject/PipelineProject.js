@@ -250,7 +250,7 @@ export default class PipelineProject extends Component {
                             defaultMessage="运行流水线"
                         />
                     </Button>
-                    <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} disabled>
+                    <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} >
                         <Icon type="edit"/>
                         <FormattedMessage
                             id="pipeline.project.editPipeline"
