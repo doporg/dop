@@ -228,8 +228,8 @@ public class PipelineService {
             String token = null;
             //收集信息
 
-            UserCredentialV1 userCredentialV11 = this.userFeign.getUserCredentialV1ByUserId(loginUser, UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
-
+            UserCredentialV1 userCredentialV11 = this.userFeign.getUserCredentialV1ByUserId(pipeline.getCuser(), UserCredential.Type.DOP_INNER_HARBOR_LOGIN_EMAIL);
+            BizAssert.found(userCredentialV11 != null, BizCodes.NOT_FOUND.getCode(), "无法获取docker账户");
             dockerUserName = userCredentialV11.getIdentifier();
             dockerPassword = userCredentialV11.getCredential();
 
@@ -267,13 +267,10 @@ public class PipelineService {
                 deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipeline.getAppEnvId(), resultOutputId);
                 BizAssert.found(deploy != null, BizCodes.NOT_FOUND.getCode(), "无法获取Deployment文件");
                 KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipeline.getAppEnvId());
-                if (kubeCredentialWithTokenV1 == null) {
-                    ip = "https://121.43.191.226:6443";
-                    token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1sY25kOCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImIyZDBlYTQzLTA5MzAtMTFlOS1hYmM3LTAwMTYzZTBlYzFjZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.KlrkaUDeoyWngUwbmGS2C7gpSixEYJYRgv52w9v_YVLe_uDO_SdHAaQanxG8W23RbKxYPRt_0S7haFy-gU5ngbuYPxHVvPMoB8gVrPX8dGOvYpxvs26eOEjibgnfJTmegWBgylSP9ULKqLTgJ3feFiUyMtd_metvaCSJInPDonDFlvNTzLIn8sOxE3Qxq3fAApNgkxNeuHT8vygznoLysv0I3Tzobhn5R78q5D1QL01AxRlAIKm57i6h5X7utoXrnt8JbuLlMk2ZERa8ANTlhTDhFOj4ODiAqWgN2gtDUmX9ACGHr7kbU8HW_COj4QMS6gLNdnI4bBxTCWVSL-er9Q";
-                } else {
-                    ip = kubeCredentialWithTokenV1.getTargetClusterUrl();
-                    token = kubeCredentialWithTokenV1.getTargetClusterToken();
-                }
+                BizAssert.found(kubeCredentialWithTokenV1 != null, BizCodes.NOT_FOUND.getCode(), "无法获取集群信息");
+                ip = kubeCredentialWithTokenV1.getTargetClusterUrl();
+                token = kubeCredentialWithTokenV1.getTargetClusterToken();
+
             }
 
             List<Stage> stages = pipeline.getStages();
