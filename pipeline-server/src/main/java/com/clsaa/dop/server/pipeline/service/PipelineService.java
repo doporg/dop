@@ -265,45 +265,9 @@ public class PipelineService {
 
             if (repositoryVersion != null) {
                 deploy = this.applicationFeign.createYamlFileForDeploy(loginUser, pipeline.getAppEnvId(), resultOutputId);
-                if (deploy == null) {
-                    deploy = "apiVersion: extensions/v1beta1\n" +
-                            "kind: Deployment\n" +
-                            "metadata:\n" +
-                            "  name: pipeline-server\n" +
-                            "  namespace: dop\n" +
-                            "spec:\n" +
-                            "  replicas: 1\n" +
-                            "  template:\n" +
-                            "    metadata:\n" +
-                            "      labels:\n" +
-                            "        app: pipeline-server\n" +
-                            "    spec:\n" +
-                            "      containers:\n" +
-                            "        - name: pipeline-server\n" +
-                            "          imagePullPolicy: Always\n" +
-                            "          image: registry.dop.clsaa.com/dop/pipeline-server:latest\n" +
-                            "          resources:\n" +
-                            "            requests:\n" +
-                            "              memory: 384Mi\n" +
-                            "              cpu: 250m\n" +
-                            "            limits:\n" +
-                            "              memory: 384Mi\n" +
-                            "              cpu: 500m\n" +
-                            "          volumeMounts:\n" +
-                            "            - name: host-time\n" +
-                            "              mountPath: /etc/localtime\n" +
-                            "            - name: host-timezone\n" +
-                            "              mountPath: /etc/timezone\n" +
-                            "          ports:\n" +
-                            "            - containerPort: 13600\n" +
-                            "      volumes:\n" +
-                            "        - name: host-time\n" +
-                            "          hostPath:\n" +
-                            "            path: /etc/localtime\n" +
-                            "        - name: host-timezone\n" +
-                            "          hostPath:\n" +
-                            "            path: /etc/timezone";
-                }
+//                if (deploy == null) {
+//                    deploy = ;
+//                }
                 KubeCredentialWithTokenV1 kubeCredentialWithTokenV1 = this.applicationFeign.getUrlAndTokenByAppEnvId(pipeline.getAppEnvId());
                 if (kubeCredentialWithTokenV1 == null) {
                     ip = "https://121.43.191.226:6443";
