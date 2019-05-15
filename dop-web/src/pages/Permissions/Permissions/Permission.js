@@ -285,21 +285,21 @@ export  class Permission extends Component {
 
         //删除操作定义
         const renderDelete = (value, index, record) => {
-            return (
+            return (<AuthRequire permissionList={this.state.userPermissionList} permissionName="删除功能点">
                 <BalloonConfirm
                     onConfirm={this.onConfirm.bind(this, record.id)}
                     onCancel={this.onCancel}
                     title={this.props.intl.messages['permission.confirmDelete']}
                 >
-                    <AuthRequire permissionList={this.state.userPermissionList} permissionName="删除功能点">
+
                     <Button
                         type="primary"
                         shape="warning"
                         size="medium"
                         className="button">{this.props.intl.messages['permission.delete']}</Button>
-                    </AuthRequire>
-                </BalloonConfirm>
 
+                </BalloonConfirm>
+        </AuthRequire>
             );
         }
         return (
