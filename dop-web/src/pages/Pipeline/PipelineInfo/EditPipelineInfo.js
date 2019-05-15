@@ -134,7 +134,6 @@ export default class EditPipelineInfo extends Component {
             data: self.state.pipeline
         }).then((response) => {
             if (response.status === 200) {
-                console.log(11)
                 self.deleteJenkins().then(()=>{
                     self.createJenkinsfile()
                 }).then(()=>{
