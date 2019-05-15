@@ -248,10 +248,10 @@ class EditPipelineInfo extends Component {
                         language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
                         content: <div>
                             <p>请复制以下链接到webhook: </p>
-                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
                         </div>,
                         title: "提示",
-                        onOk: self.copy.bind(this, response.data),
+                        onOk: self.copy.bind(this, self.state.pipeline.id),
                         onCancel: self.onCancel.bind(this)
                     });
                 }
@@ -292,10 +292,10 @@ class EditPipelineInfo extends Component {
                         language: window.sessionStorage.getItem('language').toLocaleLowerCase(),
                         content: <div>
                             <p>请复制以下链接到webhook: </p>
-                            <p>{API.pipeline + "/v1/jenkins/build/" + response.data}</p>
+                            <p>{API.pipeline + "/v1/jenkins/build/" + self.state.pipeline.id}</p>
                         </div>,
                         title: "提示",
-                        onOk: self.copy.bind(this, response.data),
+                        onOk: self.copy.bind(this, self.state.pipeline.id),
                         onCancel: self.onCancel.bind(this)
                     });
                 }
