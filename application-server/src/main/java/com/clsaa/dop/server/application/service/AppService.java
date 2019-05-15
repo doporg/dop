@@ -57,7 +57,7 @@ public class AppService {
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        List<Long> idList = this.permissionService.findAllIds(this.permissionConfig.getViewApp(), loginUser, this.permissionConfig.getAppRuleFieldName());
+        //List<Long> idList = this.permissionService.findAllIds(this.permissionConfig.getViewApp(), loginUser, this.permissionConfig.getAppRuleFieldName());
 
         Page<App> applicationPage;
         List<App> applicationList;
@@ -65,17 +65,17 @@ public class AppService {
 
         //如果带查询则使用上面的 带前缀查询的函数
         if (!queryKey.equals("")) {
-            applicationPage = appRepository.findAllByProjectIdAndTitleStartingWithAndIdIn(projectId, queryKey, pageable, idList);
+            applicationPage = appRepository.findAllByProjectIdAndTitleStartingWith(projectId, queryKey, pageable);
 
             applicationList = applicationPage.getContent();
-            totalCount = appRepository.countAllByProjectIdAndTitleStartingWithAndIdIn(projectId, queryKey, idList);
+            totalCount = appRepository.countAllByProjectIdAndTitleStartingWith(projectId, queryKey);
         } else {
 
-            applicationPage = appRepository.findAllByProjectIdAndIdIn(projectId, pageable, idList);
+            applicationPage = appRepository.findAllByProjectId(projectId, pageable);
 
             applicationList = applicationPage.getContent();
 
-            totalCount = appRepository.countAllByProjectIdAndIdIn(projectId, idList);
+            totalCount = appRepository.countAllByProjectId(projectId);
             //applicationList = applicationPage.getContent();
 
         }
@@ -218,7 +218,7 @@ public class AppService {
                 .warehouseUrl(gitUrl)
                 .build();
         this.appUrlInfoService.createAppUrlInfo(appUrlInfo);
-        this.permissionService.addData(permissionConfig.getProjectManagerAndAppRuleId(), loginUser, app.getId(), loginUser);
+        //this.permissionService.addData(permissionConfig.getProjectManagerAndAppRuleId(), loginUser, app.getId(), loginUser);
 
     }
 

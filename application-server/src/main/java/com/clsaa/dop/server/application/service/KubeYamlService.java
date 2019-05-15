@@ -575,10 +575,12 @@ public class KubeYamlService {
      * @return {@link List<String>}
      */
     public List<String> findNameSpaces(Long loginUser, Long id) throws Exception {
+        //校验权限
         BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewNameSpace(), loginUser)
                 , BizCodes.NO_PERMISSION);
+        //根据用户所填集群信息获取api
         CoreV1Api api = getCoreV1Api(id);
-
+        //查询所有命名空间
         return api.listNamespace(true, null, null, null, null, null, null, null, false)
                 .getItems()
                 .stream()
