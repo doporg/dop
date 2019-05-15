@@ -25,8 +25,7 @@ class Login extends Component {
     componentWillMount() {
         let self = this;
         window.sessionStorage.clear();
-
-        document.addEventListener("keydown",this.handleEnterKey);
+        document.addEventListener("keydown", this.handleEnterKey);
         RSA().then(() => {
             self.setState({
                 visible: false

@@ -11,28 +11,30 @@ export default class Intl extends Component {
     constructor(props){
         super(props);
         this.state = {
-            language: 'zh-CN'
+            language: this.props.language
         }
     }
     componentDidMount(){
         let self = this;
-        window.sessionStorage.setItem('language', 'zh-CN');
         window.sessionStorage.setItem('language', navigator.language);
         window.addEventListener('setItemEvent', function(event) {
             let rlanguage;
+            console.log(event.newValue);
             switch (event.newValue) {
                 case "zh-CN":
                     rlanguage = 'zh-CN';
+                    self.setState({
+                        language: rlanguage
+                    });
                     break;
                 case "en-US":
                     rlanguage = 'en-US';
+                    self.setState({
+                        language: rlanguage
+                    });
                     break;
-                default:
-                    rlanguage = 'zh-CN';
             }
-            self.setState({
-                language: rlanguage
-            });
+
         });
         self.setState({
             language: navigator.language

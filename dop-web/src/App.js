@@ -9,7 +9,14 @@ const {toast} = Feedback;
 
 
 class App extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            time: null
+        }
+    }
     componentWillMount() {
+        let self = this;
         if (window.sessionStorage.getItem('Authorization')) {
             Axios.defaults.headers.common['Authorization'] = "Bearer " + window.sessionStorage.getItem('Authorization');
         }
@@ -58,11 +65,16 @@ class App extends Component {
             }
             return Promise.reject(error);
         });
-        setInterval(() => {
+        let time = setInterval(() => {
             RSA()
-        }, 3540000)
+        }, 3540000);
+        self.setState({
+            time: time
+        });
     }
-
+    componentWillUnmount(){
+        clearInterval(this.state.time);
+    }
     render() {
         return router;
     }
