@@ -61,7 +61,7 @@ class ApplicationEnvironmentLogList extends Component {
         let projectName = imageUrl.split("/")[1]
         console.log("repoName", imageUrl.split("/"))
         let repoName = imageUrl.split("/")[2].split(":")[0]
-        return <Link to={"/repos/" + projectName + "/" + repoName + "/images"}
+        return <Link to={"/repos/" + projectName + "/" + repoName + "/images/" + buildTag}
         >{buildTag}</Link>
     }
 
