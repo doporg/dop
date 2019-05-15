@@ -4,6 +4,7 @@ import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
 import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
 import com.clsaa.dop.server.pipeline.model.bo.PipelineV1Project;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
 import com.clsaa.dop.server.pipeline.service.PipelineService;
 import io.swagger.annotations.ApiOperation;
@@ -67,8 +68,8 @@ public class PipelineController {
 
     @ApiOperation(value = "根据id查找流水线信息")
     @GetMapping("/v1/pipeline/{id}")
-    public Pipeline findById(@PathVariable(value = "id") String id) {
-        return this.pipelineService.findById(id);
+    public PipelineVoV1 findByIdV1(@PathVariable(value = "id") String id) {
+        return this.pipelineService.findByIdV1(id);
     }
 
     @ApiOperation(value = "根据用户id查找，返回该用户的流水线信息")
@@ -101,7 +102,7 @@ public class PipelineController {
     }
 
     @ApiOperation(value = "根据id更新流水线信息")
-    @PutMapping("/v1/pipeline/update")
+    @PutMapping("/v1/pipeline")
     public void update(@RequestBody Pipeline pipeline) {
         this.pipelineService.update(pipeline);
     }

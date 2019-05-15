@@ -84,6 +84,7 @@ function oauth(timestamp) {
         Axios.post(API.gateway + URI, Qs.stringify(data)).then((response)=>{
             Axios.defaults.headers.common['Authorization'] = "Bearer " + response.data.access_token;
             window.sessionStorage.setItem("Authorization", response.data.access_token);
+            // window.sessionStorage.setItem('language', navigator.language);
             resolve(response.data.access_token)
         }).catch((error)=>{
             reject(error)

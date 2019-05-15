@@ -13,9 +13,12 @@ window.sessionStorage.setItem = function(key,newValue){
     window.dispatchEvent(setItemEvent);
     originalSetItem.apply(this,arguments);
 };
+window.sessionStorage.setItem('language', navigator.language);
 
 ReactDOM.render(
-    <Intl>
+    <Intl
+        language= {navigator.language}
+    >
         <App />
     </Intl>
     ,

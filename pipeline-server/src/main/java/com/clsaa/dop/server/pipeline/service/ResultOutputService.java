@@ -73,11 +73,11 @@ public class ResultOutputService {
         }
 
         String commitId = null;
-        Pattern patternCommitId = Pattern.compile("git\\s+checkout\\s+-f\\s+[a-z0-9]+");
+//        Pattern patternCommitId = Pattern.compile("git\\s+checkout\\s+-f\\s+[a-z0-9]+");
+        Pattern patternCommitId = Pattern.compile("commitId\\s+\\S+");
         Matcher matcherCommitId = patternCommitId.matcher(output);
         if (matcherCommitId.find()) {
-            commitId = matcherCommitId.group().split("\\s+")[3];
-            System.out.println(commitId);
+            commitId = matcherCommitId.group().split("\\s+")[1];
         }
 
         String repository= null;

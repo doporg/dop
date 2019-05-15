@@ -13,7 +13,10 @@ import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
+import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV1;
 import com.clsaa.dop.server.pipeline.model.vo.PipelineVoV3;
+import com.clsaa.dop.server.pipeline.model.vo.StageVoV1;
+import com.clsaa.dop.server.pipeline.model.vo.StepVoV1;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import org.bson.types.ObjectId;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.channels.Pipe;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -60,7 +64,7 @@ public class PipelineService {
         pipeline.setIsDeleted(false);
 
         try {
-            pipelineRepository.insert(pipeline);
+            pipelineRepository.save(pipeline);
             //拿到 result output id
             String resultOutputId = this.resultOutputService.create(id.toString());
             //拿到 校验流水线信息完整
@@ -79,7 +83,7 @@ public class PipelineService {
         pipeline.setCtime(LocalDateTime.now());
         pipeline.setMtime(LocalDateTime.now());
         pipeline.setIsDeleted(false);
-        pipelineRepository.insert(pipeline);
+        pipelineRepository.save(pipeline);
 
         this.jenkinsService.createByJenkinsfile(pipeline);
     }
@@ -121,6 +125,47 @@ public class PipelineService {
      */
     public Pipeline findById(String id) {
         return this.pipelineRepository.findById(id);
+    }
+
+    public PipelineVoV1 findByIdV1(String id) {
+        Pipeline pipeline = this.pipelineRepository.findById(id);
+        List<StageVoV1> stageVoV1s = new ArrayList<StageVoV1>();
+        for (int i = 0; i < pipeline.getStages().size(); i++) {
+            Stage stage = pipeline.getStages().get(i);
+            List<StepVoV1> stepVoV1s = new ArrayList<StepVoV1>();
+            for (int j = 0; j < stage.getSteps().size(); j++) {
+                StepVoV1 stepVoV1 = StepVoV1.builder()
+                        .taskName(stage.getSteps().get(j).getTaskName().ordinal())
+                        .gitUrl(stage.getSteps().get(j).getGitUrl())
+                        .dockerUserName(stage.getSteps().get(j).getDockerUserName())
+                        .dockerPassword(stage.getSteps().get(j).getDockerPassword())
+                        .repositoryVersion(stage.getSteps().get(j).getDockerPassword())
+                        .repository(stage.getSteps().get(j).getRepository())
+                        .deploy(stage.getSteps().get(j).getDeploy())
+                        .token(stage.getSteps().get(j).getToken())
+                        .ip(stage.getSteps().get(j).getIp())
+                        .shell(stage.getSteps().get(j).getShell())
+                        .build();
+                stepVoV1s.add(stepVoV1);
+            }
+            StageVoV1 stageVoV1 = StageVoV1.builder()
+                    .name(stage.getName())
+                    .steps((ArrayList)stepVoV1s)
+                    .build();
+            stageVoV1s.add(stageVoV1);
+        }
+
+        PipelineVoV1 pipelineVoV1 = PipelineVoV1.builder()
+                .id(pipeline.getId())
+                .name(pipeline.getName())
+                .monitor(pipeline.getMonitor().ordinal())
+                .timing(pipeline.getTiming())
+                .config(pipeline.getConfig().ordinal())
+                .jenkinsfile(pipeline.getJenkinsfile())
+                .stages((ArrayList)stageVoV1s)
+                .appId(pipeline.getAppId())
+                .appEnvId(pipeline.getAppEnvId()).build();
+        return pipelineVoV1;
     }
 
     /**
