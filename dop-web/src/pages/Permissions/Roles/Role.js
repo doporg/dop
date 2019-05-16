@@ -525,13 +525,14 @@ export class Role extends Component {
                             </Select>
                         </FormItem>
 
-                        <FormItem label={this.props.intl.messages[ 'permission.rolePermission']} {...formItemLayout} required>
+                        <FormItem label='  ' {...formItemLayout} required>
                             <Table
                                 hasBorder={false}
                                 dataSource={this.state.permissionList}
                                 primaryKey="id"
                                 isTree
                                 rowSelection={this.state.rowSelection}
+
                             >
                                 <Table.Column title={this.props.intl.messages[ 'permission.permissionName']} dataIndex="name" />
                                 <Table.Column title={this.props.intl.messages[ 'permission.permissionDes']} dataIndex="description" />

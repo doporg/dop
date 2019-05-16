@@ -10,6 +10,7 @@ package com.clsaa.dop.server.permission;
 import com.clsaa.dop.server.permission.annotation.GetUserId;
 import com.clsaa.dop.server.permission.annotation.PermissionName;
 import com.clsaa.dop.server.permission.service.AuthenticationService;
+import com.clsaa.dop.server.permission.service.PermissionService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -29,6 +30,8 @@ public class Authentication {
     @Autowired
     AuthenticationService authenticService;
 
+    @Autowired
+    PermissionService permissionService;
 //    第一个参数: args(userId, ..)
 //    第二个参数: args(*, userId, ..)
 //    第三个参数: args(*, *, userId, ..)
@@ -61,7 +64,7 @@ public class Authentication {
         if(userId.toString().isEmpty()) return false;
         System.out.println("切入了 ，下面执行feign调用");
         try {
-            if(authenticService.checkUserPermission(name,Long.parseLong(userId.toString())))
+            if(permissionService.checkUserPermission(name,Long.parseLong(userId.toString())))
             {
                 System.out.println("可以执行切点!!!!!!!!!!");
                 obj=pjp.proceed();
