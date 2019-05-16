@@ -26,6 +26,7 @@ public class AppEnvLogController {
     @Autowired
     private AppEnvLogService appEnvLogService;
 
+
     @ApiOperation(value = "查询日志", notes = "查询环境的日志")
     @GetMapping("/app/env/{appEnvId}/log")
     public Pagination<AppEnvLogV1> findLogByAppEnvId(
@@ -36,6 +37,7 @@ public class AppEnvLogController {
         return this.appEnvLogService.getLogByAppEnvId(loginUser, pageNo, pageSize, appEnvId);
 
     }
+
 
     @ApiOperation(value = "添加日志", notes = "添加日志")
     @PostMapping("/app/env/{appEnvId}/log")
