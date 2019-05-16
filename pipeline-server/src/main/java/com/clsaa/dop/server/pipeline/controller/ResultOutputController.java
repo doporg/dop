@@ -1,14 +1,14 @@
 package com.clsaa.dop.server.pipeline.controller;
 
 import com.clsaa.dop.server.pipeline.config.HttpHeadersConfig;
-import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
+import com.clsaa.dop.server.pipeline.model.vo.ResultOutputV1;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
 import com.clsaa.dop.server.pipeline.service.ResultOutputService;
+import com.clsaa.dop.server.pipline.util.BeanUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
-
 
 /**
  * 流水线运行结果接口实现类
@@ -44,8 +44,8 @@ public class ResultOutputController {
 
     @ApiOperation(value = "根据runningId拿日志")
     @GetMapping("/v1/resultOutput")
-    public ResultOutput findByRunningId(String runningId) {
-        return this.resultOutputService.findByRunningId(runningId);
+    public ResultOutputV1 findByRunningId(@RequestParam(value = "runningId") String runningId) {
+        return BeanUtils.convertType(this.resultOutputService.findByRunningId(runningId), ResultOutputV1.class);
     }
 }
 

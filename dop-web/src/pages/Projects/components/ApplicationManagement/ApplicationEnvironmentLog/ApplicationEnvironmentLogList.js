@@ -4,6 +4,7 @@ import {Col} from "@alifd/next/lib/grid";
 import {Link} from "react-router-dom";
 import "./ApplicationEnvironmentLogList.scss"
 import {injectIntl} from "react-intl";
+import PipelineLogDialog from "./PipelineLogDialog";
 
 const {Row} = Grid;
 /**
@@ -39,7 +40,7 @@ class ApplicationEnvironmentLogList extends Component {
         let _this = this;
         // https://github.com/zhangfuli/simple-maven-pipeline/dee981ce6640e3a0b115c8e784b78357f8f1ad15
         // github.com/clsaa/dop/commit/011fd4191f7c9b3e92539eb63152b8670b003253
-        console.log(url.split("/"))
+        // console.log(url.split("/"))
         let infoList = url.split("/")
         let userName = infoList[3]
         let projectName = infoList[4]
@@ -59,7 +60,7 @@ class ApplicationEnvironmentLogList extends Component {
         // registry.dop.clsaa.com/dop/dop-web:201904131311d357d70
         let buildTag = imageUrl.split(":")[1]
         let projectName = imageUrl.split("/")[1]
-        console.log("repoName", imageUrl.split("/"))
+        // console.log("repoName", imageUrl.split("/"))
         let repoName = imageUrl.split("/")[2].split(":")[0]
         return <Link to={"/repos/" + projectName + "/" + repoName + "/images"}
         >{buildTag}</Link>
@@ -72,15 +73,18 @@ class ApplicationEnvironmentLogList extends Component {
             <h3>{this.props.intl.messages['projects.text.viewEnvLog']}</h3>
         );
         const renderOpr = (value, index, record) => {
-            console.log("record:", record, value)
+            // console.log("record:", record, value)
 
             return <div>{record.ctime}
                 <Icon onClick={this.popupConfirm.bind(this, record.id)} type="ashbin" className="delete-icon"/>
 
             </div>
         };
+        const runningIdRender = (runningId) => {
+            return <PipelineLogDialog runningId={runningId}/>
+        }
         const envRender = (envData) => {
-            console.log("envData", envData)
+            // console.log("envData", envData)
             return (<Balloon align="rt" trigger={defaultTrigger} closable={false}>
                 <pre>{envData}</pre>
             </Balloon>)
@@ -98,6 +102,7 @@ class ApplicationEnvironmentLogList extends Component {
                 <Col>
                     <Table dataSource={this.state.currentData}>
                         <Table.Column title={this.props.intl.messages['projects.text.runningId']}
+                                      cell={runningIdRender.bind(this)}
                                       dataIndex="id"/>
 
                         <Table.Column
