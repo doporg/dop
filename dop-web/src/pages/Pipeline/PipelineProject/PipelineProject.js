@@ -51,15 +51,16 @@ export default class PipelineProject extends Component {
         });
     }
 
-    projectLoading(){
-        let progress = Math.round(Math.random()*50) + 50;
+    projectLoading() {
+        let progress = Math.round(Math.random() * 50) + 50;
         return (
             <div className="project-progress">
                 正在加载...
-                <Progress percent={progress} size="large" showInfo={false} />
+                <Progress percent={progress} size="large" showInfo={false}/>
             </div>
         )
     }
+
     getPipelineInfo() {
         this.setState({
             visible: true
@@ -84,6 +85,7 @@ export default class PipelineProject extends Component {
         let self = this;
         return new Promise((resolve, reject) => {
             Axios.get(url).then((response) => {
+                console.log(response.data)
                 if (response.status === 200) {
                     if (response.data.length === 0) {
                         toast.show({
@@ -107,6 +109,16 @@ export default class PipelineProject extends Component {
                             if (self.state.resultStatus === "BUILD") {
                                 self.setResult();
                             }
+                            // if(response.data[0].result === "FAILURE"){
+                            //     self.setState({
+                            //         notRunning: true
+                            //     });
+                            //     toast.show({
+                            //         type: "error",
+                            //         content: "启动运行失败",
+                            //         duration: 3000
+                            //     });
+                            // }
                         }
                         resolve(response.data[0]);
                     }
@@ -198,7 +210,11 @@ export default class PipelineProject extends Component {
             }
         })
     }
-
+    notRunning(){
+        this.setState({
+            notRunning: true
+        })
+    }
     editPipeline() {
         this.props.history.push("/pipeline/edit/" + this.state.pipelineId)
     }
@@ -236,7 +252,7 @@ export default class PipelineProject extends Component {
                             defaultMessage="运行流水线"
                         />
                     </Button>
-                    <Button type="normal" className="button" onClick={this.editPipeline.bind(this)} >
+                    <Button type="normal" className="button" onClick={this.editPipeline.bind(this)}>
                         <Icon type="edit"/>
                         <FormattedMessage
                             id="pipeline.project.editPipeline"
@@ -251,13 +267,19 @@ export default class PipelineProject extends Component {
                             defaultMessage="删除流水线"
                         />
                     </Button>
-                </div>;
+                </div>
+                ;
                 <Loading tip={this.projectLoading()} visible={this.state.visible} className="next-loading my-loading">
-                    {(()=>{
-                        if(this.state.notRunning){
+                    {(() => {
+                        if (this.state.notRunning) {
                             return <NotPermission/>
-                        }else{
-                            return  <RunResult runs={this.state.runs}/>
+                        } else {
+                            return (
+                                <RunResult
+                                    runs={this.state.runs}
+                                    notRunning={this.notRunning.bind(this)}
+                                />
+                            )
                         }
                     })()}
                 </Loading>
