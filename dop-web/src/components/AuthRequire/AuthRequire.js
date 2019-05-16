@@ -15,7 +15,7 @@ class AuthRequire extends Component{
            return true
        }
            console.log("没有功能点"+permissionName)
-       return true
+       return false
     }
     render(){
         const {permissionList,permissionName, children} = this.props;
