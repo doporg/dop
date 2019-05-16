@@ -23,7 +23,7 @@ public class SimpleCaseController {
     private SimpleCaseService simpleCaseService;
 
     @GetMapping
-    public List<SimpleCaseVo> queryCases(@RequestParam("appId") Long appId,
+    public List<SimpleCaseVo> queryCases(@RequestParam(value = "appId", required = false) Long appId,
                                          @RequestParam(name = "key", required = false) String key) {
         if (key == null || key.length() == 0) {
             key = "";

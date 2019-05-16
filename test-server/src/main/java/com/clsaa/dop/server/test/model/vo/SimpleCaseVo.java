@@ -26,7 +26,7 @@ public class SimpleCaseVo {
     private String searchInfo;
 
     public String getSearchInfo() {
-        return caseType.getComment() + "---" + caseName;
+        return caseType.toString() + "---【" + id + "】---" + caseName;
     }
 
     public SimpleCaseVo(Long id, String caseName, String caseDesc, Long applicationId) {

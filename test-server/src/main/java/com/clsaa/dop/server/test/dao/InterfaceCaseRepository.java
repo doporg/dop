@@ -17,4 +17,8 @@ public interface InterfaceCaseRepository extends JpaRepository<InterfaceCase, Lo
     @Query(value = "select new com.clsaa.dop.server.test.model.vo.SimpleCaseVo(i.id, i.caseName, i.caseDesc, i.applicationId)" +
             " from InterfaceCase i where i.applicationId=?1 and i.caseName like concat('%',?2,'%')  and i.deleted = false ")
     List<SimpleCaseVo> findSimpleCase(Long appId, String key);
+
+    @Query(value = "select new com.clsaa.dop.server.test.model.vo.SimpleCaseVo(i.id, i.caseName, i.caseDesc, i.applicationId)" +
+            " from InterfaceCase i where i.caseName like concat('%',?1,'%')  and i.deleted = false ")
+    List<SimpleCaseVo> findSimpleCaseWithoutAppId(String key);
 }
