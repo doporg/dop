@@ -4,7 +4,9 @@ import {
     Button,
     Grid,
     Icon,
-    Upload
+    Upload,
+    Dialog,
+    Table
 } from '@icedesign/base';
 import IcePanel from '@icedesign/panel';
 import {Feedback} from "@icedesign/base";
@@ -51,7 +53,11 @@ class Operations extends Component{
             requestScripts: this.props.requestScripts,
             waitOperations: this.props.waitOperations,
             operations: this.props.operations,
-            caseParams: []
+            caseParams: [],
+            visible: false,
+            selectedItems: [],
+            selectedRowKeys: [],
+            dataSource: []
         };
     }
 
@@ -65,7 +71,8 @@ class Operations extends Component{
     }
 
     beforeUpload(info) {
-        // console.log("beforeUpload callback : ", info);
+        console.log("beforeUpload callback : ", info);
+
     }
 
     onChange(info) {
@@ -92,11 +99,51 @@ class Operations extends Component{
 
             let scripts = data.requestScripts;
             if (scripts) {
+                let i = 0;
                 scripts.forEach((script) => {
-                    this.props.addRequestScriptWithContent(script);
-                })
+                   script.id = i++;
+                });
+                this.setState({
+                    dataSource: scripts,
+                    visible: true
+                });
+                // scripts.forEach((script) => {
+                //     this.props.addRequestScriptWithContent(script);
+                // })
             }
         }
+    };
+
+
+    onItemSelect = (select, records) => {
+        this.setState({
+            selectedRowKeys: select,
+            selectedItems: records
+        });
+    };
+
+    onDialogOk = () => {
+        let selectedData = this.state.selectedItems;
+        selectedData.forEach((data)=>{
+            delete data['id'];
+            this.props.addRequestScriptWithContent(data);
+        });
+        this.hideDialog();
+    };
+
+    showDialog = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    hideDialog = () => {
+        this.setState({
+            selectedRowKeys: [],
+            selectedItems: [],
+            visible: false,
+            dataSource: []
+        });
     };
 
     render() {
@@ -112,6 +159,42 @@ class Operations extends Component{
         }
         return (
             <div>
+                <Dialog
+                    className="choose-dialog"
+                    style={{width: '700px'}}
+                    autoFocus={false}
+                    isFullScreen
+                    title={this.props.intl.messages['test.operations.import.dialog.title']}
+                    {...this.props}
+                    onOk={this.onDialogOk}
+                    onClose={this.hideDialog}
+                    onCancel={this.hideDialog}
+                    visible={this.state.visible}
+                    locale={
+                        {
+                            ok: this.props.intl.messages['test.operations.import.dialog.ok'],
+                            cancel: this.props.intl.messages['test.operations.import.dialog.cancel']
+                        }
+                    }
+                >
+                    <Table
+                        dataSource={this.state.dataSource}
+                        rowSelection={{
+                            selectedRowKeys: this.state.selectedRowKeys,
+                            onChange: this.onItemSelect,
+                        }}
+                        locale={
+                            {
+                                empty: this.props.intl.messages['test.operations.import.table.empty']
+                            }
+                        }
+                    >
+                        <Table.Column width={150} title={this.props.intl.messages['test.operations.import.dialog.col1']} dataIndex="httpMethod" />
+                        <Table.Column title={this.props.intl.messages['test.operations.import.dialog.col2']} dataIndex="rawUrl" />
+                    </Table>
+                </Dialog>
+
+
                 <Row>
                     <Col span="15"/>
                     <Col span='3'>

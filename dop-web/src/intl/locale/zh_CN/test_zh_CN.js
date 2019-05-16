@@ -67,6 +67,14 @@ const TEST_ZH_CN = {
     'test.operations.http.title': 'HTTP请求',
     'test.operations.wait.title': '等待',
 
+    'test.operations.import.dialog.title': '选择需要导入的接口',
+    'test.operations.import.dialog.col1': '请求方法',
+    'test.operations.import.dialog.col2': '请求URL',
+    'test.operations.import.table.empty': '没有数据',
+    'test.operations.import.dialog.ok': '确定',
+    'test.operations.import.dialog.cancel': '取消',
+
+
     'test.requestScript.header': '请求头',
     'test.requestScript.param': '请求参数',
     'test.requestScript.body': '请求体',
@@ -74,7 +82,7 @@ const TEST_ZH_CN = {
     'test.requestScript.url.input': '请输入请求url',
     'test.requestScript.resultParam.add': '添加参数',
     'test.requestScript.resultParam.info1': '选择当前请求的响应数据作为后续请求的参数, 对于形如',
-    'test.requestScript.resultParam.info2': '的JSON响应体数据，添加参数名:paramA ， 值:a ，在后续请求中用$&#123;paramA&#125;引用参数即可.',
+    'test.requestScript.resultParam.info2': '的JSON响应体数据，添加参数名:paramA ， 值:a ，在后续请求中用${paramA}引用参数即可.',
     'test.requestScript.checkPoint.add': '检查点',
     'test.requestScript.checkPoint.info1': '自动校验响应体的JSON数据, 对于形如',
     'test.requestScript.checkPoint.info2': '的JSON响应体数据，可设置属性a等于1，作为测试用例是否执行成功的依据。',
@@ -138,6 +146,7 @@ const TEST_ZH_CN = {
     "test.exeLogs.search.title": '用例执行日志',
     "test.exeLogs.search.testManager": '测试负责人: ',
     "test.exeLogs.search.status": '状态: ',
+    "test.exeLogs.search.status.place": '请选择: ',
     "test.exeLogs.search.status.success": '成功',
     "test.exeLogs.search.status.fail": '失败',
     "test.exeLogs.search.status.all": '所有',
@@ -192,6 +201,7 @@ const TEST_ZH_CN = {
     'test.newGroup.case.create': '创建',
     'test.newGroup.case.update': '修改',
 
+    'test.wait.place': '请输入等待时长，以毫秒为单位',
 
     'test.menu.caseManage': '用例管理',
     'test.menu.groupManage': '分组管理',
