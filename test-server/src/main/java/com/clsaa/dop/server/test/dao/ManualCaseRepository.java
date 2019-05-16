@@ -17,4 +17,8 @@ public interface ManualCaseRepository extends JpaRepository<ManualCase, Long> {
     @Query(value = "select new com.clsaa.dop.server.test.model.vo.SimpleCaseVo(m.id, m.caseName, m.caseDesc, m.applicationId)" +
             " from ManualCase m where m.applicationId=?1 and m.caseName like concat('%',?2,'%') and m.deleted = false ")
     List<SimpleCaseVo> findSimpleCase(Long appId, String key);
+
+    @Query(value = "select new com.clsaa.dop.server.test.model.vo.SimpleCaseVo(m.id, m.caseName, m.caseDesc, m.applicationId)" +
+            " from ManualCase m where m.caseName like concat('%',?1,'%') and m.deleted = false ")
+    List<SimpleCaseVo> findSimpleCaseWithoutAppId(String key);
 }

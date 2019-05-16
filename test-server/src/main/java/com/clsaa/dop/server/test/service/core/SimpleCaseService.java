@@ -27,12 +27,17 @@ public class SimpleCaseService {
 
     public List<SimpleCaseVo> getAllCases(Long appId, String key) {
         List<SimpleCaseVo> result = new ArrayList<>();
-        List<SimpleCaseVo> manualCases = manualCaseRepository.findSimpleCase(appId, key);
+        boolean appIdExists = appId != null;
+        List<SimpleCaseVo> manualCases = appIdExists ?
+                manualCaseRepository.findSimpleCase(appId, key) :
+                manualCaseRepository.findSimpleCaseWithoutAppId(key);
         if (!CollectionUtils.isEmpty(manualCases)) {
             manualCases.forEach(manualCase -> manualCase.setCaseType(CaseType.MANUAL));
             result.addAll(manualCases);
         }
-        List<SimpleCaseVo> interfaceCases = interfaceCaseRepository.findSimpleCase(appId, key);
+        List<SimpleCaseVo> interfaceCases = appIdExists ?
+                interfaceCaseRepository.findSimpleCase(appId, key) :
+                interfaceCaseRepository.findSimpleCaseWithoutAppId(key);
         if (!CollectionUtils.isEmpty(interfaceCases)) {
             interfaceCases.forEach(interfaceCase -> interfaceCase.setCaseType(CaseType.INTERFACE));
             result.addAll(interfaceCases);

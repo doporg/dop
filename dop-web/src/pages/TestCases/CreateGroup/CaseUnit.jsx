@@ -41,6 +41,7 @@ export default class CaseUnit extends Component{
         super(props);
         this.state = {
             dataSource: [],
+            appId: this.props.appId
         };
     }
 
@@ -67,7 +68,11 @@ export default class CaseUnit extends Component{
 
     componentWillReceiveProps(nextProps, nextContext) {
         let _this = this;
-        let api = API.test + "/simpleCases?appId=1000";
+        let appId = nextProps.appId;
+        // if (appId !== this.props.appId) {
+        //     this.props.clearSelect();
+        // }
+        let api = API.test + "/simpleCases?appId=" + appId;
         Axios.get(api).then(function (response) {
             const dataSource = response.data.map(item => {
                 return {
@@ -76,7 +81,7 @@ export default class CaseUnit extends Component{
                 };
             });
             _this.setState({
-                dataSource
+                dataSource,appId
             });
         })
     }
@@ -85,6 +90,7 @@ export default class CaseUnit extends Component{
         let standardUnit = {
             caseType: simpleCase['caseType'],
             caseId: simpleCase['id'],
+            appId: simpleCase['applicationId'],
             caseName: simpleCase['caseName'],
         };
         return JSON.stringify(standardUnit);
@@ -93,8 +99,8 @@ export default class CaseUnit extends Component{
     renderSelectValue = (unitString) => {
         let unitJson = JSON.parse(unitString);
         let type = unitJson['caseType'];
-        let typeStr = type === 'MANUAL' ? '手工' : '接口';
-        return typeStr + '---【' + unitJson['caseId'] + '】' + '---' + unitJson['caseName'];
+        // let typeStr = type === 'MANUAL' ? '手工' : '接口';
+        return type + '---【' + unitJson['caseId'] + '】' + '---' + unitJson['caseName'];
     };
 
     render() {

@@ -56,8 +56,16 @@ class GroupInfo extends Component {
 
     onFormChange = (value) => {
         this.setState({
-            value,
+            value
         });
+    };
+
+    clearSelect = () =>{
+        let newValue = this.state.value;
+        newValue['caseUnits'] = [];
+        this.setState({
+            value: newValue
+        })
     };
 
     reset = () => {
@@ -96,10 +104,21 @@ class GroupInfo extends Component {
             let url = API.test + '/group';
             let caseUnits = this.state.value.caseUnits;
             let newUnits = [];
+            let appId = this.state.value.appId;
+            let hasError = false;
             caseUnits.forEach((unit) => {
                 let newUnit = JSON.parse(unit);
+                if (newUnit['appId'] && newUnit['appId'] !== appId) {
+                    hasError = true;
+                }
+                console.log(newUnit);
                 newUnits.push(newUnit);
             });
+            if (hasError) {
+                Toast.error("It seems you choose some invalid cases not belonging to the app of this case!" +
+                    "Please reset and select test cases again!");
+                return;
+            }
             let param = this.state.value;
             param.caseUnits = newUnits;
             if (this.state.operation === 'UPDATE'){
@@ -147,6 +166,13 @@ class GroupInfo extends Component {
         })
     }
 
+    onAppChange = (value) => {
+        console.log('app change');
+        this.setState({
+            value,
+        });
+    };
+
     render() {
         return (
             <div className="create-activity-form">
@@ -154,6 +180,7 @@ class GroupInfo extends Component {
                     <FormBinderWrapper
                         value={this.state.value}
                         ref="form"
+                        onChange={this.onFormChange}
                     >
                         <div>
                             <Row style={styles.formItem}>
@@ -226,7 +253,7 @@ class GroupInfo extends Component {
                         ref="ax"
                     >
 
-                    <CaseUnit caseUnits={this.state.value.caseUnits}
+                    <CaseUnit caseUnits={this.state.value.caseUnits} appId={this.state.value.appId} clearSelect={this.clearSelect}
                               addItem={this.addItem.bind(this)} removeItem={this.removeItem.bind(this)}/>
 
                     </FormBinderWrapper>
