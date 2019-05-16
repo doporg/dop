@@ -50,7 +50,8 @@ export default class CaseUnit extends Component{
             clearTimeout(this.searchTimeout);
         }
         let _this = this;
-        let api = API.test + "/simpleCases?appId=1000&key=" + encodeURI(value);
+        let appId = this.state.appId;
+        let api = API.test + "/simpleCases?appId=" + appId + "&key=" + encodeURI(value);
         this.searchTimeout = setTimeout(() => {
             Axios.get(api).then(function (response) {
                 const dataSource = response.data.map(item => {
