@@ -57,7 +57,7 @@ export default class CaseUnit extends Component{
                 const dataSource = response.data.map(item => {
                     return {
                         label: item['searchInfo'],
-                        value: item['id'] + '|&' + item['caseType'] + '|&' + item['caseName']
+                        value: _this.jsonStringForCase(item)
                     };
                 });
                 _this.setState({

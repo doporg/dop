@@ -104,14 +104,13 @@ class GroupInfo extends Component {
             let url = API.test + '/group';
             let caseUnits = this.state.value.caseUnits;
             let newUnits = [];
-            let appId = this.state.value.appId;
+            let curAppId = this.state.value.appId;
             let hasError = false;
             caseUnits.forEach((unit) => {
                 let newUnit = JSON.parse(unit);
-                if (newUnit['appId'] && newUnit['appId'] !== appId) {
+                if (newUnit['appId'] && newUnit['appId'] != curAppId) {
                     hasError = true;
                 }
-                console.log(newUnit);
                 newUnits.push(newUnit);
             });
             if (hasError) {
@@ -166,13 +165,6 @@ class GroupInfo extends Component {
         })
     }
 
-    onAppChange = (value) => {
-        console.log('app change');
-        this.setState({
-            value,
-        });
-    };
-
     render() {
         return (
             <div className="create-activity-form">
@@ -211,7 +203,7 @@ class GroupInfo extends Component {
                                         required
                                         message={this.props.intl.messages['test.createInterface.appIdWarn']}
                                     >
-                                        <Input style={{ width: '100%' }} />
+                                        <Input style={{ width: '100%' }} disabled={this.state.operation === 'UPDATE'}/>
                                     </FormBinder>
                                     <FormError name="appId" />
                                 </Col>
