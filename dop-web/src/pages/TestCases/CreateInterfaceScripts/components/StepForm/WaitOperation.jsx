@@ -7,8 +7,9 @@ import {
     Input,
     Grid,
 } from '@icedesign/base';
+import {injectIntl} from "react-intl";
 
-export default class WaitOperation extends Component{
+class WaitOperation extends Component{
 
     constructor(props) {
         super(props);
@@ -51,9 +52,11 @@ export default class WaitOperation extends Component{
                value={this.state.value}
                ref="form">
                <FormBinder name="waitTime">
-                  <Input style={{width: '60%'}} placeholder="请输入等待时长，以毫秒为单位"> </Input>
+                  <Input style={{width: '60%'}} placeholder={this.props.intl.messages['test.wait.place']}> </Input>
                </FormBinder>
            </FormBinderWrapper>
        );
     }
 }
+
+export default injectIntl(WaitOperation);

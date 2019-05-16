@@ -21,7 +21,7 @@ class TableFilter extends Component {
           </div>
           <div style={styles.filterItem}>
             <span style={styles.filterLabel}>{this.props.intl.messages['test.exeLogs.search.status']}</span>
-            <Select style={{ width: '200px' }}>
+            <Select style={{ width: '200px' }} placeholder={this.props.intl.messages['test.exeLogs.search.status.place']}>
               <Select.Option value="all">{this.props.intl.messages['test.exeLogs.search.status.all']}</Select.Option>
               <Select.Option value="checked">{this.props.intl.messages['test.exeLogs.search.status.success']}</Select.Option>
               <Select.Option value="unCheck">{this.props.intl.messages['test.exeLogs.search.status.fail']}</Select.Option>
