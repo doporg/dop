@@ -90,7 +90,7 @@ class CreateApplicationVariableDialog extends Component {
             onCancel={this.onClose}
             onClose={this.onClose}
             title={this.props.intl.messages['projects.button.createVar']}
-            className="dialog"
+            className="create-app-var-dialog"
             locale={{
                 ok: this.props.intl.messages["projects.button.confirm"],
                 cancel: this.props.intl.messages["projects.button.cancel"]

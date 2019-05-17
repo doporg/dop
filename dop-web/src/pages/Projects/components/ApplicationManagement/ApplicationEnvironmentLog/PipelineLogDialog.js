@@ -61,7 +61,7 @@ class PipelineLogDialog extends Component {
  <Dialog
 
      shouldUpdatePosition
-     className='dialog'
+     className='pipeline-log-dialog'
      footer={(
          <div/>
      )}

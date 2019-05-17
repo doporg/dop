@@ -89,7 +89,7 @@ class CreateProjectDialog extends Component {
                 id="projects.button.createProject"
                 defaultMessage="新建项目"
             />}
-            className="dialog"
+            className="create-project-dialog"
         >
           <ProjectForm
               isSubmit={this.state.isSubmit}

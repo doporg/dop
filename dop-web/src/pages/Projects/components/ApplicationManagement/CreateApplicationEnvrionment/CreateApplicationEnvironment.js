@@ -82,7 +82,7 @@ class CreateApplicationEnvironmentDialog extends Component {
             onCancel={this.onClose}
             onClose={this.onClose}
             title={this.props.intl.messages['projects.button.createEnv']}
-            className="dialog"
+            className="create-app-env-dialog"
             footerAlign={this.state.footerAlign}
             locale={{
                 ok: this.props.intl.messages["projects.button.confirm"],

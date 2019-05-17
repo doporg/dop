@@ -1,15 +1,16 @@
 
-.dialog-container {
+.create-app-dialog-container {
   width: 100%;
   text-align: left;
 
-  .dialog {
-    width: 50%;
-    text-align: center;
-  }
 
-  .success-dialog {
-    width: 20%;
-  }
 }
 
+.create-app-dialog {
+  width: 35%;
+  text-align: center;
+}
+
+.success-dialog {
+  width: 20%;
+}

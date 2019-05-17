@@ -202,20 +202,20 @@ class PipelineBindPage extends Component {
         // } else {
             return (
 
-                <Form className="form">
+                <Form className="pipeline-bind-form">
                     <Loading
-                        className="form-loading"
+                        className="pipeline-bind-form-loading"
                         visible={this.state.loading} size='small' shape="dot-circle"
-                             color="#2077FF"
+                        color="#2077FF"
                     >
                         <FormItem
-                            className="form-item"
+                            className="pipeline-bind-form-item"
                             {...formItemLayout}
                             label={this.props.intl.messages['projects.text.pipeline']}>
                             <Link
                                 to={this.state.currentPipeline === "" ? "pipeline" : "pipeline/project/" + this.state.currentPipeline.id}>
                                 <div
-                                    className="text">{this.state.currentPipeline === "" ? this.props.intl.messages['projects.text.bindPipeline'] : this.state.currentPipeline.name}</div>
+                                    className="pipeline-bind-text">{this.state.currentPipeline === "" ? this.props.intl.messages['projects.text.bindPipeline'] : this.state.currentPipeline.name}</div>
                             </Link>
                         </FormItem>
 
