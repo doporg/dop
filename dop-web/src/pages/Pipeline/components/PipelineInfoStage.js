@@ -45,8 +45,9 @@ class PipelineInfoStage extends Component {
     title(value, index) {
         return  this.state.currentStage === index?(
             <div>
-                <span>{value}</span>
                 <Icon type="delete-filling" size="xs" className="closeStage" onClick={this.close.bind(this, index)}/>
+                <span>{value}</span>
+                <Icon type="delete-filling" size="xs" className="addStage" onClick={this.addStageMid.bind(this, index)}/>
             </div>
         ):(
             <div>
@@ -72,7 +73,17 @@ class PipelineInfoStage extends Component {
             currentStage
         });
     }
-
+    addStageMid(index){
+        let stages = this.state.stages;
+        let newStage = {
+            name: this.props.intl.messages["pipeline.info.stage.name"],
+            steps: []
+        };
+        stages.splice(index+1, 0, newStage);
+        this.setState({
+            stages
+        })
+    }
     addStage() {
         let newStage = {
             name: this.props.intl.messages["pipeline.info.stage.name"],
@@ -83,6 +94,7 @@ class PipelineInfoStage extends Component {
             currentStage: this.state.stages.length - 1
         })
     }
+
     onChangeApp(value){
         this.props.onChangeApp(value)
     }

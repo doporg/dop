@@ -46,7 +46,6 @@ class Pull extends Component {
                             label: response.data[i].title,
                             value: response.data[i].id
                         };
-                        console.log(response.data)
                         if (self.props.appId === response.data[i].id) {
                             self.selectApplication(response.data[i].id);
                             self.setState({
