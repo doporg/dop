@@ -19,22 +19,14 @@ class Pull extends Component {
             applications: [],
             visible: false,
             selectedApp: null,
-            gitUrl: ""
+            gitUrl: this.props.gitUrl,
+            appId: this.props.appId
         }
     }
 
     componentWillMount() {
         this.getApplication();
     }
-    // componentWillUnmount(){
-    //     if(this.state.selectedApp === null){
-    //         toast.show({
-    //             type: "prompt",
-    //             content: "请选择应用",
-    //             duration: 1000
-    //         });
-    //     }
-    // }
 
     getApplication() {
         this.setState({
@@ -54,8 +46,9 @@ class Pull extends Component {
                             label: response.data[i].title,
                             value: response.data[i].id
                         };
+                        console.log(response.data)
                         if (self.props.appId === response.data[i].id) {
-                            self.selectApplication(response.data[i].id)
+                            self.selectApplication(response.data[i].id);
                             self.setState({
                                 selectedApp: response.data[i].title
                             });

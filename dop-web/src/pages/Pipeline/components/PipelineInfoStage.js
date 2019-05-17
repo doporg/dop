@@ -15,7 +15,6 @@ class PipelineInfoStage extends Component {
     componentWillMount() {
         let self = this;
         this.setState({
-            currentStage: self.props.currentStage,
             stages: self.props.stages
         })
     }
@@ -23,11 +22,6 @@ class PipelineInfoStage extends Component {
         this.setState({
             stages: nextProps.stages,
         });
-        if(nextProps.currentStage){
-            this.setState({
-                currentStage: nextProps.currentStage
-            })
-        }
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.stages !== this.state.stages) {
@@ -74,7 +68,6 @@ class PipelineInfoStage extends Component {
      * 切换stage, 将新信息放到currentStage
      * */
     changeStage(currentStage) {
-        console.log(currentStage)
         this.setState({
             currentStage
         });
@@ -106,7 +99,6 @@ class PipelineInfoStage extends Component {
     step(value) {
         let stages = this.state.stages;
         stages[this.state.currentStage] = value;
-        console.log(this.state.currentStage)
         this.setState({
             stages
         });
