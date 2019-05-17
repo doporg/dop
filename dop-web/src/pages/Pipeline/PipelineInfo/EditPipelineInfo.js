@@ -74,6 +74,7 @@ class EditPipelineInfo extends Component {
         });
         Axios.get(url).then((response) => {
             if (response.status === 200) {
+                console.log(response)
                 // if(response.data.stages === null){
                 //     response.data.stages = []
                 // }
@@ -406,16 +407,15 @@ class EditPipelineInfo extends Component {
                                 return (
                                     <PipelineInfoStage
                                         stages={this.state.pipeline.stages}
-                                        currentStage={this.state.currentStage}
                                         appId={this.state.pipeline.appId}
                                         appEnvId={this.state.pipeline.appEnvId}
+                                        dockerUserName={this.state.dockerUserName}
+                                        repository={this.state.repository}
+
                                         onChange={this.setStages.bind(this)}
                                         onChangeApp={this.onChangeApp.bind(this)}
                                         onSelectEnv={this.onSelectEnv.bind(this)}
-
-                                        dockerUserName={this.state.dockerUserName}
                                         onChangeDockerUserName={this.onChangeDockerUserName.bind(this)}
-                                        repository={this.state.repository}
                                         onChangeRepository={this.onChangeRepository.bind(this)}
                                     />
                                 )

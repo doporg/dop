@@ -15,7 +15,6 @@ class PipelineInfoStage extends Component {
     componentWillMount() {
         let self = this;
         this.setState({
-            currentStage: self.props.currentStage,
             stages: self.props.stages
         })
     }
@@ -23,11 +22,6 @@ class PipelineInfoStage extends Component {
         this.setState({
             stages: nextProps.stages,
         });
-        if(nextProps.currentStage){
-            this.setState({
-                currentStage: nextProps.currentStage
-            })
-        }
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevState.stages !== this.state.stages) {
@@ -51,8 +45,9 @@ class PipelineInfoStage extends Component {
     title(value, index) {
         return  this.state.currentStage === index?(
             <div>
-                <span>{value}</span>
                 <Icon type="delete-filling" size="xs" className="closeStage" onClick={this.close.bind(this, index)}/>
+                <span>{value}</span>
+                <Icon type="delete-filling" size="xs" className="addStage" onClick={this.addStageMid.bind(this, index)}/>
             </div>
         ):(
             <div>
@@ -74,12 +69,21 @@ class PipelineInfoStage extends Component {
      * 切换stage, 将新信息放到currentStage
      * */
     changeStage(currentStage) {
-        console.log(currentStage)
         this.setState({
             currentStage
         });
     }
-
+    addStageMid(index){
+        let stages = this.state.stages;
+        let newStage = {
+            name: this.props.intl.messages["pipeline.info.stage.name"],
+            steps: []
+        };
+        stages.splice(index+1, 0, newStage);
+        this.setState({
+            stages
+        })
+    }
     addStage() {
         let newStage = {
             name: this.props.intl.messages["pipeline.info.stage.name"],
@@ -90,6 +94,7 @@ class PipelineInfoStage extends Component {
             currentStage: this.state.stages.length - 1
         })
     }
+
     onChangeApp(value){
         this.props.onChangeApp(value)
     }
@@ -106,7 +111,6 @@ class PipelineInfoStage extends Component {
     step(value) {
         let stages = this.state.stages;
         stages[this.state.currentStage] = value;
-        console.log(this.state.currentStage)
         this.setState({
             stages
         });
