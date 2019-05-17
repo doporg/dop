@@ -1,4 +1,4 @@
-.form-container {
+.app-env-detail-form-container {
   //margin: 0 auto;
   width: 100%;
   height: 50%;
@@ -8,16 +8,26 @@
   flex-direction: column;
   align-items: center;
 
-  .form-loading {
-    width: 23%;
 
-    .deployment-strategy-from {
-      width: 50%;
-      text-align: center;
-      align-items: center;
 
-    }
+}
 
-  }
+.app-env-detail-form-loading {
+  width: 100%;
+
+  text-align: center;
+  align-items: center;
+
+}
+
+.deployment-strategy-form-item {
+  text-align: left;
+  width: 150%;
+}
+
+.deployment-strategy-from {
+  width: 30%;
+  text-align: center;
+  align-items: center;
 
 }

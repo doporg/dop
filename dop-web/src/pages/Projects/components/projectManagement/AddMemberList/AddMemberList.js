@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import Axios from "axios";
 import API from "../../../../API";
 import {injectIntl} from "react-intl";
+import "./AddMemberList.scss"
 
 const Toast = Feedback.toast
 
@@ -148,7 +149,7 @@ class AddMemberList extends Component {
 
     onSearch(value) {
 
-        this.getData(this.state.current, value)
+        this.getData(1, value)
     }
 
     render() {
@@ -157,7 +158,7 @@ class AddMemberList extends Component {
                     onOk={this.onOk}
                     onCancel={this.onClose}
                     onClose={this.onClose}
-                    className="dialog"
+                    className="add-member-list-dialog"
                     locale={{
                         ok: this.props.intl.messages["projects.button.confirm"],
                         cancel: this.props.intl.messages["projects.button.cancel"]

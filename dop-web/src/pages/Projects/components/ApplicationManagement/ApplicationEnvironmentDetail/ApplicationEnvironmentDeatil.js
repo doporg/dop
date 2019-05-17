@@ -93,14 +93,14 @@ class ApplicationEnvironmentDetail extends Component {
                         <Breadcrumb.Item>{this.props.intl.messages['projects.bread.appEnv'] + this.state.appEnvId}</Breadcrumb.Item>
                     </Breadcrumb>}
                 />
-                <div className="form-container">
-                    <Loading className="form-loading" visible={this.state.loading} shape="dot-circle"
-                             color="#2077FF"
-                    >
-                        <Form className="deployment-strategy-form">
+                <div className="app-env-detail-form-container">
 
+                        <Form className="deployment-strategy-form">
+                            <Loading className="form-loading" visible={this.state.loading} shape="dot-circle"
+                                     color="#2077FF"
+                            >
                             <FormItem label={this.props.intl.messages['projects.text.deploymentStrategy']}
-                                      className="deployment-strategy-form"
+                                      className="deployment-strategy-form-item"
                                       {...formItemLayout}
                                       validateStatus={this.field.getError("deploymentStrategy") ? "error" : ""}
                                       help={this.field.getError("deploymentStrategy") ? this.props.intl.messages['projects.check.deploymentStrategy'] : ""}
@@ -124,11 +124,10 @@ class ApplicationEnvironmentDetail extends Component {
                     </FormItem>
 
 
-
-
+                            </Loading>
                 </Form>
-                    </Loading>
-                <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
+
+                    <PipelineBindPage appId={this.state.appId} appEnvId={this.state.appEnvId}/>
                 {this.clusterInfoRender()}
 
                     <Button onClick={this.state.switchPage.bind(this, "envList")}

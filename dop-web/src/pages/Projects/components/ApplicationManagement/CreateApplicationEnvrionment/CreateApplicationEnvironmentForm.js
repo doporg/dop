@@ -95,7 +95,7 @@ class ApplicationEnvironmentForm extends Component {
                      className="form-container">
                 <Form
                     labelAlign={"left"}
-                    className="form"
+                    className="create-app-env-form"
                 >
                     <FormItem
                         {...formItemLayout}

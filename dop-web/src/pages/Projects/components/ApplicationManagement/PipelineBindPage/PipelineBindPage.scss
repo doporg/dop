@@ -1,27 +1,32 @@
-.form {
-  width: 10%;
+.pipeline-bind-form {
+  width: 30%;
   text-align: center;
   align-items: center;
 
-  .form-loading {
-    text-align: center;
-    align-items: center;
-    width: 23%;
 
-    .form-item {
-      //  text-align: center;
-      //  align-items: center;
-      width: 150%;
 
-      .text {
-        text-align: left;
-        margin-left: 4.5%;
-        padding: 8px;
-        //width: 200%;
+}
 
-      }
-    }
-  }
+.pipeline-bind-form-loading {
+  text-align: center;
+  align-items: center;
+  width: 100%;
+
+
+}
+
+.pipeline-bind-text {
+  text-align: left;
+  //margin-left: 4.5%;
+  padding: 8px;
+  //width: 200%;
+
+}
+
+.pipeline-bind-form-item {
+  //  text-align: center;
+  //  align-items: center;
+  width: 150%;
 
 
 }

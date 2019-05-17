@@ -155,14 +155,14 @@ class ApplicationForm extends Component {
         const {init} = this.field;
         return (
 
-            <div className="form-container">
+            <div className="create-app-form-container">
 
                     <Form
                         labelAlign={"left"}
-                        className="form"
+                        className="create-app-form"
                     >
                         <Loading visible={this.state.loading} shape="dot-circle" color="#2077FF"
-                                 className="form-loading">
+                                 className="create-app-form-loading">
 
                             <FormItem {...formItemLayout}
                                       validateStatus={this.field.getError("title") ? "error" : ""}

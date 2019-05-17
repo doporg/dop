@@ -69,12 +69,12 @@ class CreateApplicationDialog extends Component {
 
     render() {
         return (
-            <span className="dialog-container">
+            <span className="create-app-dialog-container">
                 <Button onClick={this.onOpen} type="primary">
         {this.props.intl.messages['projects.button.createApplication']}
         </Button>
         <Dialog
-            className="dialog"
+            className="create-app-dialog"
             visible={this.state.visible}
             onOk={this.onOk}
             onCancel={this.onClose}

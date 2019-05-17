@@ -82,7 +82,7 @@ class CreateApplicationVariableForm extends Component {
                 <div className="form-container">
                     <Form
                         labelAlign={"left"}
-                        className="form"
+                        className="create-app-var-form"
                     >
                         <FormItem
                             {...formItemLayout}
