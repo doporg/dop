@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Table, Button, Loading, Feedback} from '@icedesign/base';
+import {Table, Button, Loading, Feedback, Pagination} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import API from "../../API";
 import Axios from "axios/index";
@@ -188,6 +188,7 @@ class PipelineTable extends Component {
                             );
                         })}
                     </Table>
+                    <Pagination current={2}/>
                 </Loading>
             </div>
         )
