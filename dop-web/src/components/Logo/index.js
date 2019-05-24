@@ -14,7 +14,7 @@ export default class Logo extends PureComponent {
 const styles = {
   logoStyle: {
     display: 'block',
-    maxWidth: '180px',
+    maxWidth: '360px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
