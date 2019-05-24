@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {Table, Button, Loading, Feedback, Pagination} from '@icedesign/base';
+import {Button, Loading, Feedback} from '@icedesign/base';
 import {Link} from 'react-router-dom';
 import API from "../../API";
 import Axios from "axios/index";
 import './Styles.scss'
-import {injectIntl,FormattedMessage} from "react-intl";
+import {injectIntl, FormattedMessage} from "react-intl";
+import {Table} from 'antd';
 
 const {toast} = Feedback;
 
@@ -32,11 +33,20 @@ class PipelineTable extends Component {
         Axios.get(url).then((response) => {
             let dataSource = [];
             let data = response.data.sort();
+            for (let i = 0; i < data.length; i++) {
+                dataSource.push({
+                    key: i,
+                    ctime: data[i].ctime,
+                    cuser: data[i].cuser,
+                    id: data[i].id,
+                    name: data[i].name
+                })
+            }
             self.setState({
-                dataSource: data,
+                dataSource: dataSource,
                 visible: false
             });
-        }).catch(()=>{
+        }).catch(() => {
             toast.show({
                 type: "error",
                 content: self.props.intl.messages["pipeline.table.operation.requestFailure"],
@@ -96,8 +106,8 @@ class PipelineTable extends Component {
     /**
      *  表格 序号栏配置
      * */
-    renderIndex(value, index) {
-        return index + 1;
+    renderIndex(index, value) {
+        return value.key + 1;
     };
 
 
@@ -149,46 +159,36 @@ class PipelineTable extends Component {
     render() {
         const columns = [{
             title: this.props.intl.messages["pipeline.table.index"],
-            width: 5,
+            width: 80,
             dataIndex: 'index',
-            cell: this.renderIndex
+            render: this.renderIndex.bind(this)
         }, {
             title: this.props.intl.messages["pipeline.table.name"],
-            width: 10,
+            width: 200,
             dataIndex: 'name',
         }, {
             title: this.props.intl.messages["pipeline.table.createTime"],
-            width: 10,
+            width: 300,
             dataIndex: 'ctime'
         }, {
             title: this.props.intl.messages["pipeline.table.creator"],
-            width: 8,
+            width: 150,
             dataIndex: 'cuser'
         }, {
             title: this.props.intl.messages["pipeline.table.operation"],
-            width: 10,
+            width: 300,
             dataIndex: 'operation',
-            cell: this.renderOperation.bind(this)
+            render: this.renderOperation.bind(this)
         }];
         return (
             <div>
                 <Loading shape="fusion-reactor" visible={this.state.visible} className="next-loading my-loading">
                     <Table
                         dataSource={this.state.dataSource}
-                    >
-                        {columns.map((item, index) => {
-                            return (
-                                <Table.Column
-                                    key={index}
-                                    title={item.title}
-                                    width={item.width || 'auto'}
-                                    dataIndex={item.dataIndex}
-                                    cell={item.cell || (value => value)}
-                                />
-                            );
-                        })}
-                    </Table>
-                    <Pagination current={2}/>
+                        columns={columns}
+                        pagination={{pageSize: 10}}
+                        style={{"background": "white"}}
+                    /> 
                 </Loading>
             </div>
         )
