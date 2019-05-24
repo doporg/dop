@@ -85,7 +85,6 @@ export default class PipelineProject extends Component {
         let self = this;
         return new Promise((resolve, reject) => {
             Axios.get(url).then((response) => {
-                console.log(response.data)
                 if (response.status === 200) {
                     if (response.data.length === 0) {
                         toast.show({

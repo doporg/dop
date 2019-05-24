@@ -35,8 +35,10 @@ class PipelineTest extends Component {
             <div>
                 <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} />,
             </div>
-        )
+        );
     }
 }
+
+
 
 export default injectIntl(PipelineTest)

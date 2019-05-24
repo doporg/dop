@@ -168,7 +168,8 @@ class ApplicationPagination extends Component {
                     current={this.state.current}
                     onChange={this.handleChange}
                     pageSize={this.state.pageSize}
-                    total={this.state.totalCount}/>
+                    total={this.state.totalCount}
+                />
             </div>
         )
     }

@@ -5,7 +5,7 @@ export default class Logo extends PureComponent {
   render() {
     return (
       <Link to="/" style={{ ...styles.logoStyle, ...this.props.style }}>
-        DevOps Platform
+        南京大学DevOps学生实践平台
       </Link>
     );
   }
@@ -14,7 +14,7 @@ export default class Logo extends PureComponent {
 const styles = {
   logoStyle: {
     display: 'block',
-    maxWidth: '180px',
+    maxWidth: '360px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',

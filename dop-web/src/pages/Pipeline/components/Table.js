@@ -188,18 +188,7 @@ class PipelineTable extends Component {
                         columns={columns}
                         pagination={{pageSize: 10}}
                         style={{"background": "white"}}
-                    />
-                    {/*{columns.map((item, index) => {*/}
-                    {/*return (*/}
-                    {/*<Table.Column*/}
-                    {/*key={index}*/}
-                    {/*title={item.title}*/}
-                    {/*width={item.width || 'auto'}*/}
-                    {/*dataIndex={item.dataIndex}*/}
-                    {/*cell={item.cell || (value => value)}*/}
-                    {/*/>*/}
-                    {/*);*/}
-                    {/*})}*/}
+                    /> 
                 </Loading>
             </div>
         )
