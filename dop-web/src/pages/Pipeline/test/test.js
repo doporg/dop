@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {injectIntl} from 'react-intl';
 import Container from '@icedesign/container';
 import {Pagination} from '@icedesign/base';
-import LibTable from './LibTable';
 
 
 class PipelineTest extends Component {
@@ -15,7 +14,7 @@ class PipelineTest extends Component {
     render() {
         return (
             <div>
-                <LibTable />
+
             </div>
         );
     }
