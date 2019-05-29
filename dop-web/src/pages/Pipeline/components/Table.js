@@ -114,7 +114,7 @@ class PipelineTable extends Component {
     /**
      *  表格 操作栏配置
      * */
-    renderOperation(value, index, record) {
+    renderOperation(index, record) {
         let router = "/pipeline/project/" + record.id;
         let edit = "/pipeline/edit/" + record.id;
         return (
@@ -188,7 +188,7 @@ class PipelineTable extends Component {
                         columns={columns}
                         pagination={{pageSize: 10}}
                         style={{"background": "white"}}
-                    /> 
+                    />
                 </Loading>
             </div>
         )
