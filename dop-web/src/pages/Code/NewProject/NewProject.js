@@ -24,7 +24,7 @@ class NewProject extends React.Component {
             name: "",
             description: "",
             visibility: "private",
-            initialize_with_readme: "true",
+            initialize_with_readme: "false",
             loadingVisible:false,
         }
     }
