@@ -68,7 +68,6 @@ public class AccessTokenZuulFilter extends ZuulFilter {
 
     /**
      * 注意：AccessToken优先级最高，如果可能的话，只使用RequestHeader来进行业务判断。
-     * </p>
      * 没必要为了非法请求浪费内存，耗费CPU去解析请求参数（request.getParameter会触发解析请求参数)
      *
      * @see com.netflix.zuul.IZuulFilter#run()
