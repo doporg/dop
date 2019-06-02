@@ -8,8 +8,6 @@ import com.clsaa.dop.server.gateway.model.vo.ErrorResult;
 import com.clsaa.dop.server.gateway.oauth.security.CryptoResult;
 import com.clsaa.dop.server.gateway.oauth.security.FastAes;
 import com.clsaa.dop.server.gateway.service.AccessTokenService;
-import com.clsaa.rest.result.bizassert.BizAssert;
-import com.clsaa.rest.result.bizassert.BizCode;
 import com.google.common.io.BaseEncoding;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
