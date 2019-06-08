@@ -194,7 +194,7 @@ public class ProjectService {
                 .mtime(mtime)
                 .build();
         this.projectRepository.saveAndFlush(project);
-        this.imageService.createProject(title, status, loginUser);
+//         this.imageService.createProject(title, status, loginUser);
         this.permissionService.addData(permissionConfig.getProjectManagerAndProjectRuleId(), loginUser, project.getId(), loginUser);
 
 
