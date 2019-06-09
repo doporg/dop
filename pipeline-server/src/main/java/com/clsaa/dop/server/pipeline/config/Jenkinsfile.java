@@ -96,8 +96,15 @@ public class Jenkinsfile {
                         }
                         break;
                     case BuildMaven:
-                        this.stages += "sh \'mvn --version \' \n";
-                        this.stages += "sh \"mvn -U -am clean package \" \n";
+                        if(!this.dir.isEmpty()){
+                            this.stages += "dir(\"" + this.dir + "\"){ \n";
+                            this.stages += "sh \'mvn --version \' \n";
+                            this.stages += "sh \"mvn -U -am clean package \" \n";
+                            this.stages += "}\n";
+                        }else{
+                            this.stages += "sh \'mvn --version \' \n";
+                            this.stages += "sh \"mvn -U -am clean package \" \n";
+                        }
                         break;
                     case BuildNode:
                         this.stages += "sh \'npm --version \' \n";
