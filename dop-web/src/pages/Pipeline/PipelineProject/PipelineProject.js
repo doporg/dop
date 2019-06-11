@@ -89,7 +89,7 @@ export default class PipelineProject extends Component {
                     if (response.data.length === 0) {
                         toast.show({
                             type: "prompt",
-                            content: "该流水线尚未运行",
+                            content: self.props.intl.messages["pipeline.project.notRun"],
                             duration: 3000
                         });
                         self.setState({
@@ -103,21 +103,12 @@ export default class PipelineProject extends Component {
                         self.setState({
                             notRunning: false
                         });
+                        console.log(response.data[0])
                         if (response.data[0].state === 'FINISHED') {
                             self.clear();
                             if (self.state.resultStatus === "BUILD") {
                                 self.setResult();
                             }
-                            // if(response.data[0].result === "FAILURE"){
-                            //     self.setState({
-                            //         notRunning: true
-                            //     });
-                            //     toast.show({
-                            //         type: "error",
-                            //         content: "启动运行失败",
-                            //         duration: 3000
-                            //     });
-                            // }
                         }
                         resolve(response.data[0]);
                     }
