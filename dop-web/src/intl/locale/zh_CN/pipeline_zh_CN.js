@@ -18,6 +18,7 @@ const PIPELINE_ZH_CN = {
     'pipeline.project.runPipeline': '运行流水线',
     'pipeline.project.editPipeline': '编辑流水线',
     'pipeline.project.deletePipeline': '删除流水线',
+    'pipeline.project.notRun': '该流水线尚未运行',
 
     'pipeline.info.name': '流水线名称',
     'pipeline.info.name.placeholder': '请输入流水线名称',

@@ -18,6 +18,7 @@ const PIPELINE_EN_US = {
     'pipeline.project.runPipeline': 'Run Pipeline',
     'pipeline.project.editPipeline': 'Edit Pipeline',
     'pipeline.project.deletePipeline': 'Delete Pipeline',
+    'pipeline.project.notRun': 'This pipeline has not been run',
 
     'pipeline.info.name': 'Pipeline Name',
     'pipeline.info.name.placeholder': 'Please enter the pipeline name',
@@ -92,6 +93,7 @@ const PIPELINE_EN_US = {
 
     'pipeline.info.step.deploy.title': 'Deployment setting',
     'pipeline.info.step.deploy.tip': 'We deploy based on your settings in application',
+
 
 };
 export default PIPELINE_EN_US;
