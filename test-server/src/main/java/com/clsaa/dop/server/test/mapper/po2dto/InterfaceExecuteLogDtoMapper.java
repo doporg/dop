@@ -56,6 +56,7 @@ public class InterfaceExecuteLogDtoMapper extends AbstractCommonServiceMapper<In
 
             List<OperationExecuteLogDto> logDtos = operationLogDtoMapper.convert(sortedLog);
             interfaceExecuteLogDto.setOperationExecuteLogs(logDtos);
+            interfaceExecuteLogDto.setSuccess(logDtos.stream().allMatch(OperationExecuteLogDto::getSuccess));
 
             // user name
             Long cuser = interfaceExecuteLogDto.getCuser();

@@ -25,6 +25,8 @@ public class CaseParam implements Po {
 
     private String ref;
 
+    @Lob
+    @Column(name = "value")
     private String value;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
