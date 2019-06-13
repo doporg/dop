@@ -9,12 +9,12 @@ import Axios from 'axios';
 import API from '../../API';
 import RunResult from './RunResult'
 import {NotPermission} from '../../NotFound'
-import {FormattedMessage} from 'react-intl';
+import {injectIntl, FormattedMessage} from 'react-intl';
 import './PipelineProject.scss'
 
 const {toast} = Feedback;
 
-export default class PipelineProject extends Component {
+class PipelineProject extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -277,3 +277,4 @@ export default class PipelineProject extends Component {
         );
     }
 }
+export default injectIntl(PipelineProject)
