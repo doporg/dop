@@ -5,8 +5,7 @@ export default class Logo extends PureComponent {
   render() {
     return (
       <Link to="/" style={{ ...styles.logoStyle, ...this.props.style }}>
-        {/*南京大学DevOps学生实践平台*/}
-        DevOpsPlatform
+        南京大学DevOps学生实践平台
       </Link>
     );
   }
