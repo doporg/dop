@@ -21,8 +21,7 @@ export default class Footer extends PureComponent {
             <Logo style={{ color: '#666' }} />
           </div>
           <div className="copyright">
-            {/*© 2018 powered by NJU*/}
-            © 2018
+            © 2018 powered by NJU
           </div>
         </div>
       </Layout.Footer>
