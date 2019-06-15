@@ -2,6 +2,7 @@
 pipeline{
 	agent any
 
+	
 	environment {
 		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="message-server"
