@@ -156,7 +156,6 @@ class ApplicationForm extends Component {
         return (
 
             <div className="create-app-form-container">
-
                     <Form
                         labelAlign={"left"}
                         className="create-app-form"
@@ -243,10 +242,7 @@ class ApplicationForm extends Component {
                             </FormItem>
                         </Loading>
                     </Form>
-
                 </div>
-
-
         )
     }
 }

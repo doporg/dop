@@ -222,7 +222,8 @@ class K8sInfoPage extends Component {
         Dialog.confirm({
             content: this.props.intl.messages['projects.text.confirmSave'],
             title: this.props.intl.messages['projects.title.confirmSave'],
-            onOk: this.envDetailSubmit.bind(this)
+            onOk: this.envDetailSubmit.bind(this),
+            language: 'en-us',
         });
     };
 
@@ -380,84 +381,84 @@ class K8sInfoPage extends Component {
                                 let createServiceUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/cluster/service"
                                 if (this.state.useIngress === "ingress") {
                                     Axios.post(createServiceUrl, {}, {
-                                    params: {
-                                        name: this.field.getValue("service"),
-                                        namespace: this.field.getValue("nameSpace"),
-                                        targetPort: this.editField.getValue('targetPort'),
-                                        host: this.editField.getValue('host')
-                                    }
-                                })
-                                    .then(() => {
-                                        Toast.success(_this.props.intl.messages['projects.text.createServiceSuccessful'])
-
-                                        //然后判断是否存在yaml属性
-                                        let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
-
-                                        let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
-                                        Axios.get(existUrl)
-                                            .then((response) => {
-                                                console.log("responsssss", response)
-                                                if (response.data) {
-                                                    //存在则更新
-                                                    Axios.put(url, {}, {
-                                                            params: {
-                                                                deploymentStrategy: "KUBERNETES",
-                                                                nameSpace: this.field.getValue('nameSpace'),
-                                                                service: this.field.getValue('service'),
-                                                                releaseStrategy: this.field.getValue('releaseStrategy'),
-                                                                replicas: this.editField.getValue('replicas'),
-                                                                // imageUrl: this.field.getValue('imageUrl'),
-                                                                releaseBatch: this.field.getValue('releaseBatch')
-                                                            }
-                                                        }
-                                                    )
-                                                        .then(function (response) {
-                                                            Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
-                                                            _this.setState({
-                                                                loading: false
-                                                            })
-                                                            //提交完成后刷新当前页面
-                                                            _this.getYamlData()
-                                                        })
-                                                        .catch(function (error) {
-                                                            _this.setState({
-                                                                loading: false
-                                                            })
-                                                        });
-
-                                                }
-                                                //不存在则新建
-                                                else {
-                                                    Axios.post(url, {}, {
-                                                            params: {
-                                                                deploymentStrategy: "KUBERNETES",
-                                                                nameSpace: this.field.getValue('nameSpace'),
-                                                                service: this.field.getValue('service'),
-                                                                releaseStrategy: this.field.getValue('releaseStrategy'),
-                                                                replicas: this.editField.getValue('replicas'),
-                                                                // imageUrl: this.field.getValue('imageUrl'),
-                                                                releaseBatch: this.field.getValue('releaseBatch')
-                                                            }
-                                                        }
-                                                    )
-                                                        .then(function (response) {
-                                                            Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
-                                                            _this.setState({
-                                                                loading: false
-                                                            })
-                                                            //提交完成后刷新当前页面
-                                                            _this.getYamlData()
-                                                        })
-                                                        .catch(function (error) {
-                                                            _this.setState({
-                                                                loading: false
-                                                            })
-                                                        });
-                                                }
-                                            })
-
-
+                                        params: {
+                                            name: this.field.getValue("service"),
+                                            namespace: this.field.getValue("nameSpace"),
+                                            targetPort: this.editField.getValue('targetPort'),
+                                            host: this.editField.getValue('host')
+                                        }
                                     })
+                                        .then(() => {
+                                            Toast.success(_this.props.intl.messages['projects.text.createServiceSuccessful'])
+
+                                            //然后判断是否存在yaml属性
+                                            let url = API.application + '/app/env/' + this.state.appEnvId + "/yaml";
+
+                                            let existUrl = API.gateway + "/application-server/app/env/" + this.state.appEnvId + "/yamlStatus"
+                                            Axios.get(existUrl)
+                                                .then((response) => {
+                                                    console.log("responsssss", response)
+                                                    if (response.data) {
+                                                        //存在则更新
+                                                        Axios.put(url, {}, {
+                                                                params: {
+                                                                    deploymentStrategy: "KUBERNETES",
+                                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                                    service: this.field.getValue('service'),
+                                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                                    replicas: this.editField.getValue('replicas'),
+                                                                    // imageUrl: this.field.getValue('imageUrl'),
+                                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                                }
+                                                            }
+                                                        )
+                                                            .then(function (response) {
+                                                                Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                                //提交完成后刷新当前页面
+                                                                _this.getYamlData()
+                                                            })
+                                                            .catch(function (error) {
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                            });
+
+                                                    }
+                                                    //不存在则新建
+                                                    else {
+                                                        Axios.post(url, {}, {
+                                                                params: {
+                                                                    deploymentStrategy: "KUBERNETES",
+                                                                    nameSpace: this.field.getValue('nameSpace'),
+                                                                    service: this.field.getValue('service'),
+                                                                    releaseStrategy: this.field.getValue('releaseStrategy'),
+                                                                    replicas: this.editField.getValue('replicas'),
+                                                                    // imageUrl: this.field.getValue('imageUrl'),
+                                                                    releaseBatch: this.field.getValue('releaseBatch')
+                                                                }
+                                                            }
+                                                        )
+                                                            .then(function (response) {
+                                                                Toast.success(_this.props.intl.messages['projects.text.updateSuccessful'])
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                                //提交完成后刷新当前页面
+                                                                _this.getYamlData()
+                                                            })
+                                                            .catch(function (error) {
+                                                                _this.setState({
+                                                                    loading: false
+                                                                })
+                                                            });
+                                                    }
+                                                })
+
+
+                                        })
                                 } else {
                                     Axios.post(createServiceUrl, {}, {
                                         params: {
@@ -903,7 +904,8 @@ class K8sInfoPage extends Component {
         Dialog.confirm({
             content: this.props.intl.messages['projects.text.confirmSave'],
             title: this.props.intl.messages['projects.title.confirmSave'],
-            onOk: this.yamlEditorSubmit.bind(this)
+            onOk: this.yamlEditorSubmit.bind(this),
+            language: 'en-us',
         });
 
     }
@@ -1001,15 +1003,17 @@ class K8sInfoPage extends Component {
                             <Icon
                                 className={this.state.editMode ? "edit-k8s-icon hide" : "edit-k8s-icon"}
                                 type='edit' onClick={this.toggleEditMode.bind(this)}/></div>
-                        <Select placeholder={this.props.intl.messages['projects.placeholder.releaseStrategy']}
-                                className={this.state.editMode ? "form-item-select" : "form-item-select hide"}
-                                {...init('releaseStrategy', {
-                                    initValue: this.state.yamlData.releaseStrategy,
-                                    rules: [{
-                                        required: true,
-                                        message: this.props.intl.messages['projects.message.cantNull']
-                                    }]
-                                })}
+                        <Select
+                            placeholder={this.props.intl.messages['projects.placeholder.releaseStrategy']}
+                            className={this.state.editMode ? "form-item-select" : "form-item-select hide"}
+                            language={'en-us'}
+                            {...init('releaseStrategy', {
+                                initValue: this.state.yamlData.releaseStrategy,
+                                rules: [{
+                                    required: true,
+                                    message: this.props.intl.messages['projects.message.cantNull']
+                                }]
+                            })}
                         >
                             <Option value="BATCH"
                                     disabled={true}>{this.props.intl.messages['projects.text.batchUpdate']}</Option>
@@ -1109,7 +1113,7 @@ class K8sInfoPage extends Component {
 
 
                         {this.yamlEditorRender()}
-                </Loading>
+                    </Loading>
                 </Form>
             </div>
         )

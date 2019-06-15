@@ -153,7 +153,8 @@ class ApplicationBasicInfo extends Component {
         Dialog.confirm({
             content: this.props.intl.messages['projects.text.confirmSave'],
             title: this.props.intl.messages['projects.title.confirmSave'],
-            onOk: this.basicSubmit.bind(this)
+            onOk: this.basicSubmit.bind(this),
+            language:'en-us',
         });
     };
 
@@ -161,7 +162,8 @@ class ApplicationBasicInfo extends Component {
         Dialog.confirm({
             content: this.props.intl.messages['projects.text.confirmSave'],
             title: this.props.intl.messages['projects.title.confirmSave'],
-            onOk: this.urlSubmit.bind(this)
+            onOk: this.urlSubmit.bind(this),
+            language:'en-us',
         });
     };
 

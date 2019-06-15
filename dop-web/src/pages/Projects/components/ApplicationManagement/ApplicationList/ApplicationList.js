@@ -9,6 +9,7 @@ import {injectIntl} from "react-intl";
 
 const {Row} = Grid;
 const Toast = Feedback.toast;
+
 /**
  * 展示应用的列表
  * @author Bowen
@@ -45,6 +46,7 @@ class ApplicationList extends Component {
     popupConfirm = (id) => {
         console.log(id)
         Dialog.confirm({
+            language:'en-us',
             content: this.props.intl.messages['projects.text.deleteConfirmApplication'],
             title: this.props.intl.messages['projects.text.deleteConfirm'],
             onOk: this.onDelete.bind(this, id)
@@ -55,11 +57,10 @@ class ApplicationList extends Component {
     onDelete = (id) => {
         let url = API.application + '/app/' + id;
         let _this = this;
-        console.log("id", id)
         Axios.delete(url)
             .then(function (response) {
-                Toast.success(_this.props.intl.messages['projects.text.deleteSuccessful'])
-                _this.state.deletedCallRefresh();
+                    Toast.success(_this.props.intl.messages['projects.text.deleteSuccessful'])
+                    _this.state.deletedCallRefresh();
                 }
             )
             .catch(function (error) {
@@ -89,7 +90,10 @@ class ApplicationList extends Component {
         return (
             <Row wrap gutter="20">
                 <Col>
-                    <Table dataSource={this.state.currentData}>
+                    <Table
+                        dataSource={this.state.currentData}
+                        language="en-us"
+                    >
                         <Table.Column
                             title={this.props.intl.messages['projects.text.id']}
                             dataIndex="id"/>

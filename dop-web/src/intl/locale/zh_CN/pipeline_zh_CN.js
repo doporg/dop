@@ -19,6 +19,8 @@ const PIPELINE_ZH_CN = {
     'pipeline.project.editPipeline': '编辑流水线',
     'pipeline.project.deletePipeline': '删除流水线',
     'pipeline.project.notRun': '该流水线尚未运行',
+    'pipeline.project.notRunPicture': '抱歉，您尚未运行该流水线',
+    'pipeline.project.loading': '正在加载...',
 
     'pipeline.info.name': '流水线名称',
     'pipeline.info.name.placeholder': '请输入流水线名称',
@@ -39,6 +41,9 @@ const PIPELINE_ZH_CN = {
     'pipeline.info.noJenkinsfile': '无Jenkinsfile',
     'pipeline.info.save': '保存',
     'pipeline.info.cancel': '取消',
+    'pipeline.info.submitting': '正在提交请稍后',
+    'pipeline.info.saveSuccess': '保存成功',
+    'pipeline.info.saveFailure': '保存失败',
 
     'pipeline.info.apply': '应用设置',
     'pipeline.info.apply.placeholder': '请选择一个应用',

@@ -99,7 +99,7 @@ class CreateApplicationEnvironmentDialog extends Component {
         onClose={this.onCreateDialogClose}
         title={this.props.intl.messages['projects.text.createSuccess']}
         className="success-dialog"
-
+        language={'en-us'}
         footerAlign={this.state.footerAlign}>
 {this.props.intl.messages['projects.text.createSuccess']}
 </Dialog>

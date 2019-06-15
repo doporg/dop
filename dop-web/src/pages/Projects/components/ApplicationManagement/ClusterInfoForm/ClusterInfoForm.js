@@ -42,9 +42,11 @@ class ClusterInfoForm extends Component {
 
     clusterInfoConfirm = () => {
         Dialog.confirm({
+            language:'en-us',
             content: this.props.intl.messages['projects.text.saveConfirmClusterInfo'],
             title: this.props.intl.messages['projects.text.submitConfirm'],
-            onOk: this.clusterInfoSubmit.bind(this)
+            onOk: this.clusterInfoSubmit.bind(this),
+
         });
     };
 
@@ -134,7 +136,7 @@ class ClusterInfoForm extends Component {
     }
 
     clusterDataRender() {
-        const {init, getError} = this.field
+        const {init, getError} = this.field;
         if (!(this.state.loading)) {
             return (
                 <Form className="card-form">

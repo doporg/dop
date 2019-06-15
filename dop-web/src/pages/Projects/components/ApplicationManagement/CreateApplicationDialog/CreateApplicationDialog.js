@@ -25,6 +25,7 @@ class CreateApplicationDialog extends Component {
             projectId: props.projectId
         }
     };
+
     onClose = () => {
         this.setState({
             visible: false
@@ -49,7 +50,6 @@ class CreateApplicationDialog extends Component {
             createDialogVisible: false
         });
     };
-
 
 
     /**
@@ -82,6 +82,7 @@ class CreateApplicationDialog extends Component {
             title={this.props.intl.messages['projects.button.createApplication']}
 
             footerAlign={this.state.footerAlign}
+            language={'en-us'}
         >
           <CreateApplicationForm isSubmit={this.state.isSubmit} finished={this.finished.bind(this)}
                                  projectId={this.state.projectId}/>
