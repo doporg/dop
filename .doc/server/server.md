@@ -398,6 +398,7 @@ networks:
 docker run -p 27017:27017 -v ~/mongo/db:/data/db -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone  --name mongodb -d mongo:late
 ```
 
+
 ## 8. redis
 + ip：121.43.191.226
 + port：0.0.0.0:6379->6379/tcp
