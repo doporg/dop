@@ -1,6 +1,7 @@
 package com.clsaa.dop.client.permission.model.dto;
 
 
+
 /**
  * 用户规则表DTO层
  *
