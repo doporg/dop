@@ -247,7 +247,7 @@ class PipelineInfo extends Component {
         let url = API.pipeline + '/v1/pipeline';
         toast.show({
             type: "loading",
-            content: "正在提交请稍后",
+            content: self.props.intl.messages["pipeline.info.submitting"],
             duration: 4000
         });
         console.log(self.state.pipeline);
@@ -259,7 +259,7 @@ class PipelineInfo extends Component {
             if (response.status === 200) {
                 toast.show({
                     type: "success",
-                    content: "保存成功",
+                    content: self.props.intl.messages["pipeline.info.saveSuccess"],
                     duration: 1000
                 });
 
@@ -280,7 +280,7 @@ class PipelineInfo extends Component {
         }).catch((error) => {
             toast.show({
                 type: "error",
-                content: "保存失败",
+                content: self.props.intl.messages["pipeline.info.saveFailure"],
                 duration: 1000
             });
         })

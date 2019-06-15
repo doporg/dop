@@ -23,10 +23,10 @@ export default class NotPermission extends Component {
                         />
                         <div style={styles.prompt}>
                             <h3 style={styles.title} className="title">
-                                抱歉，您尚未运行该流水线～
+                                Sorry, you are not running the pipeline yet～
                             </h3>
                             <p style={styles.description} className="description">
-                                抱歉，您尚未运行该流水线, 请点击运行～
+                                Sorry, you haven't run the pipeline yet, click run～
                             </p>
                         </div>
                     </div>

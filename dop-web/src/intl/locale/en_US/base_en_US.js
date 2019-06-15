@@ -4,6 +4,8 @@ const BASE_EN_US = {
 
     'base.myHome': 'My homepage',
     'base.setting': 'Setting',
-    'base.logout': 'Log out'
+    'base.logout': 'Log out',
+
+    'base.title': 'DevOps Platform',
 };
 export default BASE_EN_US

@@ -55,7 +55,10 @@ class PipelineProject extends Component {
         let progress = Math.round(Math.random() * 50) + 50;
         return (
             <div className="project-progress">
-                正在加载...
+                <FormattedMessage
+                    id="pipeline.project.loading"
+                    defaultMessage="正在加载..."
+                />
                 <Progress percent={progress} size="large" showInfo={false}/>
             </div>
         )

@@ -54,7 +54,8 @@ class ApplicationEnvironment extends Component {
         Dialog.confirm({
             content: this.props.intl.messages['projects.text.deleteConfirmEnv'],
             title: this.props.intl.messages['projects.text.deleteConfirm'],
-            onOk: this.onDelete.bind(this, id)
+            onOk: this.onDelete.bind(this, id),
+            language:'en-us',
         });
     };
 

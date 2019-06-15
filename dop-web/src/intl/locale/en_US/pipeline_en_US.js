@@ -19,6 +19,8 @@ const PIPELINE_EN_US = {
     'pipeline.project.editPipeline': 'Edit Pipeline',
     'pipeline.project.deletePipeline': 'Delete Pipeline',
     'pipeline.project.notRun': 'This pipeline has not been run',
+    'pipeline.project.notRunPicture': 'Sorry, you are not running the pipeline yet',
+    'pipeline.project.loading': 'Loading...',
 
     'pipeline.info.name': 'Pipeline Name',
     'pipeline.info.name.placeholder': 'Please enter the pipeline name',
@@ -39,6 +41,9 @@ const PIPELINE_EN_US = {
     'pipeline.info.noJenkinsfile': 'No Jenkinsfile',
     'pipeline.info.save': 'Save',
     'pipeline.info.cancel': 'Cancel',
+    'pipeline.info.submitting': 'Submitting...',
+    'pipeline.info.saveSuccess': 'Success',
+    'pipeline.info.saveFailure': 'Failure',
 
     'pipeline.info.apply': 'Apply Setting',
     'pipeline.info.apply.placeholder': 'Please select a apply',
