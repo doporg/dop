@@ -9,6 +9,7 @@ pipeline{
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/audit-server"
 	}
 
+
 	stages {
 		stage('获取代码') {
 			steps {
