@@ -1,14 +1,24 @@
 import React, {PureComponent} from 'react';
 import {Link} from 'react-router-dom';
-import {injectIntl, FormattedMessage} from 'react-intl';
+import {FormattedMessage} from 'react-intl';
+import logo from './images/logo.png'
 
 export default class Logo extends PureComponent {
     render() {
         return (
             <Link to="/" style={{...styles.logoStyle, ...this.props.style}}>
+                {(() => {
+                    if (this.props.img) {
+                        return (
+                            <span style={{...styles.imgStyle}}>
+                                <img src={logo} alt="" width="100%"/>
+                            </span>
+                        )
+                    }
+                })()}
                 <FormattedMessage
                     id="base.title"
-                    defaultMessage="南京大学DevOps学生实训平台"
+                    defaultMessage="DevOps Platform"
                 />
             </Link>
         );
@@ -27,4 +37,10 @@ const styles = {
         fontWeight: 'bold',
         textDecoration: 'none',
     },
+    imgStyle: {
+        display: 'inline-block',
+        width: '80px',
+        height: '60px',
+        marginRight: '20px'
+    }
 };

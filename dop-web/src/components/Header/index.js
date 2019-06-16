@@ -8,6 +8,7 @@ import {headerMenuConfig} from '../../menuConfig';
 import Logo from '../Logo/index';
 import './index.scss';
 import {FormattedMessage, IntlProvider} from 'react-intl';
+import logo from './images/logo.png'
 
 // @withRouter
 class Header extends Component {
@@ -64,7 +65,7 @@ class Header extends Component {
         return (
             <div className="header-container">
                 <div className="header-content">
-                    <Logo isDark/>
+                    <Logo isDark img/>
                     <div className="header-navbar">
                         <Menu
                             className="header-navbar-menu"
