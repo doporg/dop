@@ -14,6 +14,7 @@
 
 > All code pulling in DOP systems is done using Git, so project code must be stored in Git repositories.
 >
+
 > You can choose to use DOP's own code management module (code repository) or third-party code repository (such as GitHub, GitLab, etc.).It should be noted that the third-party code repository is used, and the visibility of the repository must be set to be publicly visible (currently the DOP platform is not connected to GitHub and GitLab account system);You can use a private repository if you use DOP's own code repository.
 >
 > The code management module provided by DOP includes most of the functions of GitLab, and can basically complete daily code management work in the code management module of DOP.
