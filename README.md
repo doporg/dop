@@ -34,7 +34,7 @@ The relationship between business modules and DevOps processes is shown in the f
 
 The architecture of a single business service, as shown in the figure below：
 
-![](https://clsaa-markdown-imgbed-1252032169.cos.ap-shanghai.myqcloud.com/very-java/2019-05-24-014534.jpg)
+![](http://markdown-img-bed-ali.oss-cn-hangzhou.aliyuncs.com/2019-06-17-130507.png)
 
 Each service uses an anemia model and is designed as a hierarchical structure. Controller handles requests forwarded by API gateway. Service layer is relatively complex. It may use persistence layer to operate database or use general processing layer to invoke API.
 
