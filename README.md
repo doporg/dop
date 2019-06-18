@@ -7,7 +7,7 @@ DOP is a DevOps platform, you can complete the coding, construction, deployment,
 
 DOP as a whole is a multi-tier system, and its architecture is shown in the figure.
 
-![](https://user-images.githubusercontent.com/17808702/59682582-1cf9ba80-9209-11e9-81ea-81f01197bbb4.png)
+![微信图片_20190618210227](https://user-images.githubusercontent.com/17808702/59684676-166d4200-920d-11e9-894d-480cb3432fad.png)
 
 **Infrastructure layer**：Platform management applications and services of the platform itself will be deployed in kubernetes, and some tools will be deployed directly on virtual machines or physical machines.
 
@@ -30,7 +30,7 @@ DOP as a whole is a multi-tier system, and its architecture is shown in the figu
 
 The relationship between business modules and DevOps processes is shown in the following figure:
 
-![](http://markdown-img-bed-ali.oss-cn-hangzhou.aliyuncs.com/2019-06-17-130507.png)
+![微信图片_20190618210231](https://user-images.githubusercontent.com/17808702/59684675-15d4ab80-920d-11e9-9e21-b64597c532f5.png)
 
 The architecture of a single business service, as shown in the figure below：
 
