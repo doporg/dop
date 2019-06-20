@@ -4,6 +4,7 @@ With the popularization of micro-services and the improvement of the frequency a
 
 DOP is a DevOps platform, you can complete the coding, construction, deployment, testing and other aspects of the DevOps process in the DOP platform, so as to achieve the CI/CD of the project.
 
+# 1. Architecture design
 
 DOP as a whole is a multi-tier system, and its architecture is shown in the figure.
 
@@ -39,7 +40,7 @@ The architecture of a single business service
 Each service uses an anemia model and is designed as a hierarchical structure. Controller handles requests forwarded by API gateway. Service layer is relatively complex. It may use persistence layer to operate database or use general processing layer to invoke API.
 
 
-# 1. Usage
+# 2. Usage
 
 > This chapter introduces the basic functions and usage of DOP. Before using it, you need to do some preparation work, such as creating an account and obtaining permissions
 
@@ -47,9 +48,9 @@ Each service uses an anemia model and is designed as a hierarchical structure. C
 2. After receiving the email of registration, click the link to activate the account, find the person in charge of DOP and add access to various functions of DOP
 3. Deploy your project using DOP as described in 1.1 or 1.2
 
-## 1.1. Routine use
+## 2.1. Routine use
 
-### 1.1.1. Preparatory phase
+### 2.1.1. Preparatory phase
 
 #### Prepare the code repository 
 
@@ -189,7 +190,7 @@ Each service uses an anemia model and is designed as a hierarchical structure. C
 
    
 
-### 1.1.3. run phase
+### 2.1.3. run phase
 
 #### Running pipeline
 
@@ -205,7 +206,7 @@ Each service uses an anemia model and is designed as a hierarchical structure. C
 
 	4. If the pipeline stage fails, the stage is shown in red![pipeline6](https://user-images.githubusercontent.com/17808702/59646925-a7133600-91ab-11e9-94db-9f4ce54d1343.png)
 
-### 1.1.4.verification stage
+### 2.1.4.verification stage
 
 #### View deployment history
 
