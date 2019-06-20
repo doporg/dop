@@ -44,3 +44,4 @@ This chapter will introduce the detailed functions and core business processes o
 
 #####  1.6.1 Functions overview
 ![TIM截图20190620184414](https://user-images.githubusercontent.com/17808702/59843616-83a6e180-938b-11e9-937b-27ec2f708992.png)
+
