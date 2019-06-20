@@ -1,4 +1,4 @@
-## 1.Detailed introduction(unfinished)
+## 1.Detailed introduction
 
 This chapter will introduce the detailed functions and core business processes of each module in detail
 

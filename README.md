@@ -20,7 +20,7 @@ DOP as a whole is a multi-tier system, and its architecture is shown in the figu
 **Basic Services Layer**：On the left is the Basic Services Layer, from which we start to implement some of our own services. Basic layer services provide support for micro-service architecture and basic business logic, including service discovery, audit, login, privilege management, user management, message service. They provide some common functions for business layer services.
 
 
-**Business layer**：Business layer services provide support for the basic functions used by users, including testing, code management, application management, pipeline management, container image management and other services, which correspond to the various functions used by users mentioned earlier.
+**Business layer**：Business layer services provide support for the basic functions used by users, including testing, code management, application management, pipeline management, container image management and other services, which correspond to the various functions used by users mentioned earlier. [see more](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
 
 **Access Layer**：Access Layer is an API gateway, which mainly deals with two authentication processes: client OAuth 2.0 authentication and user status authentication.
 
