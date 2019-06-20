@@ -20,7 +20,7 @@ DOP as a whole is a multi-tier system, and its architecture is shown in the figu
 **Basic Services Layer**：On the left is the Basic Services Layer, from which we start to implement some of our own services. Basic layer services provide support for micro-service architecture and basic business logic, including service discovery, audit, login, privilege management, user management, message service. They provide some common functions for business layer services.
 
 
-**Business layer**：Business layer services provide support for the basic functions used by users, including testing, code management, application management, pipeline management, container image management and other services, which correspond to the various functions used by users mentioned earlier. [see more](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
+**Business layer**：Business layer services provide support for the basic functions used by users, including testing, code management, application management, pipeline management, container image management and other services, which correspond to the various functions used by users mentioned earlier. [See more explanations about the design of the five services in this layer.](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
 
 **Access Layer**：Access Layer is an API gateway, which mainly deals with two authentication processes: client OAuth 2.0 authentication and user status authentication.
 
@@ -32,10 +32,9 @@ The relationship between business modules and DevOps processes is shown in the f
 
 ![微信图片_20190618210231](https://user-images.githubusercontent.com/17808702/59684675-15d4ab80-920d-11e9-9e21-b64597c532f5.png)
 
-The architecture of a single business service, as shown in the figure below：
+The architecture of a single business service
 
 
-![](https://clsaa-markdown-imgbed-1252032169.cos.ap-shanghai.myqcloud.com/very-java/2019-05-24-014534.jpg)
 
 Each service uses an anemia model and is designed as a hierarchical structure. Controller handles requests forwarded by API gateway. Service layer is relatively complex. It may use persistence layer to operate database or use general processing layer to invoke API.
 
