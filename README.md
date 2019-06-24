@@ -26,7 +26,7 @@ and message service, which are able to provide some common functions for busines
 
 **Interface Layer**：This layer includes Web UI, SSO, and RESTful API used by users. External systems can call the platform API after it has been authenticated by the client OAuth 2.0.
 
-**DOP system uses the micro-service architecture. We build the basic layer services to support the micro-service architecture and basic business logic. According to the business context, we divide the business into micro-services such as testing, code, application management, pipeline and so on. Most of the services communicate through HTTP protocol, and a few communicate through message queue.**。
+**DOP system uses the micro-service architecture. We build the basic layer services to support the micro-service architecture and basic business logic. According to the business context, we divide the business into micro-services such as testing, code, application management, pipeline and so on. Most of the services communicate through HTTP protocol, and a few communicate through message queue.**
 
 The relationship between business modules and DevOps processes is shown in the following figure:
 
