@@ -4,26 +4,27 @@ Emerging from the agile culture, DevOps extremely emphasizes automation and heav
 
 # 1. Architecture design
 
-DOP as a whole is a multi-tier system, and its architecture is shown in the figure.
+We designed DOP using microservices architecture and decomposed it into microservices based on its business logic and service capabilities. Most of the microservices of DOP communicate with each other through HTTP protocol, and only a small minority use the message queue. The architecture design of DOP is displayed in Figure 1, which includes eight layers:
 
 ![微信图片_20190618210227](https://user-images.githubusercontent.com/17808702/59684676-166d4200-920d-11e9-894d-480cb3432fad.png)
 
-**Infrastructure layer**：Platform management applications and services of the platform itself will be deployed in kubernetes, and some tools will be deployed directly on virtual machines or physical machines.
+**Infrastructure layer**：Applications managed by DOP and services of the DOP itself are all deployed in Kubernetes, and some tools are directly deployed on virtual machines or physical machines.
 
-**Persistence layer**：Using MySQL and MongoDB, using CEPH to store distributed files, and storing data of stateful applications in kubernetes.
+**Persistence layer**：MySQL and MongoDB are used for persistent storage, and Ceph is used to store distributed files,e.g., some stateful data applications in Kubernetes.
 
-**Middleware layer**：Ali's RicketMQ is used as message queue and Redis is used as cache database.
+**Middleware layer**：RocketMQ is used as the message queue and Redis is used as the cache database.
 
-**Tool Layer**：Next to the right is the Tool Layer. Tool layer mainly includes some open source tools, which provide some basic capabilities. Business layer combines these capabilities through business logic and finally provides them to users. For example, Jenkins provide pipeline operations (pipeline parallelism, waiting)
+**Tool Layer**：Tool layer mainly includes some open source tools, based on which to provide some basic capabilities of DOP. These capabilities can be combined in the Business Service Layer through business logic later. For example, some operations related to CI pipeline (pipeline parallelism, waiting) are implemented through wrapping the functions of Jenkins.
 
-**Basic Services Layer**：On the left is the Basic Services Layer, from which we start to implement some of our own services. Basic layer services provide support for micro-service architecture and basic business logic, including service discovery, audit, login, privilege management, user management, message service. They provide some common functions for business layer services.
+**Fundamental Service Layer**：This layer contains some services of DOP itself. Services in this layer could support some basic business logic, including service discovery, audit, login, authority management, user management,
+and message service, which are able to provide some common functions for business Layer services.
 
 
-**Business layer**：Business layer services provide support for the basic functions used by users, including testing, code management, application management, pipeline management, container image management and other services, which correspond to the various functions used by users mentioned earlier. [See more explanations about the design of the five services in this layer.](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
+**Business layer**：This layer are partitioned into five services: testing, code, application management, pipeline management, and container image management. These services correspond to the various functions used by users, which are introduced later. [See more explanations about the design of the five services in this layer.](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
 
-**Access Layer**：Access Layer is an API gateway, which mainly deals with two authentication processes: client OAuth 2.0 authentication and user status authentication.
+**Access Layer**：Access Layer is an API gateway, which mainly deals with two authentication processes: client OAuth 2.0 authentication and user authentication.
 
-**Interface Layer**：Including the Unified Login RESTful API for Web UI used by users. The external system can call the platform API after it has been authenticated by the client OAuth 2.0.
+**Interface Layer**：This layer includes Web UI, SSO, and RESTful API used by users. External systems can call the platform API after it has been authenticated by the client OAuth 2.0.
 
 **DOP system uses the micro-service architecture. We build the basic layer services to support the micro-service architecture and basic business logic. According to the business context, we divide the business into micro-services such as testing, code, application management, pipeline and so on. Most of the services communicate through HTTP protocol, and a few communicate through message queue.**。
 
