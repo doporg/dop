@@ -4,7 +4,7 @@ Emerging from the agile culture, DevOps extremely emphasizes automation and heav
 
 # 1. Architecture design
 
-We designed DOP using microservices architecture and decomposed it into microservices based on its business logic and service capabilities. Most of the microservices of DOP communicate with each other through HTTP protocol, and only a small minority use the message queue. The architecture design of DOP is displayed in Figure 1, which includes eight layers:
+We designed DOP using microservices architecture and decomposed it into microservices based on its business logic and service capabilities. Most of the microservices of DOP communicate with each other through HTTP protocol, and only a small minority use the message queue. The architecture design of DOP includes eight layers:
 
 ![微信图片_20190618210227](https://user-images.githubusercontent.com/17808702/59684676-166d4200-920d-11e9-894d-480cb3432fad.png)
 
