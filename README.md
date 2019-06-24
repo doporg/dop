@@ -32,11 +32,7 @@ The relationship between business modules and DevOps processes is shown in the f
 
 ![微信图片_20190618210231](https://user-images.githubusercontent.com/17808702/59684675-15d4ab80-920d-11e9-9e21-b64597c532f5.png)
 
-The architecture of a single business service
-
-
-
-Each service uses an anemia model and is designed as a hierarchical structure. Controller handles requests forwarded by API gateway. Service layer is relatively complex. It may use persistence layer to operate database or use general processing layer to invoke API.
+Developers push the code to code repository of an application, triggering the WebHook of the code management service, which can send an HTTP request to the pipeline management service to start a pipeline. When the pipeline is started, the source code of an applicaiton is pulled from the code repository, after which a build task can be executed. Then a test task is submitted to the test service, and a Docker image could be built and pushed to the image management service. Finally, the application can be deployed to the target environment, whose latest container image is pulled by the Kubernetes cluster and starts running.
 
 
 # 2. Usage
