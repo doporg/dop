@@ -20,7 +20,7 @@ We designed DOP using microservices architecture and decomposed it into microser
 and message service, which are able to provide some common functions for business Layer services.
 
 
-**Business layer**：This layer are partitioned into five services: testing, code, application management, pipeline management, and container image management. These services correspond to the various functions used by users, which are introduced later. [See more explanations about the design of the five services in this layer.](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
+**Business layer**：This layer are partitioned into five services: testing, code, application management, pipeline management, and container image management. These services correspond to the various functions used by users, which are introduced later. [See more explanations about the design of these services in this layer.](https://github.com/doporg/dop/blob/master/.doc/manual/mind-map.md)
 
 **Access Layer**：Access Layer is an API gateway, which mainly deals with two authentication processes: client OAuth 2.0 authentication and user authentication.
 
