@@ -126,6 +126,7 @@ nohup java -jar jenkins.war --httpPort=8976 /var/log/jenkins/running-log &
 ## 6. harbor
 + domain：https://registry.dop.clsaa.com/
 + 部署ip：47.99.138.113
++ ./package/harbor/install.sh
 + Dop123456789
 + port(run in docker)：0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:4443->4443/tcp
 ```
