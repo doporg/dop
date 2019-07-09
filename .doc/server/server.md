@@ -75,6 +75,8 @@
         + config：/etc/nginx/nginx.conf
     + gitlab
         + port(in docker):0.0.0.0:22->22/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp
+    + ssh
+        + port：2222
 
 ## 2. kubernetes
 ### 2.1. 已部署应用
