@@ -398,7 +398,7 @@ networks:
 + mongo.dop.clsaa.com:27017
 + 命令：
 ```
-docker run -p 27017:27017 -v ~/mongo/db:/data/db -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone  --name mongodb -d mongo:late
+docker run -p 27017:27017 -v ~/mongo/db:/data/db -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone  --name mongodb -d mongo:latest
 ```
 
 
