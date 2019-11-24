@@ -97,7 +97,8 @@ Password: kUTvK1tMFL
 
 ```
 用户名：user
-密码：kUTvK1tMFL
+密码：111111
+
 
 6. 创建jenkins-pv
 ```
