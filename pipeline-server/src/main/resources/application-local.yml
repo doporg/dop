@@ -10,9 +10,9 @@ spring:
     name: pipeline-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://sh-cdb-42xoavqj.sql.tencentcdb.com:63280/db_dop_pipeline?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: dop_dba
-    password: dop_dba_123456
+    url: jdbc:mysql://121.42.13.103:30306/db_dop_pipeline?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: dop
+    password: dop_db_123
     driver-class-name: com.mysql.jdbc.Driver
     max-active: 10
     max-idle: 5

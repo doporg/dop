@@ -1,14 +1,10 @@
 package com.clsaa.dop.server.pipeline.config;
 
 
-import com.clsaa.dop.server.pipeline.feign.UserFeign;
-import com.clsaa.dop.server.pipeline.model.dto.UserCredential;
-import com.clsaa.dop.server.pipeline.model.dto.UserCredentialV1;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.Yaml;
 
 import java.net.MalformedURLException;
@@ -67,7 +63,7 @@ public class Jenkinsfile {
                 String deploy = task.getDeploy();
                 String ip = task.getIp();
                 String token = task.getToken();
-                String dockerRepoHost = "registry.dop.clsaa.com";
+                String dockerRepoHost = "121.42.13.243:30000";
                 String dockerRepoPath = "/default";
                 String imageName = dockerRepoHost + dockerRepoPath;
                 try {
