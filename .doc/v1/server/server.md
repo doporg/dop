@@ -15,7 +15,7 @@
 172.16.24.196 softeng-cn-hz-2c8g-node003
 
 172.16.24.194 jenkins.dop.clsaa.com
-172.16.24.195 registry.dop.clsaa.com
+172.16.24.195 121.42.13.243:30000
 172.16.24.196 gitlab.dop.clsaa.com
 ```
 
@@ -39,7 +39,7 @@
 
 
 172.16.24.194 jenkins.dop.clsaa.com
-172.16.24.195 registry.dop.clsaa.com
+172.16.24.195 121.42.13.243:30000
 172.16.24.196 gitlab.dop.clsaa.com
 ```
 
@@ -62,7 +62,7 @@
 172.16.24.196 softeng-cn-hz-2c8g-node003
 
 172.16.24.194 jenkins.dop.clsaa.com
-172.16.24.195 registry.dop.clsaa.com
+172.16.24.195 121.42.13.243:30000
 172.16.24.196 gitlab.dop.clsaa.com
 ```
 + 安全组
@@ -124,7 +124,7 @@ docker run -d \
 nohup java -jar jenkins.war --httpPort=8976 /var/log/jenkins/running-log &
 ```
 ## 6. harbor
-+ domain：https://registry.dop.clsaa.com/
++ domain：https://121.42.13.243:30000/
 + 部署ip：47.99.138.113
 + ./package/harbor/install.sh
 + Dop123456789

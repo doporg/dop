@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import {Grid, Input, Loading, Pagination, Table,Feedback,Balloon} from "@icedesign/base";
+import React, {Component} from 'react';
+import {Balloon, Feedback, Grid, Input, Loading, Pagination, Table} from "@icedesign/base";
 import DeleteImageDialog from "../deleteImageDialog";
 import {Col} from "@alifd/next/lib/grid";
 import API from "../../../API";
@@ -122,12 +122,13 @@ class ImagePagination extends Component{
         Toast.success(this.props.intl.messages["image.copySuccess"]);
     }
     pullRender=(value,index,record)=>{
-        let pull = <CopyToClipboard onCopy={this.onCopy} text={"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}>
+        let pull = <CopyToClipboard onCopy={this.onCopy}
+                                    text={"docker pull 121.42.13.243:30000/" + this.state.repoName + ":" + record.name}>
                          <img className={"imgStyle"} src={require('../../img/copy.png')} alt="" />
                     </CopyToClipboard>
         return(
             <Balloon trigger={pull} triggerType="hover">
-                {"docker pull registry.dop.clsaa.com/"+this.state.repoName+":"+record.name}
+                {"docker pull 121.42.13.243:30000/" + this.state.repoName + ":" + record.name}
             </Balloon>
         );
     }

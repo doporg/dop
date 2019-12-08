@@ -180,3 +180,18 @@ kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h 
 要删除 mysql的pod，首先要删除其deployment，然后再删除pod
 要删除pv，首先要删除其pod，然后删除pvc，最后删除pv
 
+### 进入mysql
+在集群上查看容器id
+ps -a
+容器id 为3a4746c113b4
+执行  docker exec -it 3a4746c113b4 /bin/bash
+可以使用mysql命令
+ mysql -h127.0.0.1 -uroot -ppassword
+进入mysql
+### mysql 信息
+ip:port: 121.42.13.103:30306
+
+用户名
+dop
+密码
+dop_db_123
