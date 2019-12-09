@@ -73,7 +73,7 @@ ribbon:
 logging.path: ./logs/${spring.application.name}
 
 feign:
-  url: https://121.42.13.243:30000/api
+  url: https://http://registry.dop.clsaa.com/api
 
 message:
   mq:
