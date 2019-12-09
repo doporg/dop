@@ -123,12 +123,12 @@ class ImagePagination extends Component{
     }
     pullRender=(value,index,record)=>{
         let pull = <CopyToClipboard onCopy={this.onCopy}
-                                    text={"docker pull 121.42.13.243:30000/" + this.state.repoName + ":" + record.name}>
+                                    text={"docker pull http://registry.dop.clsaa.com/" + this.state.repoName + ":" + record.name}>
                          <img className={"imgStyle"} src={require('../../img/copy.png')} alt="" />
                     </CopyToClipboard>
         return(
             <Balloon trigger={pull} triggerType="hover">
-                {"docker pull 121.42.13.243:30000/" + this.state.repoName + ":" + record.name}
+                {"docker pull http://registry.dop.clsaa.com/" + this.state.repoName + ":" + record.name}
             </Balloon>
         );
     }

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: 121.42.13.243:30000/dop/gateway-server:<BUILD_TAG>
+          image: http://registry.dop.clsaa.com/dop/gateway-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi
