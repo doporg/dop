@@ -1,6 +1,5 @@
-#!/groovy
 pipeline{
-	agent any
+    agent any
 
 	environment {
 		REPOSITORY="https://github.com/doporg/dop.git"
@@ -10,7 +9,7 @@ pipeline{
 	}
 
 	stages {
-		stage('pull code') {
+		stage('获取代码') {
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
