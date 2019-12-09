@@ -10,7 +10,7 @@ pipeline{
 	}
 
 	stages {
-		stage('获取代码') {
+		stage('pull code') {
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
