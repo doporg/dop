@@ -1,9 +1,12 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: discovery-server
   namespace: dop
 spec:
+  selector:
+    matchLabels:
+      app: discovery-server
   replicas: 1
   template:
     metadata:

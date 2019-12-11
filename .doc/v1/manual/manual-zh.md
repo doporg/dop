@@ -144,7 +144,7 @@ API网关与用户登录、校验及用户注册的逻辑关系如下图所示�
 
 ## 2.2.本地运行
 
-1. **从master分支拉取最新代码**：```git clone https://github.com/doporg/dop.git```
+1. **从master分支拉取最新代码**：```git clone github.com/doporg/dop.git```
 
 2. **将项目导入IDEA**：IDEA->file->open(打开dop目录)
 
@@ -210,14 +210,14 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="https://github.com/clsaa/dop.git"
+		REPOSITORY="github.com/doporg/dop.git"
 		SERVICE_DIR="gateway-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/gateway-server"
 	}
 
 	stages {
-		stage('获取代码') {
+		stage('pull code') {
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
@@ -230,7 +230,7 @@ pipeline{
 			}
 		}
 
-		stage('编译+单元测试') {
+		stage('build maven') {
 			steps {
                 echo "star compile"
                 dir(SERVICE_DIR){
@@ -240,7 +240,7 @@ pipeline{
 			}
 		}
 
-		stage('构建镜像') {
+		stage('build docker') {
 			steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
@@ -251,7 +251,7 @@ pipeline{
 			}
 		}
 
-       stage('推送镜像') {
+       stage('push docker') {
             steps {
                 echo "start push image"
                 dir(SERVICE_DIR){
@@ -264,7 +264,7 @@ pipeline{
             }
         }
 
-        stage('更新YAML镜像版本') {
+        stage('update yaml') {
             steps{
                 echo "start change yaml image tag"
                 dir(SERVICE_DIR){
@@ -275,7 +275,7 @@ pipeline{
             }
         }
 
-		stage('发布系统') {
+		stage('deploy') {
 			steps {
 				echo "start deploy"
 				dir(SERVICE_DIR){

@@ -4,14 +4,14 @@ pipeline{
 
 	
 	environment {
-		REPOSITORY="https://github.com/clsaa/dop.git"
+		REPOSITORY="github.com/doporg/dop.git"
 		SERVICE_DIR="permission-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/permission-server"
 	}
 
 	stages {
-		stage('获取代码') {
+		stage('pull code') {
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
@@ -24,7 +24,7 @@ pipeline{
 			}
 		}
 
-		stage('编译+单元测试') {
+		stage('build maven') {
 			steps {
                 echo "star compile"
                 dir(SERVICE_DIR){
@@ -34,7 +34,7 @@ pipeline{
 			}
 		}
 
-		stage('构建镜像') {
+		stage('build docker') {
 			steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
@@ -45,7 +45,7 @@ pipeline{
 			}
 		}
 
-       stage('推送镜像') {
+       stage('push docker') {
             steps {
                 echo "start push image"
                 dir(SERVICE_DIR){
@@ -58,7 +58,7 @@ pipeline{
             }
         }
 
-        stage('更新YAML镜像版本') {
+        stage('update yaml') {
             steps{
                 echo "start change yaml image tag"
                 dir(SERVICE_DIR){
@@ -69,7 +69,7 @@ pipeline{
             }
         }
 
-		stage('发布系统') {
+		stage('deploy') {
 			steps {
 				echo "start deploy"
 				dir(SERVICE_DIR){
