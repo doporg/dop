@@ -100,7 +100,7 @@ public class RepositoryService {
     public List<String> getRepoAddress(Long userId){
 
         List<String> list = new ArrayList<>();
-        String beginAddress = "http://registry.dop.clsaa.com/";
+        String beginAddress = "registry.dop.clsaa.com/";
         //获取用户可访问的项目
         List<Integer> projectIds = new ArrayList<>();
         int pageNo = 1;

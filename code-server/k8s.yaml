@@ -13,7 +13,7 @@ spec:
       containers:
         - name: code-server
           imagePullPolicy: Always
-          image: http://registry.dop.clsaa.com/dop/code-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/code-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

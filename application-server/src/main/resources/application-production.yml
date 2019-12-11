@@ -10,9 +10,9 @@ spring:
     name: application-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://121.42.13.103:30306/db_dop_application?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://115.28.186.77:30306/db_dop_application?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: dop
-    password: dop_db_123
+    password: Dop_mysql_12345
     driver-class-name: com.mysql.jdbc.Driver
     max-active: 10
     max-idle: 5

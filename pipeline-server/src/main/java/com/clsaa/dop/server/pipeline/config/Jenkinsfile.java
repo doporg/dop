@@ -63,7 +63,7 @@ public class Jenkinsfile {
                 String deploy = task.getDeploy();
                 String ip = task.getIp();
                 String token = task.getToken();
-                String dockerRepoHost = "http://registry.dop.clsaa.com";
+                String dockerRepoHost = "registry.dop.clsaa.com";
                 String dockerRepoPath = "/default";
                 String imageName = dockerRepoHost + dockerRepoPath;
                 try {

@@ -13,7 +13,7 @@ spec:
       containers:
         - name: test-server
           imagePullPolicy: Always
-          image: http://registry.dop.clsaa.com/dop/test-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/test-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

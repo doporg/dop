@@ -3,10 +3,10 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="https://github.com/doporg/dop.git"
+		REPOSITORY="github.com/doporg/dop.git"
 		SERVICE_DIR="code-server"
-		DOCKER_REGISTRY_HOST="http://registry.dop.clsaa.com"
-		DOCKER_REGISTRY="http://registry.dop.clsaa.com/dop/code-server"
+		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
+		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/code-server"
 	}
 
 	stages {

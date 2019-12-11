@@ -3,14 +3,14 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="https://github.com/doporg/dop.git"
+        REPOSITORY = "github.com/doporg/dop.git"
 		SERVICE_DIR="dop-web"
-        DOCKER_REGISTRY_HOST = "http://registry.dop.clsaa.com"
-        DOCKER_REGISTRY = "http://registry.dop.clsaa.com/dop/dop-web"
+        DOCKER_REGISTRY_HOST = "registry.dop.clsaa.com"
+        DOCKER_REGISTRY = "registry.dop.clsaa.com/dop/dop-web"
 	}
 
 	stages {
-		stage('pull code') {
+        stage('pull code') {
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
@@ -23,7 +23,7 @@ pipeline{
 			}
 		}
 
-		stage('build docker') {
+        stage('build docker') {
 			steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
@@ -34,7 +34,7 @@ pipeline{
 			}
 		}
 
-       stage('push docker') {
+        stage('push docker') {
             steps {
                 echo "start push image"
                 dir(SERVICE_DIR){
@@ -58,7 +58,7 @@ pipeline{
             }
         }
 
-		stage('deploy') {
+        stage('deploy') {
 			steps {
 				echo "start deploy"
 				dir(SERVICE_DIR){

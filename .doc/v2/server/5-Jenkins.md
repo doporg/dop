@@ -130,3 +130,8 @@ service/jenkins   LoadBalancer   10.1.79.225   <pending>     80:32757/TCP,443:30
 http://115.28.186.77:32757/
 
 
+## 本机安装jenkins
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+yum install jenkins

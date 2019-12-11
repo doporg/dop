@@ -60,9 +60,9 @@
 >
 > Here to explain image management module of the two concepts: namespace (usually on behalf of a project, is a classification of image repository), image repository (generally on behalf of an application, each application image every building general into the same image but with different version number of the repository), image (generally represent a certain version of an application)
 >
-> docker pull **http://registry.dop.clsaa.com/dop/application-server:2019032515435beb579**
+> docker pull **registry.dop.clsaa.com/dop/application-server:2019032515435beb579**
 >
-> **http://registry.dop.clsaa.com** is the image repository domain name，
+> **registry.dop.clsaa.com** is the image repository domain name，
 >
 > dop is namespace,representing project
 >
