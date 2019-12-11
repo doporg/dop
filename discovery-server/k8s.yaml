@@ -42,6 +42,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: discovery-server
+  annotations:
+    getambassador.io/config: |
+      ---
+      apiVersion: ambassador/v1
+      kind: Mapping
+      name: discovery-server-mapping
+      prefix: /
+      service: discovery-server.dop
+      host: discovery.dop.clsaa.com
   namespace: dop
   labels:
     app: discovery-server
@@ -52,17 +61,17 @@ spec:
     targetPort: 8761
   selector:
     app: discovery-server
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: discovery-server
-  namespace: dop
-spec:
-  rules:
-  - host: discovery.dop.clsaa.com
-    http:
-      paths:
-      - backend:
-          serviceName: discovery-server
-          servicePort: 8761
+#---
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  name: discovery-server
+#  namespace: dop
+#spec:
+#  rules:
+#  - host: discovery.dop.clsaa.com
+#    http:
+#      paths:
+#      - backend:
+#          serviceName: discovery-server
+#          servicePort: 8761
