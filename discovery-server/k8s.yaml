@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: discovery-server
-          image: http://registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/discovery-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi
