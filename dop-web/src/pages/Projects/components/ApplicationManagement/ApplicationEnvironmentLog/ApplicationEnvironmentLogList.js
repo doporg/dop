@@ -57,7 +57,7 @@ class ApplicationEnvironmentLogList extends Component {
     //渲染表格中的ID项，添加超链接至该项目ID下的应用ID列表
     imageIdRender(imageUrl) {
         let _this = this;
-        // 121.42.13.243:30000/dop/dop-web:201904131311d357d70
+        // registry.dop.clsaa.com/dop/dop-web:201904131311d357d70
         let buildTag = imageUrl.split(":")[1]
         let projectName = imageUrl.split("/")[1]
         // console.log("repoName", imageUrl.split("/"))

@@ -6,8 +6,8 @@ pipeline{
 	environment {
 		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="message-server"
-		DOCKER_REGISTRY_HOST="121.42.13.243:30000"
-		DOCKER_REGISTRY="121.42.13.243:30000/dop/message-server"
+		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
+		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/message-server"
 	}
 
 	stages {

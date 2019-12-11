@@ -10,9 +10,9 @@ spring:
     name: image-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://121.42.13.103:30306/db_dop_image?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://115.28.186.77:30306/db_dop_image?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop
-    password: dop_db_123
+    password: Dop_mysql_12345
     driver-class-name: com.mysql.jdbc.Driver
     max-active: 10
     max-idle: 5
@@ -73,7 +73,7 @@ ribbon:
 logging.path: ./logs/${spring.application.name}
 
 feign:
-  url: https://121.42.13.243:30000/api
+  url: https://registry.dop.clsaa.com/api
 
 message:
   mq:

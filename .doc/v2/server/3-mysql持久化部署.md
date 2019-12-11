@@ -189,9 +189,30 @@ ps -a
  mysql -h127.0.0.1 -uroot -ppassword
 进入mysql
 ### mysql 信息
-ip:port: 121.42.13.103:30306
+ip:port: 115.28.186.77:30306
 
 用户名
 dop
 密码
-dop_db_123
+Dop_mysql_12345
+
+## 创建用户 和 数据库 并授权
+create user "dop"@"%" identified by "Dop_mysql_12345";
+
+create DATABASE db_dop_code;
+create DATABASE db_dop_image;
+create DATABASE db_dop_login;
+create DATABASE db_dop_message;
+create DATABASE db_dop_permission;
+create DATABASE db_dop_pipeline;
+create DATABASE db_dop_test;
+create DATABASE db_dop_user;
+
+grant all privileges on `db_dop_code`.* to 'dop'@'%';
+grant all privileges on `db_dop_image`.* to 'dop'@'%';
+grant all privileges on `db_dop_login`.* to 'dop'@'%';
+grant all privileges on `db_dop_message`.* to 'dop'@'%';
+grant all privileges on `db_dop_permission`.* to 'dop'@'%';
+grant all privileges on `db_dop_pipeline`.* to 'dop'@'%';
+grant all privileges on `db_dop_test`.* to 'dop'@'%';
+grant all privileges on `db_dop_user`.* to 'dop'@'%';

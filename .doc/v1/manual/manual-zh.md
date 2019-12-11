@@ -8,7 +8,7 @@
 * API Doc：http://open.dop.clsaa.com/xxx-server/swagger-ui.html
 
 * GitHub：https://github.com/doporg/dop
-* Harbor：[https://121.42.13.243:30000](https://121.42.13.243:30000/)
+* Harbor：[https://registry.dop.clsaa.com](https://registry.dop.clsaa.com/)
 * GitLab：[http://gitlab.dop.clsaa.com/](http://gitlab.dop.clsaa.com/)
 * Jenkins：[http://jenkins.dop.clsaa.com/](http://jenkins.dop.clsaa.com/)
 * Kubernetes：https://dashboard.k8s.dop.clsaa.com/
@@ -212,8 +212,8 @@ pipeline{
 	environment {
 		REPOSITORY="https://github.com/clsaa/dop.git"
 		SERVICE_DIR="gateway-server"
-		DOCKER_REGISTRY_HOST="121.42.13.243:30000"
-		DOCKER_REGISTRY="121.42.13.243:30000/dop/gateway-server"
+		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
+		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/gateway-server"
 	}
 
 	stages {
@@ -526,7 +526,7 @@ pipeline{
 >
 > 这里要说明镜像管理模块中的两个概念：命名空间(一般代表一个项目，是对镜像仓库的一个分类)、镜像仓库(一般代表一个应用，每个应用每次构建的镜像一般存入同一个镜像仓库中只不过版本号不同)、镜像(一般代表一个应用的某个版本)
 >
-> 以 docker pull 121.42.13.243:30000/dop/application-server:2019032515435beb579 为例
+> 以 docker pull registry.dop.clsaa.com/dop/application-server:2019032515435beb579 为例
 >
 > registry.dop.clsaa.com为镜像仓库域名，
 >

@@ -36,7 +36,7 @@ DOP平台提供简易的[代码仓库](http://gitlab.dop.clsaa.com/users/sign_in
 
 与IDP平台相同，DOP平台提供一条用户可定制的流水线，供用户完成持续集成相关的工作
 
-> DOP平台在构建过程中提供完备的容器镜像管理，DOP平台拥有自己的[镜像仓库](https://121.42.13.243:30000/)
+> DOP平台在构建过程中提供完备的容器镜像管理，DOP平台拥有自己的[镜像仓库](https://registry.dop.clsaa.com/)
 
 DOP镜像管理所提供的功能：
 - sign in/sign up

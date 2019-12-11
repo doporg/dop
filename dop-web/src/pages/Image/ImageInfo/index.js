@@ -59,7 +59,7 @@ class ImageInfo extends Component{
     }
 
     pullRender=(value,index,record)=>{
-        let pull = "docker pull 121.42.13.243:30000/" + this.state.namespace + "/" + this.state.repoName + ":" + record.name;
+        let pull = "docker pull registry.dop.clsaa.com/" + this.state.namespace + "/" + this.state.repoName + ":" + record.name;
         console.log(pull);
         return <CopyToClipboard className={"copy"} onCopy={this.onCopy} text={pull}>
             <div>

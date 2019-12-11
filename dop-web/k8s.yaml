@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: dop-web
-          image: 121.42.13.243:30000/dop/dop-web:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/dop-web:<BUILD_TAG>
           volumeMounts:
             - name: host-time
               mountPath: /etc/localtime
