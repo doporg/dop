@@ -40,7 +40,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
+  #mongo配置
+  data:
+    mongodb:
+      database: db_dop_pipeline
+      uri: mongodb://121.42.13.103:31041
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
