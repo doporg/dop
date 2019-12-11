@@ -395,7 +395,7 @@ networks:
 + ip：47.99.138.113
 + port：0.0.0.0:27017->27017/tcp
 + mount：~/mongo/db:/data/db
-+ mongo.dop.clsaa.com:27017
++ 121.42.13.103:31041
 + 命令：
 ```
 docker run -p 27017:27017 -v ~/mongo/db:/data/db -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone  --name mongodb -d mongo:latest
