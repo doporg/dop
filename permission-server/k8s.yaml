@@ -4,6 +4,9 @@ metadata:
   name: permission-server
   namespace: dop
 spec:
+  selector:
+    matchLabels:
+      app: permission-server
   replicas: 1
   template:
     metadata:
@@ -13,7 +16,7 @@ spec:
       containers:
         - name: permission-server
           imagePullPolicy: Always
-          image: http://registry.dop.clsaa.com/dop/permission-server:<BUILD_TAG>
+          image: registry.dop.clsaa.com/dop/permission-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi
