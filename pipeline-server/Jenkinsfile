@@ -2,7 +2,7 @@ pipeline{
     agent any
 
 	environment {
-		REPOSITORY="github.com/doporg/dop.git"
+		REPOSITORY="https://github.com/doporg/dop.git"
 		SERVICE_DIR="pipeline-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/pipeline-server"

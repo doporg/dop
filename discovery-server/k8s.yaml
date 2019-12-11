@@ -42,19 +42,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: discovery-server
-  annotations:
-    getambassador.io/config: |
-      ---
-      apiVersion: ambassador/v1
-      kind: Mapping
-      name: discovery-server-mapping
-      prefix: /
-      service: discovery-server.dop
-      host: discovery.dop.clsaa.com
   namespace: dop
   labels:
     app: discovery-server
 spec:
+  type: NodePort
   ports:
   - port: 8761
     protocol: TCP

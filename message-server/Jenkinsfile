@@ -4,7 +4,7 @@ pipeline{
 
 	
 	environment {
-		REPOSITORY="github.com/doporg/dop.git"
+		REPOSITORY="https://github.com/doporg/dop.git"
 		SERVICE_DIR="message-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/message-server"

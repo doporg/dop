@@ -144,7 +144,7 @@ API网关与用户登录、校验及用户注册的逻辑关系如下图所示�
 
 ## 2.2.本地运行
 
-1. **从master分支拉取最新代码**：```git clone github.com/doporg/dop.git```
+1. **从master分支拉取最新代码**：```git clone https://github.com/doporg/dop.git```
 
 2. **将项目导入IDEA**：IDEA->file->open(打开dop目录)
 
@@ -210,7 +210,7 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="github.com/doporg/dop.git"
+		REPOSITORY="https://github.com/doporg/dop.git"
 		SERVICE_DIR="gateway-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/gateway-server"
