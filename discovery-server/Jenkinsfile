@@ -5,8 +5,8 @@ pipeline {
     environment {
         REPOSITORY = "https://github.com/doporg/dop.git"
         SERVICE_DIR = "discovery-server"
-        DOCKER_REGISTRY_HOST = "http://registry.dop.clsaa.com"
-        DOCKER_REGISTRY = "http://registry.dop.clsaa.com/dop/discovery-server"
+        DOCKER_REGISTRY_HOST = "registry.dop.clsaa.com"
+        DOCKER_REGISTRY = "registry.dop.clsaa.com/dop/discovery-server"
     }
 
 
