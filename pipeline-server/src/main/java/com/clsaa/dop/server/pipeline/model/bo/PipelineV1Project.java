@@ -45,4 +45,35 @@ public class PipelineV1Project {
     @SerializedName("ctime")
     private LocalDateTime ctime;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getCuser() {
+        return cuser;
+    }
+
+    public void setCuser(Long cuser) {
+        this.cuser = cuser;
+    }
+
+    public LocalDateTime getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(LocalDateTime ctime) {
+        this.ctime = ctime;
+    }
 }

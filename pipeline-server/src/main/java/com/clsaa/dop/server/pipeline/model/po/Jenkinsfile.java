@@ -29,4 +29,20 @@ public class Jenkinsfile {
      */
     @SerializedName("path")
     private String path;
+
+    public String getGit() {
+        return git;
+    }
+
+    public void setGit(String git) {
+        this.git = git;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

@@ -30,4 +30,20 @@ public class Stage {
      */
     @SerializedName("steps")
     private ArrayList<Step> steps;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Step> getSteps() {
+        return steps;
+    }
+
+    public void setSteps(ArrayList<Step> steps) {
+        this.steps = steps;
+    }
 }

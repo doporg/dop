@@ -88,4 +88,13 @@ public class Step {
      */
     @SerializedName("shell")
     private String shell;
+
+
+    public TaskType getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(TaskType taskName) {
+        this.taskName = taskName;
+    }
 }

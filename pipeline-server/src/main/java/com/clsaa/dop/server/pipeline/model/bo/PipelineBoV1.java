@@ -107,4 +107,108 @@ public class PipelineBoV1 {
     @Field("isDeleted")
     @SerializedName("isDeleted")
     private Boolean isDeleted;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Pipeline.Monitor getMonitor() {
+        return monitor;
+    }
+
+    public void setMonitor(Pipeline.Monitor monitor) {
+        this.monitor = monitor;
+    }
+
+    public Long getTiming() {
+        return timing;
+    }
+
+    public void setTiming(Long timing) {
+        this.timing = timing;
+    }
+
+    public Pipeline.Config getConfig() {
+        return config;
+    }
+
+    public void setConfig(Pipeline.Config config) {
+        this.config = config;
+    }
+
+    public Jenkinsfile getJenkinsfile() {
+        return jenkinsfile;
+    }
+
+    public void setJenkinsfile(Jenkinsfile jenkinsfile) {
+        this.jenkinsfile = jenkinsfile;
+    }
+
+    public ArrayList<Stage> getStages() {
+        return stages;
+    }
+
+    public void setStages(ArrayList<Stage> stages) {
+        this.stages = stages;
+    }
+
+    public Long getCuser() {
+        return cuser;
+    }
+
+    public void setCuser(Long cuser) {
+        this.cuser = cuser;
+    }
+
+    public LocalDateTime getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(LocalDateTime ctime) {
+        this.ctime = ctime;
+    }
+
+    public LocalDateTime getMtime() {
+        return mtime;
+    }
+
+    public void setMtime(LocalDateTime mtime) {
+        this.mtime = mtime;
+    }
+
+    public Long getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Long appId) {
+        this.appId = appId;
+    }
+
+    public Long getAppEnvId() {
+        return appEnvId;
+    }
+
+    public void setAppEnvId(Long appEnvId) {
+        this.appEnvId = appEnvId;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
 }
