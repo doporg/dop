@@ -15,6 +15,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
+          imagePullPolicy: Always
           image: registry.dop.clsaa.com/dop/gateway-server:<BUILD_TAG>
           resources:
             requests:
