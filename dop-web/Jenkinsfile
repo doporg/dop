@@ -39,7 +39,7 @@ pipeline{
                 echo "start push image"
                 dir(SERVICE_DIR){
                   sh "ls -l"
-                  withCredentials([usernamePassword(credentialsId: 'zfl_docker_registry', passwordVariable: 'password', usernameVariable: 'username')]) {
+                  withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'password', usernameVariable: 'username')]) {
                       sh "docker login -u ${username} -p ${password} ${DOCKER_REGISTRY_HOST}"
                       sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
                   }
