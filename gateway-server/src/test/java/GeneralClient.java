@@ -2,7 +2,7 @@ import com.clsaa.dop.server.gateway.oauth.security.ClientKeysUtil;
 
 public class GeneralClient {
     public static void main(String[] args) {
-        String client_aes_key = "e5Fcq-fWX-EvE5jyM7Scsb9PUXYEC22NE0SgF9dp-3sVvLxW-_59sOJ4I5tFqgKz";
+        String client_aes_key = "IVgXZ_LavzG4ySKsxcqJC1tiGZia2xjhyzDz_tTCjU7-W5P5Xc9yqyevX-ro_qiW";
         String client_id = ClientKeysUtil.newClientId("softeng_dop_web");
         String client_secret = ClientKeysUtil.newPlainClientSecret();
         String client_secret_in_db = ClientKeysUtil.getAesChipperSecret(client_secret, client_aes_key);

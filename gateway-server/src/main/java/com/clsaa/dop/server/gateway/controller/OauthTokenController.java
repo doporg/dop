@@ -90,6 +90,7 @@ public class OauthTokenController {
         ClientBoV1 client = this.clientService.findClientByClientId(client_id);
         BizAssert.validParam(client != null, BizCodes.INVALID_CLIENT);
         //获取明文client_secret
+
         String clientSecret = ClientKeysUtil.getAesPlainSecret(client.getClientSecret(),
                 this.properties.getOauth().getAES().getClientKey());
         //验证签名
@@ -101,7 +102,7 @@ public class OauthTokenController {
                 request.getParameterMap());
         //创建AccessToken
         AccessTokenBoV1 accessTokenBoV1 = this.accessTokenService.addAccessToken(client.getId(), client.getAccessTokenValidity());
-        //自校验加密
+        //自校验加密getAesPlainSecret
         String returnedAccessToken = FastAes.encrypt(
                 BaseEncoding.base64Url().decode(this.properties.getOauth().getAES().getTokenKey()),
                 accessTokenBoV1.getToken()).getContent();

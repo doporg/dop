@@ -93,7 +93,7 @@ logging.path: ./logs/${spring.application.name}
 gateway:
   oauth:
     AES:
-      clientKey: e5Fcq-fWX-EvE5jyM7Scsb9PUXYEC22NE0SgF9dp-3sVvLxW-_59sOJ4I5tFqgKz
+      clientKey: IVgXZ_LavzG4ySKsxcqJC1tiGZia2xjhyzDz_tTCjU7-W5P5Xc9yqyevX-ro_qiW
       tokenKey: APbCXRbW7Rw6JAX03GJiHKgTM5UMUQyXXhWpnPbjgIEjBnURgLCbes3ty1x_vJU7HQ==
   jwt:
     secret: ANBgkqhkiG9w0BAQEDANBgkqhkiG9w0BAQE
