@@ -69,8 +69,8 @@ function getTimeStamp() {
  * */
 
 function oauth(timestamp) {
-    const clientID = "softeng_dop_webAL6-aLDpLKqCdhA";
-    const clientSecret = "AKubxFOEGfWV0vig8XbI08-EC3AheDNG6GD_9upruWmrp-Rd6lny9fkHj6GsWhzD2A==";
+    const clientID = "softeng_dop_webBkAb3YKcAdPgRjb";
+    const clientSecret = "c7M5ZV75J6wXDyuQ0X5XqleuGwJlh1Xq1muPLbpW6jF__hL0xKS1pFmaIhMENH8e";
     let URI = "/v1/oauth/token";
     let data = {
         grant_type: "client_credentials",

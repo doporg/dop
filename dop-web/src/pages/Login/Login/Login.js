@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import Logo from '../../../components/Logo'
 import './Login.scss';
 import Footer from "../../../components/Footer";
-import {Form, Input, Button, Field, Loading, Feedback} from "@icedesign/base";
-import {RSA, Encryption, PublicKey} from '../index'
+import {Button, Feedback, Field, Form, Input, Loading} from "@icedesign/base";
+import {Encryption, PublicKey, RSA} from '../index'
 import API from "../../API";
 import Axios from "axios/index";
 import jsonp from "jsonp";
@@ -186,7 +186,7 @@ class Login extends Component {
                         </div>
                     </div>
                     <div className="right">
-                        <Loading shape="fusion-reactor" visible={this.state.visible}
+                        <Loading shape="fusion-reactor" visible={false}
                                  className="next-loading my-loading"
                         >
                             <div className="form">
