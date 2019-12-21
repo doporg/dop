@@ -23,8 +23,6 @@ import com.clsaa.rest.result.bizassert.BizCode;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -89,6 +87,7 @@ public class UserService {
             JSONObject registerData = JSONObject.parseObject(exitRegisterDataStr);
             //RSA解密
             String password = registerData.getString("password");
+            System.out.print("password" + password);
             CryptoResult realPassword = RSA.decryptByPrivateKey(password, this.userProperties.getAccount().getSecret().getRSAPrivateKey());
             BizAssert.validParam(realPassword.isOK(), new BizCode(BizCodes.INVALID_PARAM.getCode(), "RSA解密失败"));
             //校验用户名或邮箱是否存在
