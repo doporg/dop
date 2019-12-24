@@ -21,6 +21,6 @@ eureka:
     use-read-only-response-cache: false #禁用read-only-response-cache
   client:
     registerWithEureka: false
-    fetchRegistry: false
+    fetchRegistry: true
     serviceUrl:
       defaultZone: http://discovery.dop.clsaa.com/eureka/

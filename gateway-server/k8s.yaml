@@ -48,7 +48,7 @@ metadata:
     app: gateway-server
 spec:
   ports:
-    - port: 14523
+    - port: 8888
       protocol: TCP
       targetPort: 8888
   selector:
