@@ -44,8 +44,7 @@ spring:
   #mongo配置
   data:
     mongodb:
-      database: pipeline
-      uri: mongodb://121.42.13.103:31041
+      uri: mongodb://121.42.13.103:27017/db_dop_pipeline
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
