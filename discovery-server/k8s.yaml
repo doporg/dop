@@ -63,7 +63,7 @@ spec:
 #  namespace: dop
 #spec:
 #  rules:
-#  - host: discovery.dop.clsaa.com
+#  - host: 121.42.13.103:30195
 #    http:
 #      paths:
 #      - backend:
