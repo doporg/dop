@@ -4,7 +4,7 @@
 
 * DOP：[http://www.dop.clsaa.com/](http://www.dop.clsaa.com/)
 * APIGateway：[http://open.dop.clsaa.com](http://open.dop.clsaa.com/)
-* Eureka：[http://discovery.dop.clsaa.com/](http://discovery.dop.clsaa.com/)
+* Eureka：[http://121.42.13.103:30195/](http://121.42.13.103:30195/)
 * API Doc：http://open.dop.clsaa.com/xxx-server/swagger-ui.html
 
 * GitHub：https://github.com/doporg/dop
