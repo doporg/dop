@@ -46,16 +46,16 @@ spec:
   selector:
     app: dop-web
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: dop-web
-  namespace: dop
+ name: dop-web
+ namespace: dop
 spec:
-  rules:
-    - host: www.dop.clsaa.com
-      http:
-        paths:
-          - backend:
-              serviceName: dop-web
-              servicePort: 14237
+ rules:
+   - host: www.dop.clsaa.com
+     http:
+       paths:
+         - backend:
+             serviceName: dop-web
+             servicePort: 14237
