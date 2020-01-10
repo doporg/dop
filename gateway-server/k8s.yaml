@@ -38,8 +38,6 @@ spec:
         - name: host-timezone
           hostPath:
             path: /etc/timezone
-      nodeSelector:
-        labelName: dop-node2
 ---
 apiVersion: v1
 kind: Service
@@ -50,22 +48,22 @@ metadata:
     app: gateway-server
 spec:
   ports:
-    - port: 8888
+    - port: 14258
       protocol: TCP
       targetPort: 8888
   selector:
     app: gateway-server
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  name: gateway-server
-#  namespace: dop
-#spec:
-#  rules:
-#    - host: open.dop.clsaa.com
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: gateway-server
-#              servicePort: 14523
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+ name: gateway-server
+ namespace: dop
+spec:
+ rules:
+   - host: open.dop.clsaa.com
+     http:
+       paths:
+         - backend:
+             serviceName: gateway-server
+             servicePort: 14258
