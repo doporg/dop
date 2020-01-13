@@ -69,7 +69,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://121.42.13.103:31240/eureka
+      defaultZone: http://121.42.13.103:32129/eureka
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000
