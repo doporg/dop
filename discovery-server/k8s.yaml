@@ -48,25 +48,24 @@ metadata:
   labels:
     app: discovery-server
 spec:
-  type: NodePort
+  type: ClusterIp
   ports:
-  - nodePort: 32129
-    port: 8761
+  - port: 8761
     protocol: TCP
     targetPort: 8761
   selector:
     app: discovery-server
-#---
-#apiVersion: extensions/v1beta1
-#kind: Ingress
-#metadata:
-#  name: discovery-server
-#  namespace: dop
-#spec:
-#  rules:
-#  - host: 121.42.13.103:30195
-#    http:
-#      paths:
-#      - backend:
-#          serviceName: discovery-server
-#          servicePort: 8761
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: discovery-server
+ namespace: dop
+spec:
+ rules:
+ - host: discovery.dop.clsaa.com
+   http:
+     paths:
+     - backend:
+         serviceName: discovery-server
+         servicePort: 8761
