@@ -59,6 +59,8 @@ kind: Ingress
 metadata:
  name: gateway-server
  namespace: dop
+ annotations:
+     kubernetes.io/ingress.class: "nginx"
 spec:
  rules:
    - host: open.dop.clsaa.com
