@@ -59,6 +59,18 @@ public interface RoleRepository extends JpaRepository<Role, Long>
                                         @Param("pageSize") Integer pageSize);
 
     /**
+     * 根据关键字key过滤查询
+     *
+     * @param  key 关键字
+     * @param {List <Long> idList}
+     * @return {@link List < Permission >}
+     */
+    @Query(value = "select * from t_role where id in :idList and name like concat(:key,'%') and is_deleted = 0 "+
+            "limit :rowOffset,:pageSize  ",nativeQuery = true)
+    List<Role> findAllByNameLikeAndIdIn(@Param("key") String key,
+                                        @Param("idList") List<Long> idList);
+
+    /**
      * 查询全部
      *
      * @param  {List <Long> idList}

@@ -123,21 +123,21 @@ public class PermissionService {
         List<Long> idList=authenticationService.findAllIds("查询功能点",userId,"permissionId");
 
         List<Permission> permissionList=new ArrayList<>();
+
+        int count = 0;
         if(key.equals(""))
         {
+            count=this.permissionRepository.findByIdIn(idList).size();
             permissionList=this.permissionRepository.findByIdIn(idList,pagination.getRowOffset(),pagination.getPageSize());
         }
         else
         {
+
             permissionList = this.permissionRepository.findAllByNameLikeAndIdIn(key,idList,pagination.getRowOffset(),
                     pagination.getPageSize());
+            count=this.permissionRepository.findAllByNameLikeAndIdIn(key,idList).size();
         }
 
-        for(int i =0 ;i<permissionList.size();i++)
-        {
-            System.out.println(permissionList.get(i).getName());
-        }
-        int count=permissionList.size();
         pagination.setTotalCount(count);
         if (count== 0) {
             pagination.setPageList(Collections.emptyList());

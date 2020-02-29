@@ -130,18 +130,20 @@ public class RoleService {
 
         //可以查看的ID列表
         List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
-
+        int count=0;
         List<Role> roleList=new ArrayList<>();
         if(key.equals(""))
         {
+             count = this.roleRepository.findByIdIn(idList).size();
              roleList=this.roleRepository.findByIdIn(idList,pagination.getRowOffset(),pagination.getPageSize());
         }
         else
         {
+            count = this.roleRepository.findAllByNameLikeAndIdIn(key,idList).size();
              roleList = this.roleRepository.findAllByNameLikeAndIdIn(key,idList,pagination.getRowOffset(),
                      pagination.getPageSize());
         }
-        int count=roleList.size();
+
         pagination.setTotalCount(count);
         if (count == 0) {
             pagination.setPageList(Collections.emptyList());
