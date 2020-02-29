@@ -133,6 +133,10 @@ public class PermissionService {
                     pagination.getPageSize());
         }
 
+        for(int i =0 ;i<permissionList.size();i++)
+        {
+            System.out.println(permissionList.get(i).getName());
+        }
         int count=permissionList.size();
         pagination.setTotalCount(count);
         if (count== 0) {
@@ -145,21 +149,23 @@ public class PermissionService {
                 map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
 
         //获取每条数据的创建人
-        Map<Long,String> userMap=new HashMap<>();
-        for(PermissionV1 permissionV1 : permissionV1List)
-        {
-            if(!userMap.containsKey(permissionV1.getCuser()))
-            {
-                userMap.put(
-                        permissionV1.getCuser(),
-                        userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
-            }
-        }
-        for(PermissionV1 permissionV1 : permissionV1List)
-        {
-            permissionV1.setUserName(userMap.get(permissionV1.getCuser()));
-        }
+//        HashMap<Long,String> userMap=new HashMap<>();
+//        for(PermissionV1 permissionV1 : permissionV1List)
+//        {
+//            if(!userMap.containsKey(permissionV1.getCuser()))
+//            {
+//                userMap.put(
+//                        permissionV1.getCuser(),
+//                        userFeignService.findUserByIdV1(permissionV1.getCuser()).getName());
+//            }
+//        }
+//        for(PermissionV1 permissionV1 : permissionV1List)
+//        {
+//            permissionV1.setUserName(userMap.get(permissionV1.getCuser()));
+//        }
         pagination.setPageList(permissionV1List);
+
+
         return pagination;
     }
 

@@ -152,21 +152,21 @@ public class RoleService {
         List<RoleV1> roleV1List=roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
 
 
-        //获取每条数据的创建人
-        Map<Long,String> userMap=new HashMap<>();
-        for(RoleV1 roleV1 : roleV1List)
-        {
-            if(!userMap.containsKey(roleV1.getMuser()))
-            {
-                userMap.put(
-                        roleV1.getMuser(),
-                        userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
-            }
-        }
-        for(RoleV1 roleV1 : roleV1List)
-        {
-            roleV1.setUserName(userMap.get(roleV1.getMuser()));
-        }
+//        //获取每条数据的创建人
+//        Map<Long,String> userMap=new HashMap<>();
+//        for(RoleV1 roleV1 : roleV1List)
+//        {
+//            if(!userMap.containsKey(roleV1.getMuser()))
+//            {
+//                userMap.put(
+//                        roleV1.getMuser(),
+//                        userFeignService.findUserByIdV1(roleV1.getMuser()).getName());
+//            }
+//        }
+//        for(RoleV1 roleV1 : roleV1List)
+//        {
+//            roleV1.setUserName(userMap.get(roleV1.getMuser()));
+//        }
 
         pagination.setPageList(roleV1List);
         return pagination;

@@ -117,11 +117,12 @@ public class UserDataService {
     //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
     public List<Long> findAllIds(String permissionName, Long userId,String fieldName)
     {
+        //舍弃了 参数 permissionName
         Set<Long> IdSet=new HashSet<>();
         List<Long> IdList=new ArrayList<>();
         if(permissionService.checkUserPermission(permissionName,userId))
         {
-            List<UserData> userDataList=userDataDAO.findAllIds(permissionName,userId,fieldName);
+            List<UserData> userDataList=userDataDAO.findAllIds(userId,fieldName);
             for(UserData userData:userDataList)
             {
                 IdSet.add(userData.getFieldValue());

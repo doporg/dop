@@ -93,20 +93,23 @@ public interface UserDataDAO extends JpaRepository<UserData, Long>{
     /**
      * 得到某个功能点操作允许操作的数据范围
      *
-     * @param permissionName  作用域值
+
      * @param fieldName 作用域名称
      * @param userId 用户ID
      *
      * @return {List<Long>}
      */
 
-    @Query(value = "select * from t_user_data d inner join t_user_rule r on d.rule_id=r.id " +
-            "inner join t_user_role_mapping ur on d.user_id=ur.user_id " +
-            "inner join t_role_permission_mapping rp on ur.role_id=rp.role_id " +
-            "inner join t_permission p on rp.permission_id=p.id "
-            +"where p.name=:permissionName and d.user_id=:userId and r.field_name=:fieldName and " +
-            "r.rule='in' and d.is_deleted = 0",nativeQuery = true)
-    List<UserData> findAllIds(@Param("permissionName") String permissionName,
+//    @Query(value = "select * from t_user_data d inner join t_user_rule r on d.rule_id=r.id " +
+//            "inner join t_user_role_mapping ur on d.user_id=ur.user_id " +
+//            "inner join t_role_permission_mapping rp on ur.role_id=rp.role_id " +
+//            "inner join t_permission p on rp.permission_id=p.id "
+//            +"where p.name=:permissionName and d.user_id=:userId and r.field_name=:fieldName and " +
+//            "r.rule='in' and d.is_deleted = 0",nativeQuery = true)
+    @Query(value = "select * from t_user_data where user_id=:userId and description like CONCAT('%',:fieldName,'%') "
+            ,nativeQuery = true
+    )
+    List<UserData> findAllIds(
                               @Param("userId") Long userId,
                               @Param("fieldName") String fieldName);
 

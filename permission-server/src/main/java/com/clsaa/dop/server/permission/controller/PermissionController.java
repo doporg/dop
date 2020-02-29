@@ -3,8 +3,10 @@ package com.clsaa.dop.server.permission.controller;
 import com.clsaa.dop.server.permission.config.HttpHeaders;
 import com.clsaa.dop.server.permission.model.vo.PermissionV1;
 import com.clsaa.dop.server.permission.service.PermissionService;
+import com.clsaa.dop.server.permission.service.UserDataService;
 import com.clsaa.dop.server.permission.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ import java.util.stream.Collectors;
 public class PermissionController {
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private UserDataService userDataService;
 
     @ApiOperation(value = "创建功能点", notes = "创建功能点")
     @PostMapping("/v1/permissions")
@@ -136,6 +141,13 @@ public class PermissionController {
     {
         return permissionService.findByUserId(loginUser)
                 .stream().map(p -> BeanUtils.convertType(p, PermissionV1.class)).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value ="得到用户2能看的所有功能点ID列表",notes = "得到用户2能看的所有功能点ID列表")
+    @GetMapping("/aaaaa")
+    public List<Long> findAllIdOf2()
+    {
+        return userDataService.findAllIds("查询功能点",2l,"PermissionId");
     }
 
 }
