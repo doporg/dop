@@ -8,6 +8,7 @@ import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
+import com.clsaa.dop.server.pipeline.util.JenkinsUtils;
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
@@ -36,14 +37,23 @@ import java.util.Map;
 
 @Service
 public class JenkinsService {
-    private static String JenkinsURI = "http://jenkins.dop.clsaa.com";
-    private static String User = "zfl";
-    private static String PWD = "zfl";
+    private String jenkinsURI;
+    private String user;
+    private String pwd;
     private JenkinsServer jenkins;
+    private JenkinsUtils jenkinsUtils = new JenkinsUtils();
 
 
-    public JenkinsService() throws Exception {
-        this.jenkins = new JenkinsServer(new URI(JenkinsURI), User, PWD);
+    public JenkinsService() {
+        this.jenkinsURI = jenkinsUtils.getUri();
+        this.user = jenkinsUtils.getUsername();
+        this.pwd = jenkinsUtils.getPassword();
+        try {
+            this.jenkins = new JenkinsServer(new URI(jenkinsURI), user, pwd);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /***
@@ -56,7 +66,7 @@ public class JenkinsService {
 
         try {
             if (jenkins.getJob(name) == null) {
-                System.out.println(new JobConfig(jenkinsfile.getScript(), pipeline.getTiming()).getXml());
+//                System.out.println(new JobConfig(jenkinsfile.getScript(), pipeline.getTiming()).getXml());
                 jenkins.createJob(name, new JobConfig(jenkinsfile.getScript(), pipeline.getTiming()).getXml());
             } else {
                 jenkins.deleteJob(name);
@@ -73,6 +83,7 @@ public class JenkinsService {
      * 根据jenkinsfile创建流水线
      */
     public void createByJenkinsfile(Pipeline pipeline) {
+        System.out.println(new JobConfig(pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath(), pipeline.getTiming()).getXml());
         try {
             if (jenkins.getJob(pipeline.getId()) == null) {
                 jenkins.createJob(pipeline.getId(), new JobConfig(pipeline.getJenkinsfile().getGit(), pipeline.getJenkinsfile().getPath(), pipeline.getTiming()).getXml());

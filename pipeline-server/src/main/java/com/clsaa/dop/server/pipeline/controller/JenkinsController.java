@@ -10,6 +10,7 @@ import com.clsaa.dop.server.pipeline.service.BlueOceanService;
 import com.clsaa.dop.server.pipeline.service.JenkinsService;
 import com.clsaa.dop.server.pipeline.service.PipelineService;
 import com.clsaa.dop.server.pipeline.service.ResultOutputService;
+import com.clsaa.dop.server.pipeline.util.JenkinsUtils;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -41,18 +42,19 @@ import java.util.Map;
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class JenkinsController {
-
-    @Autowired
-    private JenkinsService jenkinsService;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private PipelineService pipelineService;
     @Autowired
     private ResultOutputService resultOutputService;
+    @Autowired
+    private JenkinsService jenkinsService;
+
+    private JenkinsUtils jenkinsUtils = new JenkinsUtils();
 
 
-    private String BaseUrl = "http://jenkins.dop.clsaa.com";
+//    private String jenkinsUtils.getUri() = JenkinsUtils.getUri();
 
     private BlueOceanService blueOceanService = new BlueOceanService();
 
@@ -102,14 +104,14 @@ public class JenkinsController {
         }
 
         //运行流水线
-        String url = this.BaseUrl + "/blue/rest/organizations/jenkins/pipelines/" + id + "/runs/";
+        String url = this.jenkinsUtils.getUri() + "/blue/rest/organizations/jenkins/pipelines/" + id + "/runs/";
         restTemplate.postForEntity(url, null, String.class);
     }
 
     @ApiOperation(value = "查找流水线运行结果", notes = "根据流水线id查找流水线运行结果所得stages")
     @GetMapping("/v1/jenkins/runs")
     public String runs(String id) {
-        String url = this.BaseUrl + "/blue/rest/organizations/jenkins/pipelines/" + id + "/runs/";
+        String url = this.jenkinsUtils.getUri() + "/blue/rest/organizations/jenkins/pipelines/" + id + "/runs/";
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         return responseEntity.getBody();
     }
@@ -117,7 +119,7 @@ public class JenkinsController {
     @ApiOperation(value = "查找流水线运行最后一次的stages", notes = "根据传进来的地址进行api接口的访问")
     @GetMapping("/v1/jenkins/result")
     public String stages(String path) {
-        String url = this.BaseUrl + path;
+        String url = this.jenkinsUtils.getUri() + path;
         ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
         return responseEntity.getBody();
     }

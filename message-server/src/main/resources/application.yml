@@ -10,7 +10,7 @@ spring:
     name: message-server
   data:
     mongodb:
-      uri: mongodb://121.42.13.103:31041/db_message
+      uri: mongodb://121.42.13.103:27017/db_dop_message
   #邮箱配置
   mail:
     host: smtp.qq.com

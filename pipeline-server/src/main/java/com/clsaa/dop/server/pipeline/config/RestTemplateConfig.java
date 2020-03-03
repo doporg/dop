@@ -1,5 +1,8 @@
 package com.clsaa.dop.server.pipeline.config;
 
+import com.clsaa.dop.server.pipeline.util.JenkinsUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -10,17 +13,23 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 
 @Configuration
 public class RestTemplateConfig {
+    private JenkinsUtils jenkinsUtils = new JenkinsUtils();
 
-    public static class AgentInterceptor implements ClientHttpRequestInterceptor {
+
+    public class AgentInterceptor implements ClientHttpRequestInterceptor {
         @Override
         public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
             HttpHeaders headers = request.getHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "Basic emZsOnpmbA==");
+            String decode = jenkinsUtils.getUsername() + ":" + jenkinsUtils.getPassword();
+            byte[] decodeByte = decode.getBytes(StandardCharsets.UTF_8);
+            String encoded = Base64.encodeBase64String(decodeByte);
+            headers.add(HttpHeaders.AUTHORIZATION, "Basic " + encoded);
             headers.add(HttpHeaders.CONTENT_TYPE, "application/json");
             headers.add(HttpHeaders.USER_AGENT, "");
             return execution.execute(request, body);
