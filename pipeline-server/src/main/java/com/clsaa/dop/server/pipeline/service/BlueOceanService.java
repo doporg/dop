@@ -25,7 +25,7 @@ public class BlueOceanService {
 
     // 获得authorization
     public String getAuthorization(){
-        String uri = "http://jenkins.dop.clsaa.com/jwt-auth/token";
+        String uri = "http://jenkins.dop.clsaa.com:8088/jwt-auth/token";
         HttpHeaders headers = restTemplate.getForEntity(uri, String.class).getHeaders();
         return headers.get("X-BLUEOCEAN-JWT").get(0);
     }

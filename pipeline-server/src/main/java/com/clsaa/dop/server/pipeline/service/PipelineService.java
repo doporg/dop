@@ -91,6 +91,7 @@ public class PipelineService {
     public List<PipelineVoV3> getPipelineForTable() {
         List<Pipeline> pipelines = this.pipelineRepository.findAllNoDeleted();
         List<PipelineVoV3> pipelineVoV3s = new ArrayList<>();
+        System.out.println();
         for (int i = 0; i < pipelines.size(); i++) {
             PipelineVoV3 pipelineVoV3 = PipelineVoV3.builder()
                     .id(pipelines.get(i).getId())

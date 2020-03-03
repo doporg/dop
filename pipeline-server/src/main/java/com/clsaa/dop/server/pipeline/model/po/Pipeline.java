@@ -112,6 +112,7 @@ public class Pipeline {
     private Long cuser;
 
     /**
+     *
      * 是否删除
      */
     @Field("isDeleted")
