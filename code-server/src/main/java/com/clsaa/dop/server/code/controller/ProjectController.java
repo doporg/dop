@@ -157,10 +157,10 @@ public class ProjectController {
     @ApiOperation(value = "修改项目成员的权限等级",notes = "根据项目id，用户id设置权限等级")
     @PutMapping("/projects/{username}/{projectname}/members")
     public void changeProjectMemberAccessLevel(@ApiParam(value = "用户名") @PathVariable("username") String username,
-                                 @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
-                                 @ApiParam(value = "gitlab用户id") @RequestParam("user_id") int user_id,
-                                 @ApiParam(value = "权限等级") @RequestParam("access_level") int access_level,
-                                 @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
+                                               @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                               @ApiParam(value = "gitlab用户id") @RequestParam("user_id") int user_id,
+                                               @ApiParam(value = "权限等级") @RequestParam("access_level") int access_level,
+                                               @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
         projectService.changeProjectMemberAccessLevel(id,user_id,access_level,userId);
     }
@@ -168,9 +168,9 @@ public class ProjectController {
     @ApiOperation(value = "删除一个项目成员",notes = "根据项目id，用户id删除项目成员")
     @DeleteMapping("/projects/{username}/{projectname}/members")
     public void deleteProjectMember(@ApiParam(value = "用户名") @PathVariable("username") String username,
-                                               @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
-                                               @ApiParam(value = "gitlab用户id") @RequestParam("user_id") int user_id,
-                                               @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
+                                    @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                    @ApiParam(value = "gitlab用户id") @RequestParam("user_id") int user_id,
+                                    @ApiParam(value = "dop用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
         projectService.deleteProjectMember(id,user_id,userId);
     }
