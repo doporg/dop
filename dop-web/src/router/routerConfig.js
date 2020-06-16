@@ -12,6 +12,7 @@ import codeConfig from "../pages/Code";
 import {testConfig} from "../pages/TestCases";
 import {imageConfig} from "../pages/Image";
 
+
 const baseConfig = [
     {
         path: '/notPermission',

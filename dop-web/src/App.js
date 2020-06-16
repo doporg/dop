@@ -28,6 +28,7 @@ class App extends Component {
             return Promise.resolve(response);
         }, (error) => {
             if (error.response) {
+                console.log(error.response)
                 switch (error.response.status) {
                     case 403: {
                         window.sessionStorage.clear();

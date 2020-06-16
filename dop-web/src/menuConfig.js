@@ -55,8 +55,6 @@ const asideMenuConfig = [
         path: '/image/projects',
         icon: 'image',
     }
-
-
 ];
 
 export {headerMenuConfig, asideMenuConfig};
