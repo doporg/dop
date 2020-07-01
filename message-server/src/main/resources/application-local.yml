@@ -68,7 +68,7 @@ logging.level.org .springframework.data.mongodb.core: DEBUG
 message:
   mq:
     RocketMQ:                                     #RocketMQ相关配置
-      namesrvAddr: rocketmq.dop.clsaa.com:9876    #name-server地址与端口,多个可用分号隔开
+      namesrvAddr: 121.42.13.243:9876    #name-server地址与端口,多个可用分号隔开
       groupName:  DOP_MESSAGE_PRODUCER_GROUP      #生产者组名称
       instanceName: DOP_MESSAGE                   #要发送到的MQ集群
       maxMessageSize: 131072 # 1024*128           #最大消息长度
