@@ -412,4 +412,70 @@ docker pull redis
 ```
 docker run -d -p 6379:6379 --name redis-test redis /bin/bash -c "/usr/local/bin/redis-server"
 ```
+## 9.rocketmq
++ ip：121.43.191.226
++ port：0.0.0.0:9876->9876/tcp
++ ip:8087,查看 mq 外部控制台
+```shell script
+# 新建目录
+mkdir /opt/rocketmq/conf
+mkdir /opt/rocketmq/logs
+mkdir /opt/rocketmq/store
+```
+```shell script
+# 在conf下创建 broker.conf
 
+brokerClusterName = DefaultCluster  
+brokerName = broker-a  
+brokerId = 0  
+deleteWhen = 04  
+fileReservedTime = 48  
+brokerRole = ASYNC_MASTER  
+flushDiskType = ASYNC_FLUSH  
+brokerIP1=主机IP
+```
+```shell script
+# 在/opt/rocketmq/ 下创建docker-compose.yml
+
+version: '2'
+services:
+  namesrv:
+    image: rocketmqinc/rocketmq
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    volumes:
+      - /opt/rocketmq/logs:/home/rocketmq/logs
+      - /opt/rocketmq/store:/home/rocketmq/store
+    command: sh mqnamesrv
+  broker:
+    image: rocketmqinc/rocketmq
+    container_name: rmqbroker
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    volumes:
+      - /opt/rocketmq/logs:/home/rocketmq/logs
+      - /opt/rocketmq/store:/home/rocketmq/store
+      - /opt/rocketmq/conf/broker.conf:/opt/rocketmq-4.4.0/conf/broker.conf
+    #command: sh mqbroker -n namesrv:9876
+    command: sh mqbroker -n namesrv:9876 -c ../conf/broker.conf
+    depends_on:
+      - namesrv
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/jre
+  console:
+    image: styletang/rocketmq-console-ng
+    container_name: rocketmq-console-ng
+    ports:
+      - 8087:8080
+    depends_on:
+      - namesrv
+    environment:
+      - JAVA_OPTS= -Dlogging.level.root=info   -Drocketmq.namesrv.addr=rmqnamesrv:9876 
+      - Dcom.rocketmq.sendMessageWithVIPChannel=false
+```
+```shell script
+docker-compose -f docker-compose.yml up -d
+```
