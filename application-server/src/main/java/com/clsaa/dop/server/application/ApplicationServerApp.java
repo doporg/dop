@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableFeignClients
 @ComponentScan("com.clsaa")
 public class ApplicationServerApp {
-
-
     public static void main(String[] args) {
         SpringApplication.run(ApplicationServerApp.class, args);
     }

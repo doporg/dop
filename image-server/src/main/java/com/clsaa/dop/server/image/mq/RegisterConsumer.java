@@ -117,6 +117,7 @@ public class RegisterConsumer implements MessageListenerConcurrently {
     public void stop() {
         if (consumer != null) {
             consumer.shutdown();
+
         }
     }
 }
