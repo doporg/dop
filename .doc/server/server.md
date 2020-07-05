@@ -412,7 +412,8 @@ docker pull redis
 ```
 docker run -d -p 6379:6379 --name redis-test redis /bin/bash -c "/usr/local/bin/redis-server"
 ```
-## 9.rocketmq
+## 9.rocketmq-会有占用内存过高的问题, 废弃
+[配置看这里](https://github.com/doporg/dopv2/blob/master/.doc/server/9-rocketMQ%E9%83%A8%E7%BD%B2.md)
 + ip：121.43.191.226
 + port：0.0.0.0:9876->9876/tcp
 + ip:8087,查看 mq 外部控制台
