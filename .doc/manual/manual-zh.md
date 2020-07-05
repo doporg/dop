@@ -210,7 +210,7 @@ pipeline{
 	agent any
 
 	environment {
-		REPOSITORY="https://github.com/doporg/dop.git"
+		REPOSITORY="https://gitee.com/MrZCoding/dop.git"
 		SERVICE_DIR="gateway-server"
 		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
 		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/gateway-server"
