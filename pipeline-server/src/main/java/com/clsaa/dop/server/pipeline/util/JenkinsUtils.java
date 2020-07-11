@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 public class JenkinsUtils {
-    private static String uri = "http://jenkins.dop.clsaa.com:8088";
+    private static String uri = "http://jenkins.dop.clsaa.com";
     private static String username = "dop";
     private static String password = "Dop123..";
 
