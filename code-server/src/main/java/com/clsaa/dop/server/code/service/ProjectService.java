@@ -26,17 +26,18 @@ public class ProjectService {
      * @param id 项目id
      * @return 项目overview需要的信息
      */
-    public ProjectBo findProject(String id) {
+    public ProjectBo findProject(String id,Long userId) {
 
         id = URLUtil.encodeURIComponent(id);
 
         //获得项目基本信息
-        ProjectBo projectBo = RequestUtil.get("/projects/" + id + "?statistics=true", ProjectBo.class);
+        ProjectBo projectBo = RequestUtil.get("/projects/" + id + "?statistics=true",ProjectBo.class);
+        System.out.println(projectBo);
         //获得tag的数量
-        List<TagBo> tags = RequestUtil.getList("/projects/" + id + "/repository/tags", TagBo.class);
+        List<TagBo> tags = RequestUtil.getList("/projects/" + id + "/repository/tags",TagBo.class);
         projectBo.setTag_count(tags.size());
         //获得分支的数量
-        List<BranchBo> branches = RequestUtil.getList("/projects/" + id + "/repository/branches", BranchBo.class);
+        List<BranchBo> branches = RequestUtil.getList("/projects/" + id + "/repository/branches",BranchBo.class);
         projectBo.setBranch_count(branches.size());
         //获得提交次数
         projectBo.setCommit_count(projectBo.getStatistics().getCommit_count());
@@ -113,7 +114,7 @@ public class ProjectService {
         params.add(new BasicNameValuePair("name", name));
         params.add(new BasicNameValuePair("description", description));
         params.add(new BasicNameValuePair("visibility", visibility));
-        params.add(new BasicNameValuePair("initialize_with_readme", initialize_with_readme));
+        params.add(new BasicNameValuePair("initialize_with_readme", "true"));
 
         RequestUtil.post("/projects", userId, params);
 

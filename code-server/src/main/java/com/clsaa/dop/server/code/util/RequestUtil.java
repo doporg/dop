@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.controller.UserController;
 import com.clsaa.dop.server.code.feign.UserCredentialType;
 import com.clsaa.dop.server.code.feign.UserFeign;
+import com.clsaa.dop.server.code.model.bo.project.ProjectBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
 import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
@@ -50,31 +51,8 @@ public class RequestUtil {
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
 
     //    管理员的token
-    private static final String rootPrivateToken = "z2U7tVfxKakJdX19Zmf5";
-
-    private static final String rootAccessToken = "z2U7tVfxKakJdX19Zmf5";
-
-
-
-    public static void main(String[] args) {
-
-
-//        String access_token="64fce1be53ef1457c98a5a3385d88d48133be93719d53267ed0b813a43fb6352";//Wsy123
-        String access_token="z2U7tVfxKakJdX19Zmf5";//waszqt
-
-        String path="/projects/3/repository/branches";
-
-        String url=api+path+"?access_token="+access_token;
-//        String url=api+"/projects/13"+"?access_token="+access_token;
-
-        FormatUtil.printJson(httpGet(url));
-
-
-
-
-    }
-
-
+    private static final String rootPrivateToken = "2Rxs9jTQEyqipmDsgscX";
+    private static final String rootAccessToken = "2Rxs9jTQEyqipmDsgscX";
 
 
     /**
@@ -88,9 +66,7 @@ public class RequestUtil {
      */
     public static <T> List<T> getList(String path, Long userId, Class<T> clazz) {
 
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -140,9 +116,7 @@ public class RequestUtil {
      * 发送get请求到gitlab，返回一个对象，其他同getList方式
      */
     public static <T> T get(String path, Long userId, Class<T> clazz) {
-
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -155,14 +129,23 @@ public class RequestUtil {
      * 发送get请求到gitlab，返回字符串类型
      */
     public static String getString(String path,Long userId){
-
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
 
         return httpGet(url);
+    }
+
+    public static void main(String[] args) {
+        String id= URLUtil.encodeURIComponent("Admin_0/hhhh");
+        String url = api + "/projects/"+id;
+        url+="?statistics=true";
+        url += url.indexOf('?') == -1 ? "?" : "&";
+        String access_token="92d328d1e0602a5cbefff89508ccc27a9a10bc85fcb01f3261d7d9fc50dc772e";
+        url += "access_token=" + access_token;
+        System.out.println(httpGet(url));
+        System.out.println(JSON.parseObject(httpGet(url), ProjectBo.class));
     }
 
     /**
@@ -189,8 +172,7 @@ public class RequestUtil {
      */
     public static int post(String path, Long userId, List<NameValuePair> params) {
 
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         NameValuePair p = new BasicNameValuePair("access_token", access_token);
         params.add(p);
@@ -224,8 +206,7 @@ public class RequestUtil {
      */
     public static int put(String path,Long userId, List<NameValuePair> params){
 
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         NameValuePair p = new BasicNameValuePair("access_token", access_token);
         params.add(p);
@@ -255,8 +236,7 @@ public class RequestUtil {
      */
     public static int delete(String path,Long userId){
 
-        //String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
-        String access_token="z2U7tVfxKakJdX19Zmf5";
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;

@@ -34,9 +34,10 @@ public class ProjectController {
     @ApiOperation(value = "查询项目信息",notes="根据项目的id查询项目总览需要的信息")
     @GetMapping("/projects/{username}/{projectname}")
     public ProjectVo findProject(@ApiParam(value = "用户名") @PathVariable("username") String username,
-                                 @ApiParam(value = "项目名") @PathVariable("projectname") String projectname){
+                                 @ApiParam(value = "项目名") @PathVariable("projectname") String projectname,
+                                 @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
         String id=username+"/"+projectname;
-        return BeanUtils.convertType(projectService.findProject(id),ProjectVo.class);
+        return BeanUtils.convertType(projectService.findProject(id,userId),ProjectVo.class);
     }
 
     @ApiOperation(value = "star一个项目",notes = "若项目没有star则star,否则unstar")

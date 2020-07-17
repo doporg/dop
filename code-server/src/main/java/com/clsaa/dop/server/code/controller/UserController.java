@@ -45,11 +45,12 @@ public class UserController {
 //    }
 
 
-//    @ApiOperation(value = "新增一个用户",notes = "用用户名、密码和邮箱新建一个gitlab用户，并且创建access_token插入数据库")
-//    @PostMapping("/users")
-//    public void addUser(@ApiParam(value = "用户信息") @RequestBody UserDto userDto){
-//        userService.addUser(userDto.getName(),userDto.getPassword(),userDto.getEmail());
-//    }
+    @ApiOperation(value = "新增一个用户",notes = "用用户名、密码和邮箱新建一个gitlab用户，并且创建access_token插入数据库")
+    @PostMapping("/users")
+    public void addUser(@ApiParam(value = "用户信息") @RequestBody UserDto userDto,
+                        @ApiParam(value = "用户id") @RequestHeader("x-login-user") Long userId){
+        userService.addUser(userId,userDto.getName(),userDto.getPassword(),userDto.getEmail());
+    }
 
 //    @PostMapping("/users/{userId}/credential")
 //    public void hh3(@PathVariable("userId") Long userId,
@@ -61,11 +62,12 @@ public class UserController {
 //
 //    }
 //
-//    @GetMapping("/users/{userId}/credential")
-//    public UserCredentialV1 getUserCredentialV1ByUserId(@PathVariable("userId") Long userId, @RequestParam("type") UserCredentialType type){
-//
-//        return userFeign.getUserCredentialV1ByUserId(userId,type);
-//    }
+    @GetMapping("/users/{userId}/credential")
+    public UserCredentialV1 getUserCredentialV1ByUserId(@PathVariable("userId") Long userId, @RequestParam("type") UserCredentialType type){
+        UserCredentialV1 v1=userFeign.getUserCredentialV1ByUserId(userId,type);
+        System.out.println(v1.toString());
+        return userFeign.getUserCredentialV1ByUserId(userId,type);
+    }
 
 //    @PostMapping("/users")
 //    public void addUser(@RequestParam("id") Long id,@RequestParam("username") String username,@RequestParam("password") String password,@RequestParam("email") String email){
