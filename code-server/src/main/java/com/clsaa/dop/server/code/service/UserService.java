@@ -54,7 +54,6 @@ public class UserService {
         //保证唯一性，查询用户名是否已经存在，如存在则先删除用户
         String path = "/users?username=" + username;
         List<UserIdBo> userIdBos = RequestUtil.getList(path, UserIdBo.class);
-//        System.out.println("userId size:"+userIdBos.size());
         if (userIdBos.size() != 0) {
 
             int gitlabId = userIdBos.get(0).getId();
@@ -82,12 +81,8 @@ public class UserService {
         params.add(new BasicNameValuePair("password", password));
         String access_token = JSON.parseObject(RequestUtil.httpPost1("http://gitlab.dop.clsaa.com/oauth/token", params), TokenBo.class).getAccess_token();
 
-
-        //将access_token插入数据库
-        userMapper.addUser(new User(username, access_token));
         //创建gitlab_token用户凭证
         userFeign.addUserCredential(id, email, access_token, UserCredentialType.DOP_INNER_GITLAB_TOKEN);
-
     }
 
 
