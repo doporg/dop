@@ -155,7 +155,8 @@ public class ProjectService {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("name", name));
         params.add(new BasicNameValuePair("description", description));
-        params.add(new BasicNameValuePair("default_branch", default_branch));
+        if(!default_branch.equals("null"))
+            params.add(new BasicNameValuePair("default_branch", default_branch));
         params.add(new BasicNameValuePair("visibility", visibility));
         RequestUtil.put(path, userId, params);
     }
