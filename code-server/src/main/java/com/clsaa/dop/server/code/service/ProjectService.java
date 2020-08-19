@@ -114,7 +114,7 @@ public class ProjectService {
         params.add(new BasicNameValuePair("name", name));
         params.add(new BasicNameValuePair("description", description));
         params.add(new BasicNameValuePair("visibility", visibility));
-        params.add(new BasicNameValuePair("initialize_with_readme", "true"));
+        params.add(new BasicNameValuePair("initialize_with_readme", initialize_with_readme));
 
         RequestUtil.post("/projects", userId, params);
 
