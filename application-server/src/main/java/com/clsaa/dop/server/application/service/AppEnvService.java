@@ -39,9 +39,9 @@ public class AppEnvService {
      * @return{@link List<AppEnvBoV1> }
      */
     public List<AppEnvBoV1> findEnvironmentByAppId(Long loginUser, Long appID) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnv(), loginUser)
-                , BizCodes.NO_PERMISSION);
-    
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnv(), loginUser)
+//                , BizCodes.NO_PERMISSION);
+
         return this.appEnvRepository.findAllByAppId(appID).stream().map(l -> BeanUtils.convertType(l, AppEnvBoV1.class)).collect(Collectors.toList());
     }
 
@@ -72,8 +72,8 @@ public class AppEnvService {
      * @return AppEnvBoV1
      */
     public AppEnvBoV1 findEnvironmentDetailById(Long loginUser, Long id) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnvDetail(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnvDetail(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         AppEnv appEnv = this.appEnvRepository.findById(id).orElse(null);
         return BeanUtils.convertType(appEnv, AppEnvBoV1.class);
     }
@@ -100,8 +100,8 @@ public class AppEnvService {
      * @param deploymentStrategy 发布策略
      */
     public void createEnvironmentByAppId(Long appId, Long loginUser, String title, String environmentLever, String deploymentStrategy) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateAppEnv(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateAppEnv(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         AppEnv appEnv = AppEnv.builder()
                 .appId(appId)
                 .title(title)
@@ -121,8 +121,8 @@ public class AppEnvService {
 
 
     public PipelineIdAndNameV1 findPipelineByAppEnvId(Long loginUser, Long appEnvId) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewPipeline(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewPipeline(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         return this.pipelineService.findPipelineByAppEnvId(appEnvId);
     }
 
@@ -132,8 +132,8 @@ public class AppEnvService {
      * @param id appId
      */
     public void deleteEnvironmentById(Long loginUser, Long id) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteAppEnv(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteAppEnv(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         this.appEnvRepository.deleteById(id);
     }
 

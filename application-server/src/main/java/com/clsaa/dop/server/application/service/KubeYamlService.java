@@ -170,8 +170,8 @@ public class KubeYamlService {
      */
     public void CreateYamlData(Long appEnvId, Long loginUser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
             , Long releaseBatch, String yamlFilePath) throws Exception {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateYamlData(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateYamlData(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = KubeYamlData.builder()
                 .appEnvId(appEnvId)
                 .ctime(LocalDateTime.now())
