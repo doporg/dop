@@ -33,8 +33,8 @@ public class AppUrlInfoService {
     }
 
     public void updateAppUrlInfoByAppId(Long id, Long loginUser, String warehouseUrl, String imageUrl, String productionDbUrl, String testDbUrl, String productionDomain, String testDomain) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditAppUrl(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditAppUrl(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         AppUrlInfo appUrlInfo = appUrlInfoRepository.findByAppId(id);
         appUrlInfo.setWarehouseUrl(warehouseUrl);
         appUrlInfo.setImageUrl(imageUrl);

@@ -35,8 +35,8 @@ public class KubeCredentialService {
      * @param token    token
      */
     public void updateClusterInfo(Long loginUser, Long appEnvId, String url, String token) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditCluster(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditCluster(), loginUser)
+//                , BizCodes.NO_PERMISSION);
 
 
         ApiClient client = Config.fromToken(url,
@@ -59,8 +59,8 @@ public class KubeCredentialService {
     }
 
     public KubeCredentialBoV1 findByAppEnvId(Long loginUser, Long appEnvId) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewCluster(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewCluster(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
         //credential.setTargetClusterToken(this.DecryptValue(credential.getTargetClusterToken()));

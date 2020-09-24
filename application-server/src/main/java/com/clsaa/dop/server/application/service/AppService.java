@@ -51,8 +51,8 @@ public class AppService {
      * @return {@link Pagination< AppBoV1>}
      */
     public Pagination<AppV1> findApplicationByProjectIdOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
+//                , BizCodes.NO_PERMISSION);
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
@@ -129,8 +129,8 @@ public class AppService {
      * @param id appId
      */
     public void deleteApp(Long loginUser, Long id) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteApp(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteApp(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         this.appRepository.deleteById(id);
         //appUrlInfoService.deleteAppUrlInfo(id);
         //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
@@ -152,8 +152,8 @@ public class AppService {
      * @param id appId
      */
     public void updateApp(Long loginUser, Long id, String title, String description) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditApp(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditApp(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         App app = this.appRepository.findById(id).orElse(null);
         app.setTitle(title);
         app.setDescription(description);
@@ -174,8 +174,8 @@ public class AppService {
      *
      */
     public void createApp(Long loginUser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateApp(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateApp(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         App app = App.builder()
@@ -229,8 +229,8 @@ public class AppService {
      * @return @return {@link AppBasicInfoV1}
      */
     public AppBasicInfoV1 findAppById(Long loginUser, Long id) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         //System.out.print(this.appRepository.findById(id).orElse(null));
         AppBoV1 app = BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
         AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);

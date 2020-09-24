@@ -38,14 +38,14 @@ public class ProjectService {
     private PermissionService permissionService;
 
     public void deleteMemberFromProject(Long userId, Long projectId, Long loginUser) {
-        BizAssert.authorized(this.permissionService.check(permissionConfig.getDeleteMemberFromProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.check(permissionConfig.getDeleteMemberFromProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
+//                , BizCodes.NO_PERMISSION);
         this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
     }
 
     public void addMemberToProject(List<Long> userIdList, Long projectId, Long loginUser) {
-        BizAssert.authorized(this.permissionService.check(permissionConfig.getAddMemberToProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.check(permissionConfig.getAddMemberToProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
+//                , BizCodes.NO_PERMISSION);
         List<Long> existUserIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
         Set<Long> userIdSet = new HashSet<>(existUserIdList);
 
@@ -161,8 +161,8 @@ public class ProjectService {
     }
 
     public ProjectBoV1 findProjectById(Long loginUser, Long projectId) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
+//                , BizCodes.NO_PERMISSION);
 
         return BeanUtils.convertType(this.projectRepository.findById(projectId).orElse(null), ProjectBoV1.class);
     }
@@ -175,8 +175,8 @@ public class ProjectService {
      */
     public void createProjects(Long loginUser, String title, Long origanizationId, String description, String status) {
 
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateProject(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateProject(), loginUser)
+//                , BizCodes.NO_PERMISSION);
 
 
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
