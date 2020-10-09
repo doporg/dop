@@ -38,6 +38,7 @@ public class KubeCredentialController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "clusterInfoV1", name = "clusterInfoV1", required = true) @RequestBody ClusterInfoV1 clusterInfoV1) {
+
         BizAssert.validParam(Validator.isUrl(clusterInfoV1.getTargetClusterUrl()),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "集群地址格式错误"));
         this.kubeCredentialService.updateClusterInfo(loginUser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
@@ -49,7 +50,6 @@ public class KubeCredentialController {
     public ClusterUrlV1 getUrlByAppEnvId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
-
         return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(loginUser, appEnvId), ClusterUrlV1.class);
 
     }

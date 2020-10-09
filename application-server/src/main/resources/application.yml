@@ -40,6 +40,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+#  profiles:
+#    active: local
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
@@ -118,8 +120,8 @@ permission:
   viewService: "查看服务"
   createService: "创建服务"
   viewDeployment: "查看部署"
-  projectManagerAndProjectRuleId: 11
-  developerAndProjectRuleId: 13
+  projectManagerAndProjectRuleId: 6
+  developerAndProjectRuleId: 8
   projectRuleFieldName: "projectId"
   projectManagerAndAppRuleId: 12
   developerAndAppRuleId: 14

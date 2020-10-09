@@ -9,6 +9,7 @@ import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,7 @@ public class ProjectController {
                                    @ApiParam(name = "userIdList", value = "userIdList", required = true) @RequestParam(value = "userIdList") List<Long> userIdList,
                                    @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId) {
 
+        System.out.println("添加成员");
         this.projectService.addMemberToProject(userIdList, projectId, loginUser);
 
     }
@@ -95,7 +97,6 @@ public class ProjectController {
         BizAssert.validParam(projectDescription == null || projectDescription.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
         this.projectService.createProjects(loginUser, title, organizationId, projectDescription, status);
-
     }
 
 

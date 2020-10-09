@@ -56,9 +56,13 @@ public class UserDataService {
      */
     public void addData(Long ruleId,Long userId,Long fieldValue,Long cuser,Long muser)
     {
+        System.out.println("UserDataService addData");
         UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
+        System.out.println("UserDataService existUserData => "+existUserData);
         BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
+        System.out.println("判定成功");
         UserRule userRule=userRuleService.findById(ruleId);
+        System.out.println("UserDataService userRule => "+userRule);
         UserData userData=UserData.builder()
                 .ruleId(ruleId)
                 .userId(userId)
@@ -70,7 +74,9 @@ public class UserDataService {
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
                 .build();
-        userDataDAO.saveAndFlush(userData);
+        System.out.println("UserDataService  beforeInsert");
+        UserData savedUserData = userDataDAO.saveAndFlush(userData);
+        System.out.println("UserDataService  savedUserData => "+savedUserData);
     }
 
     public void addDataByUserList(Long ruleId,List<Long> userIdList,Long fieldValue,Long cuser,Long muser)
@@ -117,20 +123,23 @@ public class UserDataService {
     //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
     public List<Long> findAllIds(String permissionName, Long userId,String fieldName)
     {
+        System.out.println("UserDataService.findAllIds");
+        System.out.println("permissionName = " + permissionName + ", userId = " + userId + ", fieldName = " + fieldName);
         //舍弃了 参数 permissionName
         Set<Long> IdSet=new HashSet<>();
         List<Long> IdList=new ArrayList<>();
-        if(permissionService.checkUserPermission(permissionName,userId))
-        {
+//        if(permissionService.checkUserPermission(permissionName,userId))
+//        {
             List<UserData> userDataList=userDataDAO.findAllIds(userId,fieldName);
             for(UserData userData:userDataList)
             {
                 IdSet.add(userData.getFieldValue());
             }
             IdList.addAll(IdSet);
+            System.out.println("UserDataService IdList => "+IdList);
             return IdList;
-        }
-        return IdList;
+//        }
+//        return IdList;
 
     }
 
