@@ -46,18 +46,25 @@ public class ProjectService {
     public void addMemberToProject(List<Long> userIdList, Long projectId, Long loginUser) {
 //        BizAssert.authorized(this.permissionService.check(permissionConfig.getAddMemberToProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
 //                , BizCodes.NO_PERMISSION);
+        System.out.println("userIdList = " + userIdList + ", projectId = " + projectId + ", loginUser = " + loginUser+", this.permissionConfig.getProjectRuleFieldName() = "+this.permissionConfig.getProjectRuleFieldName());
         List<Long> existUserIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
         Set<Long> userIdSet = new HashSet<>(existUserIdList);
 
+
         for (Long userId : userIdList) {
-            BizAssert.validParam(!existUserIdList.contains(userId), new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "已在项目中"));
+
+//            BizAssert.validParam(!existUserIdList.contains(userId), new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "已在项目中"));
             try {
+                System.out.println("添加userId:"+userId+"到项目里");
                 this.permissionService.addData(this.permissionConfig.getDeveloperAndProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
             } catch (Exception e) {
+                System.out.println("添加失败");
                 BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "添加失败，请检查该用户的角色"));
             }
             //this.permissionService.addRoleToUser(userId,this.permissionConfig.get);
         }
+
+
 
     }
 
@@ -80,13 +87,13 @@ public class ProjectService {
         //
         //BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
         //        , BizCodes.NO_PERMISSION);
-
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
-        //得到可以查看的所有数据的ID列表
-        List<Long> idList = permissionService.findAllIds(permissionConfig.getViewProject(), loginUser, permissionConfig.getProjectRuleFieldName());
-
+        //得到可以查看的所有数据的ID列表（若权限模块修复成功，将下行代码注释取消，再将下下行代码注释）
+//        List<Long> idList = permissionService.findAllIds(permissionConfig.getViewProject(), loginUser, permissionConfig.getProjectRuleFieldName());
+        List<Long> idList = projectRepository.findAllIdsByCuser(loginUser);
+        System.out.println("loginUser => "+loginUser+",idList => "+idList);
         Page<Project> projectPage;
         List<Project> projectList;
         Integer totalCount;
@@ -119,7 +126,6 @@ public class ProjectService {
                 totalCount = projectRepository.countAllByStatusAndIdIn(Project.Status.NORMAL, idList);
             }
         }
-
         //projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
         List<ProjectV1> projectV1List = projectList.stream().map(l -> BeanUtils.convertType(l, ProjectV1.class)).collect(Collectors.toList());
 
@@ -195,7 +201,8 @@ public class ProjectService {
                 .build();
         this.projectRepository.saveAndFlush(project);
 //         this.imageService.createProject(title, status, loginUser);
-        this.permissionService.addData(permissionConfig.getProjectManagerAndProjectRuleId(), loginUser, project.getId(), loginUser);
+        //若permission模块修复成功，则将下行代码注释取消
+//        this.permissionService.addData(permissionConfig.getProjectManagerAndProjectRuleId(), loginUser, project.getId(), loginUser);
 
 
     }

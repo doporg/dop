@@ -4,6 +4,7 @@ import com.clsaa.dop.server.application.model.po.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
 import java.util.List;
@@ -91,4 +92,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @return {@link Page<Project>} 项目持久层对象
      */
     Page<Project> findAllByTitleStartingWithAndIdIn(String Title, Pageable pageable, Collection<Long> c);
+
+
+    /**
+     * 根据创建用户id查询创建用户全部项目的id(wjr)
+     * @param cuser
+     * @return
+     */
+    @Query(value = "select id from Project where cuser = ?1")
+    List<Long> findAllIdsByCuser(Long cuser);
+
 }
