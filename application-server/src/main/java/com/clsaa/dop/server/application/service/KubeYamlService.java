@@ -209,8 +209,8 @@ public class KubeYamlService {
      */
     public void updateYamlData(Long appEnvId, Long loginUser, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
             , Long releaseBatch, String yamlFilePath) throws Exception {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditYamlData(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditYamlData(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
         kubeYamlData.setMuser(loginUser);
@@ -321,8 +321,8 @@ public class KubeYamlService {
     }
 
     public KubeYamlDataBoV1 findYamlDataByEnvId(Long loginUser, Long appEnvId) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewYamlData(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewYamlData(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         if (kubeYamlData == null)
             return null;
@@ -332,8 +332,8 @@ public class KubeYamlService {
 
 
     public void updateDeploymentYaml(Long loginUser, Long appEnvId, String deploymentYaml) {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditDeploymentYaml(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditDeploymentYaml(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
         kubeYamlData.setMuser(loginUser);
@@ -404,8 +404,8 @@ public class KubeYamlService {
      * @param port      容器
      */
     public void createServiceByNameSpace(Long loginUser, Long id, String namespace, String name, Integer port, Integer nodePort, String host) throws Exception {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateService(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateService(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         CoreV1Api coreV1Api = getCoreV1Api(id);
 
         AppsV1beta1Api AppsV1beta1Api = getAppsV1beta1Api(id);
@@ -597,8 +597,8 @@ public class KubeYamlService {
      * @return {@link List<String>}
      */
     public List<String> getServiceByNameSpace(Long loginUser, Long id, String namespace) throws Exception {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewService(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewService(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespacedService(namespace, false, null, null, null, null, Integer.MAX_VALUE, null, null, false)
@@ -617,8 +617,8 @@ public class KubeYamlService {
      * @return {@link List<String>}
      */
     public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long loginUser, Long id, String namespace, String service) throws Exception {
-        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewDeployment(), loginUser)
-                , BizCodes.NO_PERMISSION);
+//        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewDeployment(), loginUser)
+//                , BizCodes.NO_PERMISSION);
         AppsV1beta1Api api = getAppsV1beta1Api(id);
 
 
