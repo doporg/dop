@@ -174,7 +174,7 @@ public class RequestScriptDto implements Operation {
             String message = e.getMessage();
             operationExecuteLog.setExecuteInfo(message);
             setResultFail();
-        }  finally {
+        } finally {
             executeContext.addOperationLog(
                     endOperationLog(operationExecuteLog)
             );

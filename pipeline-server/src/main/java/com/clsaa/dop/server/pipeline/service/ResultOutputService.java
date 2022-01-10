@@ -3,12 +3,9 @@ package com.clsaa.dop.server.pipeline.service;
 
 import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
 import com.clsaa.dop.server.pipeline.feign.ApplicationFeign;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.dto.LogInfoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.ResultOutput;
-import com.clsaa.dop.server.pipeline.model.po.Stage;
-import com.clsaa.dop.server.pipeline.model.po.Step;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,7 +77,7 @@ public class ResultOutputService {
             commitId = matcherCommitId.group().split("\\s+")[1];
         }
 
-        String repository= null;
+        String repository = null;
         Pattern patternRepository = Pattern.compile("Successfully\\s+tagged(.*)+");
         Matcher matcherRepository = patternRepository.matcher(output);
         if (matcherRepository.find()) {

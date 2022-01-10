@@ -28,7 +28,7 @@ public interface ApplicationFeign {
 
     /**
      * 拿版本号
-     * */
+     */
     @GetMapping(value = "/app/env/{appEnvId}/build_tag")
     String findBuildTagByAppEnvIdAndRunningId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
@@ -37,7 +37,7 @@ public interface ApplicationFeign {
 
     /**
      * 拿yaml
-     * */
+     */
     @GetMapping(value = "/app/env/{appEnvId}/yamlFile")
     String createYamlFileForDeploy(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long cuser,
@@ -46,14 +46,14 @@ public interface ApplicationFeign {
 
     /**
      * 查询集群url和Token
-     * */
+     */
     @GetMapping(value = "/app/env/{appEnvId}/clusterWithToken")
     KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId);
 
     /**
      * 添加日志
-     * */
+     */
     @PostMapping("/app/env/{appEnvId}/log")
     void addLog(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,

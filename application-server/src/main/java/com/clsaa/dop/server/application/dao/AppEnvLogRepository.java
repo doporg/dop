@@ -12,7 +12,7 @@ public interface AppEnvLogRepository extends JpaRepository<AppEnvLog, String> {
     /**
      * 根据appEnvId查询对应的environmentId
      *
-     * @param  c
+     * @param c
      * @return {@link   Optional<AppEnvLog> } 对应关系
      */
     Page<AppEnvLog> findAllByIdIn(Pageable pageable, Collection<String> c);

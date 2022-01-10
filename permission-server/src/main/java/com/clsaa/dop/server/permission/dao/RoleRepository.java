@@ -13,13 +13,12 @@ import java.util.List;
  * 角色DAO层，用来与数据库进行交互
  *
  * @author lzy
- *
- *
+ * <p>
+ * <p>
  * since :2019.3.7
  */
 
-public interface RoleRepository extends JpaRepository<Role, Long>
-{
+public interface RoleRepository extends JpaRepository<Role, Long> {
     /**
      * 根据name查询角色
      *
@@ -31,13 +30,13 @@ public interface RoleRepository extends JpaRepository<Role, Long>
     /**
      * 查询全部
      *
-     * @param  {List <Long> idList}
+     * @param {List     <Long> idList}
      * @param rowOffset
      * @param pageSize
      * @return {@link Page<Role>}
      */
-    @Query(value = "select * from t_role where id in :idList and is_deleted = 0 "+
-            "limit :rowOffset,:pageSize ",nativeQuery = true)
+    @Query(value = "select * from t_role where id in :idList and is_deleted = 0 " +
+            "limit :rowOffset,:pageSize ", nativeQuery = true)
     List<Role> findByIdIn(@Param("idList") List<Long> idList,
                           @Param("rowOffset") Integer rowOffset,
                           @Param("pageSize") Integer pageSize);
@@ -45,14 +44,14 @@ public interface RoleRepository extends JpaRepository<Role, Long>
     /**
      * 根据关键字key过滤查询
      *
-     * @param  key 关键字
-     * @param {List <Long> idList}
+     * @param key       关键字
+     * @param {List     <Long> idList}
      * @param rowOffset
      * @param pageSize
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_role where id in :idList and name like concat(:key,'%') and is_deleted = 0 "+
-            "limit :rowOffset,:pageSize  ",nativeQuery = true)
+    @Query(value = "select * from t_role where id in :idList and name like concat(:key,'%') and is_deleted = 0 " +
+            "limit :rowOffset,:pageSize  ", nativeQuery = true)
     List<Role> findAllByNameLikeAndIdIn(@Param("key") String key,
                                         @Param("idList") List<Long> idList,
                                         @Param("rowOffset") Integer rowOffset,
@@ -61,43 +60,43 @@ public interface RoleRepository extends JpaRepository<Role, Long>
     /**
      * 根据关键字key过滤查询
      *
-     * @param  key 关键字
+     * @param key   关键字
      * @param {List <Long> idList}
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_role where id in :idList and name like concat(:key,'%') and is_deleted = 0 "+
-            "limit :rowOffset,:pageSize  ",nativeQuery = true)
+    @Query(value = "select * from t_role where id in :idList and name like concat(:key,'%') and is_deleted = 0 " +
+            "limit :rowOffset,:pageSize  ", nativeQuery = true)
     List<Role> findAllByNameLikeAndIdIn(@Param("key") String key,
                                         @Param("idList") List<Long> idList);
 
     /**
      * 查询全部
      *
-     * @param  {List <Long> idList}
+     * @param {List <Long> idList}
      * @return {@link List < Permission >}
      */
-    @Query(value = "select * from t_role r where id in :idList and is_deleted = 0 ",nativeQuery = true)
-    List<Role> findByIdIn(@Param("idList")List<Long> idList);
+    @Query(value = "select * from t_role r where id in :idList and is_deleted = 0 ", nativeQuery = true)
+    List<Role> findByIdIn(@Param("idList") List<Long> idList);
 
 
     /**
      * 根据功能点ID查询角色
      *
-     * @param   permissionId
+     * @param permissionId
      * @return {@link List < Role >}
      */
-    @Query(value = "select * from t_role r inner join t_role_permission_mapping rp on r.id=rp.role_id "+
-            "where rp.permission_id=:permissionId and r.is_deleted = 0",nativeQuery = true)
-    List<Role> findByPermissionId(@Param("permissionId")Long permissionId);
+    @Query(value = "select * from t_role r inner join t_role_permission_mapping rp on r.id=rp.role_id " +
+            "where rp.permission_id=:permissionId and r.is_deleted = 0", nativeQuery = true)
+    List<Role> findByPermissionId(@Param("permissionId") Long permissionId);
 
     /**
      * 根据用户ID查询角色
      *
-     * @param   userId
+     * @param userId
      * @return {@link List < Role >}
      */
-    @Query(value = "select * from t_role r inner join t_user_role_mapping ur on r.id=ur.role_id "+
-            "where ur.user_id=:userId and r.is_deleted = 0",nativeQuery = true)
-    List<Role> findByUserId(@Param("userId")Long userId);
+    @Query(value = "select * from t_role r inner join t_user_role_mapping ur on r.id=ur.role_id " +
+            "where ur.user_id=:userId and r.is_deleted = 0", nativeQuery = true)
+    List<Role> findByUserId(@Param("userId") Long userId);
 
 }

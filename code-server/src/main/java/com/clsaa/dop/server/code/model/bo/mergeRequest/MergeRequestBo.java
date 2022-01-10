@@ -23,12 +23,12 @@ public class MergeRequestBo {
     private String target_branch;
     private String source_branch;
 
-    @JSONField(name="merged_by")
+    @JSONField(name = "merged_by")
     private UserBo mergedBy;
     private String merged_by;
     private String merged_at;
 
-    @JSONField(name="closed_by")
+    @JSONField(name = "closed_by")
     private UserBo closedBy;
     private String closed_by;
     private String closed_at;

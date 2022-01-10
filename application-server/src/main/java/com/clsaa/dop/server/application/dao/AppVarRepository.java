@@ -1,9 +1,6 @@
 package com.clsaa.dop.server.application.dao;
 
-import com.clsaa.dop.server.application.model.po.App;
 import com.clsaa.dop.server.application.model.po.AppVariable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -3,7 +3,6 @@ package com.clsaa.dop.server.application.feign;
 import com.clsaa.dop.server.application.config.FeignConfig;
 import com.clsaa.dop.server.application.config.HttpHeadersConfig;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;

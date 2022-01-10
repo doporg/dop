@@ -1,12 +1,12 @@
 package com.clsaa.dop.server.test.mapper.po2dto;
 
 import com.clsaa.dop.server.test.enums.Stage;
+import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.InterfaceExecuteLogDto;
 import com.clsaa.dop.server.test.model.dto.OperationExecuteLogDto;
 import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 import com.clsaa.dop.server.test.model.po.OperationExecuteLog;
-import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.service.core.CaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

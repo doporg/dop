@@ -6,6 +6,7 @@ import lombok.Setter;
 
 /**
  * 项目成员BO类
+ *
  * @author xzt
  * @since 2019-4-18
  */

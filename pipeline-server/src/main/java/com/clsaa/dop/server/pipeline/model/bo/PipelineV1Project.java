@@ -1,16 +1,14 @@
 package com.clsaa.dop.server.pipeline.model.bo;
 
-import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * 向应用管理模块返回数据
- * */
+ */
 @Getter
 @Setter
 @Builder

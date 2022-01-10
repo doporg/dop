@@ -1,10 +1,8 @@
 package com.clsaa.dop.server.permission.model.po;
 
-import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -12,7 +10,7 @@ import java.time.LocalDateTime;
  * 用户数据表，用于数据权限的控制
  *
  * @author lzy
- *
+ * <p>
  * since :2019.3.19
  */
 @Entity
@@ -22,7 +20,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_data",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"rule_id","user_id","field_value"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"rule_id", "user_id", "field_value"})})
+//引入@Table注解，name赋值为表名
 //重写SQL删除语句
 @SQLDelete(sql = "update t_user_data set is_deleted = true ,user_id = uuid_short() where id = ?")
 @Where(clause = "is_deleted =false")
@@ -44,7 +43,7 @@ public class UserData implements Serializable {
     @Column(name = "rule_id")
     private Long ruleId;
     /**
-     *  用户ID
+     * 用户ID
      */
     @Basic
     @Column(name = "user_id")
@@ -91,7 +90,7 @@ public class UserData implements Serializable {
      * 删除标记
      */
     @Basic
-    @Column(name="is_deleted")
+    @Column(name = "is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
 }

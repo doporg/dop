@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +25,7 @@ import java.util.List;
 //        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "ref"})},
 //        indexes = {@Index(columnList = "case_id,ref", unique = true)}
 )
-public class GroupExecuteLog implements Po{
+public class GroupExecuteLog implements Po {
 
     @Column(name = "group_id")
     private Long groupId;
@@ -39,7 +38,7 @@ public class GroupExecuteLog implements Po{
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "group_log_id", referencedColumnName = "id"
-            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<InterfaceExecuteLog> logs;
 

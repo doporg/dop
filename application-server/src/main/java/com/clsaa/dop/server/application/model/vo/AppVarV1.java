@@ -1,8 +1,7 @@
 package com.clsaa.dop.server.application.model.vo;
 
-import lombok.*;
-
-import javax.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 变量视图对象

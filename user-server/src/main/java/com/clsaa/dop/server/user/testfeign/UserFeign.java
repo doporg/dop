@@ -29,6 +29,7 @@ public interface UserFeign {
                                                                     @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
                                                                     @ApiParam(value = "页大小")
                                                                     @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize);
+
     @GetMapping(value = "/v1/users/{userId}/credential")
     UserCredentialV1 getUserCredentialV1ByUserId(@PathVariable("userId") Long userId,
                                                  @RequestParam("type") UserCredential.Type type);

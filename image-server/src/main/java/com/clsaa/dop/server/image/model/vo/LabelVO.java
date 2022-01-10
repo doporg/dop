@@ -5,6 +5,7 @@ import lombok.Setter;
 
 /**
  * label的业务层实体类
+ *
  * @author xzt
  * @since 2019-4-6
  */

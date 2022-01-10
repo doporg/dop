@@ -17,9 +17,9 @@ public interface UserFeignService {
     /**
      * 通过邮箱、密码获取用户信息
      *
-     * @param id  用户ID
+     * @param id 用户ID
      * @return {@link UserDtoV1}
      */
     @GetMapping("/v1/users/{id}")
-     UserDtoV1 findUserByIdV1(@PathVariable("id") Long id);
+    UserDtoV1 findUserByIdV1(@PathVariable("id") Long id);
 }

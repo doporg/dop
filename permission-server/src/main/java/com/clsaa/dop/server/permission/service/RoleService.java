@@ -18,14 +18,16 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- *  角色的增删改查
+ * 角色的增删改查
  *
  * @author lzy
- *
  * @since 2019.3.9
  */
 
@@ -75,52 +77,48 @@ public class RoleService {
     //创建一个角色
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     @PermissionName(name = "创建角色")
-    public Long createRole(@GetUserId Long cuser, Long parentId, String name, Long muser)
-    {
-            Role existRole=this.roleRepository.findByName(name);
-            BizAssert.allowed(existRole==null, BizCodes.REPETITIVE_ROLE_NAME);
-            Role role= Role.builder()
-                    .parentId(parentId)
-                    .name(name)
-                    .cuser(cuser)
-                    .muser(muser)
-                    .ctime(LocalDateTime.now())
-                    .mtime(LocalDateTime.now())
-                    .deleted(false)
-                    .build();
-            roleRepository.saveAndFlush(role);
-            authenticationService.addData(
-                    authenticationService.findUniqueRule("in","roleId",
-                            authenticationService.findByName("权限管理员").getId()).getId(),
-                    cuser,role.getId(),cuser);
-            authenticationService.addData(
-                    authenticationService.findUniqueRule("equals","roleId",
-                            authenticationService.findByName("权限管理员").getId()).getId(),
-                    cuser,role.getId(),cuser);
-            return role.getId();
+    public Long createRole(@GetUserId Long cuser, Long parentId, String name, Long muser) {
+        Role existRole = this.roleRepository.findByName(name);
+        BizAssert.allowed(existRole == null, BizCodes.REPETITIVE_ROLE_NAME);
+        Role role = Role.builder()
+                .parentId(parentId)
+                .name(name)
+                .cuser(cuser)
+                .muser(muser)
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .deleted(false)
+                .build();
+        roleRepository.saveAndFlush(role);
+        authenticationService.addData(
+                authenticationService.findUniqueRule("in", "roleId",
+                        authenticationService.findByName("权限管理员").getId()).getId(),
+                cuser, role.getId(), cuser);
+        authenticationService.addData(
+                authenticationService.findUniqueRule("equals", "roleId",
+                        authenticationService.findByName("权限管理员").getId()).getId(),
+                cuser, role.getId(), cuser);
+        return role.getId();
 
     }
 
     //根据ID查询角色
-    public Role findById(Long id)
-    {
-        Optional<Role> role=roleRepository.findById(id);
-        if(role.isPresent())
-        {
+    public Role findById(Long id) {
+        Optional<Role> role = roleRepository.findById(id);
+        if (role.isPresent()) {
             return role.get();
         }
         return null;
     }
+
     //根据name查询角色
-    public RoleBoV1 findByname(String name)
-    {
+    public RoleBoV1 findByname(String name) {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //分页查询所有角色
 
     @PermissionName(name = "查询角色")
-    public Pagination<RoleV1> getRoleV1Pagination(@GetUserId Long userId,Integer pageNo, Integer pageSize,String key)
-    {
+    public Pagination<RoleV1> getRoleV1Pagination(@GetUserId Long userId, Integer pageNo, Integer pageSize, String key) {
         Sort sort = new Sort(Sort.Direction.DESC, "mtime");
 
         Pagination<RoleV1> pagination = new Pagination<>();
@@ -129,19 +127,16 @@ public class RoleService {
 
 
         //可以查看的ID列表
-        List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
-        int count=0;
-        List<Role> roleList=new ArrayList<>();
-        if(key.equals(""))
-        {
-             count = this.roleRepository.findByIdIn(idList).size();
-             roleList=this.roleRepository.findByIdIn(idList,pagination.getRowOffset(),pagination.getPageSize());
-        }
-        else
-        {
-            count = this.roleRepository.findAllByNameLikeAndIdIn(key,idList).size();
-             roleList = this.roleRepository.findAllByNameLikeAndIdIn(key,idList,pagination.getRowOffset(),
-                     pagination.getPageSize());
+        List<Long> idList = authenticationService.findAllIds("查询角色", userId, "roleId");
+        int count = 0;
+        List<Role> roleList = new ArrayList<>();
+        if (key.equals("")) {
+            count = this.roleRepository.findByIdIn(idList).size();
+            roleList = this.roleRepository.findByIdIn(idList, pagination.getRowOffset(), pagination.getPageSize());
+        } else {
+            count = this.roleRepository.findAllByNameLikeAndIdIn(key, idList).size();
+            roleList = this.roleRepository.findAllByNameLikeAndIdIn(key, idList, pagination.getRowOffset(),
+                    pagination.getPageSize());
         }
 
         pagination.setTotalCount(count);
@@ -151,7 +146,7 @@ public class RoleService {
         }
 
         //类型转换
-        List<RoleV1> roleV1List=roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
+        List<RoleV1> roleV1List = roleList.stream().map(p -> BeanUtils.convertType(p, RoleV1.class)).collect(Collectors.toList());
 
 
 //        //获取每条数据的创建人
@@ -173,52 +168,46 @@ public class RoleService {
         pagination.setPageList(roleV1List);
         return pagination;
     }
+
     //根据name查询角色
-    public RoleBoV1 findByName(String name)
-    {
+    public RoleBoV1 findByName(String name) {
         return BeanUtils.convertType(this.roleRepository.findByName(name), RoleBoV1.class);
     }
     //根据ID删除角色,并删除关联关系和数据规则
 
-    @PermissionName(name="删除角色")
-    public void deleteById(@GetUserId Long userId,Long id)
-    {
-            if(authenticationService.check("删除角色",userId,"roleId",id))
-            {
-                rolePermissionMappingService.deleteByRoleId(id);
-                userRuleService.deleteByRoleId(id);
-                roleRepository.deleteById(id);
-            }
+    @PermissionName(name = "删除角色")
+    public void deleteById(@GetUserId Long userId, Long id) {
+        if (authenticationService.check("删除角色", userId, "roleId", id)) {
+            rolePermissionMappingService.deleteByRoleId(id);
+            userRuleService.deleteByRoleId(id);
+            roleRepository.deleteById(id);
+        }
     }
 
     //查询所有权限的ID和名称
-    public List<PermissionBoV1> findAllPermission(Long loginUser)
-    {
+    public List<PermissionBoV1> findAllPermission(Long loginUser) {
         return permissionService.findAll(loginUser);
     }
 
     //根据功能点ID查询角色
-    public List<RoleBoV1> findByPermissionId(Long permissionId)
-    {
-        List<RoleBoV1> roleBoV1List=roleRepository.findByPermissionId(permissionId)
-                .stream().map(p->BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
+    public List<RoleBoV1> findByPermissionId(Long permissionId) {
+        List<RoleBoV1> roleBoV1List = roleRepository.findByPermissionId(permissionId)
+                .stream().map(p -> BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
         return roleBoV1List;
     }
 
     //根据用户ID查询角色
-    public List<RoleBoV1> findByUserId(Long userId)
-    {
-        List<RoleBoV1> roleBoV1List =roleRepository.findByUserId(userId)
-                .stream().map(p->BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
+    public List<RoleBoV1> findByUserId(Long userId) {
+        List<RoleBoV1> roleBoV1List = roleRepository.findByUserId(userId)
+                .stream().map(p -> BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
         return roleBoV1List;
     }
 
     //查询所有角色，为用户绑定时使用
     @PermissionName(name = "查询角色")
-    public List<RoleBoV1> findAllRole(@GetUserId Long userId)
-    {
+    public List<RoleBoV1> findAllRole(@GetUserId Long userId) {
         //可以查看的ID列表
-        List<Long> idList=authenticationService.findAllIds("查询角色",userId,"roleId");
+        List<Long> idList = authenticationService.findAllIds("查询角色", userId, "roleId");
         return roleRepository.findByIdIn(idList).stream().map(p ->
                 BeanUtils.convertType(p, RoleBoV1.class)).collect(Collectors.toList());
     }

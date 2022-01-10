@@ -7,7 +7,6 @@ import com.clsaa.dop.server.test.service.query.ManualCaseQueryService;
 import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 

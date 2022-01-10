@@ -49,9 +49,9 @@ public class Jenkinsfile {
                 Step task = steps.get(j);
                 Step.TaskType taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
-                if(!task.getGitUrl().isEmpty()){
+                if (!task.getGitUrl().isEmpty()) {
                     this.git = task.getGitUrl();
-                    String folderGit = this.git.split("/")[this.git.split("/").length-1];
+                    String folderGit = this.git.split("/")[this.git.split("/").length - 1];
                     this.dir = folderGit.split("[.]")[0];
                 }
 
@@ -85,19 +85,19 @@ public class Jenkinsfile {
                         this.stages += "deleteDir() \n";
 //                        this.stages += "git \"" + gitUrl + "\" \n";
                         this.stages += "sh \'git clone \"" + gitUrl + "\" \'\n";
-                        if(!this.dir.isEmpty()){
+                        if (!this.dir.isEmpty()) {
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
                             this.stages += "sh \'echo commitId `git rev-parse HEAD`\' \n";
                             this.stages += "}\n";
                         }
                         break;
                     case BuildMaven:
-                        if(!this.dir.isEmpty()){
+                        if (!this.dir.isEmpty()) {
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
                             this.stages += "sh \'mvn --version \' \n";
                             this.stages += "sh \"mvn -U -am clean package \" \n";
                             this.stages += "}\n";
-                        }else{
+                        } else {
                             this.stages += "sh \'mvn --version \' \n";
                             this.stages += "sh \"mvn -U -am clean package \" \n";
                         }
@@ -115,9 +115,9 @@ public class Jenkinsfile {
                         this.stages += "sh \'pip --version \' \n";
                         break;
                     case BuildDocker:
-                        if(this.dir.isEmpty()){
+                        if (this.dir.isEmpty()) {
                             this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
-                        }else{
+                        } else {
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
                             this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
                             this.stages += "}\n";
@@ -125,10 +125,10 @@ public class Jenkinsfile {
 
                         break;
                     case PushDocker:
-                        if(this.dir.isEmpty()){
+                        if (this.dir.isEmpty()) {
                             this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
                             this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";
-                        }else{
+                        } else {
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
                             this.stages += "sh \'docker login -u \"" + dockerUserName + "\" -p \"" + dockerPassword + "\" " + dockerRepoHost + "\' \n";
                             this.stages += "sh \'docker push " + imageName + ":" + respositoryVersion + "\' \n";

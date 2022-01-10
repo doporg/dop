@@ -36,7 +36,6 @@ public class KubeYamlDataV1 {
     private KubeYamlData.ReleaseStrategy releaseStrategy;
 
 
-
     /**
      * 发布批次
      */

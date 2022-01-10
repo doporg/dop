@@ -7,7 +7,6 @@ import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.user.SSHKeyBo;
 import com.clsaa.dop.server.code.model.bo.user.TokenBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
-import com.clsaa.dop.server.code.model.po.User;
 import com.clsaa.dop.server.code.util.RequestUtil;
 import com.clsaa.dop.server.code.util.TimeUtil;
 import org.apache.http.NameValuePair;

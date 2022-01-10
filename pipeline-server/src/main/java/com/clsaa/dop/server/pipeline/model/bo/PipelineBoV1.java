@@ -5,15 +5,14 @@ import com.clsaa.dop.server.pipeline.model.po.Pipeline;
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- *
  * 流水线信息业务层对象
+ *
  * @author 张富利
  * @since 2019-03-09
  */
@@ -48,15 +47,15 @@ public class PipelineBoV1 {
     @SerializedName("timing")
     private Long timing;
     /**
-     *  配置方式
-     * */
+     * 配置方式
+     */
     @Field("config")
     @SerializedName("config")
     private Pipeline.Config config;
 
     /**
-     *  Jenkinsfile
-     * */
+     * Jenkinsfile
+     */
     @SerializedName("jenkinsfile")
     private Jenkinsfile jenkinsfile;
 

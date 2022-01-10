@@ -3,11 +3,9 @@ package com.clsaa.dop.server.pipeline.model.po;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
 
-import java.util.ArrayList;
-
 /**
- *
  * 保存用户Jenkinsfile目录
+ *
  * @author 张富利
  * @since 2019-03-22
  */

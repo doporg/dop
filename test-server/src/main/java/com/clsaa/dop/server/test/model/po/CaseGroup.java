@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,8 +25,8 @@ import java.util.List;
         ,
         uniqueConstraints = {@UniqueConstraint(columnNames = {"app_id", "group_name"})},
         indexes = {@Index(columnList = "app_id,group_name", unique = true)}
-        )
-public class CaseGroup implements Po{
+)
+public class CaseGroup implements Po {
 
     @Column(name = "group_name")
     private String groupName;
@@ -43,7 +42,7 @@ public class CaseGroup implements Po{
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "case_group_id", referencedColumnName = "id"
-            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<CaseUnit> caseUnits;
 

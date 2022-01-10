@@ -4,8 +4,6 @@ import com.clsaa.dop.server.application.model.po.AppEnv;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-
 /**
  * 应用环境视图层对象
  *

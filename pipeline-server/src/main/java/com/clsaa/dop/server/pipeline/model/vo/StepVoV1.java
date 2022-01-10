@@ -1,11 +1,6 @@
 package com.clsaa.dop.server.pipeline.model.vo;
 
-import com.clsaa.dop.server.pipeline.model.po.Step;
-import com.google.gson.annotations.SerializedName;
 import lombok.*;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @Getter
 @Setter

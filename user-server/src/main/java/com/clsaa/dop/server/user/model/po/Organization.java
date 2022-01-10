@@ -1,10 +1,8 @@
 package com.clsaa.dop.server.user.model.po;
 
-import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

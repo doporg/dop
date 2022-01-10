@@ -37,6 +37,7 @@ public class SwaggerConfig {
     private String url;
     @Value("${swagger.enable}")
     private boolean enableShow;
+
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)

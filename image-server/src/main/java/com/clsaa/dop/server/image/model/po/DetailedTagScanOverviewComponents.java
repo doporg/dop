@@ -13,11 +13,11 @@ import java.util.List;
 @Getter
 @Setter
 public class DetailedTagScanOverviewComponents {
-  @JsonProperty("total")
-  private Integer total;
+    @JsonProperty("total")
+    private Integer total;
 
-  @JsonProperty("summary")
-  private List<ComponentOverviewEntry> summary;
+    @JsonProperty("summary")
+    private List<ComponentOverviewEntry> summary;
 
 }
 

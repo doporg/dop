@@ -3,7 +3,6 @@ package com.clsaa.dop.server.application.dao;
 import com.clsaa.dop.server.application.model.po.AppEnvCredentialMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface AppEnvCredentialMappingRepository extends JpaRepository<AppEnvCredentialMapping, Long> {

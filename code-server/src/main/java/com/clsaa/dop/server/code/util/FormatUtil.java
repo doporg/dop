@@ -2,6 +2,7 @@ package com.clsaa.dop.server.code.util;
 
 /**
  * 格式化打印json字符串工具类
+ *
  * @author wsy
  */
 public class FormatUtil {
@@ -25,7 +26,7 @@ public class FormatUtil {
             current = jsonStr.charAt(i);
             switch (current) {
                 case '"':
-                    if (last != '\\'){
+                    if (last != '\\') {
                         isInQuotationMarks = !isInQuotationMarks;
                     }
                     sb.append(current);

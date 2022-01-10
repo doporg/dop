@@ -45,18 +45,18 @@ public class InterfaceStagePoMapper extends AbstractCommonServiceMapper<Interfac
         List<WaitOperation> waitOperations = waitOperationPoMapper.convert(interfaceStageParam.getWaitOperations());
         return super.convert(interfaceStageParam).map(dateAndUser())
                 .map(interfaceStage -> {
-                        interfaceStage.setRequestScripts(requestScripts);
-                        interfaceStage.setWaitOperations(waitOperations);
+                    interfaceStage.setRequestScripts(requestScripts);
+                    interfaceStage.setWaitOperations(waitOperations);
 
-                        requestScripts.forEach(requestScript -> requestScript.setInterfaceStage(interfaceStage));
-                        waitOperations.forEach(waitOperation -> waitOperation.setInterfaceStage(interfaceStage));
+                    requestScripts.forEach(requestScript -> requestScript.setInterfaceStage(interfaceStage));
+                    waitOperations.forEach(waitOperation -> waitOperation.setInterfaceStage(interfaceStage));
 
-                        InterfaceCase interfaceCase = new InterfaceCase();
-                        interfaceCase.setId(interfaceStageParam.getCaseId());
-                        interfaceCase.setStages(Collections.singletonList(interfaceStage));
+                    InterfaceCase interfaceCase = new InterfaceCase();
+                    interfaceCase.setId(interfaceStageParam.getCaseId());
+                    interfaceCase.setStages(Collections.singletonList(interfaceStage));
 
-                        interfaceStage.setInterfaceCase(interfaceCase);
-                        return interfaceStage;
+                    interfaceStage.setInterfaceCase(interfaceCase);
+                    return interfaceStage;
                 });
     }
 }

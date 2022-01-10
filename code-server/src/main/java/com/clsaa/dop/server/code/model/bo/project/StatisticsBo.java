@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 项目统计数据
+ *
  * @author wsy
  */
 @Data

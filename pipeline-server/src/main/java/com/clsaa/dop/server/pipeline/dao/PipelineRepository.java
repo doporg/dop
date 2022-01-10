@@ -8,8 +8,7 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 
-
-public interface PipelineRepository extends MongoRepository<Pipeline, ObjectId>{
+public interface PipelineRepository extends MongoRepository<Pipeline, ObjectId> {
     @Query(value = "{'isDeleted': false}")
     List<Pipeline> findAllNoDeleted();
 

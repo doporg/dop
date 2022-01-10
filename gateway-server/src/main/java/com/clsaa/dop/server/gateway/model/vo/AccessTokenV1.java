@@ -1,7 +1,5 @@
 package com.clsaa.dop.server.gateway.model.vo;
 
-import lombok.*;
-
 @Getter
 @Setter
 @AllArgsConstructor

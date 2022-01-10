@@ -14,10 +14,9 @@ import java.util.List;
 
 
 /**
- *  角色功能点关联关系 的增删改查
+ * 角色功能点关联关系 的增删改查
  *
  * @author lzy
- *
  * @since 2019.3.9
  */
 @Service
@@ -49,69 +48,63 @@ public class RolePermissionMappingService {
 
     //添加一个关联关系
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
-    public void addPermissionToRole(Long roleId,Long permissionId,Long cuser,Long muser)
-    {
-        RolePermissionMapping existRolePermissionMapping=this.rolePermissionMappingDAO.
-                findByRoleIdAndPermissionId(roleId,permissionId);
-        BizAssert.allowed(existRolePermissionMapping==null, BizCodes.REPETITIVE_MAPPING);
+    public void addPermissionToRole(Long roleId, Long permissionId, Long cuser, Long muser) {
+        RolePermissionMapping existRolePermissionMapping = this.rolePermissionMappingDAO.
+                findByRoleIdAndPermissionId(roleId, permissionId);
+        BizAssert.allowed(existRolePermissionMapping == null, BizCodes.REPETITIVE_MAPPING);
 
-            RolePermissionMapping rolePermissionMapping=RolePermissionMapping.builder()
-                    .roleId(roleId)
-                    .permissionId(permissionId)
-                    .cuser(cuser)
-                    .muser(muser)
-                    .ctime(LocalDateTime.now())
-                    .mtime(LocalDateTime.now())
-                    .deleted(false)
-                    .build();
-            rolePermissionMappingDAO.saveAndFlush(rolePermissionMapping);
+        RolePermissionMapping rolePermissionMapping = RolePermissionMapping.builder()
+                .roleId(roleId)
+                .permissionId(permissionId)
+                .cuser(cuser)
+                .muser(muser)
+                .ctime(LocalDateTime.now())
+                .mtime(LocalDateTime.now())
+                .deleted(false)
+                .build();
+        rolePermissionMappingDAO.saveAndFlush(rolePermissionMapping);
 
 
     }
 
     //根据角色ID查找关联关系
-    public List<RolePermissionMapping> findByRoleId(Long roleId)
-    {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByRoleId(roleId);
+    public List<RolePermissionMapping> findByRoleId(Long roleId) {
+        List<RolePermissionMapping> rolePermissionMappingList = rolePermissionMappingDAO.findByRoleId(roleId);
         return rolePermissionMappingList;
     }
 
     //根据功能点ID查找关联关系
-    public List<RolePermissionMapping> findByPermissionId(Long permissionId)
-    {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByPermissionId(permissionId);
+    public List<RolePermissionMapping> findByPermissionId(Long permissionId) {
+        List<RolePermissionMapping> rolePermissionMappingList = rolePermissionMappingDAO.findByPermissionId(permissionId);
         return rolePermissionMappingList;
     }
 
     @Transactional(rollbackFor = Exception.class, isolation = Isolation.SERIALIZABLE)
     //删除特定角色特定功能点关联关系
-    public void delete(Long roleId,Long permissionId)
-    {
-        RolePermissionMapping existRolePermissionMapping=this.rolePermissionMappingDAO.
-                findByRoleIdAndPermissionId(roleId,permissionId);
+    public void delete(Long roleId, Long permissionId) {
+        RolePermissionMapping existRolePermissionMapping = this.rolePermissionMappingDAO.
+                findByRoleIdAndPermissionId(roleId, permissionId);
         rolePermissionMappingDAO.delete(existRolePermissionMapping);
     }
 
     //根据功能点ID删除关联关系
-    public void deleteByPermissionId(Long permissionId)
-    {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByPermissionId(permissionId);
+    public void deleteByPermissionId(Long permissionId) {
+        List<RolePermissionMapping> rolePermissionMappingList = rolePermissionMappingDAO.findByPermissionId(permissionId);
         rolePermissionMappingList.forEach(rolePermissionMapping -> {
             rolePermissionMappingDAO.delete(rolePermissionMapping);
         });
     }
+
     //根据角色ID删除关联关系
-    public void deleteByRoleId(Long roleId)
-    {
-        List<RolePermissionMapping> rolePermissionMappingList=rolePermissionMappingDAO.findByRoleId(roleId);
+    public void deleteByRoleId(Long roleId) {
+        List<RolePermissionMapping> rolePermissionMappingList = rolePermissionMappingDAO.findByRoleId(roleId);
         rolePermissionMappingList.forEach(rolePermissionMapping -> {
             rolePermissionMappingDAO.delete(rolePermissionMapping);
         });
     }
 
     //根据角色ID和功能点ID查找关联关系
-    public RolePermissionMapping findByRoleIdAndPermissionId(Long roleId,Long permissionId)
-    {
-       return rolePermissionMappingDAO.findByRoleIdAndPermissionId(roleId,permissionId);
+    public RolePermissionMapping findByRoleIdAndPermissionId(Long roleId, Long permissionId) {
+        return rolePermissionMappingDAO.findByRoleIdAndPermissionId(roleId, permissionId);
     }
 }

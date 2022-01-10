@@ -1,7 +1,5 @@
 package com.clsaa.dop.server.user.model.vo;
 
-import lombok.*;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

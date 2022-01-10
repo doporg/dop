@@ -6,12 +6,13 @@ import lombok.Setter;
 
 /**
  * 项目人员的harbor对应实体类
+ *
  * @author xzt
  * @since 2019-3-25
  */
 @Getter
 @Setter
-public class ProjectMemberEntity   {
+public class ProjectMemberEntity {
     @JsonProperty("id")
     private Integer id;
 

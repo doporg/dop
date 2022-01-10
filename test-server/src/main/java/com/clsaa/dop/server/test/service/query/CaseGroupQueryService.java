@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 06/05/2019
  */
 @Component
-public class CaseGroupQueryService extends CommonQueryServiceImpl<CaseGroup, CaseGroupDto,Long> {
+public class CaseGroupQueryService extends CommonQueryServiceImpl<CaseGroup, CaseGroupDto, Long> {
 
     @Autowired
     public CaseGroupQueryService(ServiceMapper<CaseGroup, CaseGroupDto> serviceMapper,

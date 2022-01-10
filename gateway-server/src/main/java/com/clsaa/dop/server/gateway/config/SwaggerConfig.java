@@ -66,7 +66,7 @@ public class SwaggerConfig implements SwaggerResourcesProvider {
     public List<SwaggerResource> get() {
         //利用routeLocator动态引入微服务
         List<SwaggerResource> resources = new ArrayList<>();
-        resources.add(swaggerResource("gateway-server","/v2/api-docs","1.0"));
+        resources.add(swaggerResource("gateway-server", "/v2/api-docs", "1.0"));
         //循环 使用Lambda表达式简化代码
         routeLocator.getRoutes().forEach(route -> {
             //动态获取

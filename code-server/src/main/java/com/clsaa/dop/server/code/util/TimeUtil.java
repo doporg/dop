@@ -1,13 +1,9 @@
 package com.clsaa.dop.server.code.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +22,7 @@ public class TimeUtil {
     public static void main(String[] args) {
 
         String lastTime = "2019-02-26T07:57:50.000Z";
-        List<String> res=natureTime(lastTime);
+        List<String> res = natureTime(lastTime);
         System.out.println(res.get(0));
         System.out.println(res.get(1));
 
@@ -34,18 +30,19 @@ public class TimeUtil {
 
     /**
      * 将gitlab返回的时间(例如2019-02-26T07:57:50.000Z)加上8小时的时差转换成距现在的时间
+     *
      * @param lastTime gitlab返回的时间
      * @return 加上8小时的时差后的时间以及距现在的时间
      */
     public static List<String> natureTime(String lastTime) {
 
-        if(lastTime.contains("+")){
-            lastTime=lastTime.substring(0, lastTime.indexOf("+")) + "Z";
+        if (lastTime.contains("+")) {
+            lastTime = lastTime.substring(0, lastTime.indexOf("+")) + "Z";
         }
 
-        LocalDateTime dt_commit=LocalDateTime.parse(lastTime,dtf);
-        Long ts_commit=dt_commit.toInstant(ZoneOffset.of("+0")).toEpochMilli();
-        String commit_time=ts_commit.toString();
+        LocalDateTime dt_commit = LocalDateTime.parse(lastTime, dtf);
+        Long ts_commit = dt_commit.toInstant(ZoneOffset.of("+0")).toEpochMilli();
+        String commit_time = ts_commit.toString();
 //        dt_commit=dt_commit.plusHours(8);
 //
 //        //计算距现在的时长
@@ -67,7 +64,7 @@ public class TimeUtil {
 //        }
 
         List<String> res = new ArrayList<>();
-        String commit_date=dt_commit.toString();
+        String commit_date = dt_commit.toString();
         res.add(commit_date);
         res.add(commit_time);
 

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 /**
  * 视图层的数据统计类
+ *
  * @author xzt
  * @since 2019-4-5
  */

@@ -1,7 +1,5 @@
 package com.clsaa.dop.server.code.util;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 

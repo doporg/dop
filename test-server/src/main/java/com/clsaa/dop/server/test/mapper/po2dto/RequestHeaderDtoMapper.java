@@ -7,8 +7,6 @@ import com.clsaa.dop.server.test.model.po.RequestHeader;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.logging.Handler;
 
 /**
  * @author xihao

@@ -6,9 +6,9 @@ public class GeneralClient {
         String client_id = ClientKeysUtil.newClientId("softeng_dop_web");
         String client_secret = ClientKeysUtil.newPlainClientSecret();
         String client_secret_in_db = ClientKeysUtil.getAesChipperSecret(client_secret, client_aes_key);
-        System.out.println("client_aes_key"+" : "+client_aes_key);
-        System.out.println("client_id"+" : "+client_id);
-        System.out.println("client_secret"+" : "+client_secret);
-        System.out.println("client_secret_in_db"+" : "+client_secret_in_db);
+        System.out.println("client_aes_key" + " : " + client_aes_key);
+        System.out.println("client_id" + " : " + client_id);
+        System.out.println("client_secret" + " : " + client_secret);
+        System.out.println("client_secret_in_db" + " : " + client_secret_in_db);
     }
 }

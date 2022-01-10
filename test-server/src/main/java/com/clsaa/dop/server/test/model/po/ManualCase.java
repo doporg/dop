@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class ManualCase implements Po {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "case_id", referencedColumnName = "id"
-            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<TestStep> testSteps;
 
     // ------ common property ------------

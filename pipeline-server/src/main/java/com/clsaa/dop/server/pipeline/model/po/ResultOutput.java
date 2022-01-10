@@ -47,10 +47,12 @@ public class ResultOutput {
     @SerializedName("status")
     @Enumerated(EnumType.STRING)
     private Status status;
+
     public enum Status {
         RUNNING("RUNNING"),
         FINISHED("FINISHED");
         private String code;
+
         Status(String code) {
         }
     }

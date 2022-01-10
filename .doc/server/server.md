@@ -1,12 +1,16 @@
 ## 1. 实验室服务器配置
+
 ### 1.1. 服务器基本信息
+
 ##### 1.1.1. node001
+
 + ip-121.43.191.226
 + hostname:softeng-cn-hz-2c8g-node001
 + 地域：杭州
 + 可用区：可用区H
 + 内网IP（同一region内，内网ip互通）：172.16.24.194
 + hosts
+
 ```
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 127.0.0.1 localhost
@@ -19,17 +23,20 @@
 172.16.24.196 gitlab.dop.clsaa.com
 ```
 
-+ 安全组   
++ 安全组
     + 端口：1~30010
     + 上行：%
     + 下行：%
+
 ##### 1.1.2 node002
+
 + ip-47.99.138.113
 + hostname:softeng-cn-hz-2c8g-node002
 + 地域：杭州
 + 可用区：可用区H
 + 内网IP（同一region内，内网ip互通）：172.16.24.195
 + hosts
+
 ```
 127.0.0.1 localhost
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
@@ -47,13 +54,16 @@
     + 端口：1~30010
     + 上行：%
     + 下行：%
+
 ##### 1.1.3 node003
+
 + ip-47.110.147.92
 + hostname:softeng-cn-hz-2c8g-node003
 + 地域：杭州
 + 可用区：可用区H
 + 内网IP（同一region内，内网ip互通）：172.16.24.196
 + hosts
+
 ```
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 127.0.0.1 localhost
@@ -65,6 +75,7 @@
 172.16.24.195 registry.dop.clsaa.com
 172.16.24.196 gitlab.dop.clsaa.com
 ```
+
 + 安全组
     + 端口：1~30010
     + 上行：%
@@ -79,27 +90,41 @@
         + port：2222
 
 ## 2. kubernetes
+
 ### 2.1. 已部署应用
+
 ##### 2.1.1 ingress
+
 ##### 2.1.2 dashboard
+
 + 地址：https://dashboard.k8s.dop.clsaa.com
 + token
+
 ```
 eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZC10b2tlbi1sY25kOCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImIyZDBlYTQzLTA5MzAtMTFlOS1hYmM3LTAwMTYzZTBlYzFjZiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWRhc2hib2FyZCJ9.KlrkaUDeoyWngUwbmGS2C7gpSixEYJYRgv52w9v_YVLe_uDO_SdHAaQanxG8W23RbKxYPRt_0S7haFy-gU5ngbuYPxHVvPMoB8gVrPX8dGOvYpxvs26eOEjibgnfJTmegWBgylSP9ULKqLTgJ3feFiUyMtd_metvaCSJInPDonDFlvNTzLIn8sOxE3Qxq3fAApNgkxNeuHT8vygznoLysv0I3Tzobhn5R78q5D1QL01AxRlAIKm57i6h5X7utoXrnt8JbuLlMk2ZERa8ANTlhTDhFOj4ODiAqWgN2gtDUmX9ACGHr7kbU8HW_COj4QMS6gLNdnI4bBxTCWVSL-er9Q
 ```
+
 ##### 2.1.3. master
+
 + 121.43.191.226
+
 ##### 2.1.4. slave
+
 + 47.99.138.113
 + 47.110.147.92
+
 ## 3. nginx
+
 + 部署ip：47.110.147.92
 + port：80
 + config file path：/etc/nginx
+
 ## 4. gitlab
+
 + domain：http://gitlab.dop.clsaa.com
 + 部署ip：47.110.147.92
 + port(in docker):0.0.0.0:22->22/tcp, 0.0.0.0:8080->80/tcp, 0.0.0.0:8443->443/tcp
+
 ```
 #!/bin/bash
 HOST_NAME=gitlab.dop.clsaa.com
@@ -115,20 +140,26 @@ docker run -d \
     -v ${GITLAB_DIR}/data:/var/opt/gitlab \
     gitlab/gitlab-ce:latest
 ```
+
 ## 5. jenkins
+
 + domain：http://jenkins.dop.clsaa.com/
 + 部署ip：121.43.191.226
 + port：8976
 + 命令：
+
 ```
 nohup java -jar jenkins.war --httpPort=8976 /var/log/jenkins/running-log &
 ```
+
 ## 6. harbor
+
 + domain：https://registry.dop.clsaa.com/
 + 部署ip：47.99.138.113
 + ./package/harbor/install.sh
 + Dop123456789
 + port(run in docker)：0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:4443->4443/tcp
+
 ```
 version: '2'
 services:
@@ -392,37 +423,46 @@ networks:
 ```
 
 ## 7. mongodb
+
 + ip：47.99.138.113
 + port：0.0.0.0:27017->27017/tcp
 + mount：~/mongo/db:/data/db
 + 121.42.13.103:31041
 + 命令：
+
 ```
 docker run -p 27017:27017 -v ~/mongo/db:/data/db -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone  --name mongodb -d mongo:latest
 ```
 
-
 ## 8. redis
+
 + ip：121.43.191.226
 + port：0.0.0.0:6379->6379/tcp
 + 命令：
+
 ```
 docker pull redis
 ```
+
 ```
 docker run -d -p 6379:6379 --name redis-test redis /bin/bash -c "/usr/local/bin/redis-server"
 ```
+
 ## 9.rocketmq-会有占用内存过高的问题, 废弃
+
 [配置看这里](https://github.com/doporg/dopv2/blob/master/.doc/server/9-rocketMQ%E9%83%A8%E7%BD%B2.md)
+
 + ip：121.43.191.226
 + port：0.0.0.0:9876->9876/tcp
 + ip:8087,查看 mq 外部控制台
+
 ```shell script
 # 新建目录
 mkdir /opt/rocketmq/conf
 mkdir /opt/rocketmq/logs
 mkdir /opt/rocketmq/store
 ```
+
 ```shell script
 # 在conf下创建 broker.conf
 
@@ -435,6 +475,7 @@ brokerRole = ASYNC_MASTER
 flushDiskType = ASYNC_FLUSH  
 brokerIP1=主机IP
 ```
+
 ```shell script
 # 在/opt/rocketmq/ 下创建docker-compose.yml
 
@@ -477,6 +518,7 @@ services:
       - JAVA_OPTS= -Dlogging.level.root=info   -Drocketmq.namesrv.addr=rmqnamesrv:9876 
       - Dcom.rocketmq.sendMessageWithVIPChannel=false
 ```
+
 ```shell script
 docker-compose -f docker-compose.yml up -d
 ```

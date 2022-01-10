@@ -1,13 +1,12 @@
 package com.clsaa.dop.server.test.enums;
 
-public enum  ParamType {
+public enum ParamType {
     STRING("String"),
     INTEGER("Integer"),
     LONG("Long"),
     DOUBLE("double"),
     BOOLEAN("Boolean"),
-    BIGDECIMAL("BigDecimal")
-    ;
+    BIGDECIMAL("BigDecimal");
 
     private String comment;
 

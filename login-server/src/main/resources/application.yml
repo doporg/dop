@@ -42,7 +42,7 @@ spring:
     show-sql: true
   redis:
     database: 0
-#    host: redis.dop.clsaa.com
+    #    host: redis.dop.clsaa.com
     host: 121.42.13.243
     port: 6379
     lettuce:

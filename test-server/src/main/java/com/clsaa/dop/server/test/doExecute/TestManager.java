@@ -1,8 +1,8 @@
 package com.clsaa.dop.server.test.doExecute;
 
-import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.consumer.GroupLogConsumer;
 import com.clsaa.dop.server.test.doExecute.consumer.SingleCaseLogConsumer;
+import com.clsaa.dop.server.test.doExecute.context.RequestContext;
 import com.clsaa.dop.server.test.doExecute.plugin.PluginManager;
 import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.model.dto.CaseGroupDto;
@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 完成测试脚本的执行
+ *
  * @author xihao
  * @version 1.0
  * @since 20/03/2019

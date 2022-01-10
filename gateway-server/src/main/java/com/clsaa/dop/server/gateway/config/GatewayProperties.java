@@ -26,35 +26,36 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class GatewayProperties {
 
-	@NotNull
-	@Valid
-	private Oauth oauth;
-	@NotNull
-	@Valid
-	private Jwt jwt;
+    @NotNull
+    @Valid
+    private Oauth oauth;
+    @NotNull
+    @Valid
+    private Jwt jwt;
 
 
-	@Getter
-	@Setter
-	public static class Oauth {
-		@NotNull
-		@Valid
-		private AES AES;
-		@Getter
-		@Setter
-		public static class AES{
-			@NotBlank
-			private String clientKey;
-			@NotBlank
-			private String tokenKey;
-		}
-	}
+    @Getter
+    @Setter
+    public static class Oauth {
+        @NotNull
+        @Valid
+        private AES AES;
 
-	@Getter
-	@Setter
-	public static class Jwt {
-		@NotNull
-		@Valid
-		private String secret;
-	}
+        @Getter
+        @Setter
+        public static class AES {
+            @NotBlank
+            private String clientKey;
+            @NotBlank
+            private String tokenKey;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class Jwt {
+        @NotNull
+        @Valid
+        private String secret;
+    }
 }

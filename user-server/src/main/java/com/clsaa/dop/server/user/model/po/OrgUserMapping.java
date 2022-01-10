@@ -1,8 +1,5 @@
 package com.clsaa.dop.server.user.model.po;
 
-import lombok.*;
-
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**

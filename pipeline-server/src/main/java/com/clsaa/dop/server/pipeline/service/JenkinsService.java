@@ -2,30 +2,15 @@ package com.clsaa.dop.server.pipeline.service;
 
 import com.clsaa.dop.server.pipeline.config.Jenkinsfile;
 import com.clsaa.dop.server.pipeline.config.JobConfig;
-import com.clsaa.dop.server.pipeline.dao.PipelineRepository;
-import com.clsaa.dop.server.pipeline.dao.ResultOutputRepository;
-import com.clsaa.dop.server.pipeline.model.bo.PipelineBoV1;
 import com.clsaa.dop.server.pipeline.model.po.Pipeline;
-import com.clsaa.dop.server.pipeline.model.po.Stage;
-import com.clsaa.dop.server.pipeline.model.po.Step;
 import com.clsaa.dop.server.pipeline.util.JenkinsUtils;
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
 import com.offbytwo.jenkins.model.JobWithDetails;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.lang.reflect.Array;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,7 +35,7 @@ public class JenkinsService {
         this.pwd = jenkinsUtils.getPassword();
         try {
             this.jenkins = new JenkinsServer(new URI(jenkinsURI), user, pwd);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

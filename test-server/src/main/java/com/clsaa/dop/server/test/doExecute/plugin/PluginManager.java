@@ -2,13 +2,11 @@ package com.clsaa.dop.server.test.doExecute.plugin;
 
 import com.clsaa.dop.server.test.doExecute.Version;
 import com.clsaa.dop.server.test.doExecute.context.RequestContext;
-import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**

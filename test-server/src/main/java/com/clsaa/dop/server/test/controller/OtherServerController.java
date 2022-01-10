@@ -4,7 +4,6 @@ import com.clsaa.dop.server.test.manager.feign.ApplicationInterface;
 import com.clsaa.dop.server.test.model.dto.Application;
 import com.clsaa.dop.server.test.model.dto.Project;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

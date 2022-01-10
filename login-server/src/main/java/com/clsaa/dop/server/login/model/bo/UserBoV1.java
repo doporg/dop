@@ -38,6 +38,7 @@ public class UserBoV1 {
         Status(String code) {
         }
     }
+
     /**
      * 用户id
      */

@@ -8,9 +8,6 @@ import com.clsaa.dop.server.code.util.TimeUtil;
 import com.clsaa.dop.server.code.util.URLUtil;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +27,7 @@ public class CommitService {
      * @param path     路径(需要urlencode)
      * @return 提交列表
      */
-    public List<CommitBo> findCommitList(String id, String path, String ref_name, Long userId){
+    public List<CommitBo> findCommitList(String id, String path, String ref_name, Long userId) {
 
         id = URLUtil.encodeURIComponent(id);
 
@@ -55,30 +52,32 @@ public class CommitService {
 
     /**
      * 查询某次commit的git diff内容
-     * @param id 项目id
-     * @param sha commit sha
+     *
+     * @param id     项目id
+     * @param sha    commit sha
      * @param userId 用户id
      * @return 每个改动文件的git diff信息
      */
-    public List<DiffBo> findDiff(String id,String sha,Long userId){
+    public List<DiffBo> findDiff(String id, String sha, Long userId) {
 
-        id=URLUtil.encodeURIComponent(id);
-        sha=URLUtil.encodeURIComponent(sha);
+        id = URLUtil.encodeURIComponent(id);
+        sha = URLUtil.encodeURIComponent(sha);
 
-        String path="/projects/"+id+"/repository/commits/"+sha+"/diff";
+        String path = "/projects/" + id + "/repository/commits/" + sha + "/diff";
 
-        return RequestUtil.getList(path,userId,DiffBo.class);
+        return RequestUtil.getList(path, userId, DiffBo.class);
 
     }
 
     /**
      * 查询commit的统计信息
-     * @param id 项目id
-     * @param sha commit sha
+     *
+     * @param id     项目id
+     * @param sha    commit sha
      * @param userId 用户id
      * @return 统计信息
      */
-    public CommitInfoBo findCommitInfo(String id,String sha,Long userId) {
+    public CommitInfoBo findCommitInfo(String id, String sha, Long userId) {
 
         id = URLUtil.encodeURIComponent(id);
         sha = URLUtil.encodeURIComponent(sha);

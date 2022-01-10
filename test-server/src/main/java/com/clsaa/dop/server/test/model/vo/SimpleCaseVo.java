@@ -1,9 +1,7 @@
 package com.clsaa.dop.server.test.model.vo;
 
 import com.clsaa.dop.server.test.enums.CaseType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author xihao

@@ -11,24 +11,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DetailedTagScanOverview {
-  @JsonProperty("digest")
-  private String digest;
+    @JsonProperty("digest")
+    private String digest;
 
-  @JsonProperty("scan_status")
-  private String scanStatus;
+    @JsonProperty("scan_status")
+    private String scanStatus;
 
-  @JsonProperty("job_id")
-  private Integer jobId;
+    @JsonProperty("job_id")
+    private Integer jobId;
 
-  @JsonProperty("severity")
-  private Integer severity;
+    @JsonProperty("severity")
+    private Integer severity;
 
-  @JsonProperty("details_key")
-  private String detailsKey;
+    @JsonProperty("details_key")
+    private String detailsKey;
 
-  @JsonProperty("components")
-  private DetailedTagScanOverviewComponents components;
+    @JsonProperty("components")
+    private DetailedTagScanOverviewComponents components;
 
- 
+
 }
 

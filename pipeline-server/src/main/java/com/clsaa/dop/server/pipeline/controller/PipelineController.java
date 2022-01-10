@@ -34,7 +34,7 @@ public class PipelineController {
     public String addUserV1(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @RequestBody Pipeline pipeline
-    ){
+    ) {
         return this.pipelineService.addPipeline(pipeline, loginUser);
     }
 

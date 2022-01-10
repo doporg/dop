@@ -1,10 +1,5 @@
 package com.clsaa.dop.server.permission.model.vo;
 
-import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -12,7 +7,7 @@ import java.time.LocalDateTime;
  * 用户数据表VO层
  *
  * @author lzy
- *
+ * <p>
  * since :2019.3.21
  */
 @Getter
@@ -31,7 +26,7 @@ public class UserDataV1 implements Serializable {
      */
     private Long ruleId;
     /**
-     *  用户ID
+     * 用户ID
      */
     private Long userId;
     /**

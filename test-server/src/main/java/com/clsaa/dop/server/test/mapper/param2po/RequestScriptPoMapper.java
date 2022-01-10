@@ -54,19 +54,19 @@ public class RequestScriptPoMapper extends AbstractCommonServiceMapper<RequestSc
         List<UrlResultParam> resultParams = resultParamPoMapper.convert(requestScriptParam.getResultParams());
         return super.convert(requestScriptParam)
                 .map(requestScript -> {
-                        requestScript.setRequestHeaders(requestHeaders);
-                        requestScript.setRequestParams(requestParams);
-                        requestScript.setRequestCheckPoints(checkPoints);
-                        requestScript.setResultParams(resultParams);
+                    requestScript.setRequestHeaders(requestHeaders);
+                    requestScript.setRequestParams(requestParams);
+                    requestScript.setRequestCheckPoints(checkPoints);
+                    requestScript.setResultParams(resultParams);
 
-                        //inject RequestScript into joined Objects
-                        requestHeaders.forEach(requestHeader -> requestHeader.setRequestScript(requestScript));
-                        requestParams.forEach(requestParam -> requestParam.setRequestScript(requestScript));
-                        checkPoints.forEach(checkPoint -> checkPoint.setRequestScript(requestScript));
-                        resultParams.forEach(urlResultParam -> urlResultParam.setRequestScript(requestScript));
+                    //inject RequestScript into joined Objects
+                    requestHeaders.forEach(requestHeader -> requestHeader.setRequestScript(requestScript));
+                    requestParams.forEach(requestParam -> requestParam.setRequestScript(requestScript));
+                    checkPoints.forEach(checkPoint -> checkPoint.setRequestScript(requestScript));
+                    resultParams.forEach(urlResultParam -> urlResultParam.setRequestScript(requestScript));
 
-                        return requestScript;
-                    })
+                    return requestScript;
+                })
                 .map(dateAndUser());
     }
 }

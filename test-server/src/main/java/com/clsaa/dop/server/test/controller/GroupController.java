@@ -16,13 +16,13 @@ import com.clsaa.rest.result.Pagination;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 测试分组相关接口
+ *
  * @author xihao
  * @version 1.0
  * @since 06/05/2019
@@ -86,8 +86,8 @@ public class GroupController {
 
     @GetMapping("/logs/page/{groupId}")
     public Pagination<GroupExecuteLogDto> getGroupLogByGroupId(@PathVariable("groupId") Long groupId,
-                                                          @RequestParam("pageNo")int pageNo,
-                                                          @RequestParam("pageSize")int pageSize) {
+                                                               @RequestParam("pageNo") int pageNo,
+                                                               @RequestParam("pageSize") int pageSize) {
 
         return groupLogQueryService.getGroupLogs(groupId, pageNo, pageSize);
     }

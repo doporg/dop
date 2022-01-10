@@ -84,5 +84,4 @@ public class AppVariable {
     private String varValue;
 
 
-
 }

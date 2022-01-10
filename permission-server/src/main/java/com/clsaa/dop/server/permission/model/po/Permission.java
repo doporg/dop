@@ -1,13 +1,8 @@
 package com.clsaa.dop.server.permission.model.po;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.format.annotation.DateTimeFormat;
 
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,8 +11,8 @@ import java.time.LocalDateTime;
  * 功能点持久层对象，对应功能点表中每条数据
  *
  * @author lzy
- *
- *
+ * <p>
+ * <p>
  * since :2019.3.1
  */
 
@@ -40,32 +35,32 @@ public class Permission implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
+    @Column(name = "id")
     private Long id;
     /**
      * 父功能点ID
      */
     @Basic
-    @Column(name="parent_id")
+    @Column(name = "parent_id")
     private Long parentId;
     /**
      * 功能点名称
      */
     @Basic
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
     /**
      * 是否私有
      */
     @Basic
-    @Column(name="is_private")
+    @Column(name = "is_private")
     private Integer isPrivate;
     /**
      * 功能点描述
      */
 
     @Basic
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
     /* 表里都要有的字段*/
@@ -97,7 +92,7 @@ public class Permission implements Serializable {
      * 删除标记
      */
     @Basic
-    @Column(name="is_deleted")
+    @Column(name = "is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
 }

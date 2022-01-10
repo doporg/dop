@@ -28,6 +28,7 @@ public class FeignConfig {
     public Retryer feignRetryer() {
         return new Retryer.Default(100, TimeUnit.SECONDS.toMillis(1), 5);
     }
+
     @Bean
     Logger.Level feignLoggerLevel() {
         return Logger.Level.FULL;
@@ -45,7 +46,7 @@ public class FeignConfig {
     }
 
     public class PhpMappingJackson2HttpMessageConverter extends MappingJackson2HttpMessageConverter {
-        PhpMappingJackson2HttpMessageConverter(){
+        PhpMappingJackson2HttpMessageConverter() {
             List<MediaType> mediaTypes = new ArrayList<>();
             mediaTypes.add(MediaType.valueOf(MediaType.APPLICATION_JSON + ";charset=UTF-8"));
             setSupportedMediaTypes(mediaTypes);

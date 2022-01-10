@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 用于获取仓库数据的控制类
+ *
  * @author xzt
  * @since 2019-4-5
  */
@@ -28,9 +29,9 @@ public class StatisticsController {
         this.statisticsService = statisticsService;
     }
 
-    @ApiOperation(value = "获取仓库的基本统计数据",notes = "根据不同的登录用户返回不同的数据")
+    @ApiOperation(value = "获取仓库的基本统计数据", notes = "根据不同的登录用户返回不同的数据")
     @GetMapping(value = "/v1/statistics")
-    public StatisticVO getStatistics(@ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
-        return BeanUtils.convertType(statisticsService.getStatistics(userId),StatisticVO.class);
+    public StatisticVO getStatistics(@ApiParam(value = "用户id", required = true) @RequestHeader(value = "x-login-user") Long userId) {
+        return BeanUtils.convertType(statisticsService.getStatistics(userId), StatisticVO.class);
     }
 }

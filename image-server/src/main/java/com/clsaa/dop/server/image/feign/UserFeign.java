@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
  * 用户服务接口
  */
 @Component
-@FeignClient(value = "user-server",configuration = FeignConfig.class)
+@FeignClient(value = "user-server", configuration = FeignConfig.class)
 public interface UserFeign {
 
     @GetMapping(value = "/v1/users/{userId}/credential")
     UserCredentialDto getUserCredentialV1ByUserId(@PathVariable("userId") Long userId,
-                                                         @RequestParam("type")UserCredentialType type);
+                                                  @RequestParam("type") UserCredentialType type);
 
     @PostMapping("/v1/users/{userId}/credential")
     void addUserCredential(@PathVariable("userId") Long userId,

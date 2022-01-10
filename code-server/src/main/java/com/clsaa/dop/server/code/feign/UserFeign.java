@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author wsy
  */
 @Component
-@FeignClient(value = "user-server",configuration = FeignConfig.class)
+@FeignClient(value = "user-server", configuration = FeignConfig.class)
 public interface UserFeign {
 
     @GetMapping("/v1/account/RSAPublicKey")
@@ -21,9 +21,9 @@ public interface UserFeign {
 
     @PostMapping("/v1/users/{userId}/credential")
     void addUserCredential(@PathVariable("userId") Long userId,
-                                  @RequestParam("identifier") String identifier,
-                                  @RequestParam("credential") String credential,
-                                  @RequestParam("type") UserCredentialType type);
+                           @RequestParam("identifier") String identifier,
+                           @RequestParam("credential") String credential,
+                           @RequestParam("type") UserCredentialType type);
 
 
     @GetMapping("/v1/users/{userId}/credential")

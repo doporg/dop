@@ -1,10 +1,6 @@
 package com.clsaa.dop.server.pipeline.util;
 
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
 public class JenkinsUtils {
     private static String uri = "http://jenkins.dop.clsaa.com";
     private static String username = "dop";

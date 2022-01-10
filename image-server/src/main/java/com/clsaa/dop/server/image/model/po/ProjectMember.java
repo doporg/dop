@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 /**
  * ProjectMember的harbor对应实体类
- * @author  xzt
+ *
+ * @author xzt
  * @since 2019-3-25
  */
 
@@ -15,15 +17,15 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectMember   {
-  @JsonProperty("role_id")
-  private Integer roleId;
+public class ProjectMember {
+    @JsonProperty("role_id")
+    private Integer roleId;
 
-  @JsonProperty("member_user")
-  private UserEntity memberUser;
+    @JsonProperty("member_user")
+    private UserEntity memberUser;
 
-  @JsonProperty("member_group")
-  private UserGroup memberGroup;
+    @JsonProperty("member_group")
+    private UserGroup memberGroup;
 
 }
 

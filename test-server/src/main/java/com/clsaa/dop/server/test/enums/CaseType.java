@@ -5,7 +5,7 @@ package com.clsaa.dop.server.test.enums;
  * @version 1.0
  * @since 06/05/2019
  */
-public enum  CaseType {
+public enum CaseType {
 
     MANUAL("手工"), INTERFACE("接口");
 

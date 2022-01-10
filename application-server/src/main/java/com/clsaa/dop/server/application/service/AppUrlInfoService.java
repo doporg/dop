@@ -1,13 +1,11 @@
 package com.clsaa.dop.server.application.service;
 
 
-import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppUrlInfoRepository;
 import com.clsaa.dop.server.application.model.bo.AppUrlInfoBoV1;
 import com.clsaa.dop.server.application.model.po.AppUrlInfo;
 import com.clsaa.dop.server.application.util.BeanUtils;
-import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +19,7 @@ public class AppUrlInfoService {
     private PermissionService permissionService;
     @Autowired
     private PermissionConfig permissionConfig;
+
     /**
      * 根据appId查询
      *

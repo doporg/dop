@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "wait_operation", schema = "db_dop_test")
-public class WaitOperation implements Po{
+public class WaitOperation implements Po {
 
     @Enumerated(value = EnumType.STRING)
     private OperationType operationType;
@@ -32,7 +31,7 @@ public class WaitOperation implements Po{
     private int order;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stage_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "stage_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private InterfaceStage interfaceStage;
 
     // ----------- common property ---------

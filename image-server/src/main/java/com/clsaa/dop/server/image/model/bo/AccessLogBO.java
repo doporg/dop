@@ -6,8 +6,9 @@ import lombok.Setter;
 
 /**
  * <p>
- *     项目日志的传输类
+ * 项目日志的传输类
  * </p>
+ *
  * @author xzt
  * @since 2019-3-27
  */

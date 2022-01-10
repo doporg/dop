@@ -15,10 +15,10 @@ public class BranchBo {
 
     private String name;
 
-    @JSONField(name="default")
+    @JSONField(name = "default")
     private boolean default_;
 
-    @JSONField(name="protected")
+    @JSONField(name = "protected")
     private boolean protected_;
 
 

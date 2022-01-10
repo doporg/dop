@@ -8,10 +8,11 @@ import lombok.Setter;
 
 /**
  * <p>
- *     项目视图层对象
+ * 项目视图层对象
  * </p>
+ *
  * @author xzt
- * @since  2019-3-25
+ * @since 2019-3-25
  */
 @Setter
 @Getter
@@ -51,11 +52,11 @@ public class ProjectVO {
      */
     private Boolean togglable;
     /**
-     *  当前用户的用户类型
+     * 当前用户的用户类型
      */
     private String currentUserRole;
     /**
-     *  镜像仓库数
+     * 镜像仓库数
      */
     private Integer repoCount;
     /**

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 统计信息的服务类
+ *
  * @author xzt
  * @since 2019-4-5
  */
@@ -29,14 +30,13 @@ public class StatisticsService {
 
 
     /**
-     *
      * @param userId 用户id
      * @return {@link StatisticsBO} 统计数据的逻辑层类
      */
-    public StatisticsBO getStatistics(Long userId){
+    public StatisticsBO getStatistics(Long userId) {
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,
                 UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
-        return BeanUtils.convertType(harborStatisticFeign.statisticsGet(auth),StatisticsBO.class);
+        return BeanUtils.convertType(harborStatisticFeign.statisticsGet(auth), StatisticsBO.class);
     }
 }

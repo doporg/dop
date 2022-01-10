@@ -15,10 +15,10 @@ public class ChildrenBo {
 
     private String value;
     private String label;
-    @JSONField(name="default")
+    @JSONField(name = "default")
     private boolean default_;
 
-    @JSONField(name="protected")
+    @JSONField(name = "protected")
     private boolean protected_;
 
     public ChildrenBo(String value, String label) {

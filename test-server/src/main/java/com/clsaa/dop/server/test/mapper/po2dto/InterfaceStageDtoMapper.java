@@ -13,7 +13,10 @@ import com.clsaa.dop.server.test.model.po.WaitOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
@@ -96,7 +99,7 @@ public class InterfaceStageDtoMapper extends AbstractCommonServiceMapper<Interfa
                 ;
     }
 
-    private Function<InterfaceStage,InterfaceStage> fillProperties(InterfaceStageDto interfaceStageDto) {
+    private Function<InterfaceStage, InterfaceStage> fillProperties(InterfaceStageDto interfaceStageDto) {
         return interfaceStage -> {
             List<RequestScript> requestScripts = requestScriptDtoMapper.inverseConvert(interfaceStageDto.getRequestScripts());
             List<WaitOperation> waitOperations = waitOperationDtoMapper.inverseConvert(interfaceStageDto.getWaitOperations());

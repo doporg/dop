@@ -4,7 +4,6 @@ import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.*;
 import com.clsaa.dop.server.test.model.po.*;
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +65,7 @@ public class RequestScriptDtoMapper extends AbstractCommonServiceMapper<RequestS
         List<UrlResultParam> resultParams = resultParamDtoMapper.inverseConvert(requestScriptDto.getResultParams());
         return super.inverseConvert(requestScriptDto)
                 .map(UserManager.newInfoIfNotExists())
-                .map(fillScriptProperties(headers,params, checkPoints, resultParams))
+                .map(fillScriptProperties(headers, params, checkPoints, resultParams))
                 ;
     }
 
@@ -89,10 +88,10 @@ public class RequestScriptDtoMapper extends AbstractCommonServiceMapper<RequestS
         };
     }
 
-    private Function<RequestScriptDto,RequestScriptDto> fillProperties(List<RequestHeaderDto> headerDtos,
-                                                                       List<RequestParamDto> paramDtos,
-                                                                       List<RequestCheckPointDto> checkPointDtos,
-                                                                       List<UrlResultParamDto> resultParamDtos) {
+    private Function<RequestScriptDto, RequestScriptDto> fillProperties(List<RequestHeaderDto> headerDtos,
+                                                                        List<RequestParamDto> paramDtos,
+                                                                        List<RequestCheckPointDto> checkPointDtos,
+                                                                        List<UrlResultParamDto> resultParamDtos) {
         return requestScriptDto -> {
             requestScriptDto.setRequestHeaders(headerDtos);
             Map<String, String> headersMap = headerDtos.stream()

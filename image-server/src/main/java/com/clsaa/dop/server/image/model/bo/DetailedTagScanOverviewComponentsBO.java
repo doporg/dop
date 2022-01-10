@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * The components overview of the image.
+ *
  * @author xzt
  * @since 2019-4-6
  */
@@ -14,8 +15,8 @@ import java.util.List;
 @Getter
 @Setter
 public class DetailedTagScanOverviewComponentsBO {
-  private Integer total;
-  private List<ComponentOverviewEntryBO> summary;
+    private Integer total;
+    private List<ComponentOverviewEntryBO> summary;
 
 }
 

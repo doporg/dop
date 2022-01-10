@@ -10,7 +10,7 @@ spring:
     name: message-server
   data:
     mongodb:
-#      uri: mongodb://121.42.13.103:31041/db_message
+      #      uri: mongodb://121.42.13.103:31041/db_message
       uri: mongodb://121.42.13.103:27017/db_dop_message
   #邮箱配置
   mail:
@@ -67,9 +67,9 @@ logging.level.org .springframework.data.mongodb.core: DEBUG
 
 message:
   mq:
-    RocketMQ:                                     #RocketMQ相关配置
+    RocketMQ: #RocketMQ相关配置
       namesrvAddr: 115.28.186.77:9876    #name-server地址与端口,多个可用分号隔开
-      groupName:  DOP_MESSAGE_PRODUCER_GROUP      #生产者组名称
+      groupName: DOP_MESSAGE_PRODUCER_GROUP      #生产者组名称
       instanceName: DOP_MESSAGE                   #要发送到的MQ集群
       maxMessageSize: 131072 # 1024*128           #最大消息长度
       sendMessageTimeout: 10000                   #消息发送超时时间

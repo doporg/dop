@@ -1,16 +1,12 @@
 package com.clsaa.dop.server.permission.model.bo;
 
-import lombok.*;
-
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 /**
  * 角色业务层对象
  *
  * @author lzy
- *
- *
  * @since :2019.3.7
  */
 @Getter

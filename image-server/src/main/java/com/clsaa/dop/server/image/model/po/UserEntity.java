@@ -8,6 +8,7 @@ import lombok.Setter;
 
 /**
  * UserEntity
+ *
  * @author xzt
  * @since 2019-3-30
  */
@@ -16,12 +17,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity   {
-  @JsonProperty("user_id")
-  private Integer userId;
+public class UserEntity {
+    @JsonProperty("user_id")
+    private Integer userId;
 
-  @JsonProperty("username")
-  private String username;
+    @JsonProperty("username")
+    private String username;
 
 }
 
