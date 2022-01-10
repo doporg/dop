@@ -1,12 +1,11 @@
 package com.clsaa.dop.server.application.util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import java.beans.Encoder;
 import java.security.Key;
 import java.security.SecureRandom;
+import java.util.Base64;
 
 
 /**
@@ -48,7 +47,7 @@ public class DESUtil {
      */
     public static String getEncryptString(String str) {
         // 基于BASE64编码，接收byte[]并转换层String
-        BASE64Encoder base64encoder = new BASE64Encoder();
+        Base64.Encoder encoder = Base64.getEncoder();
         try {
             // utf-8编码
             byte[] bytes = str.getBytes(CHARSETNAME);
@@ -59,7 +58,7 @@ public class DESUtil {
             // 加密
             byte[] doFinal = cipher.doFinal(bytes);
             // 返回
-            return base64encoder.encode(doFinal);
+            return encoder.encodeToString(doFinal);
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -73,10 +72,10 @@ public class DESUtil {
      */
     public static String getDecryptString(String str) {
         //基于BASE64编码，接收byte[]并转换成String
-        BASE64Decoder base64decoder = new BASE64Decoder();
+        Base64.Decoder decoder = Base64.getDecoder();
         try {
             //将字符串decode成byte[]
-            byte[] bytes = base64decoder.decodeBuffer(str);
+            byte[] bytes = decoder.decode(str);
             //获取解密对象
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             //初始化解密信息
