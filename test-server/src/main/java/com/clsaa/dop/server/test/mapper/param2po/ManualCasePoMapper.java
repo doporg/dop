@@ -38,13 +38,13 @@ public class ManualCasePoMapper extends AbstractCommonServiceMapper<ManualCasePa
     public Optional<ManualCase> convert(ManualCaseParam manualCaseParam) {
         List<TestStep> testSteps = testStepPoMapper.convert(manualCaseParam.getTestSteps());
         range(0, testSteps.size())
-                .forEach(i -> setIndex(testSteps, i));
+            .forEach(i -> setIndex(testSteps, i));
         return super.convert(manualCaseParam).map(dateAndUser())
                 .map(po -> {
-                    testSteps.forEach(testStep -> testStep.setManualCase(po));
-                    po.setTestSteps(testSteps);
-                    return po;
-                });
+                        testSteps.forEach(testStep -> testStep.setManualCase(po));
+                        po.setTestSteps(testSteps);
+                        return po;
+                    });
     }
 
     private TestStep setIndex(List<TestStep> testSteps, int i) {

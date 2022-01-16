@@ -5,11 +5,11 @@ package com.clsaa.dop.server.permission.model.dto;
  * 用户规则表DTO层
  *
  * @author lzy
- * <p>
+ *
  * since :2019.4.6
  */
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

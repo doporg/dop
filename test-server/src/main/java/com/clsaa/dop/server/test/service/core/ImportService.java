@@ -82,7 +82,7 @@ public class ImportService {
                                                 String url = "http://" + "${host}" + "${basePath}";
                                                 if (rawUrl.startsWith("/")) {
                                                     url += rawUrl.substring(1);
-                                                } else {
+                                                }else {
                                                     url += rawUrl;
                                                 }
 

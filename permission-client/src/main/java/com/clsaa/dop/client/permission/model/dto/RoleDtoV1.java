@@ -2,13 +2,14 @@ package com.clsaa.dop.client.permission.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
 import java.time.LocalDateTime;
-
 /**
  * 角色DTO对象
  *
  * @author lzy
+ *
+
+ *
  * @since :2019.4.6
  */
 @Getter

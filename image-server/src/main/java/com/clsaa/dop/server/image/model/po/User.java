@@ -8,7 +8,6 @@ import lombok.Setter;
 
 /**
  * 对应harbor的user类
- *
  * @author xzt
  * @since 2019-3-30
  */

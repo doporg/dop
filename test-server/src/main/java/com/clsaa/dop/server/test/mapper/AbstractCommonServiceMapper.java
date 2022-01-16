@@ -21,12 +21,12 @@ public abstract class AbstractCommonServiceMapper<SOURCE, TARGET> implements Ser
 
     public abstract Class<TARGET> getTargetClass();
 
-    public Optional<SOURCE> inverseConvert(TARGET target) {
+    public Optional<SOURCE> inverseConvert(TARGET target){
         return Optional.of(target)
                 .map(d -> BeanUtils.convertType(d, getSourceClass()));
     }
 
-    public List<SOURCE> inverseConvert(Collection<TARGET> targets) {
+    public List<SOURCE> inverseConvert(Collection<TARGET> targets){
         return isEmpty(targets) ?
                 Lists.newArrayList() :
                 targets.stream()
@@ -36,11 +36,11 @@ public abstract class AbstractCommonServiceMapper<SOURCE, TARGET> implements Ser
                         .collect(Collectors.toList());
     }
 
-    public Optional<TARGET> convert(SOURCE source) {
+    public Optional<TARGET> convert(SOURCE source){
         return Optional.of(source).map(p -> BeanUtils.convertType(p, getTargetClass()));
     }
 
-    public List<TARGET> convert(Collection<SOURCE> sources) {
+    public List<TARGET> convert(Collection<SOURCE> sources){
         return isEmpty(sources) ?
                 Lists.newArrayList() :
                 sources.stream()

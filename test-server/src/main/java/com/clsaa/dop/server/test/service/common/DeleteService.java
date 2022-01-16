@@ -7,5 +7,5 @@ package com.clsaa.dop.server.test.service.common;
  */
 public interface DeleteService<PO, ID> {
 
-
+    
 }

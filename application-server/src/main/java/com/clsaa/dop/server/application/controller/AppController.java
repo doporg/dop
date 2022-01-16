@@ -52,7 +52,7 @@ public class AppController {
     public List<AppV1> findApplicationByCuser(
             @ApiParam(name = "ouser", value = "ouser", required = true) @RequestParam(value = "ouser") Long ouser) {
 
-        return this.appService.findApplicationByOuser(ouser).stream().map(l -> BeanUtils.convertType(l, AppV1.class)).collect(Collectors.toList());
+        return this.appService.findApplicationByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppV1.class)).collect(Collectors.toList());
     }
 
     @ApiOperation(value = "根据ID查询应用信息", notes = "根据ID查询应用项目")

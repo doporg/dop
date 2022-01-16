@@ -36,10 +36,10 @@ public class RequestScriptParam {
 
     private List<@Valid RequestCheckPointParam> requestCheckPoints;
 
-    //    @Min(1)
+//    @Min(1)
     private int retryTimes;
 
-    //    @Min(1)
+//    @Min(1)
     private Long retryInterval;
 
     private List<@Valid RequestResultParam> resultParams;

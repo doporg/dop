@@ -11,7 +11,8 @@ public enum CaseResultEnum {
     FAIL("失败"),
     TOCHECK("待核查"),
     NONUSE("不可用"),
-    BLOCKED("阻塞");
+    BLOCKED("阻塞")
+    ;
 
     private String comment;
 

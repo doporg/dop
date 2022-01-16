@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.gateway.model.vo;
 
 import com.clsaa.rest.result.bizassert.BizCode;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

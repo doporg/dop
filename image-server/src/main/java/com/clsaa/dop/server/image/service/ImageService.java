@@ -34,28 +34,27 @@ public class ImageService {
 
     /**
      * 获取镜像仓库的镜像信息
-     *
      * @param repoName 镜像仓库名称
-     * @param labels   标签
-     * @param userId   访问用户名
+     * @param labels 标签
+     * @param userId 访问用户名
      * @return {@link List<ImageInfoBO>} 镜像信息的list
      */
-    public Pagination<ImageInfoBO> getImages(int pageNo, int pageSize, String tag, String projectName, String repoName, String labels, Long userId) {
+    public Pagination<ImageInfoBO> getImages(int pageNo,int pageSize,String tag,String projectName, String repoName, String labels, Long userId){
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
-        String repo = projectName + "/" + repoName;
+        String repo = projectName+"/"+repoName;
 
-        ResponseEntity<List<DetailedTag>> responseEntity = harborRepoFeign.repositoriesRepoNameTagsGet(repo, labels, auth);
+        ResponseEntity<List<DetailedTag>> responseEntity = harborRepoFeign.repositoriesRepoNameTagsGet(repo,labels,auth);
         List<DetailedTag> detailedTags = responseEntity.getBody();
 
         int count = 0;
-        if (tag == null) {
-            if (detailedTags != null) {
+        if(tag==null){
+            if (detailedTags!=null){
                 count = detailedTags.size();
             }
-        } else {
-            for (DetailedTag detailedTag : detailedTags) {
-                if (detailedTag.getName().startsWith(tag)) {
+        }else {
+            for (DetailedTag detailedTag:detailedTags){
+                if(detailedTag.getName().startsWith(tag)){
                     count++;
                 }
             }
@@ -65,39 +64,39 @@ public class ImageService {
         pagination.setTotalCount(count);
         pagination.setPageNo(pageNo);
         pagination.setPageSize(pageSize);
-        int beginIndex = (pageNo - 1) * pageSize;
+        int beginIndex = (pageNo-1)*pageSize;
         int endIndex;
-        if (pagination.isLastPage()) {
+        if (pagination.isLastPage()){
             endIndex = count;
-        } else {
-            endIndex = pageNo * pageSize;
+        }else {
+            endIndex = pageNo*pageSize;
         }
 
-        if (count == 0) {
+        if (count==0){
             pagination.setPageList(Collections.emptyList());
             return pagination;
-        } else {
-            if (tag == null) {
+        }else {
+            if (tag==null){
                 List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
-                for (DetailedTag detailedTag : detailedTags) {
-                    ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag, ImageInfoBO.class);
+                for (DetailedTag detailedTag:detailedTags){
+                    ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
                     imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
                     imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
                     imageInfoBOS.add(imageInfo);
                 }
-                pagination.setPageList(imageInfoBOS.subList(beginIndex, endIndex));
+                pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
                 return pagination;
-            } else {
+            }else {
                 List<ImageInfoBO> imageInfoBOS = new ArrayList<>();
-                for (DetailedTag detailedTag : detailedTags) {
-                    if (detailedTag.getName().startsWith(tag)) {
-                        ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag, ImageInfoBO.class);
+                for (DetailedTag detailedTag:detailedTags){
+                    if (detailedTag.getName().startsWith(tag)){
+                        ImageInfoBO imageInfo = BeanUtils.convertType(detailedTag,ImageInfoBO.class);
                         imageInfo.setSize(SizeConvertUtil.convertSize(detailedTag.getSize()));
                         imageInfo.setCreated(TimeConvertUtil.convertTime(detailedTag.getCreated()));
                         imageInfoBOS.add(imageInfo);
                     }
                 }
-                pagination.setPageList(imageInfoBOS.subList(beginIndex, endIndex));
+                pagination.setPageList(imageInfoBOS.subList(beginIndex,endIndex));
                 return pagination;
             }
 
@@ -106,32 +105,30 @@ public class ImageService {
 
     /**
      * 通过镜像仓库名和tag名来删除镜像
-     *
      * @param projectName 项目名称
-     * @param repoName    镜像仓库名称
-     * @param imageName   镜像的tag名
-     * @param userId      用户id
+     * @param repoName  镜像仓库名称
+     * @param imageName 镜像的tag名
+     * @param userId   用户id
      */
-    public void deleteImage(String projectName, String repoName, String imageName, Long userId) {
-        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+    public void deleteImage(String projectName,String repoName,String imageName,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
-        String repo = projectName + "/" + repoName;
-        harborRepoFeign.repositoriesRepoNameTagsTagDelete(repo, imageName, auth);
+        String repo = projectName+"/"+repoName;
+        harborRepoFeign.repositoriesRepoNameTagsTagDelete(repo,imageName,auth);
     }
 
     /**
      * 通过镜像仓库名和tag名来获取镜像
-     *
      * @param projectName 项目名称
-     * @param repoName    镜像名称
-     * @param imageName   镜像版本
-     * @param userId      用户id
+     * @param repoName 镜像名称
+     * @param imageName 镜像版本
+     * @param userId 用户id
      * @return {@link ImageInfoBO} 镜像的信息
      */
-    public ImageInfoBO getImage(String projectName, String repoName, String imageName, Long userId) {
-        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
+    public ImageInfoBO getImage(String projectName,String repoName,String imageName,Long userId){
+        UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
-        String repo = projectName + "/" + repoName;
-        return BeanUtils.convertType(harborRepoFeign.repositoriesRepoNameTagsTagGet(repo, imageName, auth), ImageInfoBO.class);
+        String repo = projectName+"/"+repoName;
+        return BeanUtils.convertType(harborRepoFeign.repositoriesRepoNameTagsTagGet(repo,imageName,auth),ImageInfoBO.class);
     }
 }

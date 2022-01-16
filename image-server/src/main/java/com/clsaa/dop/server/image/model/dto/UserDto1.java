@@ -5,9 +5,8 @@ import lombok.Setter;
 
 /**
  * <p>
- * 接收用户服务发送的消息的传输类
+ *     接收用户服务发送的消息的传输类
  * </p>
- *
  * @author xzt
  * @since 2019-3-28
  */

@@ -4,10 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 统计数据的业务层对象
- *
- * @author xzt
- * @since 2019-4-5
+ *  统计数据的业务层对象
+ *  @author xzt
+ *  @since 2019-4-5
  */
 @Setter
 @Getter

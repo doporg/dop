@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.test.service.create;
 
 import com.clsaa.dop.server.test.mapper.ServiceMapper;
+import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.param.InterfaceCaseParam;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
 import com.clsaa.dop.server.test.service.common.CommonCreateServiceImpl;

@@ -8,6 +8,9 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +101,7 @@ public class FileService {
         List<ChildrenBo> tags = new ArrayList<>();
 
         for (BranchBo branchBo : branchBos) {
-            branches.add(new ChildrenBo(branchBo.getName(), branchBo.getName(), branchBo.isDefault_(), branchBo.isProtected_()));
+            branches.add(new ChildrenBo(branchBo.getName(), branchBo.getName(),branchBo.isDefault_(),branchBo.isProtected_()));
         }
 
         for (TagBo tagBo : tagBos) {

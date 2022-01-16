@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 
 /**
  * 流水线阶段所做任务持久层对象
- *
  * @author 张富利
  * @since 2019-03-09
  */
@@ -25,7 +24,6 @@ public class Step {
     @SerializedName("taskName")
     @Enumerated(EnumType.STRING)
     private TaskType taskName;
-
     public enum TaskType {
         PullCode,
         BuildMaven,

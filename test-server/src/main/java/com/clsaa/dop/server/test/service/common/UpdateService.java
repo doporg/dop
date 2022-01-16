@@ -12,5 +12,5 @@ public interface UpdateService<PARAM> {
     void update(PARAM param);
 
     void batchUpdate(List<PARAM> params);
-
+    
 }

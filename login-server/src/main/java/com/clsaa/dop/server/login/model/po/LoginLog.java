@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.login.model.po;
 
 import com.clsaa.dop.server.login.enums.Client;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

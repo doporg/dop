@@ -8,7 +8,6 @@ import lombok.Setter;
 
 /**
  * 项目传输层对象
- *
  * @author xzt
  * @since 2019-3-24
  */

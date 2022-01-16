@@ -6,9 +6,8 @@ import lombok.Setter;
 
 /**
  * <p>
- * 对应的harbor的Label类
+ *     对应的harbor的Label类
  * </p>
- *
  * @author xzt
  * @since 2019-3-24
  */

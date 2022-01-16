@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE + 1000)
-public class UrlPathVariablePlugin implements UrlPlugin {
+public class UrlPathVariablePlugin implements UrlPlugin{
 
     @Override
     public void apply(RequestContext requestContext) {
         String url = requestContext.getUrl();
         Map<String, String> data = requestContext.getRequestParams()
-                .getOrDefault(ParamClass.PATH_PARAM, new ArrayList<>())
+                .getOrDefault(ParamClass.PATH_PARAM,new ArrayList<>())
                 .stream()
                 .collect(Collectors.toMap(RequestParamDto::getName, RequestParamDto::getValue));
         requestContext.setUrl(StringUtils.tryToResolveBrace(url, data));

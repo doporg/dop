@@ -6,7 +6,6 @@ package com.clsaa.dop.client.permission.FeignClient;
  *
  * @author lzy
  */
-
 import com.clsaa.dop.client.permission.model.dto.RoleDtoV1;
 import com.clsaa.dop.client.permission.model.dto.UserRuleDtoV1;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -29,11 +28,11 @@ public interface AuthenticService {
      *
      */
     @PostMapping("/v1/userData")
-    void addData(
-            @RequestParam(value = "ruleId") Long ruleId,
-            @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "fieldValue") Long fieldValue,
-            @RequestHeader("x-login-user") Long loginUser
+     void addData(
+            @RequestParam(value = "ruleId")Long ruleId,
+            @RequestParam(value = "userId")Long userId,
+            @RequestParam(value = "fieldValue")Long fieldValue,
+            @RequestHeader("x-login-user")Long loginUser
     );
 
     /* *
@@ -45,9 +44,9 @@ public interface AuthenticService {
      */
 
     @GetMapping("/v1/users/permissionmaps")
-    boolean checkUserPermission(
-            @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam("userId") Long loginUser);
+     boolean checkUserPermission(
+             @RequestParam(value = "permissionName", required = true) String permissionName,
+             @RequestParam("userId") Long loginUser);
 
     /* *
      *
@@ -74,7 +73,7 @@ public interface AuthenticService {
 
     @GetMapping("/v1/roles/byName")
     RoleDtoV1 findByName(
-            @RequestParam(value = "name") String name
+             @RequestParam(value = "name")String name
     );
 
     /* *
@@ -89,8 +88,8 @@ public interface AuthenticService {
     @GetMapping("/v1/userData/byPermission")
     List<Long> findAllIds(
             @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam(value = "userId", required = true) Long userId,
-            @RequestParam(value = "fieldName", required = true) String fieldName
+            @RequestParam(value = "userId", required = true)Long userId,
+            @RequestParam(value = "fieldName", required = true)String fieldName
     );
 
     /* *
@@ -104,11 +103,11 @@ public interface AuthenticService {
      */
 
     @GetMapping("/v1/userData")
-    boolean check(
+     boolean check(
             @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam(value = "userId", required = true) Long userId,
-            @RequestParam(value = "fieldName", required = true) String fieldName,
-            @RequestParam(value = "fieldValue", required = true) Long fieldValue
+            @RequestParam(value = "userId", required = true)Long userId,
+            @RequestParam(value = "fieldName", required = true)String fieldName,
+            @RequestParam(value = "fieldValue", required = true)Long fieldValue
     );
 
     /* *
@@ -134,7 +133,7 @@ public interface AuthenticService {
      */
 
     @DeleteMapping("/v1/userData/byFieldAndUserId")
-    void deleteByFieldAndUserId(
+     void deleteByFieldAndUserId(
             @RequestParam(value = "fieldValue") Long fieldValue,
             @RequestParam(value = "fieldName") String fieldName,
             @RequestParam(value = "userId") Long userId
@@ -151,10 +150,10 @@ public interface AuthenticService {
      */
     @PostMapping("/v1/userData/byUserList")
     void addDataByUserList(
-            @RequestParam(value = "ruleId") Long ruleId,
-            @RequestParam(value = "userId") List<Long> userIdList,
-            @RequestParam(value = "fieldValue") Long fieldValue,
-            @RequestHeader("x-login-user") Long loginUser
+            @RequestParam(value = "ruleId")Long ruleId,
+            @RequestParam(value = "userId")List<Long> userIdList,
+            @RequestParam(value = "fieldValue")Long fieldValue,
+            @RequestHeader("x-login-user")Long loginUser
     );
 
 

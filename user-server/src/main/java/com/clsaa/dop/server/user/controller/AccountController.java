@@ -1,9 +1,11 @@
 package com.clsaa.dop.server.user.controller;
 
 import com.clsaa.dop.server.user.model.dto.RegisterDtoV1;
+import com.clsaa.dop.server.user.model.dto.ResetDtoV1;
 import com.clsaa.dop.server.user.service.AccountService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 注册接口实现类

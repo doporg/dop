@@ -6,7 +6,6 @@ import lombok.Setter;
 
 /**
  * 修改项目公开状态的类
- *
  * @author xzt
  * @since 2019-4-5
  */

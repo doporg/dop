@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.permission.model.po;
 
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
  * 用户规则表，用于数据权限的控制
  *
  * @author lzy
- * <p>
+ *
  * since :2019.3.19
  */
 
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "t_user_rule",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "field_name", "rule"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id","field_name","rule"})}) //引入@Table注解，name赋值为表名
 //重写SQL删除语句
 @SQLDelete(sql = "update t_user_rule set is_deleted = true,field_name = CONCAT(uuid(),field_name) where id = ?")
 @Where(clause = "is_deleted =false")
@@ -90,7 +92,7 @@ public class UserRule implements Serializable {
      * 删除标记
      */
     @Basic
-    @Column(name = "is_deleted")
+    @Column(name="is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
 

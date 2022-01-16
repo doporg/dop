@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 06/05/2019
  */
 @Component
-public class CaseUnitCreateService extends CommonCreateServiceImpl<CaseUnitParam, CaseUnit, Long> {
+public class CaseUnitCreateService extends CommonCreateServiceImpl<CaseUnitParam, CaseUnit,Long> {
 
     @Autowired
     public CaseUnitCreateService(ServiceMapper<CaseUnitParam, CaseUnit> serviceMapper,

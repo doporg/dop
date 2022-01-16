@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * @since 08/05/2019
  */
 @Component
-public class GroupLogQueryService extends CommonQueryServiceImpl<GroupExecuteLog, GroupExecuteLogDto, Long> {
+public class GroupLogQueryService extends CommonQueryServiceImpl<GroupExecuteLog, GroupExecuteLogDto,Long> {
 
     private GroupLogRepository groupLogRepository;
 

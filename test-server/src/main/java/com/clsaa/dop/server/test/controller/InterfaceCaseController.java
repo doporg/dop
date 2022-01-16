@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -39,7 +40,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * 接口测试用例相关api
- *
  * @author xihao
  * @version 1.0
  * @since 19/03/2019
@@ -96,8 +96,7 @@ public class InterfaceCaseController {
     public Boolean updateStages(@RequestBody String jsonArray, @PathVariable("caseId") Long caseId) {
         List<InterfaceStageDto> stageDtos;
         try {
-            stageDtos = mapper.readValue(jsonArray, new TypeReference<List<InterfaceStageDto>>() {
-            });
+            stageDtos = mapper.readValue(jsonArray, new TypeReference<List<InterfaceStageDto>>(){});
             interfaceStageUpdateService.batchUpdate(stageDtos);
         } catch (IOException e) {
             log.error("[Update Stages Error]: ", e);

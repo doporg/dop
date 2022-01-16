@@ -10,7 +10,7 @@ import org.hamcrest.core.IsNot;
  * @version 1.0
  * @since 31/03/2019
  */
-public class ToStringMatcher<T> extends FeatureMatcher<T, String> {
+public class ToStringMatcher<T> extends FeatureMatcher<T,String> {
 
     public ToStringMatcher(Matcher<? super String> toStringMatcher) {
         super(toStringMatcher, "with toString()", "toString()");

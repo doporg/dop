@@ -65,6 +65,7 @@ public class ProjectService {
         }
 
 
+
     }
 
     public List<UserV1> getMembersInProject(Long projectId) {
@@ -92,7 +93,7 @@ public class ProjectService {
         //得到可以查看的所有数据的ID列表（若权限模块修复成功，将下行代码注释取消，再将下下行代码注释）
 //        List<Long> idList = permissionService.findAllIds(permissionConfig.getViewProject(), loginUser, permissionConfig.getProjectRuleFieldName());
         List<Long> idList = projectRepository.findAllIdsByCuser(loginUser);
-        System.out.println("loginUser => " + loginUser + ",idList => " + idList);
+        System.out.println("loginUser => "+loginUser+",idList => "+idList);
         Page<Project> projectPage;
         List<Project> projectList;
         Integer totalCount;

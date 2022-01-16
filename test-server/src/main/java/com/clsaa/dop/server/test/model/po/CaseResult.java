@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "case_result", schema = "db_dop_test",
         indexes = {@Index(columnList = "case_id,rtime", unique = false)})
-public class CaseResult implements Po {
+public class CaseResult implements Po{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

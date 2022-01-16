@@ -34,7 +34,7 @@ public class GroupExecuteLogDtoMapper extends AbstractCommonServiceMapper<GroupE
 
     @Override
     public Optional<GroupExecuteLogDto> convert(GroupExecuteLog groupExecuteLog) {
-        return super.convert(groupExecuteLog).map(dto -> {
+        return super.convert(groupExecuteLog).map(dto ->{
             List<InterfaceExecuteLogDto> caseLogs = interfaceExecuteLogDtoMapper.convert(groupExecuteLog.getLogs());
             dto.setLogs(caseLogs);
 

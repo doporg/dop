@@ -1,14 +1,24 @@
 package com.clsaa.dop.server.user.controller;
 
+import com.alibaba.druid.sql.visitor.functions.If;
+import com.clsaa.dop.server.user.config.BizCodes;
 import com.clsaa.dop.server.user.config.HttpHeaders;
 import com.clsaa.dop.server.user.model.dto.ResetDtoV1;
+import com.clsaa.dop.server.user.model.po.UserCredential;
 import com.clsaa.dop.server.user.model.vo.UserV1;
-import com.clsaa.dop.server.user.service.UserService;
 import com.clsaa.dop.server.user.util.BeanUtils;
+import com.clsaa.dop.server.user.service.UserService;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
+import com.clsaa.rest.result.bizassert.BizCode;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -59,13 +69,13 @@ public class UserController {
     @ApiOperation(value = "根据邮箱或账户名模糊匹配用户", notes = "根据邮箱和账户名模糊匹配用户, 仅支持前缀匹配, ")
     @GetMapping("/v1/users/search")
     public Pagination<UserV1> searchUserByOrganizationIdAndEmailOrPassword(@ApiParam(value = "关键字，姓名或邮箱")
-                                                                           @RequestParam(value = "key", required = false) String key,
+                                                                               @RequestParam(value = "key", required = false) String key,
                                                                            @ApiParam(value = "组织id，若为空则不限制，若填写则搜索对应组织下的用户")
                                                                            @RequestParam(value = "organizationId", required = false) Long organizationId,
                                                                            @ApiParam(value = "页号")
-                                                                           @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
+                                                                               @RequestParam(value = "pageNo", required = false, defaultValue = "1") Integer pageNo,
                                                                            @ApiParam(value = "页大小")
-                                                                           @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+                                                                               @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         return this.userService.searchUserByEmailOrPassword(key, organizationId, pageNo, pageSize);
     }
 }

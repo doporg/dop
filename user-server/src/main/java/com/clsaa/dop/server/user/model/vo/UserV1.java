@@ -1,9 +1,9 @@
 package com.clsaa.dop.server.user.model.vo;
 
 import com.clsaa.dop.server.user.model.po.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 /**

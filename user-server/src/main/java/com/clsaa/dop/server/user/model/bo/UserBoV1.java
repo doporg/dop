@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.user.model.bo;
 
 import com.clsaa.dop.server.user.model.po.User;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

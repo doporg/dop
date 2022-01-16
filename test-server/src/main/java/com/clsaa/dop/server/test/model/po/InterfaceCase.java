@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_name", "application_id"})},
         indexes = {@Index(columnList = "case_name,application_id", unique = true),
                 @Index(columnList = "application_id,case_name", unique = false)})
-public class InterfaceCase implements Po {
+public class InterfaceCase implements Po{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,13 +54,13 @@ public class InterfaceCase implements Po {
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "case_id", referencedColumnName = "id"
-            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<CaseParam> caseParams;
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinColumn(name = "case_id", referencedColumnName = "id"
-            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private List<InterfaceStage> stages;
 
     // ----------- common property ---------

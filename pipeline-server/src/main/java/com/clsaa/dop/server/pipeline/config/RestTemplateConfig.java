@@ -2,14 +2,12 @@ package com.clsaa.dop.server.pipeline.config;
 
 import com.clsaa.dop.server.pipeline.util.JenkinsUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -39,10 +37,10 @@ public class RestTemplateConfig {
     }
 
     @Bean
-    public RestTemplate restTemplate() {
-        HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectTimeout(1000);
-        httpRequestFactory.setReadTimeout(1000);
+    public RestTemplate restTemplate(){
+        HttpComponentsClientHttpRequestFactory httpRequestFactory  = new HttpComponentsClientHttpRequestFactory ();
+        httpRequestFactory .setConnectTimeout(1000);
+        httpRequestFactory .setReadTimeout(1000);
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters()

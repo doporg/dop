@@ -26,18 +26,18 @@ public class ProjectService {
      * @param id 项目id
      * @return 项目overview需要的信息
      */
-    public ProjectBo findProject(String id, Long userId) {
+    public ProjectBo findProject(String id,Long userId) {
 
         id = URLUtil.encodeURIComponent(id);
 
         //获得项目基本信息
-        ProjectBo projectBo = RequestUtil.get("/projects/" + id + "?statistics=true", ProjectBo.class);
+        ProjectBo projectBo = RequestUtil.get("/projects/" + id + "?statistics=true",ProjectBo.class);
         System.out.println(projectBo);
         //获得tag的数量
-        List<TagBo> tags = RequestUtil.getList("/projects/" + id + "/repository/tags", TagBo.class);
+        List<TagBo> tags = RequestUtil.getList("/projects/" + id + "/repository/tags",TagBo.class);
         projectBo.setTag_count(tags.size());
         //获得分支的数量
-        List<BranchBo> branches = RequestUtil.getList("/projects/" + id + "/repository/branches", BranchBo.class);
+        List<BranchBo> branches = RequestUtil.getList("/projects/" + id + "/repository/branches",BranchBo.class);
         projectBo.setBranch_count(branches.size());
         //获得提交次数
         projectBo.setCommit_count(projectBo.getStatistics().getCommit_count());
@@ -155,7 +155,7 @@ public class ProjectService {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("name", name));
         params.add(new BasicNameValuePair("description", description));
-        if (!default_branch.equals("null"))
+        if(!default_branch.equals("null"))
             params.add(new BasicNameValuePair("default_branch", default_branch));
         params.add(new BasicNameValuePair("visibility", visibility));
         RequestUtil.put(path, userId, params);
@@ -237,93 +237,88 @@ public class ProjectService {
 
     /**
      * 查询项目的成员列表
-     *
-     * @param id     项目id
+     * @param id 项目id
      * @param userId 用户id
      * @return 成员列表
      */
-    public List<MemberBo> findProjectMemberList(String id, Long userId) {
+    public List<MemberBo> findProjectMemberList(String id,Long userId){
 
-        id = URLUtil.encodeURIComponent(id);
+        id=URLUtil.encodeURIComponent(id);
 
-        String path = "/projects/" + id + "/members";
-        return RequestUtil.getList(path, userId, MemberBo.class);
+        String path="/projects/"+id+"/members";
+        return RequestUtil.getList(path,userId,MemberBo.class);
 
     }
 
     /**
      * 增加一个项目成员
-     *
-     * @param id           项目id
-     * @param user_name    gitlab用户名
+     * @param id 项目id
+     * @param user_name gitlab用户名
      * @param access_level 权限等级
-     * @param userId       dop用户id
+     * @param userId dop用户id
      */
-    public void addProjectMember(String id, String user_name, int access_level, Long userId) {
+    public void addProjectMember(String id,String user_name,int access_level,Long userId){
 
-        id = URLUtil.encodeURIComponent(id);
-        String path = "/users?username=" + user_name;
-        List<UserIdBo> userIdBos = RequestUtil.getList(path, userId, UserIdBo.class);
-        if (userIdBos.size() == 0) return;
-        int user_id = userIdBos.get(0).getId();
+        id=URLUtil.encodeURIComponent(id);
+        String path="/users?username="+user_name;
+        List<UserIdBo> userIdBos=RequestUtil.getList(path,userId,UserIdBo.class);
+        if(userIdBos.size()==0) return;
+        int user_id=userIdBos.get(0).getId();
 
 
-        path = "/projects/" + id + "/members";
+        path="/projects/"+id+"/members";
 
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("user_id", "" + user_id));
-        params.add(new BasicNameValuePair("access_level", "" + access_level));
-        RequestUtil.post(path, userId, params);
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("user_id",""+user_id));
+        params.add(new BasicNameValuePair("access_level",""+access_level));
+        RequestUtil.post(path,userId,params);
 
     }
 
     /**
      * 修改项目成员的权限等级
-     *
-     * @param id           项目id
-     * @param user_id      gitlab用户id
+     * @param id 项目id
+     * @param user_id gitlab用户id
      * @param access_level 权限等级
-     * @param userId       dop用户id
+     * @param userId dop用户id
      */
-    public void changeProjectMemberAccessLevel(String id, int user_id, int access_level, Long userId) {
+    public void changeProjectMemberAccessLevel(String id,int user_id,int access_level,Long userId){
 
-        id = URLUtil.encodeURIComponent(id);
-        String path = "/projects/" + id + "/members/" + user_id;
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/members/"+user_id;
 
-        List<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("access_level", "" + access_level));
-        RequestUtil.put(path, userId, params);
+        List<NameValuePair> params=new ArrayList<>();
+        params.add(new BasicNameValuePair("access_level",""+access_level));
+        RequestUtil.put(path,userId,params);
     }
 
     /**
      * 删除一个项目成员
-     *
      * @param user_id gitlab用户id
-     * @param userId  dop用户id
+     * @param userId dop用户id
      */
-    public void deleteProjectMember(String id, int user_id, Long userId) {
+    public void deleteProjectMember(String id,int user_id,Long userId){
 
-        id = URLUtil.encodeURIComponent(id);
-        String path = "/projects/" + id + "/members/" + user_id;
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id+"/members/"+user_id;
 
-        RequestUtil.delete(path, userId);
+        RequestUtil.delete(path,userId);
     }
 
     /**
      * 查询用户的项目权限，包括项目可见等级和用户的角色
-     *
-     * @param id     项目id
+     * @param id 项目id
      * @param userId 用户id
      * @return 项目可见等级和用户的角色
      */
-    public ProjectAccessLevelBo findProjectAccessLevel(String id, Long userId) {
+    public ProjectAccessLevelBo findProjectAccessLevel(String id, Long userId){
 
-        id = URLUtil.encodeURIComponent(id);
-        String path = "/projects/" + id;
-        ProjectAccessLevelBo projectAccessLevelBo = RequestUtil.get(path, userId, ProjectAccessLevelBo.class);
-        if (projectAccessLevelBo.getPermissions().getProject_access() != null) {
+        id=URLUtil.encodeURIComponent(id);
+        String path="/projects/"+id;
+        ProjectAccessLevelBo projectAccessLevelBo=RequestUtil.get(path, userId,ProjectAccessLevelBo.class);
+        if(projectAccessLevelBo.getPermissions().getProject_access()!=null){
             projectAccessLevelBo.setAccess_level(projectAccessLevelBo.getPermissions().getProject_access().getAccess_level());
-        } else {
+        }else {
             projectAccessLevelBo.setAccess_level(0);
         }
 

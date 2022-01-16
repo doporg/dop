@@ -31,7 +31,7 @@ public class CaseService {
     @Autowired
     private ManualCaseRepository manualCaseRepository;
 
-    private LoadingCache<Long, String> inCaseName = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
+    private LoadingCache<Long,String> inCaseName = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
         @Override
         public String load(Long id) throws Exception {
             InterfaceCase interfaceCase = interfaceCaseRepository.findById(id).orElse(null);
@@ -43,7 +43,7 @@ public class CaseService {
         }
     });
 
-    private LoadingCache<Long, String> manCaseName = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
+    private LoadingCache<Long,String> manCaseName = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
         @Override
         public String load(Long id) throws Exception {
             ManualCase manualCase = manualCaseRepository.findById(id).orElse(null);
@@ -60,7 +60,7 @@ public class CaseService {
             return inCaseName.get(id);
         } else if (caseType == CaseType.MANUAL) {
             return manCaseName.get(id);
-        } else {
+        }else {
             return null;
         }
     }

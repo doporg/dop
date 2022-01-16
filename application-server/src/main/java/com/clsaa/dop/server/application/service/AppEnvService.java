@@ -1,15 +1,18 @@
 package com.clsaa.dop.server.application.service;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppEnvRepository;
 import com.clsaa.dop.server.application.model.bo.AppEnvBoV1;
 import com.clsaa.dop.server.application.model.po.AppEnv;
 import com.clsaa.dop.server.application.model.vo.PipelineIdAndNameV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,7 @@ public class AppEnvService {
     //public void findPipelineByAppEnvId(Long appEnvId) {
     //
     //}
+
 
 
     /**
@@ -90,7 +94,7 @@ public class AppEnvService {
      * 创建环境
      *
      * @param appId              appId
-     * @param loginUser          创建者
+     * @param loginUser              创建者
      * @param title              名称
      * @param environmentLever   环境级别
      * @param deploymentStrategy 发布策略

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 12/03/2019
  */
-public class CommonQueryServiceImpl<PO, DTO, ID> implements QueryService<DTO, ID> {
+public class CommonQueryServiceImpl<PO,DTO,ID> implements QueryService<DTO, ID> {
 
     private ServiceMapper<PO, DTO> serviceMapper;
     private JpaRepository<PO, ID> jpaRepository;

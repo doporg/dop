@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * 修改密码消息消费类
- *
  * @author wsy
  */
 @Component
@@ -81,9 +80,9 @@ public class UpdateAccountConsumer implements MessageListenerConcurrently {
                 MessageExt msg = msgs.get(index);
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
                 System.out.println(messageBody);
-                UserDto userDto = JSON.parseObject(messageBody, UserDto.class);
-                CryptoResult cryptoResult = RSA.decryptByPublicKey(userDto.getPassword(), userFeign.getAccountRSAPublicKey());
-                userService.updateUserPassword(userDto.getName(), cryptoResult.getContent());
+                UserDto userDto=JSON.parseObject(messageBody,UserDto.class);
+                CryptoResult cryptoResult=RSA.decryptByPublicKey(userDto.getPassword(),userFeign.getAccountRSAPublicKey());
+                userService.updateUserPassword(userDto.getName(),cryptoResult.getContent());
 
             }
         } catch (Exception e) {

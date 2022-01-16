@@ -1,5 +1,7 @@
 package com.clsaa.dop.server.code.feign;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

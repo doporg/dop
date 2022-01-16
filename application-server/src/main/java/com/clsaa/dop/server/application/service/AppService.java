@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.application.service;
 
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppRepository;
 import com.clsaa.dop.server.application.model.bo.AppBoV1;
@@ -12,6 +13,7 @@ import com.clsaa.dop.server.application.model.vo.AppBasicInfoV1;
 import com.clsaa.dop.server.application.model.vo.AppV1;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -140,8 +142,8 @@ public class AppService {
      *
      * @param ouser ouser
      */
-    public List<AppBoV1> findApplicationByOuser(Long ouser) {
-        return this.appRepository.findAllByOuser(ouser).stream().map(l -> BeanUtils.convertType(l, AppBoV1.class)).collect(Collectors.toList());
+    public List<AppBoV1> findApplicationByOuser(Long ouser){
+        return this.appRepository.findAllByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppBoV1.class)).collect(Collectors.toList());
     }
 
     /**
@@ -162,12 +164,14 @@ public class AppService {
     }
 
 
+
     /**
      * 创建应用
      *
      * @param projectId   项目Id
      * @param title       应用名称
      * @param description 应用描述
+     *
      */
     public void createApp(Long loginUser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateApp(), loginUser)

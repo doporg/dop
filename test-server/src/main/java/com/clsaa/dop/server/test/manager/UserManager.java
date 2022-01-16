@@ -16,7 +16,6 @@ import java.util.function.Function;
 
 /**
  * 用户相关操作
- *
  * @author xihao
  * @version 1.0
  * @since 29/03/2019
@@ -30,7 +29,7 @@ public class UserManager {
 
     private static UserInterface userInterface;
 
-    private static LoadingCache<Long, String> userNameCache = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
+    private static LoadingCache<Long,String> userNameCache = CacheBuilder.newBuilder().maximumSize(10000L).build(new CacheLoader<Long, String>() {
         @Override
         public String load(Long key) throws Exception {
             User user = userInterface.getUserById(key);
@@ -101,7 +100,7 @@ public class UserManager {
             if (po.getId() == null) {
                 // new
                 dateAndUser().apply(po);
-            } else {
+            }else {
                 // update
                 updateUserAndTime().apply(po);
             }

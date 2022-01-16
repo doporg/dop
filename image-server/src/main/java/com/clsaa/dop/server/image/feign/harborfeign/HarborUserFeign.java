@@ -9,17 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * harbor用户管理类
- *
- * @author xzt
+ * @author  xzt
  * @since 2019-4-5
  */
 @Component
-@FeignClient(value = "user", url = "${feign.url}", configuration = FeignConfig.class)
+@FeignClient(value = "user",url = "${feign.url}",configuration = FeignConfig.class)
 public interface HarborUserFeign {
 
     /**
      * 注册harbor用户
-     *
      * @param user 用户信息
      */
     @PostMapping(value = "/users")

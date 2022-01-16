@@ -18,9 +18,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 用户数据表的增删改查
+ *  用户数据表的增删改查
  *
  * @author lzy
+ *
  * @since 2019.3.19
  */
 
@@ -38,6 +39,7 @@ public class UserDataService {
     private RolePermissionMappingService rolePermissionMappingService;
 
 
+
     /* *
      *
      *  * @param ruleId 规则ID
@@ -52,20 +54,21 @@ public class UserDataService {
      *
      * since :2019.3.19
      */
-    public void addData(Long ruleId, Long userId, Long fieldValue, Long cuser, Long muser) {
+    public void addData(Long ruleId,Long userId,Long fieldValue,Long cuser,Long muser)
+    {
         System.out.println("UserDataService addData");
-        UserData existUserData = userDataDAO.findByUserIdAndFieldValueAndRuleId(userId, fieldValue, ruleId);
-        System.out.println("UserDataService existUserData => " + existUserData);
-        BizAssert.allowed(existUserData == null, BizCodes.REPETITIVE_DATA);
+        UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
+        System.out.println("UserDataService existUserData => "+existUserData);
+        BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
         System.out.println("判定成功");
-        UserRule userRule = userRuleService.findById(ruleId);
-        System.out.println("UserDataService userRule => " + userRule);
-        UserData userData = UserData.builder()
+        UserRule userRule=userRuleService.findById(ruleId);
+        System.out.println("UserDataService userRule => "+userRule);
+        UserData userData=UserData.builder()
                 .ruleId(ruleId)
                 .userId(userId)
                 .fieldValue(fieldValue)
-                .description("身为 " + roleService.findById(userRule.getRoleId()).getName() +
-                        " 有权操作 " + userRule.getFieldName() + " " + userRule.getRule() + " {作用域参数值} 的数据")
+                .description("身为 "+roleService.findById(userRule.getRoleId()).getName()+
+                " 有权操作 "+userRule.getFieldName()+" "+userRule.getRule()+" {作用域参数值} 的数据")
                 .cuser(cuser)
                 .muser(muser)
                 .ctime(LocalDateTime.now())
@@ -73,21 +76,23 @@ public class UserDataService {
                 .build();
         System.out.println("UserDataService  beforeInsert");
         UserData savedUserData = userDataDAO.saveAndFlush(userData);
-        System.out.println("UserDataService  savedUserData => " + savedUserData);
+        System.out.println("UserDataService  savedUserData => "+savedUserData);
     }
 
-    public void addDataByUserList(Long ruleId, List<Long> userIdList, Long fieldValue, Long cuser, Long muser) {
-        for (Long userId : userIdList) {
-            UserData existUserData = userDataDAO.findByUserIdAndFieldValueAndRuleId(userId, fieldValue, ruleId);
-            BizAssert.allowed(existUserData == null, BizCodes.REPETITIVE_DATA);
+    public void addDataByUserList(Long ruleId,List<Long> userIdList,Long fieldValue,Long cuser,Long muser)
+    {
+        for(Long userId:userIdList)
+        {
+            UserData existUserData=userDataDAO.findByUserIdAndFieldValueAndRuleId(userId,fieldValue,ruleId);
+            BizAssert.allowed(existUserData==null, BizCodes.REPETITIVE_DATA);
 
-            UserRule userRule = userRuleService.findById(ruleId);
-            UserData userData = UserData.builder()
+            UserRule userRule=userRuleService.findById(ruleId);
+            UserData userData=UserData.builder()
                     .ruleId(ruleId)
                     .userId(userId)
                     .fieldValue(fieldValue)
-                    .description("身为 " + roleService.findById(userRule.getRoleId()).getName() +
-                            " 有权操作 " + userRule.getFieldName() + " " + userRule.getRule() + " {作用域参数值} 的数据")
+                    .description("身为 "+roleService.findById(userRule.getRoleId()).getName()+
+                            " 有权操作 "+userRule.getFieldName()+" "+userRule.getRule()+" {作用域参数值} 的数据")
                     .cuser(cuser)
                     .muser(muser)
                     .ctime(LocalDateTime.now())
@@ -100,12 +105,15 @@ public class UserDataService {
     }
 
     //验证某个功能点操作的数据是否允许操作
-    public boolean check(String permissionName, Long userId, String fieldName, Long fieldValue) {
-        List<Object> roleIdList = userDataDAO.findRoleByUserAndRule(fieldValue, userId, fieldName);
+    public boolean check(String permissionName,Long userId,String fieldName,Long fieldValue)
+    {
+        List<Object> roleIdList=userDataDAO.findRoleByUserAndRule(fieldValue,userId,fieldName);
 
-        for (Object roleId : roleIdList) {
-            if (rolePermissionMappingService.findByRoleIdAndPermissionId
-                    (Long.parseLong(roleId.toString()), permissionService.findByName(permissionName).getId()) != null) {
+        for(Object roleId :roleIdList)
+        {
+            if(rolePermissionMappingService.findByRoleIdAndPermissionId
+                    (Long.parseLong(roleId.toString()),permissionService.findByName(permissionName).getId())!=null)
+            {
                 return true;
             }
         }
@@ -113,55 +121,63 @@ public class UserDataService {
     }
 
     //得到某个功能点操作允许操作的数据范围（返回ID列表形式）
-    public List<Long> findAllIds(String permissionName, Long userId, String fieldName) {
+    public List<Long> findAllIds(String permissionName, Long userId,String fieldName)
+    {
         System.out.println("UserDataService.findAllIds");
         System.out.println("permissionName = " + permissionName + ", userId = " + userId + ", fieldName = " + fieldName);
         //舍弃了 参数 permissionName
-        Set<Long> IdSet = new HashSet<>();
-        List<Long> IdList = new ArrayList<>();
+        Set<Long> IdSet=new HashSet<>();
+        List<Long> IdList=new ArrayList<>();
 //        if(permissionService.checkUserPermission(permissionName,userId))
 //        {
-        List<UserData> userDataList = userDataDAO.findAllIds(userId, fieldName);
-        for (UserData userData : userDataList) {
-            IdSet.add(userData.getFieldValue());
-        }
-        IdList.addAll(IdSet);
-        System.out.println("UserDataService IdList => " + IdList);
-        return IdList;
+            List<UserData> userDataList=userDataDAO.findAllIds(userId,fieldName);
+            for(UserData userData:userDataList)
+            {
+                IdSet.add(userData.getFieldValue());
+            }
+            IdList.addAll(IdSet);
+            System.out.println("UserDataService IdList => "+IdList);
+            return IdList;
 //        }
 //        return IdList;
 
     }
 
     //根据用户ID查找数据
-    public List<UserDataV1> findByUserId(Long userId, String key) {
-        return userDataDAO.findByUserIdAndDescriptionLike(userId, "%" + key + "%")
-                .stream().map(p -> BeanUtils.convertType(p, UserDataV1.class)).collect(Collectors.toList());
+    public List<UserDataV1> findByUserId(Long userId,String key)
+    {
+        return userDataDAO.findByUserIdAndDescriptionLike(userId,"%"+key+"%")
+                .stream().map(p-> BeanUtils.convertType(p, UserDataV1.class)).collect(Collectors.toList());
     }
 
     //根据规则ID删除数据
-    public void deleteByRuleId(Long ruleId) {
+    public void deleteByRuleId(Long ruleId)
+    {
         userDataDAO.deleteByRuleId(ruleId);
     }
 
     //根据ID删除数据
-    public void deleteById(Long id) {
+    public void deleteById(Long id)
+    {
         userDataDAO.deleteById(id);
     }
 
     //根据字段值查找用户ID列表
-    public List<Long> findUserByField(Long fieldValue, String fieldName) {
-        List<Long> userList = new ArrayList<>();
-        List<UserData> userDataList = userDataDAO.findUserByField(fieldValue, fieldName);
-        for (UserData userData : userDataList) {
+    public List<Long> findUserByField(Long fieldValue,String fieldName)
+    {
+        List<Long> userList=new ArrayList<>();
+        List<UserData> userDataList= userDataDAO.findUserByField(fieldValue,fieldName);
+        for(UserData userData:userDataList)
+        {
             userList.add(userData.getUserId());
         }
         return userList;
     }
 
     //根据作用域名称、值和用户ID删除用户数据
-    public void deleteByFieldAndUserId(Long fieldValue, String fieldName, Long userId) {
-        userDataDAO.deleteByFieldAndUserId(fieldValue, fieldName, userId);
+    public void deleteByFieldAndUserId(Long fieldValue,String fieldName,Long userId)
+    {
+        userDataDAO.deleteByFieldAndUserId(fieldValue,fieldName,userId);
     }
 
 

@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.permission.model.po;
 
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,7 +12,7 @@ import java.time.LocalDateTime;
  * 角色关联功能点持久层对象，对应角色与功能点关联表中每条数据
  *
  * @author lzy
- * <p>
+ *
  * since :2019.3.7
  */
 @Entity
@@ -23,7 +25,7 @@ import java.time.LocalDateTime;
 @SQLDelete(sql = "update t_role_permission_mapping set is_deleted = true,role_id = uuid_short() where id = ?")
 @Where(clause = "is_deleted =false")
 @Table(name = "t_role_permission_mapping",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id", "role_id"})}) //引入@Table注解，name赋值为表名
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"permission_id","role_id"})}) //引入@Table注解，name赋值为表名
 public class RolePermissionMapping implements Serializable {
 
     private static final long serialVersionUID = 552000262L;
@@ -77,7 +79,7 @@ public class RolePermissionMapping implements Serializable {
      * 删除标记
      */
     @Basic
-    @Column(name = "is_deleted")
+    @Column(name="is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
 }

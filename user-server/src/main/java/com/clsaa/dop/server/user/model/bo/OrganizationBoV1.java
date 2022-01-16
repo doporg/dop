@@ -1,5 +1,7 @@
 package com.clsaa.dop.server.user.model.bo;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

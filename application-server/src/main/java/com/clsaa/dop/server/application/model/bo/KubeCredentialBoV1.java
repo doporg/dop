@@ -2,6 +2,7 @@ package com.clsaa.dop.server.application.model.bo;
 
 import lombok.*;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 

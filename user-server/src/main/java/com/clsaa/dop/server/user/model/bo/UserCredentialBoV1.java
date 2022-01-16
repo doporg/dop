@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.user.model.bo;
 
 import com.clsaa.dop.server.user.model.po.UserCredential;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

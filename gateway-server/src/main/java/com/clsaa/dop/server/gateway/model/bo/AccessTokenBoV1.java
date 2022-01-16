@@ -1,5 +1,8 @@
 package com.clsaa.dop.server.gateway.model.bo;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -39,7 +42,6 @@ public class AccessTokenBoV1 implements Serializable {
      * 创建时间
      */
     private Timestamp ctime;
-
     /**
      * 检查Token是否失效
      *

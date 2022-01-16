@@ -77,7 +77,7 @@ feign:
 
 message:
   mq:
-    RocketMQ: #RocketMQ相关配置
+    RocketMQ:                                     #RocketMQ相关配置
       namesrvAddr: rocketmq.dop.clsaa.com:9876    #name-server地址与端口,多个可用分号隔开
       instanceName: DOP_MESSAGE                   #要发送到的MQ集群
       maxMessageSize: 131072 # 1024*128           #最大消息长度

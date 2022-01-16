@@ -57,15 +57,15 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: gateway-server
-  namespace: dop
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
+ name: gateway-server
+ namespace: dop
+ annotations:
+     kubernetes.io/ingress.class: "nginx"
 spec:
-  rules:
-    - host: open.dop.clsaa.com
-      http:
-        paths:
-          - backend:
-              serviceName: gateway-server
-              servicePort: 14258
+ rules:
+   - host: open.dop.clsaa.com
+     http:
+       paths:
+         - backend:
+             serviceName: gateway-server
+             servicePort: 14258

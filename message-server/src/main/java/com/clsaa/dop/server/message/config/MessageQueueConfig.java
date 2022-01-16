@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * 消息队列配置类, 根据配置maat.mq.name决定初始化哪个MQ的{@link MessageSender}实现
- *
  * @author joyren
  */
 @SpringBootConfiguration

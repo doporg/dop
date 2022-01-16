@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 @Table(name = "operation_log", schema = "db_dop_test",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"case_log_id", "stage", "operation_order"})},
         indexes = {@Index(columnList = "case_log_id,stage,operation_order", unique = true)})
-public class OperationExecuteLog implements Po {
+public class OperationExecuteLog implements Po{
 
     @Lob
     @Column(name = "execute_info")
@@ -46,7 +47,7 @@ public class OperationExecuteLog implements Po {
     private LocalDateTime end;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_log_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "case_log_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private InterfaceExecuteLog interfaceExecuteLog;
 
     // ----------- common property ---------

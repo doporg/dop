@@ -1,13 +1,17 @@
 package com.clsaa.dop.server.code.util;
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.code.controller.UserController;
 import com.clsaa.dop.server.code.feign.UserCredentialType;
 import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.project.ProjectBo;
+import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
+import com.clsaa.dop.server.code.service.UserService;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -16,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +45,7 @@ public class RequestUtil {
     private static UserFeign userFeign;
 
     @Autowired
-    public void setUserFeign(UserFeign userFeign) {
-        RequestUtil.userFeign = userFeign;
-    }
+    public void setUserFeign(UserFeign userFeign){RequestUtil.userFeign=userFeign;}
 
     //api地址
     private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
@@ -54,27 +58,27 @@ public class RequestUtil {
     /**
      * 发送get请求到gitlab，返回一个对象列表
      *
-     * @param path   请求路径
-     * @param userId 用户id
-     * @param clazz  类
-     * @param <T>    结果转化的类型
+     * @param path     请求路径
+     * @param userId   用户id
+     * @param clazz    类
+     * @param <T>      结果转化的类型
      * @return 列表
      */
     public static <T> List<T> getList(String path, Long userId, Class<T> clazz) {
 
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
 
-        List<T> list = new ArrayList<>();
-        int page = 1;
-        while (true) {
-            String temp_url = url + "&per_page=50&page=" + page++;
-            List<T> temp_list = JSON.parseArray(httpGet(temp_url), clazz);
-            if (temp_list.size() == 0) {
+        List<T> list=new ArrayList<>();
+        int page=1;
+        while(true){
+            String temp_url=url+"&per_page=50&page="+page++;
+            List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
+            if(temp_list.size()==0){
                 break;
-            } else {
+            }else {
                 list.addAll(temp_list);
             }
         }
@@ -92,14 +96,14 @@ public class RequestUtil {
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "private_token=" + rootPrivateToken;
 
-        List<T> list = new ArrayList<>();
-        int page = 1;
-        while (true) {
-            String temp_url = url + "&per_page=50&page=" + page++;
-            List<T> temp_list = JSON.parseArray(httpGet(temp_url), clazz);
-            if (temp_list.size() == 0) {
+        List<T> list=new ArrayList<>();
+        int page=1;
+        while(true){
+            String temp_url=url+"&per_page=50&page="+page++;
+            List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
+            if(temp_list.size()==0){
                 break;
-            } else {
+            }else {
                 list.addAll(temp_list);
             }
         }
@@ -112,7 +116,7 @@ public class RequestUtil {
      * 发送get请求到gitlab，返回一个对象，其他同getList方式
      */
     public static <T> T get(String path, Long userId, Class<T> clazz) {
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -124,8 +128,8 @@ public class RequestUtil {
     /**
      * 发送get请求到gitlab，返回字符串类型
      */
-    public static String getString(String path, Long userId) {
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+    public static String getString(String path,Long userId){
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -134,11 +138,11 @@ public class RequestUtil {
     }
 
     public static void main(String[] args) {
-        String id = URLUtil.encodeURIComponent("Admin_0/hhhh");
-        String url = api + "/projects/" + id;
-        url += "?statistics=true";
+        String id= URLUtil.encodeURIComponent("Admin_0/hhhh");
+        String url = api + "/projects/"+id;
+        url+="?statistics=true";
         url += url.indexOf('?') == -1 ? "?" : "&";
-        String access_token = "92d328d1e0602a5cbefff89508ccc27a9a10bc85fcb01f3261d7d9fc50dc772e";
+        String access_token="92d328d1e0602a5cbefff89508ccc27a9a10bc85fcb01f3261d7d9fc50dc772e";
         url += "access_token=" + access_token;
         System.out.println(httpGet(url));
         System.out.println(JSON.parseObject(httpGet(url), ProjectBo.class));
@@ -161,14 +165,14 @@ public class RequestUtil {
     /**
      * 发送post请求到gitlab
      *
-     * @param path   路径
-     * @param userId 用户id
-     * @param params 参数键值对
+     * @param path     路径
+     * @param userId   用户id
+     * @param params   参数键值对
      * @return 返回状态码
      */
     public static int post(String path, Long userId, List<NameValuePair> params) {
 
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         NameValuePair p = new BasicNameValuePair("access_token", access_token);
         params.add(p);
@@ -179,8 +183,8 @@ public class RequestUtil {
      * 发送post请求到gitlab
      * root身份
      *
-     * @param path   路径
-     * @param params 参数键值对
+     * @param path     路径
+     * @param params   参数键值对
      * @return 返回状态码
      */
     public static int post(String path, List<NameValuePair> params) {
@@ -195,18 +199,18 @@ public class RequestUtil {
     /**
      * 发送put请求到gitlab
      *
-     * @param path   路径
-     * @param userId 用户id
-     * @param params 参数键值对
+     * @param path     路径
+     * @param userId   用户id
+     * @param params   参数键值对
      * @return 返回状态码
      */
-    public static int put(String path, Long userId, List<NameValuePair> params) {
+    public static int put(String path,Long userId, List<NameValuePair> params){
 
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         NameValuePair p = new BasicNameValuePair("access_token", access_token);
         params.add(p);
-        return httpPut(url, params);
+        return httpPut(url,params);
 
     }
 
@@ -214,25 +218,25 @@ public class RequestUtil {
     /**
      * 发送put请求到gitlab
      *
-     * @param path   路径
-     * @param params 参数键值对
+     * @param path     路径
+     * @param params   参数键值对
      * @return 返回状态码
      */
-    public static int put(String path, List<NameValuePair> params) {
+    public static int put(String path,List<NameValuePair> params){
 
         String url = api + path;
         NameValuePair p = new BasicNameValuePair("access_token", rootAccessToken);
         params.add(p);
-        return httpPut(url, params);
+        return httpPut(url,params);
 
     }
 
     /**
      * 发送delete请求到gitlab
      */
-    public static int delete(String path, Long userId) {
+    public static int delete(String path,Long userId){
 
-        String access_token = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
+        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -243,7 +247,7 @@ public class RequestUtil {
     /**
      * 发送delete请求到gitlab，管理员身份
      */
-    public static int delete(String path) {
+    public static int delete(String path){
 
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
@@ -251,6 +255,9 @@ public class RequestUtil {
 
         return httpDelete(url);
     }
+
+
+
 
 
     /**
@@ -262,7 +269,7 @@ public class RequestUtil {
     private static String httpGet(String url) {
 
         //首先对url的request param进行url encode
-        url = URLUtil.encodeURI(url);
+        url=URLUtil.encodeURI(url);
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(url);
@@ -280,7 +287,7 @@ public class RequestUtil {
             //4.处理结果，这里将结果返回为字符串
             HttpEntity entity = response.getEntity();
             if (entity != null) {
-                result = EntityUtils.toString(entity, "utf-8");
+                result = EntityUtils.toString(entity,"utf-8");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -337,7 +344,7 @@ public class RequestUtil {
     /**
      * 发送http put请求
      *
-     * @param url        路径
+     * @param url 路径
      * @param formparams 参数键值对
      * @return 状态码
      */
@@ -379,7 +386,7 @@ public class RequestUtil {
     private static int httpDelete(String url) {
 
         //首先对url的request param进行url encode
-        url = URLUtil.encodeURI(url);
+        url=URLUtil.encodeURI(url);
 
         CloseableHttpClient httpclients = HttpClients.createDefault();
 
@@ -405,10 +412,14 @@ public class RequestUtil {
     }
 
 
+
+
+
+
+
     /**
      * 获得用户access_token不是rest api的形式，创建一个新的post方法
-     *
-     * @param url        地址
+     * @param url 地址
      * @param formparams 参数
      * @return json字符串
      */
@@ -436,9 +447,9 @@ public class RequestUtil {
             if (entity1 != null) {
                 result = EntityUtils.toString(entity1);
             }
-        } catch (IOException e) {
+        }catch (IOException e){
             e.printStackTrace();
-        } finally {
+        }finally {
             try {
                 response.close();
             } catch (IOException e) {

@@ -10,7 +10,6 @@ package com.clsaa.dop.server.pipeline.config;
 public class JobConfig {
     private String script;
     private String xml;
-
     public JobConfig(String script, String timing) {
         this.script = script;
         this.xml = "<flow-definition plugin=\"workflow-job@2.31\">\n" +
@@ -33,7 +32,7 @@ public class JobConfig {
                 "\t\t<org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>\n" +
                 "\t\t\t<triggers>\n" +
                 "\t\t\t\t<hudson.triggers.TimerTrigger>\n" +
-                "\t\t\t\t\t<spec>" + timing + "</spec>\n" +
+                "\t\t\t\t\t<spec>"+ timing +"</spec>\n" +
                 "\t\t\t\t</hudson.triggers.TimerTrigger>\n" +
                 "\t\t\t</triggers>\n" +
                 "\t\t</org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>\n" +
@@ -51,7 +50,7 @@ public class JobConfig {
 
     public JobConfig(String git, String path, String timing) {
         this.xml = "<?xml version='1.1' encoding='UTF-8'?>\n"
-                + "<flow-definition plugin=\"workflow-job@2.31\">\n" +
+                +"<flow-definition plugin=\"workflow-job@2.31\">\n" +
                 "\t<actions>\n" +
                 "\t\t<org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin=\"pipeline-model-definition@1.3.4\"/>\n" +
                 "\t</actions>\n" +
@@ -61,7 +60,7 @@ public class JobConfig {
                 "\t\t<org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>\n" +
                 "\t\t\t<triggers>\n" +
                 "\t\t\t\t<hudson.triggers.TimerTrigger>\n" +
-                "\t\t\t\t\t<spec>" + timing + "</spec>\n" +
+                "\t\t\t\t\t<spec>"+timing+"</spec>\n" +
                 "\t\t\t\t</hudson.triggers.TimerTrigger>\n" +
                 "\t\t\t</triggers>\n" +
                 "\t\t</org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>\n" +
@@ -82,7 +81,7 @@ public class JobConfig {
                 "\t\t\t<userRemoteConfigs>\n" +
                 "\t\t\t\t<hudson.plugins.git.UserRemoteConfig>\n" +
                 "\t\t\t\t\t<url>" +
-                git.trim() + "</url>\n" +
+                git.trim()+"</url>\n" +
                 "\t\t\t\t</hudson.plugins.git.UserRemoteConfig>\n" +
                 "\t\t\t</userRemoteConfigs>\n" +
                 "\t\t\t<branches>\n" +
@@ -94,7 +93,7 @@ public class JobConfig {
                 "\t\t\t<submoduleCfg class=\"list\"/>\n" +
                 "\t\t\t<extensions/>\n" +
                 "\t\t</scm>\n" +
-                "\t\t<scriptPath>" + path.trim() + "</scriptPath>\n" +
+                "\t\t<scriptPath>"+path.trim()+"</scriptPath>\n" +
                 "\t\t<lightweight>true</lightweight>\n" +
                 "\t</definition>\n" +
                 "\t<triggers/>\n" +

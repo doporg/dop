@@ -2,20 +2,18 @@ package com.clsaa.dop.server.pipeline.model.po;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * 流水线信息持久层对象
  *
+ * 流水线信息持久层对象
  * @author 张富利
  * @since 2019-03-09
  */
@@ -57,17 +55,16 @@ public class Pipeline {
     private String timing;
 
     /**
-     * 配置方式
-     */
+     *  配置方式
+     * */
     @Field("config")
     @SerializedName("config")
     private Config config;
-
     public enum Config {HasJenkinsfile, NoJenkinsfile;}
 
     /**
-     * Jenkinsfile
-     */
+     *  Jenkinsfile
+     * */
     @Field("jenkinsfile")
     @SerializedName("jenkinsfile")
     private Jenkinsfile jenkinsfile;
@@ -115,6 +112,7 @@ public class Pipeline {
     private Long cuser;
 
     /**
+     *
      * 是否删除
      */
     @Field("isDeleted")

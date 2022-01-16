@@ -65,7 +65,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @return {@link Integer} 项目持久层对象
      */
     Page<Project> findAllByIdIn(Pageable pageable, Collection<Long> c);
-
     /**
      * 根据status和关键词查询Project
      *
@@ -74,6 +73,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      */
 
     List<Project> findAllByStatusAndIdIn(Project.Status status, Collection<Long> c);
+
 
 
     /**
@@ -96,7 +96,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     /**
      * 根据创建用户id查询创建用户全部项目的id(wjr)
-     *
      * @param cuser
      * @return
      */

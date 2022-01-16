@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.gateway.model.bo;
 
 import com.clsaa.dop.server.gateway.enums.ClientType;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 

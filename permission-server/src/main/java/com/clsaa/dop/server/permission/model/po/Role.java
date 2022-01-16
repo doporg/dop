@@ -1,8 +1,10 @@
 package com.clsaa.dop.server.permission.model.po;
 
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,9 +13,9 @@ import java.time.LocalDateTime;
  * 角色持久层对象，对应角色表中每条数据
  *
  * @author lzy
- * <p>
- * <p>
- * <p>
+ *
+
+ *
  * since :2019.3.7
  */
 
@@ -37,19 +39,19 @@ public class Role implements Serializable {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name="id")
     private Long id;
     /**
      * 父级角色ID
      */
     @Basic
-    @Column(name = "parent_id")
+    @Column(name="parent_id")
     private Long parentId;
     /**
      * 角色名称
      */
     @Basic
-    @Column(name = "name")
+    @Column(name="name")
     private String name;
 
     /* 表里都要有的字段*/
@@ -81,7 +83,7 @@ public class Role implements Serializable {
      * 删除标记
      */
     @Basic
-    @Column(name = "is_deleted")
+    @Column(name="is_deleted")
     private boolean deleted;
     /* 表里都要有的字段*/
 }

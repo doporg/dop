@@ -18,7 +18,7 @@ import java.util.List;
  * @since 16/04/2019
  */
 @Component
-public class InterfaceCaseUpdateService extends CommonUpdateServiceImpl<Long, UpdatedInterfaceCase, InterfaceCase> {
+public class InterfaceCaseUpdateService extends CommonUpdateServiceImpl<Long, UpdatedInterfaceCase, InterfaceCase>{
 
     @Autowired
     private CaseParamDtoMapper caseParamDtoMapper;

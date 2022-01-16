@@ -1,12 +1,13 @@
 package com.clsaa.dop.server.image.model.bo;
 
 import com.clsaa.dop.server.image.model.po.ProjectMetadata;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 /**
  * <p>
- * 项目的业务层对象
+ *   项目的业务层对象
  * </p>
- *
  * @author xzt
  * @since 2019-3-23
  */
@@ -49,11 +50,11 @@ public class ProjectBO {
      */
     private Boolean togglable;
     /**
-     * 当前用户的用户类型
+     *  当前用户的用户类型
      */
     private String currentUserRole;
     /**
-     * 镜像仓库数
+     *  镜像仓库数
      */
     private Integer repoCount;
     /**

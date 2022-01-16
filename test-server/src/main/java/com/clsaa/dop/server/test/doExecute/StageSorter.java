@@ -23,7 +23,7 @@ public class StageSorter implements Comparator<InterfaceStageDto> {
             return -1;
         } else if (isO2Null) {
             return 1;
-        } else {
+        }else {
             return o1.getStage().compareTo(o2.getStage());
         }
     }

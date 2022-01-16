@@ -7,7 +7,6 @@ import java.util.List;
 
 /**
  * 镜像信息的视图层对应类
- *
  * @author xzt
  * @since 2019-4-6
  */

@@ -1,7 +1,8 @@
 package com.clsaa.dop.server.image.model.dto;
 
 import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 import java.time.LocalDateTime;
 
 /**

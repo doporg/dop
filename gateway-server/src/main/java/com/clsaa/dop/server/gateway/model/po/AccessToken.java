@@ -1,5 +1,8 @@
 package com.clsaa.dop.server.gateway.model.po;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 

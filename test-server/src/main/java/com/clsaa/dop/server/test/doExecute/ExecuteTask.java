@@ -1,7 +1,7 @@
 package com.clsaa.dop.server.test.doExecute;
 
-import com.clsaa.dop.server.test.doExecute.consumer.LogConsumer;
 import com.clsaa.dop.server.test.doExecute.context.ExecuteContext;
+import com.clsaa.dop.server.test.doExecute.consumer.LogConsumer;
 import com.clsaa.dop.server.test.enums.CaseType;
 import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.model.dto.CaseGroupDto;

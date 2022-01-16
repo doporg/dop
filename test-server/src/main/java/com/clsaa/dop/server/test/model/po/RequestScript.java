@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class RequestScript implements Po {
     // check point concerned
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id", referencedColumnName = "id"
-            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<RequestCheckPoint> requestCheckPoints;
 
@@ -61,7 +62,7 @@ public class RequestScript implements Po {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "request_id", referencedColumnName = "id"
-            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<UrlResultParam> resultParams;
 
@@ -72,7 +73,7 @@ public class RequestScript implements Po {
     private int order;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stage_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "stage_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private InterfaceStage interfaceStage;
 
     // ----------- common property ---------

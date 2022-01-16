@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 19/03/2019
  */
 @Component
-public class InterfaceStageCreateService extends CommonCreateServiceImpl<InterfaceStageParam, InterfaceStage, Long> {
+public class InterfaceStageCreateService extends CommonCreateServiceImpl<InterfaceStageParam, InterfaceStage,Long> {
 
     @Autowired
     public InterfaceStageCreateService(ServiceMapper<InterfaceStageParam, InterfaceStage> serviceMapper, JpaRepository<InterfaceStage, Long> repository) {

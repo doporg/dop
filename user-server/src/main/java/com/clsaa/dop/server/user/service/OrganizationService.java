@@ -101,7 +101,7 @@ public class OrganizationService {
                 .collect(Collectors.toList());
         return this.organizationRepository.findOrganizationByIdIn(orgIds)
                 .stream()
-                .map(o -> BeanUtils.convertType(o, OrganizationBoV1.class))
+                .map(o-> BeanUtils.convertType(o, OrganizationBoV1.class))
                 .collect(Collectors.toList());
     }
 

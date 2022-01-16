@@ -3,12 +3,10 @@ package com.clsaa.dop.server.image.model.po;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 /**
  * DetailedTag对应的harbor类
- *
  * @author xzt
  * @since 2019-3-30
  */
@@ -16,38 +14,39 @@ import java.util.List;
 @Getter
 @Setter
 public class DetailedTag {
-    @JsonProperty("digest")
-    private String digest;
+  @JsonProperty("digest")
+  private String digest;
 
-    @JsonProperty("name")
-    private String name;
+  @JsonProperty("name")
+  private String name;
 
-    @JsonProperty("size")
-    private Integer size;
+  @JsonProperty("size")
+  private Integer size;
 
-    @JsonProperty("architecture")
-    private String architecture;
+  @JsonProperty("architecture")
+  private String architecture;
 
-    @JsonProperty("os")
-    private String os;
+  @JsonProperty("os")
+  private String os;
 
-    @JsonProperty("docker_version")
-    private String dockerVersion;
+  @JsonProperty("docker_version")
+  private String dockerVersion;
 
-    @JsonProperty("author")
-    private String author;
+  @JsonProperty("author")
+  private String author;
 
-    @JsonProperty("created")
-    private String created;
+  @JsonProperty("created")
+  private String created;
 
-    @JsonProperty("signature")
-    private Object signature;
+  @JsonProperty("signature")
+  private Object signature;
 
-    @JsonProperty("scan_overview")
-    private DetailedTagScanOverview scanOverview;
+  @JsonProperty("scan_overview")
+  private DetailedTagScanOverview scanOverview;
 
-    @JsonProperty("labels")
-    private List<Label> labels;
+  @JsonProperty("labels")
+  private List<Label> labels;
+  
 
 
 }

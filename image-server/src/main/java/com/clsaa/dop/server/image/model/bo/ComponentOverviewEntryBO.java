@@ -6,7 +6,6 @@ import lombok.Setter;
 
 /**
  * ComponentOverviewEntry对应的harbor类
- *
  * @author xzt
  * @since 2019-3-30
  */
@@ -14,10 +13,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ComponentOverviewEntryBO {
-    @JsonProperty("severity")
-    private Integer severity;
+  @JsonProperty("severity")
+  private Integer severity;
 
-    @JsonProperty("count")
-    private Integer count;
+  @JsonProperty("count")
+  private Integer count;
 }
 

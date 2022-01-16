@@ -1,7 +1,9 @@
 package com.clsaa.dop.server.permission.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -15,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDtoV1 {
+public class UserDtoV1  {
     /**
      * 用户id
      */
@@ -41,7 +43,7 @@ public class UserDtoV1 {
      */
     private LocalDateTime mtime;
 
-    public UserDtoV1() {
+    public UserDtoV1(){
         super();
     }
 

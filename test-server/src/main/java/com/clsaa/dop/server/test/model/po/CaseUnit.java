@@ -1,11 +1,13 @@
 package com.clsaa.dop.server.test.model.po;
 
+import com.clsaa.dop.server.test.enums.CaseResultEnum;
 import com.clsaa.dop.server.test.enums.CaseType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 //        ,
 //        uniqueConstraints = {@UniqueConstraint(columnNames = {"case_id", "case_type"})},
 //        indexes = {@Index(columnList = "case_id,case_type", unique = true)}
-)
+        )
 public class CaseUnit implements Po {
 
     // 类型

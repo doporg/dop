@@ -1,11 +1,13 @@
 package com.clsaa.dop.server.application.service;
 
+import com.clsaa.dop.server.application.config.BizCodes;
 import com.clsaa.dop.server.application.config.PermissionConfig;
 import com.clsaa.dop.server.application.dao.AppVarRepository;
 import com.clsaa.dop.server.application.model.bo.AppVarBoV1;
 import com.clsaa.dop.server.application.model.po.AppVariable;
 import com.clsaa.dop.server.application.util.BeanUtils;
 import com.clsaa.dop.server.application.util.DESUtil;
+import com.clsaa.rest.result.bizassert.BizAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,9 +30,9 @@ public class AppVarService {
      * 创建变量
      *
      * @param loginUser 创建者
-     * @param appId     应用id
-     * @param key       键
-     * @param value     值
+     * @param appId 应用id
+     * @param key   键
+     * @param value 值
      */
     public void createAppVarByAppId(Long loginUser, Long appId, String key, String value) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateVar(), loginUser)
@@ -73,9 +75,9 @@ public class AppVarService {
     /**
      * 修改变量
      *
-     * @param id        id
+     * @param id    id
      * @param loginUser 修改者
-     * @param value     值
+     * @param value 值
      */
     public void updateAppVarById(Long id, Long loginUser, String value) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditVar(), loginUser)

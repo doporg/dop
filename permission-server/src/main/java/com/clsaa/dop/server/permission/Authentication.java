@@ -36,7 +36,7 @@ public class Authentication {
 //    第二个参数: args(*, userId, ..)
 //    第三个参数: args(*, *, userId, ..)
 
-    @Pointcut("@annotation(com.clsaa.dop.server.permission.annotation.PermissionName)")
+    @Pointcut("@annotation(com.clsaa.dop.server.permission.annotation.PermissionName)" )
     public void getAnnotation() {
     }
 
@@ -44,9 +44,9 @@ public class Authentication {
     @Around("getAnnotation()&&@annotation(permissionName)")
     public Object check(ProceedingJoinPoint pjp, PermissionName permissionName) {
 
-        Object obj;
-        String name = permissionName.name();
-        Object[] args = pjp.getArgs();
+        Object obj ;
+        String name=permissionName.name();
+        Object[] args=pjp.getArgs();
 
         Method method = MethodSignature.class.cast(pjp.getSignature()).getMethod();
         StringBuilder userId = new StringBuilder();
@@ -61,16 +61,21 @@ public class Authentication {
                 userId.append(args[argIndex]);
             }
         }
-        if (userId.toString().isEmpty()) return false;
+        if(userId.toString().isEmpty()) return false;
         System.out.println("切入了 ，下面执行feign调用");
         try {
-            if (permissionService.checkUserPermission(name, Long.parseLong(userId.toString()))) {
+            if(permissionService.checkUserPermission(name,Long.parseLong(userId.toString())))
+            {
                 System.out.println("可以执行切点!!!!!!!!!!");
-                obj = pjp.proceed();
-            } else {
-                obj = false;
+                obj=pjp.proceed();
             }
-        } catch (Throwable throwable) {
+            else
+            {
+                obj=false;
+            }
+        }
+        catch (Throwable throwable)
+        {
             return throwable;
         }
 

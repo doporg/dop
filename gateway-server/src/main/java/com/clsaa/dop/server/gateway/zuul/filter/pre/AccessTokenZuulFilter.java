@@ -89,13 +89,13 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         // token自校验解密
         CryptoResult cryptoResult = FastAes.decrypt(this.tokenSecret, tokens[1]);
         // 是否通过自校验
-        if (!cryptoResult.isOK()) {
+        if(!cryptoResult.isOK()){
             returnForError();
         }
         // 查找token
         AccessTokenBoV1 token = this.accessTokenService.findAccessTokenByToken(cryptoResult.getContent());
         // 是否失效
-        if (token == null || token.isExpired()) {
+        if(token==null||token.isExpired()){
             returnForError();
         }
         return null;

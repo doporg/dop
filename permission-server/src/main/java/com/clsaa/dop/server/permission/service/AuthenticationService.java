@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
- * 权限管理的接口调用
+ *  权限管理的接口调用
  *
  * @author lzy
+ *
  */
 
 @Component
@@ -33,11 +34,11 @@ public interface AuthenticationService {
      *
      */
     @PostMapping("/v1/userData")
-    void addData(
-            @RequestParam(value = "ruleId") Long ruleId,
-            @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "fieldValue") Long fieldValue,
-            @RequestHeader(HttpHeaders.X_LOGIN_USER) Long loginUser
+     void addData(
+            @RequestParam(value = "ruleId")Long ruleId,
+            @RequestParam(value = "userId")Long userId,
+            @RequestParam(value = "fieldValue")Long fieldValue,
+            @RequestHeader(HttpHeaders.X_LOGIN_USER)Long loginUser
     );
 
     /* *
@@ -49,9 +50,9 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/users/permissionmaps")
-    boolean checkUserPermission(
-            @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam("userId") Long loginUser);
+     boolean checkUserPermission(
+             @RequestParam(value = "permissionName", required = true) String permissionName,
+             @RequestParam("userId") Long loginUser);
 
     /* *
      *
@@ -63,7 +64,7 @@ public interface AuthenticationService {
      */
 
     @GetMapping("v1/userRule")
-    UserRuleDtoV1 findUniqueRule(
+     UserRuleDtoV1 findUniqueRule(
             @RequestParam(value = "rule") String rule,
             @RequestParam(value = "fieldName") String fieldName,
             @RequestParam(value = "roleId") Long roleId
@@ -77,8 +78,8 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/roles/byName")
-    RoleDtoV1 findByName(
-            @RequestParam(value = "name") String name
+     RoleDtoV1 findByName(
+             @RequestParam(value = "name")String name
     );
 
     /* *
@@ -91,10 +92,10 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/userData/byPermission")
-    List<Long> findAllIds(
+     List<Long> findAllIds(
             @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam(value = "userId", required = true) Long userId,
-            @RequestParam(value = "fieldName", required = true) String fieldName
+            @RequestParam(value = "userId", required = true)Long userId,
+            @RequestParam(value = "fieldName", required = true)String fieldName
     );
 
     /* *
@@ -108,11 +109,11 @@ public interface AuthenticationService {
      */
 
     @GetMapping("/v1/userData")
-    boolean check(
+     boolean check(
             @RequestParam(value = "permissionName", required = true) String permissionName,
-            @RequestParam(value = "userId", required = true) Long userId,
-            @RequestParam(value = "fieldName", required = true) String fieldName,
-            @RequestParam(value = "fieldValue", required = true) Long fieldValue
+            @RequestParam(value = "userId", required = true)Long userId,
+            @RequestParam(value = "fieldName", required = true)String fieldName,
+            @RequestParam(value = "fieldValue", required = true)Long fieldValue
     );
 }
 

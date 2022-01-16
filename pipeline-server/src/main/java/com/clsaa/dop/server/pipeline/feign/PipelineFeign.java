@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PipelineFeign {
     /**
      * 创建jenkins
-     */
+     * */
     @PostMapping("/v1/jenkins")
     void create(@RequestBody PipelineBoV1 pipelineBoV1);
-
     /**
      * 根据jenkinsfile创建jenkins
-     */
+     * */
     @PostMapping("/v1/jenkins/jenkinsfile")
     void jenkinsfile(@RequestBody PipelineBoV1 pipelineBoV1);
 

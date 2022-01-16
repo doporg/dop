@@ -1,5 +1,7 @@
 package com.clsaa.dop.server.permission.model.vo;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -7,7 +9,7 @@ import java.time.LocalDateTime;
  * 用户规则表VO层
  *
  * @author lzy
- * <p>
+ *
  * since :2019.3.21
  */
 

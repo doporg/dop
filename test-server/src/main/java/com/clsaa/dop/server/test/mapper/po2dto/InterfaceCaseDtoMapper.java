@@ -2,21 +2,19 @@ package com.clsaa.dop.server.test.mapper.po2dto;
 
 import com.clsaa.dop.server.test.doExecute.StageSorter;
 import com.clsaa.dop.server.test.enums.Stage;
-import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.dto.CaseParamDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceCaseDto;
 import com.clsaa.dop.server.test.model.dto.InterfaceStageDto;
 import com.clsaa.dop.server.test.model.po.InterfaceCase;
+import com.clsaa.dop.server.test.manager.UserManager;
 import com.clsaa.dop.server.test.model.po.InterfaceStage;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -63,7 +61,7 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
                 .map(fillProperties(interfaceCaseDto));
     }
 
-    private Function<InterfaceCase, InterfaceCase> fillProperties(InterfaceCaseDto interfaceCaseDto) {
+    private Function<InterfaceCase,InterfaceCase> fillProperties(InterfaceCaseDto interfaceCaseDto) {
         return interfaceCase -> {
             List<InterfaceStage> stages = interfaceStageDtoMapper.inverseConvert(interfaceCaseDto.getStages());
 
@@ -107,7 +105,7 @@ public class InterfaceCaseDtoMapper extends AbstractCommonServiceMapper<Interfac
         };
     }
 
-    private Function<InterfaceCaseDto, InterfaceCaseDto> fillParams(InterfaceCase interfaceCase) {
+    private Function<InterfaceCaseDto,InterfaceCaseDto> fillParams(InterfaceCase interfaceCase) {
         return interfaceCaseDto -> {
             List<CaseParamDto> caseParamDtos = caseParamDtoMapper.convert(interfaceCase.getCaseParams());
             interfaceCaseDto.setCaseParams(caseParamDtos);

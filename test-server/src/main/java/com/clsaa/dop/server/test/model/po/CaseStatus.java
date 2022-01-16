@@ -9,7 +9,8 @@ public enum CaseStatus {
     NEW("新创建"),
     DESIGNING("设计中"),
     TESTING("测试中"),
-    COMPLETE("已完成");
+    COMPLETE("已完成")
+    ;
 
     private String comment;
 

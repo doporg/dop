@@ -2,9 +2,11 @@ package com.clsaa.dop.server.test.mapper.param2po;
 
 import com.clsaa.dop.server.test.mapper.AbstractCommonServiceMapper;
 import com.clsaa.dop.server.test.model.param.CaseUnitParam;
+import com.clsaa.dop.server.test.model.po.CaseGroup;
 import com.clsaa.dop.server.test.model.po.CaseUnit;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
@@ -15,7 +17,7 @@ import static com.clsaa.dop.server.test.manager.UserManager.dateAndUser;
  * @since 06/05/2019
  */
 @Component
-public class CaseUnitPoMapper extends AbstractCommonServiceMapper<CaseUnitParam, CaseUnit> {
+public class CaseUnitPoMapper extends AbstractCommonServiceMapper<CaseUnitParam,CaseUnit> {
 
     @Override
     public Class<CaseUnitParam> getSourceClass() {

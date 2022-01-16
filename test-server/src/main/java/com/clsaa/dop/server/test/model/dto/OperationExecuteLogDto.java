@@ -2,6 +2,7 @@ package com.clsaa.dop.server.test.model.dto;
 
 import com.clsaa.dop.server.test.enums.OperationType;
 import com.clsaa.dop.server.test.enums.Stage;
+import com.clsaa.dop.server.test.model.po.InterfaceExecuteLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

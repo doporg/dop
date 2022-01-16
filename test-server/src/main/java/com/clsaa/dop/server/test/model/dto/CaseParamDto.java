@@ -1,5 +1,6 @@
 package com.clsaa.dop.server.test.model.dto;
 
+import com.clsaa.dop.server.test.model.po.InterfaceCase;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

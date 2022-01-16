@@ -5,7 +5,6 @@ import lombok.Setter;
 
 /**
  * ComponentOverviewEntry对应的视图层类
- *
  * @author xzt
  * @since 2019-3-30
  */
@@ -13,6 +12,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ComponentOverviewEntryVO {
-    private Integer severity;
-    private Integer count;
+  private Integer severity;
+  private Integer count;
 }

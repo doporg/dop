@@ -2,6 +2,7 @@ package com.clsaa.dop.server.audit.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.clsaa.rest.result.exception.*;
 import feign.Response;
 import feign.Util;
 import feign.codec.ErrorDecoder;

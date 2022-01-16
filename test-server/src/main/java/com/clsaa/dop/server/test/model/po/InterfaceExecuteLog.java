@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,12 +48,12 @@ public class InterfaceExecuteLog implements Po {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "case_log_id", referencedColumnName = "id"
-            , foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+            ,foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     @Fetch(FetchMode.SUBSELECT)
     private List<OperationExecuteLog> operationExecuteLogs;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_log_id", foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "group_log_id",foreignKey = @ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
     private GroupExecuteLog groupExecuteLog;
 
     // ----------- common property ---------

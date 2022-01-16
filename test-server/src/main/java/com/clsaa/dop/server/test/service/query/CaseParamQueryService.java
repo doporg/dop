@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * @since 20/04/2019
  */
 @Component
-public class CaseParamQueryService extends CommonQueryServiceImpl<CaseParam, CaseParamDto, Long> {
+public class CaseParamQueryService extends CommonQueryServiceImpl<CaseParam, CaseParamDto,Long> {
 
     @Autowired
     public CaseParamQueryService(ServiceMapper<CaseParam, CaseParamDto> serviceMapper,

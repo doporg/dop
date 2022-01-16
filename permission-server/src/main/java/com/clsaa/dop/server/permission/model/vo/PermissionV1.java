@@ -1,11 +1,14 @@
 package com.clsaa.dop.server.permission.model.vo;
 
-import java.time.LocalDateTime;
+import lombok.*;
 
+import java.time.LocalDateTime;
 /**
  * 功能点显示层对象
  *
  * @author lzy
+ *
+ *
  * @since :2019.3.7
  */
 @Getter
