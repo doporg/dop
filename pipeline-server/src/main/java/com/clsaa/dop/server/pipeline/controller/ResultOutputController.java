@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 流水线运行结果接口实现类
  *
@@ -25,10 +28,12 @@ public class ResultOutputController {
     @Autowired
     JenkinsService jenkinsService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiOperation(value = "新建一个用户的流水线运行结果")
     @PostMapping("/v1/resultOutput")
     public void create(String id) {
+        logger.info("[create] Request coming: id={}",id);
         this.resultOutputService.create(id);
     }
 
@@ -38,6 +43,7 @@ public class ResultOutputController {
     public void notify(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @PathVariable(value = "id") String id) {
+        logger.info("[notify] Request coming: loginUser={}, id={}",loginUser,id);
         String output = this.jenkinsService.getBuildOutputText(id);
         this.resultOutputService.setResult(id, output, loginUser);
     }
@@ -45,6 +51,7 @@ public class ResultOutputController {
     @ApiOperation(value = "根据runningId拿日志")
     @GetMapping("/v1/resultOutput")
     public ResultOutputV1 findByRunningId(@RequestParam(value = "runningId") String runningId) {
+        logger.info("[findByRunningId] Request coming: runningId={}",runningId);
         return BeanUtils.convertType(this.resultOutputService.findByRunningId(runningId), ResultOutputV1.class);
     }
 }

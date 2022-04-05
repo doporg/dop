@@ -16,7 +16,7 @@ spec:
       containers:
         - name: application-server
           imagePullPolicy: Always
-          image: registry.dop.clsaa.com/dop/application-server:<BUILD_TAG>
+          image: 172.29.7.157:85/dop/application-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

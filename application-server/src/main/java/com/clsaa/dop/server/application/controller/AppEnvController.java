@@ -20,6 +20,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 应用环境API接口实现类
@@ -38,11 +41,14 @@ public class AppEnvController {
     @Autowired
     BuildTagRunningIdMappingService buildTagRunningIdMappingService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "查询应用环境信息", notes = "根据应用ID查询应用环境信息")
     @GetMapping(value = "/app/{appId}/allEnv")
     public List<AppEnvV1> findEnvironmentByAppId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appId", name = "应用ID", required = true) @PathVariable(value = "appId") Long appId) {
+        logger.info("[findEnvironmentByAppId] Request coming: loginUser={}, appId={}",loginUser,appId);
         return this.appEnvService.findEnvironmentByAppId(loginUser, appId).stream().map(l -> BeanUtils.convertType(l, AppEnvV1.class)).collect(Collectors.toList());
     }
 
@@ -51,6 +57,7 @@ public class AppEnvController {
     public AppEnvV1 findEnvironmentDetailById(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[findEnvironmentDetailById] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         return BeanUtils.convertType(this.appEnvService.findEnvironmentDetailById(loginUser, appEnvId), AppEnvV1.class);
     }
 
@@ -62,6 +69,7 @@ public class AppEnvController {
             //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "runningId", name = "运行ID", required = true) @RequestParam(value = "runningId") String runningId) {
+        logger.info("[findBuildTagByAppEnvIdAndRunningId] Request coming: loginUser={}, appEnvId={}, runningId={}",loginUser,appEnvId,runningId);
         return this.buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(loginUser, runningId, appEnvId);
     }
 
@@ -73,6 +81,7 @@ public class AppEnvController {
     public void deleteEnvironmentById(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[deleteEnvironmentById] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         this.appEnvService.deleteEnvironmentById(loginUser, appEnvId);
     }
 
@@ -81,6 +90,7 @@ public class AppEnvController {
     public PipelineIdAndNameV1 findPipelineByAppEnvId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "环境ID", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[findPipelineByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         return this.appEnvService.findPipelineByAppEnvId(loginUser, appEnvId);
     }
     //@ApiOperation(value = "更新Build_Tag", notes = "更新Build_Tag")
@@ -102,6 +112,7 @@ public class AppEnvController {
             @ApiParam(name = "deploymentStrategy", value = "部署方式", required = true) @RequestParam(value = "deploymentStrategy") String deploymentStrategy) {
         BizAssert.validParam(StringUtils.hasText(title) && title.length() < 25,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
+        logger.info("[createEnvironmentByAppId] Request coming: loginUser={}, appId={}, title={}, environmentLevel={}, deploymentStrategy={}",loginUser,appId,title,environmentLevel,deploymentStrategy);
         this.appEnvService.createEnvironmentByAppId(appId, loginUser, title, environmentLevel, deploymentStrategy);
     }
 

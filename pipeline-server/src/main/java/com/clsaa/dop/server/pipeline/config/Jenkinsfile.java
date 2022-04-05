@@ -3,6 +3,7 @@ package com.clsaa.dop.server.pipeline.config;
 
 import com.clsaa.dop.server.pipeline.model.po.Stage;
 import com.clsaa.dop.server.pipeline.model.po.Step;
+import com.clsaa.dop.server.pipeline.enums.StepType;
 import com.clsaa.rest.result.bizassert.BizAssert;
 import com.clsaa.rest.result.bizassert.BizCode;
 import org.yaml.snakeyaml.Yaml;
@@ -23,16 +24,10 @@ import java.util.Map;
 public class Jenkinsfile {
 
     private String stages;
-    private Long appEnvId;
     private String git;
     private String dir;
 
-    public Jenkinsfile() {
-    }
-
-
     public Jenkinsfile(Long appEnvId, ArrayList<Stage> pipelineStage) {
-        this.appEnvId = appEnvId;
         this.stages = "";
 
         for (int i = 0; i < pipelineStage.size(); i++) {
@@ -47,9 +42,9 @@ public class Jenkinsfile {
             for (int j = 0; j < steps.size(); j++) {
                 this.stages += "steps{\n";
                 Step task = steps.get(j);
-                Step.TaskType taskName = task.getTaskName();
+                StepType taskName = task.getTaskName();
                 String gitUrl = task.getGitUrl();
-                if(!task.getGitUrl().isEmpty()){
+                if(task.getGitUrl() != null && !task.getGitUrl().isEmpty()){
                     this.git = task.getGitUrl();
                     String folderGit = this.git.split("/")[this.git.split("/").length-1];
                     this.dir = folderGit.split("[.]")[0];
@@ -63,23 +58,26 @@ public class Jenkinsfile {
                 String deploy = task.getDeploy();
                 String ip = task.getIp();
                 String token = task.getToken();
-                String dockerRepoHost = "registry.dop.clsaa.com";
+                String dockerRepoHost = "172.29.7.157:85";
                 String dockerRepoPath = "/default";
                 String imageName = dockerRepoHost + dockerRepoPath;
-                try {
-                    if (respository.startsWith("http")) {
-                        dockerRepoHost = new URL(respository).getHost();
-                        dockerRepoPath = new URL(respository).getPath();
-                        imageName = dockerRepoHost + dockerRepoPath;
-                    } else {
-                        dockerRepoHost = respository.split("/")[0];
-                        imageName = respository;
+                if (respository != null) {
+                    try {
+                        if (respository.startsWith("http")) {
+                            dockerRepoHost = new URL(respository).getHost();
+                            dockerRepoPath = new URL(respository).getPath();
+                            imageName = dockerRepoHost + dockerRepoPath;
+                        } else {
+                            dockerRepoHost = respository.split("/")[0];
+                            imageName = respository;
+                        }
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                        BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
+                                , e.getMessage()));
                     }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode()
-                            , e.getMessage()));
                 }
+
                 switch (taskName) {
                     case PullCode:
                         this.stages += "deleteDir() \n";
@@ -95,11 +93,11 @@ public class Jenkinsfile {
                         if(!this.dir.isEmpty()){
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
                             this.stages += "sh \'mvn --version \' \n";
-                            this.stages += "sh \"mvn -U -am clean package \" \n";
+                            this.stages += "sh \'mvn -U -am clean package \' \n";
                             this.stages += "}\n";
                         }else{
                             this.stages += "sh \'mvn --version \' \n";
-                            this.stages += "sh \"mvn -U -am clean package \" \n";
+                            this.stages += "sh \'mvn -U -am clean package \' \n";
                         }
                         break;
                     case BuildNode:
@@ -107,7 +105,7 @@ public class Jenkinsfile {
                         this.stages += "sh \'node --version \' \n";
 //                        this.stages += "sh \'npm install \' \n";
                         break;
-                    case BuildDjanggo:
+                    case BuildDjango:
 //                        this.stages += "sh \'pip freeze > ./requirements.txt \' \n";
 //                        this.stages += "sh \'pip install -r ./requirements.txt \' \n";
 //                        this.stages += "sh \'python ./manage.py runserver \' \n";
@@ -116,10 +114,10 @@ public class Jenkinsfile {
                         break;
                     case BuildDocker:
                         if(this.dir.isEmpty()){
-                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
+                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " .\' \n";
                         }else{
                             this.stages += "dir(\"" + this.dir + "\"){ \n";
-                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " ./\' \n";
+                            this.stages += "sh \'docker build -t " + imageName + ":" + respositoryVersion + " .\' \n";
                             this.stages += "}\n";
                         }
 
@@ -148,7 +146,7 @@ public class Jenkinsfile {
                             Object apiVersion = map.get("apiVersion");
                             Object kind = map.get("kind");
                             Map metadata = (Map) map.get("metadata");
-                            Object namespace = metadata.get("namespace");
+                            Object namespace = metadata.getOrDefault("namespace", "default");
                             Object deploymentName = metadata.get("name");
                             if (kind.toString().equals("Deployment")) {
                                 // apiVersion: apps/v1beta1

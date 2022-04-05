@@ -19,6 +19,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ResultOutputService {
@@ -32,10 +34,13 @@ public class ResultOutputService {
     @Autowired
     private ApplicationFeign applicationFeign;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 运行时，创建一条运行时的快照, 返回此快照的runningid
      */
     public String create(String pipelineid) {
+        logger.info("[create] Request coming: pipelineid={}",pipelineid);
         ObjectId id = new ObjectId();
         ResultOutput resultOutput = ResultOutput.builder()
                 .id(id)
@@ -50,6 +55,7 @@ public class ResultOutputService {
     }
 
     public void setResult(String pipelineId, String output, Long loginUser) {
+        logger.info("[setResult] Request coming: loginUser={}, pipelineId={}, output={}",loginUser,pipelineId,output);
         List<ResultOutput> resultOutputs = this.resultOutputRepository.findByPipelineId(pipelineId);
         ResultOutput running = null;
         for (int i = 0; i < resultOutputs.size(); i++) {
@@ -102,6 +108,7 @@ public class ResultOutputService {
     }
 
     public ResultOutput findByRunningId(String runningId) {
+        logger.info("[findByRunningId] Request coming: runningId={}",runningId);
         Optional<ResultOutput> optionalResultOutput = this.resultOutputRepository.findById(new ObjectId(runningId));
         if (optionalResultOutput.isPresent()) {
             ResultOutput resultOutput = optionalResultOutput.get();

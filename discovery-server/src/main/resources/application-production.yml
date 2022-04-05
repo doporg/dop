@@ -23,4 +23,4 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka
+      defaultZone: http://discovery-server:8761/eureka/

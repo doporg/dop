@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 集群信息接口实现类
@@ -32,6 +35,8 @@ public class KubeCredentialController {
     @Autowired
     KubeCredentialService kubeCredentialService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "更新集群信息", notes = "更新集群信息")
     @PostMapping(value = "/app/env/{appEnvId}/cluster")
     public void updateUrlAndToken(
@@ -41,6 +46,7 @@ public class KubeCredentialController {
 
         BizAssert.validParam(Validator.isUrl(clusterInfoV1.getTargetClusterUrl()),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "集群地址格式错误"));
+        logger.info("[updateUrlAndToken] Request coming: loginUser={}, appEnvId={}, clusterInfoV1",loginUser,appEnvId);
         this.kubeCredentialService.updateClusterInfo(loginUser, appEnvId, clusterInfoV1.getTargetClusterUrl(), clusterInfoV1.getTargetClusterToken());
 
     }
@@ -50,6 +56,7 @@ public class KubeCredentialController {
     public ClusterUrlV1 getUrlByAppEnvId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[getUrlByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         return BeanUtils.convertType(this.kubeCredentialService.findByAppEnvId(loginUser, appEnvId), ClusterUrlV1.class);
 
     }
@@ -59,6 +66,7 @@ public class KubeCredentialController {
     public KubeCredentialWithTokenV1 getUrlAndTokenByAppEnvId(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
 
+        logger.info("[getUrlAndTokenByAppEnvId] Request coming: appEnvId={}",appEnvId);
         return BeanUtils.convertType(this.kubeCredentialService.queryByAppEnvId(appEnvId), KubeCredentialWithTokenV1.class);
 
     }

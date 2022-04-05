@@ -16,7 +16,7 @@ spec:
       containers:
         - name: login-server
           imagePullPolicy: Always
-          image: registry.dop.clsaa.com/dop/image-server:<BUILD_TAG>
+          image: 172.29.7.157:85/dop/image-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

@@ -10,7 +10,7 @@ spring:
     name: user-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://115.28.186.77:30306/db_dop_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://172.29.7.157:30306/db_dop_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop
     password: Dop_mysql_12345
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -43,7 +43,7 @@ spring:
   redis:
     database: 0
     #    host: redis.dop.clsaa.com
-    host: 121.42.13.243
+    host: 172.29.7.157
     port: 6379
     lettuce:
       pool:
@@ -97,7 +97,7 @@ message:
     from: softeng_dop@163.com
   mq:
     RocketMQ:                                     #RocketMQ相关配置
-      namesrvAddr: 115.28.186.77:9876    #name-server地址与端口,多个可用分号隔开
+      namesrvAddr: 172.29.7.157:9876    #name-server地址与端口,多个可用分号隔开
       groupName:  DOP_MESSAGE_PRODUCER_GROUP      #生产者组名称
       instanceName: DOP_MESSAGE                   #要发送到的MQ集群
       maxMessageSize: 131072 # 1024*128           #最大消息长度

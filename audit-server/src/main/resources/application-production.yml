@@ -10,13 +10,13 @@ spring:
     name: audit-server
   data:
     mongodb:
-      uri: mongodb://121.42.13.103:31041/db_audit
+      uri: mongodb://172.29.7.157:27017/db_audit
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: open.dop.clsaa.com/@project.name@
+  host: gateway-server:14258/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
@@ -35,7 +35,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka
+      defaultZone: http://discovery-server:8761/eureka
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000

@@ -19,11 +19,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class ImageService {
     private final HarborRepoFeign harborRepoFeign;
 
     private final UserFeign userFeign;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ImageService(HarborRepoFeign harborRepoFeign, UserFeign userFeign) {
@@ -40,10 +45,11 @@ public class ImageService {
      * @return {@link List<ImageInfoBO>} 镜像信息的list
      */
     public Pagination<ImageInfoBO> getImages(int pageNo,int pageSize,String tag,String projectName, String repoName, String labels, Long userId){
+        logger.info("[getImages] Request coming: projectName={}, repoName={}, tag={}, labels={}, pageNo={}, pageSize={}, userId={}",projectName,repoName,tag,labels,pageNo,pageSize,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
-
+        logger.info("[getImages] Get the user auth of repo: auth={}, repo={},",auth,repo);
         ResponseEntity<List<DetailedTag>> responseEntity = harborRepoFeign.repositoriesRepoNameTagsGet(repo,labels,auth);
         List<DetailedTag> detailedTags = responseEntity.getBody();
 
@@ -111,9 +117,11 @@ public class ImageService {
      * @param userId   用户id
      */
     public void deleteImage(String projectName,String repoName,String imageName,Long userId){
+        logger.info("[deleteImage] Request coming: projectName={}, repoName={}, imageName={}, userId={}",projectName,repoName,imageName,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
+        logger.info("[deleteImage] Get the user auth of repo: auth={}, repo={},",auth,repo);
         harborRepoFeign.repositoriesRepoNameTagsTagDelete(repo,imageName,auth);
     }
 
@@ -126,9 +134,11 @@ public class ImageService {
      * @return {@link ImageInfoBO} 镜像的信息
      */
     public ImageInfoBO getImage(String projectName,String repoName,String imageName,Long userId){
+        logger.info("[getImage] Request coming: projectName={}, repoName={}, imageName={}, userId={}",projectName,repoName,imageName,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
+        logger.info("[getImage] Get the user auth of repo: auth={}, repo={},",auth,repo);
         return BeanUtils.convertType(harborRepoFeign.repositoriesRepoNameTagsTagGet(repo,imageName,auth),ImageInfoBO.class);
     }
 }

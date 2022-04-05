@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "KubeCredentialService")
 public class KubeCredentialService {
     @Autowired
@@ -26,6 +29,8 @@ public class KubeCredentialService {
     private PermissionService permissionService;
     @Autowired
     AppEnvCredentialMappingService appEnvCredentialMappingService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 更新url和token信息
@@ -39,6 +44,7 @@ public class KubeCredentialService {
 //                , BizCodes.NO_PERMISSION);
 
 
+        logger.info("[updateClusterInfo] Request coming: loginUser={}, appEnvId={}, url={}, token={}",loginUser,appEnvId,url,token);
         ApiClient client = Config.fromToken(url,
                 token,
                 false);
@@ -46,6 +52,7 @@ public class KubeCredentialService {
         try {
             api.listNamespace(false, null, null, null, null, Integer.MAX_VALUE, null, null, false);
         } catch (ApiException e) {
+            logger.error("[updateClusterInfo] 无法获得命名空间列表！Exception",e);
             BizAssert.justNotFound(BizCodes.ERROR_ACCESS);
         }
 
@@ -61,6 +68,7 @@ public class KubeCredentialService {
     public KubeCredentialBoV1 findByAppEnvId(Long loginUser, Long appEnvId) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewCluster(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
         KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
         //credential.setTargetClusterToken(this.DecryptValue(credential.getTargetClusterToken()));
@@ -69,7 +77,9 @@ public class KubeCredentialService {
 
     public KubeCredentialBoV1 queryByAppEnvId(Long appEnvId) {
 
+        logger.info("[queryByAppEnvId] Request coming: appEnvId={}",appEnvId);
         Long credentialId = this.appEnvCredentialMappingService.findCredentialIdByAppEnvId(appEnvId);
+        logger.info("[queryByAppEnvId] Get credentialId: credentialId={}",credentialId);
         KubeCredential credential = this.kubeCredentialRepository.findById(credentialId).orElse(null);
         //credential.setTargetClusterToken(this.DecryptValue(credential.getTargetClusterToken()));
         return BeanUtils.convertType(this.kubeCredentialRepository.findById(credentialId).orElse(null), KubeCredentialBoV1.class);
@@ -84,6 +94,7 @@ public class KubeCredentialService {
     //}
 
     public void createCredentialByAppEnvId(Long loginUser, Long appEnvId) {
+        logger.info("[createCredentialByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         KubeCredential kubeCredential = KubeCredential.builder()
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())

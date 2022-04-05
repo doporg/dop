@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 镜像信息的控制器
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 public class ImageInfoController {
     private final ImageService imageService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ImageInfoController(ImageService imageService) {
@@ -35,6 +39,7 @@ public class ImageInfoController {
                                              @ApiParam(value = "页号",required = true) @RequestParam(value = "pageNo")Integer pageNo,
                                              @ApiParam(value = "页大小",required = true) @RequestParam(value = "pageSize") Integer pageSize,
                                              @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        logger.info("[getImages] Request coming: projectName={}, repoName={}, tag={}, labels={}, pageNo={}, pageSize={}, userId={}",projectName,repoName,tag,labels,pageNo,pageSize,userId);
         Pagination<ImageInfoBO> pagination = imageService.getImages(pageNo,pageSize,tag,projectName,repoName,labels,userId);
         Pagination<ImageInfoVO> pagination1 = new Pagination<>();
         pagination1.setTotalCount(pagination.getTotalCount());
@@ -50,6 +55,7 @@ public class ImageInfoController {
                                 @ApiParam(value = "镜像仓库名称",required = true) @PathVariable(value = "repoName") String repoName,
                                 @ApiParam(value = "镜像名称",required = true) @PathVariable(value = "imageName") String imageName,
                                 @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        logger.info("[getImage] Request coming: projectName={}, repoName={}, imageName={}, userId={}",projectName,repoName,imageName,userId);
         return BeanUtils.convertType(imageService.getImage(projectName,repoName,imageName,userId),ImageInfoVO.class);
     }
 
@@ -60,6 +66,7 @@ public class ImageInfoController {
                             @ApiParam(value = "镜像仓库名称",required = true) @PathVariable(value = "repoName") String repoName,
                             @ApiParam(value = "镜像名称",required = true) @PathVariable(value = "imageName") String imageName,
                             @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        logger.info("[deleteImage] Request coming: projectName={}, repoName={}, imageName={}, userId={}",projectName,repoName,imageName,userId);
         imageService.deleteImage(projectName,repoName,imageName,userId);
     }
 }

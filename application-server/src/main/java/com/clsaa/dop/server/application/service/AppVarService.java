@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AppVarService")
 public class AppVarService {
     @Autowired
@@ -25,6 +28,8 @@ public class AppVarService {
 
     @Autowired
     private PermissionService permissionService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 创建变量
@@ -37,6 +42,7 @@ public class AppVarService {
     public void createAppVarByAppId(Long loginUser, Long appId, String key, String value) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateVar(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[createAppVarByAppId] Request coming: loginUser={}, appId={}, key={}, value={}",loginUser,appId,key,value);
         AppVariable appVariable = AppVariable.builder()
                 .ctime(LocalDateTime.now())
                 .mtime(LocalDateTime.now())
@@ -51,10 +57,12 @@ public class AppVarService {
     }
 
     public String EncryptValue(String value) {
+        logger.info("[EncryptValue] Request coming: value={}",value);
         return DESUtil.getEncryptString(value);
     }
 
     public String DecryptValue(String value) {
+        logger.info("[DecryptValue] Request coming: value={}",value);
         return DESUtil.getDecryptString(value);
     }
 
@@ -68,6 +76,7 @@ public class AppVarService {
     public List<AppVarBoV1> findAppVarByAppIdOrderByKey(Long loginUser, Long appId) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewVar(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findAppVarByAppIdOrderByKey] Request coming: loginUser={}, appId={}",loginUser,appId);
         Sort sort = new Sort(Sort.Direction.ASC, "varKey");
         return this.appVarRepository.findAllByAppId(appId, sort).stream().map(l -> BeanUtils.convertType(l, AppVarBoV1.class)).collect(Collectors.toList());
     }
@@ -82,6 +91,7 @@ public class AppVarService {
     public void updateAppVarById(Long id, Long loginUser, String value) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditVar(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[updateAppVarById] Request coming: loginUser={}, id={}, value={}",loginUser,id,value);
         AppVariable appVariable = this.appVarRepository.findById(id).orElse(null);
         appVariable.setMtime(LocalDateTime.now());
         appVariable.setMuser(loginUser);
@@ -90,6 +100,7 @@ public class AppVarService {
     }
 
     public String findValueByAppIdAndKey(Long appId, String key) {
+        logger.info("[findValueByAppIdAndKey] Request coming: appId={}, key={}",appId,key);
         return this.DecryptValue(this.appVarRepository.findByAppIdAndVarKey(appId, key).getVarValue());
     }
 
@@ -102,6 +113,7 @@ public class AppVarService {
     public void delteAppVarById(Long loginUser, Long id) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteVar(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[delteAppVarById] Request coming: loginUser={}, id={}",loginUser,id);
         appVarRepository.deleteById(id);
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 流水线服务API接口实现类
@@ -25,10 +28,13 @@ public class PipelineController {
     @Autowired
     private PipelineService pipelineService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "查询流水线日志", notes = "查询流水线日志")
     @GetMapping("/pipelineLog/{runningId}")
     public PipelineResultV1 findPipelineLogByRunningId(
             @PathVariable(value = "runningId") String runningId) {
+        logger.info("[findPipelineLogByRunningId] Request coming: runningId={}",runningId);
         return this.pipelineService.getPipelineResultByRunningId(runningId);
 
     }

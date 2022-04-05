@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 镜像仓库服务类
  * @author  xzt
@@ -31,6 +34,8 @@ public class RepositoryService {
     private final UserFeign userFeign;
 
     private final ProjectService projectService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public RepositoryService(HarborRepoFeign harborRepoFeign, UserFeign userFeign,ProjectService projectService) {
@@ -51,8 +56,10 @@ public class RepositoryService {
      * @return {@link List<RepositoryBO>} 镜像仓库的列表
      */
     public Pagination<RepositoryBO> getRepositories(Integer projectId, String q, String sort, Integer labelId, Integer page, Integer pageSize, Long userId){
+        logger.info("[getRepositories] Request coming: projectId={}, q={}, sort={}, labelId={}, page={}, pageSize={}, userId={}",projectId,q,sort,labelId,page,pageSize,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[getRepositories] Get the user auth of repo: auth={}",auth);
 
         ResponseEntity<List<Repository>> responseEntity = harborRepoFeign.repositoriesGet(projectId,q,sort,labelId,page,pageSize,auth);
         List<Repository> repositories = responseEntity.getBody();
@@ -90,17 +97,20 @@ public class RepositoryService {
      * @param userId 用户id
      */
     public void deleteRepository(String projectName,String repoName,Long userId){
+        logger.info("[deleteRepository] Request coming: projectName={}, repoName={}, userId={}",projectName,repoName,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
         String repo = projectName+"/"+repoName;
+        logger.info("[deleteRepository] Get the user auth of repo: auth={}, repo={}",auth,repo);
         System.out.println(repo);
         harborRepoFeign.repositoriesRepoNameDelete(repo,auth);
     }
 
     public List<String> getRepoAddress(Long userId){
 
+        logger.info("[getRepoAddress] Request coming: userId={}",userId);
         List<String> list = new ArrayList<>();
-        String beginAddress = "registry.dop.clsaa.com/";
+        String beginAddress = "172.29.7.157:85/";
         //获取用户可访问的项目
         List<Integer> projectIds = new ArrayList<>();
         int pageNo = 1;

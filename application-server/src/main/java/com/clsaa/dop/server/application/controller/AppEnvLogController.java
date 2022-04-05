@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 日志服务API接口实现类
@@ -26,6 +29,7 @@ public class AppEnvLogController {
     @Autowired
     private AppEnvLogService appEnvLogService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiOperation(value = "查询日志", notes = "查询环境的日志")
     @GetMapping("/app/env/{appEnvId}/log")
@@ -34,6 +38,7 @@ public class AppEnvLogController {
             @ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
             @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
             @ApiParam(name = "appEnvId", value = "应用环境Id", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[findLogByAppEnvId] Request coming: loginUser={}, pageNo={}, pageSize={}, appEnvId={}",loginUser,pageNo,pageSize,appEnvId);
         return this.appEnvLogService.getLogByAppEnvId(loginUser, pageNo, pageSize, appEnvId);
 
     }
@@ -45,6 +50,7 @@ public class AppEnvLogController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @PathVariable(value = "appEnvId") Long appEnvId,
             @RequestBody LogInfoV1 logInfoV1) throws Exception {
+        logger.info("[addLog] Request coming: loginUser={}, appEnvId={}, logInfoV1",loginUser,appEnvId);
         this.appEnvLogService.addLog(loginUser, logInfoV1, appEnvId);
     }
 }

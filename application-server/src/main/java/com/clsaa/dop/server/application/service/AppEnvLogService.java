@@ -26,6 +26,9 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AppEnvLogService")
 public class AppEnvLogService {
     @Autowired
@@ -39,8 +42,10 @@ public class AppEnvLogService {
     @Autowired
     private BuildTagRunningIdMappingService buildTagRunningIdMappingService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public Pagination<AppEnvLogV1> getLogByAppEnvId(Long loginUser, Integer pageNo, Integer pageSize, Long appEnvId) {
+        logger.info("[getLogByAppEnvId] Request coming: loginUser={}, pageNo={}, pageSize={}, appEnvId={}",loginUser,pageNo,pageSize,appEnvId);
         Pagination<AppEnvLogV1> pagination = new Pagination<>();
 
         Sort sort = new Sort(Sort.Direction.DESC, "rtime");
@@ -61,8 +66,10 @@ public class AppEnvLogService {
                     userIdList.add(id);
                     try {
                         String userName = this.userService.findUserNameById(id);
+                        logger.info("[getLogByAppEnvId] Get the usename: userName={}",userName);
                         idNameMap.put(id, userName);
                     } catch (Exception e) {
+                        logger.error("[getLogByAppEnvId] 无法获得username！Exception",e);
                         System.out.print(e);
                         throw e;
                     }
@@ -106,6 +113,7 @@ public class AppEnvLogService {
 
     public String readFile(String filePath) throws Exception {
 
+        logger.info("[readFile] Request coming: filePath={}",filePath);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource resource = resolver.getResource(filePath);
         InputStream inputStream = resource.getInputStream();
@@ -131,6 +139,7 @@ public class AppEnvLogService {
     }
 
     public void addLog(Long loginUser, LogInfoV1 logInfoV1, Long appEnvId) throws Exception {
+        logger.info("[addLog] Request coming: loginUser={}, appEnvId={}, logInfoV1",loginUser,appEnvId);
         AppEnvBoV1 appEnvBoV1 = this.appEnvService.findEnvironmentDetailById(loginUser, appEnvId);
         String logTemplate = this.readFile("classpath:log-template.txt");
         logTemplate = logTemplate.replace("<ENV_ID>", appEnvBoV1.getId().toString());

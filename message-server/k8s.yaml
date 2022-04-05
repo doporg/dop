@@ -16,7 +16,7 @@ spec:
       containers:
         - name: message-server
           imagePullPolicy: Always
-          image: registry.dop.clsaa.com/dop/message-server:<BUILD_TAG>
+          image: 172.29.7.157:85/dop/message-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

@@ -1,48 +1,58 @@
 #!/groovy
 pipeline{
-	agent any
+    agent any
 
-	environment {
-		REPOSITORY="https://gitee.com/MrZCoding/dop.git"
-		SERVICE_DIR="user-server"
-		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
-		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/user-server"
-	}
+    environment {
+        REPOSITORY="https://github.com/nju-softeng/dop-server.git"
+        SERVICE_DIR="user-server"
+        DOCKER_REGISTRY_HOST="172.29.7.157:85"
+        DOCKER_REGISTRY="172.29.7.157:85/dop/user-server"
+        USER_SONAR_TOKEN=credentials('user-sonar-token')
+    }
 
-	stages {
-		stage('pull code') {
-			steps {
-				echo "start fetch code from git:${REPOSITORY}"
-				deleteDir()
-				git "${REPOSITORY}"
+    stages {
+        stage('pull code') {
+            steps {
+                echo "start fetch code from git:${REPOSITORY}"
+                deleteDir()
+                checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: "${REPOSITORY}"]]])
                 script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
                 }
-			}
-		}
+            }
+        }
 
-		stage('build maven') {
-			steps {
+        stage('build maven') {
+            steps {
                 echo "star compile"
                 dir(SERVICE_DIR){
                     sh "ls -l"
                     sh "mvn -U -am clean package"
                 }
-			}
-		}
+            }
+        }
 
-		stage('build docker') {
-			steps {
+        stage('static code analysis') {
+            steps {
+                echo "run sonarqube"
+                dir(SERVICE_DIR){
+                    sh "mvn sonar:sonar -Dsonar.projectKey=user-server -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${USER_SONAR_TOKEN}"
+                }
+            }
+        }
+
+        stage('build docker') {
+            steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
                 dir(SERVICE_DIR){
                     sh "ls -l"
                     sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
                 }
-			}
-		}
+            }
+        }
 
        stage('push docker') {
             steps {
@@ -68,14 +78,14 @@ pipeline{
             }
         }
 
-		stage('deploy') {
-			steps {
-				echo "start deploy"
-				dir(SERVICE_DIR){
-				    sh "ls -l"
-				    sh "kubectl apply -f k8s.yaml"
-				}
-			}
-		}
-	}
+        stage('deploy') {
+            steps {
+                echo "start deploy"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                    sh "kubectl apply -f k8s.yaml"
+                }
+            }
+        }
+    }
 }

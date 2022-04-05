@@ -8,6 +8,11 @@ spec:
     matchLabels:
       app: pipeline-server
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0%
+      maxSurge: 100%
   template:
     metadata:
       labels:
@@ -16,7 +21,7 @@ spec:
       containers:
         - name: pipeline-server
           imagePullPolicy: Always
-          image: registry.dop.clsaa.com/dop/pipeline-server:<BUILD_TAG>
+          image: 172.29.7.157:85/dop/pipeline-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi

@@ -9,12 +9,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "BuildTagRunningIdMappingService")
 public class BuildTagRunningIdMappingService {
     @Autowired
     BuildTagRunningIdMappingRepository buildTagRunningIdMappingRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public String findBuildTagByRunningIdAndAppEnvId(Long cuser, String runningId, Long appEnvId) {
+        logger.info("[findBuildTagByRunningIdAndAppEnvId] Request coming: cuser={}, runningId={}, appEnvId={}",cuser,runningId,appEnvId);
         BuildTagRunningIdMapping buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findByRunningIdAndAppEnvId(runningId, appEnvId).orElse(null);
         if (buildTagRunningIdMapping == null) {
             return createMapping(cuser, appEnvId, runningId);
@@ -24,17 +30,20 @@ public class BuildTagRunningIdMappingService {
     }
 
     public List<String> findRunningIdByAppEnvId(Long appEnvId) {
+        logger.info("[findRunningIdByAppEnvId] Request coming: appEnvId={}",appEnvId);
         List<BuildTagRunningIdMapping> buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findAllByAppEnvId(appEnvId);
         List<String> runningIdList = buildTagRunningIdMapping.stream().map(l -> l.getRunningId()).collect(Collectors.toList());
         return runningIdList;
     }
 
     public Long findAppEnvIdByRunningId(String runningId) {
+        logger.info("[findAppEnvIdByRunningId] Request coming: runningId={}",runningId);
         BuildTagRunningIdMapping buildTagRunningIdMapping = this.buildTagRunningIdMappingRepository.findByRunningId(runningId).orElse(null);
         return buildTagRunningIdMapping.getAppEnvId();
     }
 
     public String createMapping(Long cuser, Long appEnvId, String runningId) {
+        logger.info("[createMapping] Request coming: cuser={}, appEnvId={}, runningId={}",cuser,appEnvId,runningId);
         LocalDateTime now = LocalDateTime.now();
         BuildTagRunningIdMapping buildTagRunningIdMapping = BuildTagRunningIdMapping.builder()
                 .ctime(LocalDateTime.now())

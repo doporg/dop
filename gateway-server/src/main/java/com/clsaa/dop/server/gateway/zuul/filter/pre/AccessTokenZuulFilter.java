@@ -11,6 +11,8 @@ import com.clsaa.dop.server.gateway.service.AccessTokenService;
 import com.google.common.io.BaseEncoding;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -29,8 +31,11 @@ public class AccessTokenZuulFilter extends ZuulFilter {
      */
     private static final String HTTP_AUTHORIZATION_HEADER = "Authorization";
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private GatewayProperties properties;
+
     @Autowired
     private AccessTokenService accessTokenService;
     private byte[] tokenSecret = null;
@@ -78,24 +83,28 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         // 检查是否有header
         String bearToken = ctx.getRequest().getHeader(HTTP_AUTHORIZATION_HEADER);
         if (StringUtils.isEmpty(bearToken)) {
+            logger.info("[run] 授权Header检查失败");
             returnForError();
         }
         // bearer和token之间用一个空格分隔
         // 参考 http://self-issued.info/docs/draft-ietf-oauth-v2-bearer.html#authz-header
         String[] tokens = StringUtils.split(bearToken, " ");
         if (tokens == null || tokens.length != 2) {
+            logger.info("[run] bearToken检查失败");
             returnForError();
         }
         // token自校验解密
         CryptoResult cryptoResult = FastAes.decrypt(this.tokenSecret, tokens[1]);
         // 是否通过自校验
         if(!cryptoResult.isOK()){
+            logger.info("[run] Token自校验检查失败");
             returnForError();
         }
         // 查找token
         AccessTokenBoV1 token = this.accessTokenService.findAccessTokenByToken(cryptoResult.getContent());
         // 是否失效
         if(token==null||token.isExpired()){
+            logger.info("[run] Token已失效");
             returnForError();
         }
         return null;

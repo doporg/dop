@@ -1,3 +1,6 @@
+logging:
+  level:
+    com.clsaa.dop.server.application: debug
 server:
   port: 13800
 spring:
@@ -10,7 +13,7 @@ spring:
     name: application-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://115.28.186.77:30306/db_dop_application?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://172.29.7.157:3306/db_dop_application?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: dop
     password: Dop_mysql_12345
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -40,12 +43,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  zipkin:
+    base-url: http://zipkin-server:9000
+  sleuth:
+    sampler:
+      percentage: 1.0
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: open.dop.clsaa.com/@project.name@
+  host: gateway-server:14258/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
@@ -64,7 +72,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka
+      defaultZone: http://discovery-server:8761/eureka
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000
@@ -73,11 +81,11 @@ ribbon:
 logging.path: ./logs/${spring.application.name}
 
 k8s:
-  deploymentApiVersion: "apps/v1beta1"
+  deploymentApiVersion: "apps/v1"
   deploymentKind: "Deployment"
   deploymentLabelPrefix: "app"
   deploymentContainerPortProtocol: "TCP"
-  deploymentImagePullPolicy: "Always"
+#  deploymentImagePullPolicy: "Always"
   deploymentLocalTimeMountPath: "/etc/localtime"
   deploymentLocalTimeMountName: "host-time"
   deploymentTimeZoneMountPath: "/etc/timezone"
@@ -85,7 +93,7 @@ k8s:
   deploymentDnsPolicy: "ClusterFirst"
   serviceApiVersion: "v1"
   serviceKind: "Service"
-  ingressApiVersion: "extensions/v1beta1"
+  ingressApiVersion: "extensions/v1"
   ingressKind: "Ingress"
   virtualServiceVersionLabel: "version"
   serviceTypeNodeport: "NodePort"

@@ -9,6 +9,8 @@ import com.clsaa.dop.server.image.util.BeanUtils;
 import com.clsaa.rest.result.Pagination;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectController {
     private final ProjectService projectService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
@@ -38,6 +42,7 @@ public class ProjectController {
                                              @ApiParam(value = "页号，默认为1") @RequestParam(value = "page", required = false) Integer page,
                                              @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                              @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[getProjects] Request coming: name={}, publicStatus={}, owner={}, page={}, pageSize={}, userId={}",name,publicStatus,owner,page,pageSize,userId);
         Pagination<ProjectBO> projectBOPagination = projectService.getProjects(name,publicStatus,owner,page,pageSize,userId);
         Pagination<ProjectVO> pagination = new Pagination<>();
         pagination.setPageNo(page);
@@ -51,6 +56,7 @@ public class ProjectController {
     @GetMapping(value = "/v1/projects/{projectId}")
     public ProjectVO getProjectById(@ApiParam(value = "项目id",required = true) @PathVariable("projectId") Long projectId,
                                     @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[getProjectById] Request coming: projectId={}, userId={}",projectId,userId);
         return BeanUtils.convertType(projectService.getProjectById(projectId,userId),ProjectVO.class);
     }
 
@@ -59,6 +65,7 @@ public class ProjectController {
     public void addProject(@ApiParam(value = "项目名称",required = true) @RequestParam(value = "name") String projectName,
                            @ApiParam(value = "项目权限",required = true) @RequestParam(value = "status") String publicStatus,
                            @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[addProject] Request coming: projectName={}, publicStatus={}, userId={}",projectName,publicStatus,userId);
         ProjectMetadata metadata = new ProjectMetadata(publicStatus,"false","false","low","false");
         ProjectDto1 projectDto1 = new ProjectDto1(projectName,metadata);
         projectService.addProject(projectDto1,userId);
@@ -69,6 +76,7 @@ public class ProjectController {
     public void putProject(@ApiParam(value = "项目 id",required = true) @PathVariable(value = "projectId")Long projectId,
                            @ApiParam(value = "项目内容",required = true) @RequestBody ProjectDto1 projectDto1,
                            @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[putProject] Request coming: projectId={}, userId={}, projectDto1",projectId,userId);
         projectService.putProject(projectId,projectDto1,userId);
     }
 
@@ -76,6 +84,7 @@ public class ProjectController {
     @DeleteMapping(value = "/v1/projects/{projectId}")
     public void deleteProject(@ApiParam(value = "项目id",required = true) @PathVariable("projectId")Long projectId,
                               @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[deleteProject] Request coming: projectId={}, userId={}",projectId,userId);
         projectService.deleteProject(projectId,userId);
     }
 
@@ -85,6 +94,7 @@ public class ProjectController {
                                    @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId,
                                    @ApiParam(value = "属性名称",required = true) @PathVariable(value = "metaName")String metaName,
                                    @ApiParam(value = "修改状态",required = true) @RequestParam(value = "publicStatus") String publicStatus){
+        logger.info("[updatePublicStatus] Request coming: projectId={}, userId={}, metaName={}, publicStatus={}",projectId,userId,metaName,publicStatus);
         projectService.updatePublicStatus(projectId,metaName,userId,publicStatus);
     }
 

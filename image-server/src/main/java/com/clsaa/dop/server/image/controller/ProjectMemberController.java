@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 项目成员的控制器
  * @author xzt
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectMemberController {
 
     private final ProjectMemberService projectMemberService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ProjectMemberController(ProjectMemberService projectMemberService) {
@@ -34,6 +39,7 @@ public class ProjectMemberController {
                                                   @ApiParam(value = "页大小",required = true) @RequestParam(value = "pageSize") Integer pageSize,
                                                   @ApiParam(value = "搜索条件用户名称") @RequestParam(value = "entityName",required = false) String entityName,
                                                   @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        logger.info("[getMembers] Request coming: projectId={}, userId={}, pageNo={}, pageSize={}, entityName={}",projectId,userId,pageNo,pageSize,entityName);
         Pagination<ProjectMemberVO> pagination = new Pagination<>();
         Pagination<ProjectMemberBO> pagination1 = projectMemberService.getProjectMembers(pageNo,pageSize,projectId,entityName,userId);
         pagination.setPageList(BeanUtils.convertList(pagination1.getPageList(),ProjectMemberVO.class));
@@ -49,6 +55,7 @@ public class ProjectMemberController {
                           @ApiParam(value = "用户名称",required = true) @RequestParam(value = "userName") String userName,
                           @ApiParam(value = "角色id",required = true) @RequestParam(value = "roleId") Integer roleId,
                           @ApiParam(value = "登录用户id",required = true) @RequestHeader(value = "x-login-user") Long userId){
+        logger.info("[addMember] Request coming: projectId={}, userName={}, roleId={}, userId={}",projectId,userName,roleId,userId);
         projectMemberService.addMember(projectId,userName,roleId,userId);
     }
 
@@ -57,6 +64,7 @@ public class ProjectMemberController {
     public void deleteMember(@ApiParam(value = "项目id",required = true) @PathVariable(value = "projectId") Integer projectId,
                              @ApiParam(value = "成员id",required = true) @PathVariable(value = "mid")Long mid,
                              @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[deleteMember] Request coming: projectId={}, userId={}, mid={}",projectId,userId,mid);
         projectMemberService.deleteMember(projectId,mid,userId);
     }
 
@@ -66,6 +74,7 @@ public class ProjectMemberController {
                           @ApiParam(value = "成员id",required = true) @PathVariable(value = "mid")Long mid,
                           @ApiParam(value = "角色id",required = true) @RequestParam(value = "roleId")Integer roleId,
                           @ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[putMember] Request coming: projectId={}, mid={}, roleId={}, userId={}",projectId,mid,roleId,userId);
         projectMemberService.putMember(projectId,mid,roleId,userId);
     }
 

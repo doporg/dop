@@ -20,6 +20,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 应用API接口实现类
@@ -35,6 +38,7 @@ public class AppController {
     @Autowired
     private AppService appService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiOperation(value = "查询应用", notes = "根据项目ID查询应用项目")
     @GetMapping(value = "/pagedapp")
@@ -44,6 +48,7 @@ public class AppController {
                                                         @ApiParam(name = "projectId", value = "项目ID", required = true) @RequestParam(value = "projectId") Long projectId,
                                                         @ApiParam(name = "queryKey", value = "搜索关键字", defaultValue = "") @RequestParam(value = "queryKey", defaultValue = "") String queryKey) {
 
+        logger.info("[findApplicationByProjectId] Request coming: loginUser={}, pageNo={}, pageSize={}, projectId={}, queryKey={}",loginUser,pageNo,pageSize,projectId,queryKey);
         return this.appService.findApplicationByProjectIdOrderByCtimeWithPage(loginUser, pageNo, pageSize, projectId, queryKey);
     }
 
@@ -52,6 +57,7 @@ public class AppController {
     public List<AppV1> findApplicationByCuser(
             @ApiParam(name = "ouser", value = "ouser", required = true) @RequestParam(value = "ouser") Long ouser) {
 
+        logger.info("[findApplicationByCuser] Request coming: ouser={}",ouser);
         return this.appService.findApplicationByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppV1.class)).collect(Collectors.toList());
     }
 
@@ -62,6 +68,7 @@ public class AppController {
             @ApiParam(name = "appId", value = "appId", required = true) @PathVariable(value = "appId") Long appId) {
         System.out.print(appId);
 
+        logger.info("[findAppById] Request coming: loginUser={}, appId={}",loginUser,appId);
         return this.appService.findAppById(loginUser, appId);
 
     }
@@ -85,6 +92,8 @@ public class AppController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "Git仓库地址格式错误"));
         BizAssert.validParam(Validator.isImageUrl(imageUrl),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "镜像仓库地址格式错误"));
+
+        logger.info("[createApp] Request coming: cuser={}, projectId={}, title={}, description={}, productMode={}, gitUrl={}, imageUrl={}",cuser,projectId,title,description,productMode,gitUrl,imageUrl);
         this.appService.createApp(cuser, projectId, title, description, productMode, gitUrl, imageUrl);
         return;
     }
@@ -100,6 +109,8 @@ public class AppController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "标题长度必须小于25"));
         BizAssert.validParam(description.equals("") || StringUtils.hasText(description) && description.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
+
+        logger.info("[updateApp] Request coming: loginUser={}, appId={}, title={}, description={}",loginUser,appId,title,description);
         this.appService.updateApp(loginUser, appId, title, description);
     }
 
@@ -107,7 +118,8 @@ public class AppController {
     @DeleteMapping(value = "/app/{appId}")
     public void deleteApp(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
                           @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId) {
-        this.appService.deleteApp(loginUser, appId);
 
+        logger.info("[deleteApp] Request coming: loginUser={}, appId={}",loginUser,appId);
+        this.appService.deleteApp(loginUser, appId);
     }
 }

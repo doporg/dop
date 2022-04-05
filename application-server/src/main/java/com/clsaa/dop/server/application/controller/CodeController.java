@@ -12,6 +12,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 代码API接口实现类
@@ -28,9 +31,12 @@ public class CodeController {
     @Autowired
     private CodeService codeService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "查询代码仓库地址", notes = "查询代码仓库地址")
     @GetMapping(value = "/git_url_list")
     public List<String> findGitUrls(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser) {
+        logger.info("[findGitUrls] Request coming: loginUser={}",loginUser);
         return this.codeService.findProjectUrlList(loginUser);
     }
 }

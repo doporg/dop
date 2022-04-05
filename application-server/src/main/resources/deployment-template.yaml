@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -28,16 +28,4 @@ spec:
           ports:
             - containerPort: <CONTAINER_PORT>
               protocol: TCP
-          volumeMounts:
-            - mountPath: /etc/timezone
-              name: host-timezone
       dnsPolicy: ClusterFirst
-      volumes:
-        - hostPath:
-            type: ''
-            path: /etc/localtime
-          name: host-time
-        - hostPath:
-            type: ''
-            path: /etc/timezone
-          name: host-timezone

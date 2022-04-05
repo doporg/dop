@@ -85,4 +85,3 @@ message:
       registerAccountTopic: REGISTER_ACCOUNT_QUEUE  #注册用户广播，主题名
       updateAccountTopic: UPDATE_ACCOUNT_QUEUE      #更新用户广播，主题名
       registerConsumerGroup: ACCOUNT_CONSUMER_GROUP #用户消费群组
-

@@ -18,6 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -34,11 +36,14 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "查询项目信息", notes = "查询项目信息, never return null")
     @GetMapping(value = "/project/{projectId}")
     public ProjectV1 findProjectById(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
                                      @PathVariable(value = "projectId") Long projectId) {
 
+        logger.info("[findProjectById] Request coming: loginUser={}, projectId={}",loginUser,projectId);
         return BeanUtils.convertType(this.projectService.findProjectById(loginUser, projectId), ProjectV1.class);
     }
 
@@ -50,6 +55,7 @@ public class ProjectController {
                                                                  @ApiParam(name = "includeFinished", value = "是否包含已结项目", required = true, defaultValue = "false") @RequestParam(value = "includeFinished", defaultValue = "false") Boolean includeFinished,
                                                                  @ApiParam(name = "queryKey", value = "搜索关键字", defaultValue = "") @RequestParam(value = "queryKey", defaultValue = "") String queryKey) {
 
+        logger.info("[findProjectOrderByCtimeWithPage] Request coming: loginUser={}, pageNo={}, pageSize={}, includeFinished={}, queryKey={}",loginUser,pageNo,pageSize,includeFinished,queryKey);
         return this.projectService.findProjectOrderByCtimeWithPage(loginUser, pageNo, pageSize, includeFinished, queryKey);
     }
 
@@ -58,6 +64,7 @@ public class ProjectController {
     public List<UserV1> getMemberInProject(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
                                            @PathVariable(value = "projectId") Long projectId,
                                            @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId) {
+        logger.info("[getMemberInProject] Request coming: loginUser={}, projectId={}, organizationId={}",loginUser,projectId,organizationId);
         return this.projectService.getMembersInProject(projectId);
 
     }
@@ -71,6 +78,7 @@ public class ProjectController {
                                    @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId) {
 
         System.out.println("添加成员");
+        logger.info("[addMemberToProject] Request coming: loginUser={}, projectId={}, organizationId={}, userIdList={}",loginUser,projectId,organizationId,userIdList);
         this.projectService.addMemberToProject(userIdList, projectId, loginUser);
 
     }
@@ -81,6 +89,7 @@ public class ProjectController {
                                         @PathVariable(value = "projectId") Long projectId,
                                         @ApiParam(name = "userId", value = "userId", required = true) @RequestParam(value = "userId") Long userId,
                                         @ApiParam(name = "organizationId", value = "组织名称", required = true) @RequestParam(value = "organizationId") Long organizationId) {
+        logger.info("[deleteMemberFromProject] Request coming: loginUser={}, projectId={}, userId={}, organizationId={}",loginUser,projectId,userId,organizationId);
         this.projectService.deleteMemberFromProject(userId, projectId, loginUser);
 
     }
@@ -96,6 +105,7 @@ public class ProjectController {
 
         BizAssert.validParam(projectDescription == null || projectDescription.length() < 50,
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "描述长度必须小于50"));
+        logger.info("[createProject] Request coming: loginUser={}, title={}, organizationId={}, projectDescription={}, status={}",loginUser,title,organizationId,projectDescription,status);
         this.projectService.createProjects(loginUser, title, organizationId, projectDescription, status);
     }
 

@@ -15,6 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * <p>
  * 应用变量API接口实现类
@@ -29,12 +31,14 @@ import java.util.stream.Collectors;
 public class AppVarController {
     @Autowired
     private AppVarService appVarService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiOperation(value = "查询所有变量", notes = "查询所有变量")
     @GetMapping("/app/{appId}/variable")
     public List<AppVarV1> findAppVarByAppId(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId) {
+        logger.info("[findAppVarByAppId] Request coming: loginUser={}, appId={}",loginUser,appId);
         return this.appVarService.findAppVarByAppIdOrderByKey(loginUser, appId).stream().map(l -> BeanUtils.convertType(l, AppVarV1.class)).collect(Collectors.toList());
 
     }
@@ -45,6 +49,7 @@ public class AppVarController {
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
             @ApiParam(name = "key", value = "键", required = true) @PathVariable(value = "key") String key
     ) {
+        logger.info("[findValueByAppIdAndKey] Request coming: appId={}, key={}",appId,key);
         return this.appVarService.findValueByAppIdAndKey(appId, key);
     }
 
@@ -54,6 +59,7 @@ public class AppVarController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appId", value = "应用Id", required = true) @PathVariable(value = "appId") Long appId,
             @ApiParam(name = "var", value = "变量", required = true) @RequestBody AppVarCreateV1 appVarCreateV1) {
+        logger.info("[createAppVarByAppId] Request coming: loginUser={}, appId={}, appVarCreateV1",loginUser,appId);
         this.appVarService.createAppVarByAppId(loginUser, appId, appVarCreateV1.getVarKey(), appVarCreateV1.getVarValue());
 
     }
@@ -63,6 +69,7 @@ public class AppVarController {
     public void deleteAppVarById(
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appVarId", value = "应用变量Id", required = true) @PathVariable(value = "appVarId") Long appVarId) {
+        logger.info("[deleteAppVarById] Request coming: loginUser={}, appVarId={}",loginUser,appVarId);
         this.appVarService.delteAppVarById(loginUser, appVarId);
 
     }
@@ -73,6 +80,7 @@ public class AppVarController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(name = "appVarId", value = "应用变量Id", required = true) @PathVariable(value = "appVarId") Long appVarId,
             @ApiParam(name = "var", value = "变量", required = true) @RequestBody AppVarCreateV1 appVarCreateV1) {
+        logger.info("[updateAppVarById] Request coming: loginUser={}, appVarId={}, appVarCreateV1",loginUser,appVarId);
         this.appVarService.updateAppVarById(appVarId, loginUser, appVarCreateV1.getVarValue());
     }
 

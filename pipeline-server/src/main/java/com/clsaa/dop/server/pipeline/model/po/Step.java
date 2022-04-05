@@ -1,6 +1,7 @@
 package com.clsaa.dop.server.pipeline.model.po;
 
 
+import com.clsaa.dop.server.pipeline.enums.StepType;
 import com.google.gson.annotations.SerializedName;
 import lombok.*;
 
@@ -23,17 +24,7 @@ public class Step {
      */
     @SerializedName("taskName")
     @Enumerated(EnumType.STRING)
-    private TaskType taskName;
-    public enum TaskType {
-        PullCode,
-        BuildMaven,
-        BuildNode,
-        BuildDjanggo,
-        BuildDocker,
-        PushDocker,
-        CustomScript,
-        Deploy
-    }
+    private StepType taskName;
 
     /**
      * git地址
@@ -90,11 +81,11 @@ public class Step {
     private String shell;
 
 
-    public TaskType getTaskName() {
+    public StepType getTaskName() {
         return taskName;
     }
 
-    public void setTaskName(TaskType taskName) {
+    public void setTaskName(StepType taskName) {
         this.taskName = taskName;
     }
 }

@@ -10,7 +10,7 @@ spring:
     name: login-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://115.28.186.77:30306/db_dop_login?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://172.29.7.157:3306/db_dop_login?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop
     password: Dop_mysql_12345
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -42,7 +42,7 @@ spring:
     show-sql: true
   redis:
     database: 0
-    host: 121.42.13.243
+    host: 172.29.7.157
     port: 6379
     lettuce:
       pool:
@@ -56,7 +56,7 @@ spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: open.dop.clsaa.com/@project.name@
+  host: gateway-server:14258/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
@@ -75,7 +75,7 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka
+      defaultZone: http://discovery-server:8761/eureka/
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000

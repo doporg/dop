@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * <p>
  * 应用基本API接口实现类
@@ -26,6 +28,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 public class AppUrlInfoController {
     @Autowired
     private AppUrlInfoService appUrlInfoService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     //@ApiOperation(value = "查询应用基本Url", notes = "根据应用ID查询应用基本Url")
     //@GetMapping(value = "/appDetail")
@@ -57,6 +60,7 @@ public class AppUrlInfoController {
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "开发域名格式错误"));
         BizAssert.validParam(testDomain.equals("") || Validator.isDomain(testDomain),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "测试域名格式错误"));
+        logger.info("[updateAppUrlInfoByAppId] Request coming: loginUser={}, appId={}, warehouseUrl={}, productionDbUrl={}, imageUrl={}, testDbUrl={}, productionDomain={}, testDomain={}",loginUser,appId,warehouseUrl,productionDbUrl,imageUrl,testDbUrl,productionDomain,testDomain);
         this.appUrlInfoService.updateAppUrlInfoByAppId(appId, loginUser, warehouseUrl, imageUrl, productionDbUrl, testDbUrl, productionDomain, testDomain);
     }
 

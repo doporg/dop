@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service(value = "projectService")
 public class ProjectService {
@@ -37,9 +39,12 @@ public class ProjectService {
     @Autowired
     private PermissionService permissionService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public void deleteMemberFromProject(Long userId, Long projectId, Long loginUser) {
 //        BizAssert.authorized(this.permissionService.check(permissionConfig.getDeleteMemberFromProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[deleteMemberFromProject] Request coming: loginUser={}, projectId={}, userId={}",loginUser,projectId,userId);
         this.permissionService.deleteByFieldAndUserId(projectId, this.permissionConfig.getProjectRuleFieldName(), userId);
     }
 
@@ -47,6 +52,7 @@ public class ProjectService {
 //        BizAssert.authorized(this.permissionService.check(permissionConfig.getAddMemberToProject(), loginUser, permissionConfig.getProjectRuleFieldName(), projectId)
 //                , BizCodes.NO_PERMISSION);
 //        System.out.println("userIdList = " + userIdList + ", projectId = " + projectId + ", loginUser = " + loginUser+", this.permissionConfig.getProjectRuleFieldName() = "+this.permissionConfig.getProjectRuleFieldName());
+        logger.info("[addMemberToProject] Request coming: loginUser={}, projectId={}, userIdList={}",loginUser,projectId,userIdList);
         List<Long> existUserIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
         Set<Long> userIdSet = new HashSet<>(existUserIdList);
 
@@ -58,6 +64,7 @@ public class ProjectService {
 //                System.out.println("添加userId:"+userId+"到项目里");
                 this.permissionService.addData(this.permissionConfig.getDeveloperAndProjectRuleId(), Long.valueOf(userId), projectId, loginUser);
             } catch (Exception e) {
+                logger.error("[addMemberToProject] 项目添加成员失败！Exception",e);
 //                System.out.println("添加失败");
                 BizAssert.justFailed(new BizCode(BizCodes.INVALID_PARAM.getCode(), "用户" + String.valueOf(userId) + "添加失败，请检查该用户的角色"));
             }
@@ -69,6 +76,7 @@ public class ProjectService {
     }
 
     public List<UserV1> getMembersInProject(Long projectId) {
+        logger.info("[getMembersInProject] Request coming: projectId={}",projectId);
         List<Long> userIdList = this.permissionService.getProjectMembers(this.permissionConfig.getProjectRuleFieldName(), projectId);
         return userIdList.stream().map(l -> this.userService.findUserById(l)).collect(Collectors.toList());
     }
@@ -87,6 +95,7 @@ public class ProjectService {
         //
         //BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
         //        , BizCodes.NO_PERMISSION);
+        logger.info("[findProjectOrderByCtimeWithPage] Request coming: loginUser={}, pageNo={}, pageSize={}, includeFinished={}, queryKey={}",loginUser,pageNo,pageSize,includeFinished,queryKey);
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
 
@@ -140,6 +149,7 @@ public class ProjectService {
                     String userName = this.userService.findUserNameById(id);
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
+                    logger.error("[findProjectOrderByCtimeWithPage] 无法获得username！Exception",e);
                     System.out.print(e);
                     throw e;
                 }
@@ -169,7 +179,7 @@ public class ProjectService {
     public ProjectBoV1 findProjectById(Long loginUser, Long projectId) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewProject(), loginUser)
 //                , BizCodes.NO_PERMISSION);
-
+        logger.info("[findProjectById] Request coming: loginUser={}, projectId={}",loginUser,projectId);
         return BeanUtils.convertType(this.projectRepository.findById(projectId).orElse(null), ProjectBoV1.class);
     }
 
@@ -184,7 +194,7 @@ public class ProjectService {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateProject(), loginUser)
 //                , BizCodes.NO_PERMISSION);
 
-
+        logger.info("[createProject] Request coming: loginUser={}, title={}, origanizationId={}, description={}, status={}",loginUser,title,origanizationId,description,status);
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         Project project = Project.builder()

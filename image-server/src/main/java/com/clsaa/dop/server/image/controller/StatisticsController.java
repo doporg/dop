@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 用于获取仓库数据的控制类
  * @author xzt
@@ -23,6 +26,8 @@ public class StatisticsController {
 
     private final StatisticsService statisticsService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     public StatisticsController(StatisticsService statisticsService) {
         this.statisticsService = statisticsService;
@@ -31,6 +36,7 @@ public class StatisticsController {
     @ApiOperation(value = "获取仓库的基本统计数据",notes = "根据不同的登录用户返回不同的数据")
     @GetMapping(value = "/v1/statistics")
     public StatisticVO getStatistics(@ApiParam(value = "用户id",required = true) @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[getStatistics] Request coming: userId={}",userId);
         return BeanUtils.convertType(statisticsService.getStatistics(userId),StatisticVO.class);
     }
 }

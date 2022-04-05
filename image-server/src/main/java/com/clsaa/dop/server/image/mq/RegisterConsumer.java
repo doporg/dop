@@ -2,11 +2,14 @@ package com.clsaa.dop.server.image.mq;
 
 
 import com.alibaba.fastjson.JSON;
+import com.clsaa.dop.server.image.config.HarborConfig;
 import com.clsaa.dop.server.image.feign.UserFeign;
 import com.clsaa.dop.server.image.feign.harborfeign.HarborUserFeign;
+import com.clsaa.dop.server.image.model.dto.UserCredentialDto;
 import com.clsaa.dop.server.image.model.dto.UserDto1;
 import com.clsaa.dop.server.image.model.enumtype.UserCredentialType;
 import com.clsaa.dop.server.image.model.po.User;
+import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,6 +19,8 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,6 +42,7 @@ import java.util.UUID;
 @Component
 public class RegisterConsumer implements MessageListenerConcurrently {
 
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Value("${message.mq.RocketMQ.namesrvAddr}")
     private String namesrvAddr;
@@ -83,10 +89,14 @@ public class RegisterConsumer implements MessageListenerConcurrently {
      */
     @Override
     public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+        logger.info("[consumeMessage] new messages coming: messages={}, context={}", msgs, context);
+
         int index = 0;
         try {
             for (; index < msgs.size(); index++) {
                 MessageExt msg = msgs.get(index);
+                logger.debug("[consumeMessage] deal with message: index={}, message={}", index, msg);
+
                 String messageBody = new String(msg.getBody(), RemotingHelper.DEFAULT_CHARSET);
                 UserDto1 userDto1 = JSON.parseObject(messageBody, UserDto1.class);
                 Long id = userDto1.getId();
@@ -101,9 +111,10 @@ public class RegisterConsumer implements MessageListenerConcurrently {
                         password, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
                 //在harbor中注册账户
                 User user = new User(id.intValue(), username, email, password, username, "", false, "", 0, false, "", "", "2018-12-31T17:39:18Z", "2018-12-31T17:39:18Z");
-                harborUserFeign.usersPost(user);
+                harborUserFeign.usersPost(user, BasicAuthUtil.createAuth(HarborConfig.adminUsername, HarborConfig.adminPassword));
             }
         } catch (Exception e) {
+            logger.warn("[consumeMessage] fail to register harbor account: index={}, exception={}", index, e.getMessage());
             e.printStackTrace();
         } finally {
             if (index < msgs.size()) {
@@ -117,7 +128,6 @@ public class RegisterConsumer implements MessageListenerConcurrently {
     public void stop() {
         if (consumer != null) {
             consumer.shutdown();
-
         }
     }
 }

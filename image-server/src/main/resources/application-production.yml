@@ -10,7 +10,7 @@ spring:
     name: image-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://115.28.186.77:30306/db_dop_image?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://172.29.7.157:3306/db_dop_image?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop
     password: Dop_mysql_12345
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -40,12 +40,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  zipkin:
+    base-url: http://zipkin-server:9000
+  sleuth:
+    sampler:
+      percentage: 1.0
 
 spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
 spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
 project:
-  host: open.dop.clsaa.com/@project.name@
+  host: gateway-server:14258/@project.name@
   groupId: @project.groupId@
   artifactId: @project.artifactId@
   version: @project.version@
@@ -64,10 +69,28 @@ eureka:
     lease-expiration-duration-in-seconds: 10
   client:
     serviceUrl:
-      defaultZone: http://discovery.dop.clsaa.com/eureka
+      defaultZone: http://discovery-server:8761/eureka
     registry-fetch-interval-seconds: 5 #定时刷新本地缓存
 ribbon:
   ReadTimeout: 10000
   ConnectTimeout: 10000
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
+
+feign:
+  url: http://172.29.7.157:85/api
+
+message:
+  mq:
+    RocketMQ:
+      namesrvAddr: 172.29.7.157:9876
+      instanceName: DOP_MESSAGE                     #要发送到的MQ集群
+      maxMessageSize: 131072 # 1024*128             #最大消息长度
+      sendMessageTimeout: 10000                     #消息发送超时时间
+      registerAccountTopic: REGISTER_ACCOUNT_QUEUE  #注册用户广播，主题名
+      updateAccountTopic: UPDATE_ACCOUNT_QUEUE      #更新用户广播，主题名
+      registerConsumerGroup: ACCOUNT_CONSUMER_GROUP #用户消费群组
+
+harbor-auth:
+  username: <HARBOR_ADMIN_USERNAME>
+  password: <HARBOR_ADMIN_PASSWORD>

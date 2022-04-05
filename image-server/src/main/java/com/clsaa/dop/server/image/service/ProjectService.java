@@ -14,6 +14,8 @@ import com.clsaa.dop.server.image.util.BasicAuthUtil;
 import com.clsaa.dop.server.image.util.BeanUtils;
 import com.clsaa.dop.server.image.util.TimeConvertUtil;
 import com.clsaa.rest.result.Pagination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ import java.util.List;
  */
 @Service
 public class ProjectService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ProjectFeign projectFeign;
     private final UserFeign userFeign;
 
@@ -50,8 +53,10 @@ public class ProjectService {
      * @return {@link List<ProjectBO>} 项目信息列表
      */
     public Pagination<ProjectBO> getProjects(String name, Boolean publicStatus, String owner, Integer page, Integer pageSize, Long userId){
+        logger.info("[getProjects] Request coming: name={}, publicStatus={}, owner={}, page={}, pageSize={}, userId={}",name,publicStatus,owner,page,pageSize,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[getProjects] Get the user auth of repo: auth={}",auth);
         ResponseEntity<List<Project>> responseEntity = projectFeign.projectsGet(name,publicStatus,owner,page,pageSize,auth);
 
         Pagination<ProjectBO> pagination = new Pagination<>();
@@ -95,8 +100,10 @@ public class ProjectService {
      * @return {@link ProjectBO} 项目信息
      */
     public ProjectBO getProjectById(Long id,Long userId){
+        logger.info("[getProjectById] Request coming: id={}, userId={}",id,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[getProjectById] Get the user auth of repo: auth={}",auth);
         Project project = projectFeign.projectsProjectIdGet(id,auth);
         ProjectBO projectBO = BeanUtils.convertType(project,ProjectBO.class);
         if (project.getCurrentUserRoleId()==1) {
@@ -114,10 +121,17 @@ public class ProjectService {
      * @param project 项目信息
      */
     public void addProject(ProjectDto1 project,Long userId){
+        logger.info("[addProject] Request coming: userId={}, project",userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-        ProjectReq project1 = BeanUtils.convertType(project,ProjectReq.class);
-        projectFeign.projectsPost(project1,auth);
+        logger.info("[addProject] Get the user auth of repo: auth={}",auth);
+        try {
+            ProjectReq project1 = BeanUtils.convertType(project,ProjectReq.class);
+            projectFeign.projectsPost(project1, auth);
+        } catch (Exception e) {
+            logger.error("[addProject] failed to create a new project: exception={}", e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -126,8 +140,10 @@ public class ProjectService {
      * @param projectDto1 项目内容
      */
     public void putProject(Long projectId,ProjectDto1 projectDto1,Long userId){
+        logger.info("[putProject] Request coming: projectId={}, userId={}, projectDto1",projectId,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[putProject] Get the user auth of repo: auth={}",auth);
         ProjectReq projectReq = BeanUtils.convertType(projectDto1,ProjectReq.class);
         projectFeign.projectsProjectIdPut(projectId,projectReq,auth);
     }
@@ -137,8 +153,10 @@ public class ProjectService {
      * @param projectId
      */
     public void deleteProject(Long projectId,Long userId){
+        logger.info("[deleteProject] Request coming: projectId={}, userId={}",projectId,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[deleteProject] Get the user auth of repo: auth={}",auth);
         projectFeign.projectsProjectIdDelete(projectId,auth);
     }
 
@@ -148,9 +166,11 @@ public class ProjectService {
      * @return {@link ProjectMetadata} 项目基本信息
      */
     public ProjectMetadata getProjectMetadata(Long projectId,Long userId){
+        logger.info("[getProjectMetadata] Request coming: projectId={}, userId={}",projectId,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
-       return projectFeign.projectsProjectIdMetadatasGet(projectId,auth);
+        logger.info("[getProjectMetadata] Get the user auth of repo: auth={}",auth);
+        return projectFeign.projectsProjectIdMetadatasGet(projectId,auth);
     }
 
     /**
@@ -158,8 +178,10 @@ public class ProjectService {
      * @param projectMetadata 项目的基本信息
      */
     public void addProjectMetadata(Long projectId, ProjectMetadata projectMetadata,Long userId){
+        logger.info("[addProjectMetadata] Request coming: projectId={}, userId={}, projectMetadata",projectId,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[addProjectMetadata] Get the user auth of repo: auth={}",auth);
         projectFeign.projectsProjectIdMetadatasPost(projectId,projectMetadata,auth);
     }
     /**
@@ -168,8 +190,10 @@ public class ProjectService {
      * @param mataName 项目名称
      */
     public void deleteProjectMetadata(Long projectId, String mataName,Long userId){
+        logger.info("[deleteProjectMetadata] Request coming: projectId={}, userId={}, mataName={}",projectId,userId,mataName);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[deleteProjectMetadata] Get the user auth of repo: auth={}",auth);
         projectFeign.projectsProjectIdMetadatasMetaNameDelete(projectId,mataName,auth);
     }
 
@@ -181,8 +205,10 @@ public class ProjectService {
      * @param publicStatus 修改之后的状态
      */
     public void updatePublicStatus(Long projectId,String metaName,Long userId,String publicStatus){
+        logger.info("[updatePublicStatus] Request coming: projectId={}, userId={}, metaName={}, publicStatus={}",projectId,userId,metaName,publicStatus);
         UserCredentialDto userCredentialDto= userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        logger.info("[updatePublicStatus] Get the user auth of repo: auth={}",auth);
         PublicStatus publicStatus1 = new PublicStatus();
         publicStatus1.setPublicStatus(publicStatus);
         projectFeign.projectsProjectIdMetadatasMetaNamePut(projectId,metaName,auth,publicStatus1);

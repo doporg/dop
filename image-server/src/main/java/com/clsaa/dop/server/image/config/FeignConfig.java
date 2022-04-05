@@ -1,17 +1,25 @@
 package com.clsaa.dop.server.image.config;
 
 import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.Retryer;
+import feign.auth.BasicAuthRequestInterceptor;
 import feign.codec.Decoder;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +41,6 @@ public class FeignConfig {
         return Logger.Level.FULL;
     }
 
-
     @Bean
     public Decoder feignDecoder() {
         return new ResponseEntityDecoder(new SpringDecoder(feignHttpMessageConverter()));
@@ -49,6 +56,28 @@ public class FeignConfig {
             List<MediaType> mediaTypes = new ArrayList<>();
             mediaTypes.add(MediaType.valueOf(MediaType.APPLICATION_JSON + ";charset=UTF-8"));
             setSupportedMediaTypes(mediaTypes);
+        }
+    }
+
+    @Primary
+    @Component
+    public static class TraceLogger extends Logger {
+        private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+
+        @Override
+        protected void log(String key, String format, Object... objects) {
+            logger.info("[{}] {}", key, String.format(format, objects));
+        }
+
+        @Override
+        protected Response logAndRebufferResponse(String configKey, Logger.Level logLevel, Response response, long elapsedTime) throws IOException {
+            log(configKey, "response reached: response=%s", response.toString());
+            return response;
+        }
+
+        @Override
+        protected void logRequest(String configKey, Logger.Level logLevel, Request request) {
+            log(configKey, "request sending: request=%s", request.toString());
         }
     }
 }

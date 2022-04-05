@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AppUrlInfoService")
 public class AppUrlInfoService {
     @Autowired
@@ -21,6 +24,9 @@ public class AppUrlInfoService {
     private PermissionService permissionService;
     @Autowired
     private PermissionConfig permissionConfig;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 根据appId查询
      *
@@ -29,12 +35,14 @@ public class AppUrlInfoService {
      */
     public AppUrlInfoBoV1 findAppUrlInfoByAppId(Long appId) {
 
+        logger.info("[findAppUrlInfoByAppId] Request coming: appId={}",appId);
         return BeanUtils.convertType(appUrlInfoRepository.findByAppId(appId), AppUrlInfoBoV1.class);
     }
 
     public void updateAppUrlInfoByAppId(Long id, Long loginUser, String warehouseUrl, String imageUrl, String productionDbUrl, String testDbUrl, String productionDomain, String testDomain) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditAppUrl(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[updateAppUrlInfoByAppId] Request coming: id={}, loginUser={}, warehouseUrl={}, imageUrl={}, productionDbUrl={}, testDbUrl={}, productionDomain={}, testDomain={}",id,loginUser,warehouseUrl,imageUrl,productionDbUrl,testDbUrl,productionDomain,testDomain);
         AppUrlInfo appUrlInfo = appUrlInfoRepository.findByAppId(id);
         appUrlInfo.setWarehouseUrl(warehouseUrl);
         appUrlInfo.setImageUrl(imageUrl);
@@ -54,6 +62,7 @@ public class AppUrlInfoService {
      */
     public void deleteAppUrlInfo(Long id) {
         //Long id = Long.parseLong(sId);
+        logger.info("[deleteAppUrlInfo] Request coming: id={}",id);
         this.appUrlInfoRepository.deleteById(id);
         //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
         //AppUrlInfoService.deleteAppUrlInfo(String sId);
@@ -66,6 +75,7 @@ public class AppUrlInfoService {
      */
     public void createAppUrlInfo(AppUrlInfo appUrlInfo) {
         //Long id = Long.parseLong(sId);
+        logger.info("[createAppUrlInfo] Request coming: appUrlInfo");
         this.appUrlInfoRepository.saveAndFlush(appUrlInfo);
         //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
         //AppUrlInfoService.deleteAppUrlInfo(String sId);

@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  *     项目日志的业务实现
@@ -30,6 +33,8 @@ public class ProjectLogsService {
 
     private final ProjectFeign projectFeign;
     private final UserFeign userFeign;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ProjectLogsService(ProjectFeign projectFeign, UserFeign userFeign) {
@@ -52,8 +57,10 @@ public class ProjectLogsService {
      */
     public Pagination<AccessLogBO> getProjectLogs(Integer projectId, String userName, String repo, String tag,
                                                   String operation, String beginTime, String endTime, Integer page, Integer pageSize, Long userId){
+        logger.info("[getProjectLogs] Request coming: projectId={}, userName={}, repo={}, tag={}, operation={}, beginTime={}, endTime={}, page={}, pageSize={}, userId={}",projectId,userName,repo,tag,operation,beginTime,endTime,page,pageSize,userId);
         UserCredentialDto credentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(credentialDto);
+        logger.info("[getProjectLogs] Get the user auth of repo: auth={}",auth);
 
         ResponseEntity<List<AccessLog>> responseEntity = projectFeign.projectsProjectIdLogsGet(projectId,userName,repo,tag,operation,beginTime,
                 endTime,page,pageSize,auth);

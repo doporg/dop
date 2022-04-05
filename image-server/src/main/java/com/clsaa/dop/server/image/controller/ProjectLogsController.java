@@ -11,6 +11,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 @Api(value = "ProjectLogsController|一个项目日志的控制器类")
 public class ProjectLogsController {
     private final ProjectLogsService projectLogsService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ProjectLogsController(ProjectLogsService projectLogsService) {
@@ -41,6 +45,7 @@ public class ProjectLogsController {
                                                   @ApiParam(value = "页号") @RequestParam(value = "page", required = false) Integer page,
                                                   @ApiParam(value = "页大小") @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                   @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[getProjectLogs] Request coming: projectId={}, username={}, repository={}, tag={}, operation={}, beginTimestamp={}, endTimestamp={}, page={}, pageSize={}, userId={}",projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize,userId);
         Pagination<AccessLogBO> pagination = projectLogsService.getProjectLogs(projectId,username,repository,tag,operation,beginTimestamp,endTimestamp,page,pageSize,userId);
         Pagination<AccessLogVO> pagination1 = new Pagination<>();
         pagination1.setPageSize(pageSize);

@@ -14,6 +14,8 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -24,6 +26,8 @@ import java.util.Date;
  * @author joyren
  */
 public class UserLoginZuulFilter extends ZuulFilter {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private LoginFeign loginFeign;
@@ -59,6 +63,7 @@ public class UserLoginZuulFilter extends ZuulFilter {
             Date expiresAt = jwt.getExpiresAt();
             if (expiresAt.getTime() < System.currentTimeMillis()) {
                 //token已过期
+                logger.info("[run] Token已过期");
                 returnForError();
             }
             boolean verifyResult = this.loginFeign.verifyToken(token);
@@ -67,9 +72,13 @@ public class UserLoginZuulFilter extends ZuulFilter {
                 ctx.addZuulRequestHeader(HttpHeaders.X_LOGIN_USER, String.valueOf(userId));
             } else {
                 //该token已被删除
+                logger.info("[run] Token已被删除");
                 returnForError();
             }
         } catch (Exception e) {
+            logger.info("[run] User检验过程异常");
+            logger.error("[run] Exception", e);
+            e.printStackTrace();
             returnForError();
         }
 

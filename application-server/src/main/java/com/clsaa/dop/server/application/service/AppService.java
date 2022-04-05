@@ -25,6 +25,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AppService")
 public class AppService {
     @Autowired
@@ -41,6 +44,8 @@ public class AppService {
     @Autowired
     private UserService userService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 通过projectId分页查询应用
      *
@@ -53,6 +58,7 @@ public class AppService {
     public Pagination<AppV1> findApplicationByProjectIdOrderByCtimeWithPage(Long loginUser, Integer pageNo, Integer pageSize, Long projectId, String queryKey) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findApplicationByProjectIdOrderByCtimeWithPage] Request coming: loginUser={}, pageNo={}, pageSize={}, projectId={}, queryKey={}",loginUser,pageNo,pageSize,projectId,queryKey);
 
         Sort sort = new Sort(Sort.Direction.DESC, "ctime");
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
@@ -93,8 +99,10 @@ public class AppService {
                 userIdList.add(id);
                 try {
                     String userName = this.userService.findUserNameById(id);
+                    logger.info("[findApplicationByProjectIdOrderByCtimeWithPage] Get the usename: userName={}",userName);
                     idNameMap.put(id, userName);
                 } catch (Exception e) {
+                    logger.error("[findApplicationByProjectIdOrderByCtimeWithPage] 无法获得username！Exception",e);
                     System.out.print(e);
                     throw e;
                 }
@@ -131,6 +139,7 @@ public class AppService {
     public void deleteApp(Long loginUser, Long id) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteApp(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[deleteApp] Request coming: loginUser={}, id={}",loginUser,id);
         this.appRepository.deleteById(id);
         //appUrlInfoService.deleteAppUrlInfo(id);
         //AppBasicEnvironmentServer.deleteAppUrlInfo(String sId);
@@ -143,6 +152,7 @@ public class AppService {
      * @param ouser ouser
      */
     public List<AppBoV1> findApplicationByOuser(Long ouser){
+        logger.info("[findApplicationByCuser] Request coming: ouser={}",ouser);
         return this.appRepository.findAllByOuser(ouser).stream().map(l->BeanUtils.convertType(l,AppBoV1.class)).collect(Collectors.toList());
     }
 
@@ -154,6 +164,7 @@ public class AppService {
     public void updateApp(Long loginUser, Long id, String title, String description) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditApp(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[updateApp] Request coming: loginUser={}, id={}, title={}, description={}",loginUser,id,title,description);
         App app = this.appRepository.findById(id).orElse(null);
         app.setTitle(title);
         app.setDescription(description);
@@ -176,6 +187,7 @@ public class AppService {
     public void createApp(Long loginUser, Long projectId, String title, String description, String productMode, String gitUrl, String imageUrl) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateApp(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[createApp] Request coming: loginUser={}, projectId={}, title={}, description={}, productMode={}, gitUrl={}, imageUrl={}",loginUser,projectId,title,description,productMode,gitUrl,imageUrl);
         LocalDateTime ctime = LocalDateTime.now().withNano(0);
         LocalDateTime mtime = LocalDateTime.now().withNano(0);
         App app = App.builder()
@@ -232,6 +244,7 @@ public class AppService {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewApp(), loginUser)
 //                , BizCodes.NO_PERMISSION);
         //System.out.print(this.appRepository.findById(id).orElse(null));
+        logger.info("[findAppById] Request coming: loginUser={}, id={}",loginUser,id);
         AppBoV1 app = BeanUtils.convertType(this.appRepository.findById(id).orElse(null), AppBoV1.class);
         AppUrlInfoBoV1 appUrlInfoBoV1 = this.appUrlInfoService.findAppUrlInfoByAppId(id);
         AppBasicInfoV1 appBasicInfoV1 = AppBasicInfoV1.builder()

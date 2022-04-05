@@ -16,7 +16,7 @@ spec:
       containers:
         - name: gateway-server
           imagePullPolicy: Always
-          image: registry.dop.clsaa.com/dop/gateway-server:<BUILD_TAG>
+          image: 172.29.7.157:85/dop/gateway-server:<BUILD_TAG>
           resources:
             requests:
               memory: 384Mi
@@ -54,18 +54,24 @@ spec:
   selector:
     app: gateway-server
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
  name: gateway-server
  namespace: dop
  annotations:
-     kubernetes.io/ingress.class: "nginx"
+  kubernetes.io/ingress.class: "nginx"
+  nginx.ingress.kubernetes.io/enable-cors: "true"
+  nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization,X-Login-User,X-Login-Token"
 spec:
  rules:
-   - host: open.dop.clsaa.com
+   - host: open.devopsplus.com.cn
      http:
        paths:
-         - backend:
-             serviceName: gateway-server
-             servicePort: 14258
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: gateway-server
+               port:
+                 number: 14258

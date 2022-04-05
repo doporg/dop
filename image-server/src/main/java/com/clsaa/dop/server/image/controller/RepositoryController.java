@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 用于管理镜像仓库的控制类
@@ -22,6 +24,8 @@ import java.util.List;
 public class RepositoryController {
 
     private final RepositoryService repositoryService;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public RepositoryController(RepositoryService repositoryService) {
@@ -38,6 +42,7 @@ public class RepositoryController {
                                                     @ApiParam(value = "页大小，默认为10，最大为100") @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                     @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
 
+        logger.info("[getRepositories] Request coming: projectId={}, q={}, sort={}, labelId={}, page={}, pageSize={}, userId={}",projectId,q,sort,labelId,page,pageSize,userId);
         Pagination<RepositoryBO> pagination = repositoryService.getRepositories(projectId,q,sort,labelId,page,pageSize,userId);
         Pagination<RepositoryVO> pagination1 = new Pagination<>();
         pagination1.setTotalCount(pagination.getTotalCount());
@@ -52,12 +57,14 @@ public class RepositoryController {
     public void deleteRepository(@ApiParam(value = "项目名称") @PathVariable(value = "projectName") String projectName,
                                  @ApiParam(value = "镜像仓库名称") @PathVariable(value = "repoName")String repoName,
                                  @ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[deleteRepository] Request coming: projectName={}, repoName={}, userId={}",projectName,repoName,userId);
         repositoryService.deleteRepository(projectName,repoName,userId);
     }
 
     @ApiOperation(value = "获取镜像仓库地址")
     @GetMapping(value = "/v1/repoAddress")
     public List<String> getRepoAddress(@ApiParam(value = "用户id") @RequestHeader(value = "x-login-user")Long userId){
+        logger.info("[getRepoAddress] Request coming: userId={}",userId);
         return repositoryService.getRepoAddress(userId);
     }
 

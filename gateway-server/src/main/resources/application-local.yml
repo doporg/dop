@@ -10,7 +10,7 @@ spring:
     name: gateway-server
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://115.28.186.77:30306/db_dop_gateway?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url: jdbc:mysql://172.29.7.157:30306/db_dop_gateway?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: dop
     password: Dop_mysql_12345
     driver-class-name: com.mysql.cj.jdbc.Driver

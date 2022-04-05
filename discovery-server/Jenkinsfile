@@ -4,10 +4,10 @@ pipeline {
 
     environment {
 //        REPOSITORY = "https://github.com/doporg/dop.git"
-        REPOSITORY="https://gitee.com/MrZCoding/dop.git"
+        REPOSITORY="https://github.com/nju-softeng/dop-server.git"
         SERVICE_DIR = "discovery-server"
-        DOCKER_REGISTRY_HOST = "registry.dop.clsaa.com"
-        DOCKER_REGISTRY = "registry.dop.clsaa.com/dop/discovery-server"
+        DOCKER_REGISTRY_HOST = "172.29.7.157:85"
+        DOCKER_REGISTRY = "172.29.7.157:85/dop/discovery-server"
     }
 
 
@@ -16,7 +16,8 @@ pipeline {
             steps {
                 echo "start fetch code from git:${REPOSITORY}"
                 deleteDir()
-                git "${REPOSITORY}"
+                //git "${REPOSITORY}"
+                checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: "${REPOSITORY}"]]])
                 script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()

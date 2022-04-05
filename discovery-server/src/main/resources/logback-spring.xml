@@ -80,7 +80,7 @@
         only log at level INFO and above. -->
     <root level="INFO">
         <springProfile name="!production">
-            <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDOUT"/>
         </springProfile>
         <appender-ref ref="INFO"/>
         <appender-ref ref="ERROR"/>

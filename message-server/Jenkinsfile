@@ -2,13 +2,12 @@
 pipeline{
 	agent any
 
-	
 	environment {
-//		REPOSITORY="https://gitee.com/MrZCoding/dop.git"
-		REPOSITORY="https://gitee.com/MrZCoding/dop.git"
+		REPOSITORY="https://github.com/nju-softeng/dop-server.git"
 		SERVICE_DIR="message-server"
-		DOCKER_REGISTRY_HOST="registry.dop.clsaa.com"
-		DOCKER_REGISTRY="registry.dop.clsaa.com/dop/message-server"
+		DOCKER_REGISTRY_HOST="172.29.7.157:85"
+		DOCKER_REGISTRY="172.29.7.157:85/dop/message-server"
+		EMAIL_PASSWORD=credentials('email-password')
 	}
 
 	stages {
@@ -16,13 +15,23 @@ pipeline{
 			steps {
 				echo "start fetch code from git:${REPOSITORY}"
 				deleteDir()
-				git "${REPOSITORY}"
+                checkout([$class: 'GitSCM', branches: [[name: "*/${branch}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: "${REPOSITORY}"]]])
                 script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
                 }
 			}
+		}
+
+		stage('fill in secrets') {
+		    steps {
+                echo "fill email password"
+                dir(SERVICE_DIR){
+                    sh "ls -l src/main/resources/"
+                    sh "sed -i 's/<EMAIL_PASSWORD>/${EMAIL_PASSWORD}/' src/main/resources/application-production.yml"
+                }
+		    }
 		}
 
 		stage('build maven') {

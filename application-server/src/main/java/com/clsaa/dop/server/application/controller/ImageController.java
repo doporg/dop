@@ -12,6 +12,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 镜像API接口实现类
@@ -29,9 +32,12 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "查询代码仓库地址", notes = "查询代码仓库地址")
     @GetMapping(value = "/image_url_list")
     public List<String> getImageUrlList(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser) {
+        logger.info("[getImageUrlList] Request coming: loginUser={}",loginUser);
         return this.imageService.getImageUrls(loginUser);
     }
 }

@@ -18,6 +18,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -34,6 +36,8 @@ public class KubeYamlController {
     @Autowired
     KubeYamlService kubeYamlService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "获取传输的yaml文件", notes = "获取传输的yaml文件")
     @GetMapping(value = "/app/env/{appEnvId}/yamlFile")
     public String createYamlFileForDeploy(
@@ -41,10 +45,12 @@ public class KubeYamlController {
             //@ApiParam(value = "cuser", name = "cuser", required = true) @RequestParam(value = "cuser") Long cuser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "runningId", name = "runningId", required = true) @RequestParam(value = "runningId") String runningId) {
+        logger.info("[createYamlFileForDeploy] Request coming: cuser={}, appEnvId={}, runningId={}",cuser,appEnvId,runningId);
         try {
             return this.kubeYamlService.createYamlFileForDeploy(cuser, appEnvId, runningId);
 
         } catch (Exception e) {
+            logger.error("[createYamlFileForDeploy] 创建yaml部署文件失败！Exception",e);
             System.out.print(e);
             return null;
         }
@@ -81,6 +87,7 @@ public class KubeYamlController {
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
             @ApiParam(name = "yamlFilePath", value = "镜像地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
+        logger.info("[CreateYamlInfoByAppEnvId] Request coming: appEnvId={}, deploymentStrategy={}, loginUser={}, nameSpace={}, service={}, deployment={}, containers={}, releaseStrategy={}, replicas={}, releaseBatch={}, yamlFilePath={}",appEnvId,deploymentStrategy,loginUser,nameSpace,service,deployment,containers,releaseStrategy,replicas,releaseBatch,yamlFilePath);
         this.kubeYamlService.CreateYamlData(appEnvId, loginUser, nameSpace, service, deployment, containers, releaseStrategy, replicas
                 , releaseBatch, yamlFilePath);
     }
@@ -99,6 +106,7 @@ public class KubeYamlController {
             @ApiParam(name = "replicas", value = "副本数量", defaultValue = "0") @RequestParam(value = "replicas", defaultValue = "0") Integer replicas,
             @ApiParam(name = "releaseBatch", value = "发布批次", defaultValue = "0") @RequestParam(value = "releaseBatch", defaultValue = "0") Long releaseBatch,
             @ApiParam(name = "yamlFilePath", value = "yaml文件地址", defaultValue = "") @RequestParam(value = "yamlFilePath", defaultValue = "") String yamlFilePath) throws Exception {
+        logger.info("[updateYamlInfoByAppEnvId] Request coming: appEnvId={}, deploymentStrategy={}, loginUser={}, nameSpace={}, service={}, deployment={}, containers={}, releaseStrategy={}, replicas={}, releaseBatch={}, yamlFilePath={}",appEnvId,deploymentStrategy,loginUser,nameSpace,service,deployment,containers,releaseStrategy,replicas,releaseBatch,yamlFilePath);
         BizAssert.validParam(Validator.isServiceName(service),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "服务名格式错误"));
         if (!yamlFilePath.equals("")) {
@@ -114,6 +122,7 @@ public class KubeYamlController {
 
     public KubeYamlDataV1 getYamlInfoByAppEnvId(@RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
                                                 @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[getYamlInfoByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         return BeanUtils.convertType(this.kubeYamlService.findYamlDataByEnvId(loginUser, appEnvId), KubeYamlDataV1.class);
     }
 
@@ -123,6 +132,7 @@ public class KubeYamlController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "deploymentYaml", name = "deploymentYaml", required = true) @RequestBody DeploymentYamlV1 deploymentYamlV1) {
+        logger.info("[updateDeploymentYaml] Request coming: loginUser={}, appEnvId={}, DeploymentYamlV1",loginUser,appEnvId);
         this.kubeYamlService.updateDeploymentYaml(loginUser, appEnvId, deploymentYamlV1.getDeploymentEditableYaml());
     }
 
@@ -131,6 +141,7 @@ public class KubeYamlController {
     @GetMapping(value = "/app/env/{appEnvId}/yamlStatus")
     public Boolean isExistYamlData(
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId) {
+        logger.info("[isExistYamlData] Request coming: appEnvId={}",appEnvId);
         return this.kubeYamlService.isExistYamlData(appEnvId);
     }
 
@@ -141,9 +152,11 @@ public class KubeYamlController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId
     ) {
+        logger.info("[getNameSpaceByUrlAndToken] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         try {
             return this.kubeYamlService.findNameSpaces(loginUser, appEnvId);
         } catch (Exception e) {
+            logger.error("[getNameSpaceByUrlAndToken] 获取命名空间失败！Exception",e);
             System.out.print(e);
             return null;
         }
@@ -156,9 +169,11 @@ public class KubeYamlController {
             @ApiParam(value = "appEnvId", name = "appEnvId", required = true) @PathVariable(value = "appEnvId") Long appEnvId,
             @ApiParam(value = "namespace", name = "namespace", required = true) @RequestParam(value = "namespace") String namespace
     ) {
+        logger.info("[getServiceByNameSpace] Request coming: loginUser={}, appEnvId={}, namespace={}",loginUser,appEnvId,namespace);
         try {
             return this.kubeYamlService.getServiceByNameSpace(loginUser, appEnvId, namespace);
         } catch (Exception e) {
+            logger.error("[getServiceByNameSpace] 获取服务失败！Exception",e);
             System.out.print(e);
             return null;
         }
@@ -173,9 +188,11 @@ public class KubeYamlController {
             @ApiParam(value = "service", name = "service", required = true) @RequestParam(value = "service") String service
     ) {
 
+        logger.info("[getDeploymentByNameSpaceAndService] Request coming: loginUser={}, appEnvId={}, namespace={}, service={}",loginUser,appEnvId,namespace,service);
         try {
             return this.kubeYamlService.getDeploymentByNameSpaceAndService(loginUser, appEnvId, namespace, service);
         } catch (Exception e) {
+            logger.error("[getDeploymentByNameSpaceAndService] 获取部署失败！Exception",e);
             System.out.print(e);
             return null;
         }
@@ -195,9 +212,11 @@ public class KubeYamlController {
     ) {
         BizAssert.validParam(Validator.isServiceName(name),
                 new BizCode(BizCodes.INVALID_PARAM.getCode(), "服务名格式错误"));
+        logger.info("[createServiceByNameSpace] Request coming: loginUser={}, appEnvId={}, namespace={}, name={}, targetPort={}, nodePort={}, host={}",loginUser,appEnvId,namespace,name,targetPort,nodePort,host);
         try {
             this.kubeYamlService.createServiceByNameSpace(loginUser, appEnvId, namespace, name, targetPort, nodePort, host);
         } catch (Exception e) {
+            logger.error("[createServiceByNameSpace] 创建服务失败！Exception",e);
             System.out.print(e);
         }
     }

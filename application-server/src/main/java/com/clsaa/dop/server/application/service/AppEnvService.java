@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AppEnvService")
 public class AppEnvService {
 
@@ -32,6 +35,8 @@ public class AppEnvService {
     @Autowired
     KubeCredentialService kubeCredentialService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * 根据appId查询环境信息
      *
@@ -42,6 +47,7 @@ public class AppEnvService {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnv(), loginUser)
 //                , BizCodes.NO_PERMISSION);
 
+        logger.info("[findEnvironmentByAppId] Request coming: loginUser={}, appID={}",loginUser,appID);
         return this.appEnvRepository.findAllByAppId(appID).stream().map(l -> BeanUtils.convertType(l, AppEnvBoV1.class)).collect(Collectors.toList());
     }
 
@@ -58,6 +64,7 @@ public class AppEnvService {
      * @return
      */
     public void createAppEnv(AppEnv appEnv) {
+        logger.info("[createAppEnv] Request coming: appEnv");
         this.appEnvRepository.saveAndFlush(appEnv);
         if (AppEnv.DeploymentStrategy.KUBERNETES == appEnv.getDeploymentStrategy()) {
             this.kubeCredentialService.createCredentialByAppEnvId(appEnv.getCuser(), appEnv.getId());
@@ -74,6 +81,7 @@ public class AppEnvService {
     public AppEnvBoV1 findEnvironmentDetailById(Long loginUser, Long id) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewAppEnvDetail(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findEnvironmentDetailById] Request coming: loginUser={}, id={}",loginUser,id);
         AppEnv appEnv = this.appEnvRepository.findById(id).orElse(null);
         return BeanUtils.convertType(appEnv, AppEnvBoV1.class);
     }
@@ -85,6 +93,7 @@ public class AppEnvService {
      * @return Long
      */
     public Long findAppIdById(Long id) {
+        logger.info("[findAppIdById] Request coming: id={}",id);
         AppEnv appEnv = this.appEnvRepository.findById(id).orElse(null);
         return appEnv.getAppId();
     }
@@ -102,6 +111,7 @@ public class AppEnvService {
     public void createEnvironmentByAppId(Long appId, Long loginUser, String title, String environmentLever, String deploymentStrategy) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateAppEnv(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[createEnvironmentByAppId] Request coming: appId={}, loginUser={}, title={}， environmentLever={}, deploymentStrategy={}",appId,loginUser,title,environmentLever,deploymentStrategy);
         AppEnv appEnv = AppEnv.builder()
                 .appId(appId)
                 .title(title)
@@ -123,6 +133,7 @@ public class AppEnvService {
     public PipelineIdAndNameV1 findPipelineByAppEnvId(Long loginUser, Long appEnvId) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewPipeline(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findPipelineByAppEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         return this.pipelineService.findPipelineByAppEnvId(appEnvId);
     }
 
@@ -134,6 +145,7 @@ public class AppEnvService {
     public void deleteEnvironmentById(Long loginUser, Long id) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getDeleteAppEnv(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[deleteEnvironmentById] Request coming: loginUser={}, id={}",loginUser,id);
         this.appEnvRepository.deleteById(id);
     }
 

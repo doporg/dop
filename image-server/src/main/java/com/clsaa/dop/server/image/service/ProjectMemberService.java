@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 项目成员的业务实现
  * @author  xzt
@@ -26,6 +29,8 @@ public class ProjectMemberService {
     private final ProjectFeign projectFeign;
 
     private final UserFeign userFeign;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public ProjectMemberService(ProjectFeign projectFeign, UserFeign userFeign) {
@@ -43,9 +48,10 @@ public class ProjectMemberService {
      * @return {@link Pagination<ProjectMemberBO>} 成员的分页类
      */
     public Pagination<ProjectMemberBO> getProjectMembers(Integer pageNo,Integer pageSize,Long projectId, String entityName, Long userId){
-
+        logger.info("[getProjectMembers] Request coming: projectId={}, userId={}, pageNo={}, pageSize={}, entityName={}",projectId,userId,pageNo,pageSize,entityName);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId, UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        logger.info("[getProjectMembers] Get the user auth of repo: auth={}",auth);
         ResponseEntity<List<ProjectMemberEntity>> responseEntity = projectFeign.projectsProjectIdMembersGet(projectId,entityName,auth);
         List<ProjectMemberEntity> projectMemberEntities = responseEntity.getBody();
         Pagination<ProjectMemberBO> pagination = new Pagination<>();
@@ -77,8 +83,10 @@ public class ProjectMemberService {
      */
     public void addMember(Integer projectId,String userName,Integer roleId,Long userId){
 
+        logger.info("[addMember] Request coming: projectId={}, userName={}, roleId={}, userId={}",projectId,userName,roleId,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        logger.info("[addMember] Get the user auth of repo: auth={}",auth);
 
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(userName);
@@ -96,8 +104,10 @@ public class ProjectMemberService {
      */
 
     public void deleteMember(Integer projectId,Long mid,Long userId){
+        logger.info("[deleteMember] Request coming: projectId={}, userId={}, mid={}",projectId,userId,mid);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        logger.info("[deleteMember] Get the user auth of repo: auth={}",auth);
         projectFeign.projectsProjectIdMembersMidDelete(projectId,mid,auth);
     }
 
@@ -109,8 +119,10 @@ public class ProjectMemberService {
      * @param userId 登录用户id
      */
     public void putMember(Integer projectId,Long mid,Integer roleId,Long userId){
+        logger.info("[putMember] Request coming: projectId={}, mid={}, roleId={}, userId={}",projectId,mid,roleId,userId);
         UserCredentialDto userCredentialDto = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_HARBOR_LOGIN_EMAIL);
         String auth = BasicAuthUtil.createAuth(userCredentialDto);
+        logger.info("[putMember] Get the user auth of repo: auth={}",auth);
         RoleRequest roleRequest = new RoleRequest();
         roleRequest.setRoleId(roleId);
         projectFeign.projectsProjectIdMembersMidPut(projectId,mid,roleRequest,auth);

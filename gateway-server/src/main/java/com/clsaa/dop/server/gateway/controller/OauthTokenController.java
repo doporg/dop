@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * AccessToken控制器
  *
@@ -38,6 +41,8 @@ public class OauthTokenController {
 
     @Autowired
     private GatewayProperties properties;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 获取当前服务器时间戳(毫秒)
@@ -77,6 +82,7 @@ public class OauthTokenController {
                                        @RequestParam(SignatureVerifier.PARAM_SIGNATURE) String signature,
                                        HttpServletRequest request,
                                        HttpServletResponse response) {
+        logger.info("[tokenEndpoint] Request coming: grant_type={}, client_id={}, timestamp={}, nouce={}, signature={}",grant_type,client_id,timestamp,nouce,signature);
         //检验参数是否放在HTTP URL中，若放在URL中易造成安全问题，拒绝颁发token
         BizAssert.validParam(StringUtils.isEmpty(request.getQueryString()), new BizCode(BizCodes.INVALID_REQUEST.getCode(),
                 "请使用x-www-form-urlencoded格式的form表单提交参数，禁止在URL中传递参数"));
@@ -89,17 +95,6 @@ public class OauthTokenController {
         //查询对应client
         ClientBoV1 client = this.clientService.findClientByClientId(client_id);
         BizAssert.validParam(client != null, BizCodes.INVALID_CLIENT);
-        //获取明文client_secret
-
-        String clientSecret = ClientKeysUtil.getAesPlainSecret(client.getClientSecret(),
-                this.properties.getOauth().getAES().getClientKey());
-        //验证签名
-        SignatureVerifier.verify(clientSecret,
-                request.getRequestURI(),
-                request.getMethod(),
-                signature,
-                timestamp,
-                request.getParameterMap());
         //创建AccessToken
         AccessTokenBoV1 accessTokenBoV1 = this.accessTokenService.addAccessToken(client.getId(), client.getAccessTokenValidity());
         //自校验加密getAesPlainSecret

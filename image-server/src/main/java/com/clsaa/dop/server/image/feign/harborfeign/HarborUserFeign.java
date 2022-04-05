@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 /**
  * harbor用户管理类
@@ -21,6 +22,7 @@ public interface HarborUserFeign {
      * @param user 用户信息
      */
     @PostMapping(value = "/users")
-    void usersPost(@RequestBody User user);
+    void usersPost(@RequestBody User user,
+                   @RequestHeader(value = "Authorization") String auth);
 
 }

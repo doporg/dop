@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service(value = "KubeYamlService")
 public class KubeYamlService {
@@ -54,8 +56,11 @@ public class KubeYamlService {
     @Autowired
     private PermissionService permissionService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public String readFile(String filePath) throws Exception {
         //File file = ResourceUtils.get(filePath);
+        logger.info("[readFile] Request coming: filePath={}",filePath);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource resource = resolver.getResource(filePath);
         InputStream inputStream = resource.getInputStream();
@@ -125,6 +130,7 @@ public class KubeYamlService {
     public String createYamlFileForDeploy(Long loginUser, Long appEnvId, String runningId) throws Exception {
 
 
+        logger.info("[createYamlFileForDeploy] Request coming: loginUser={}, appEnvId={}, runningId={}",loginUser,appEnvId,runningId);
         KubeYamlDataBoV1 kubeYamlDataBoV1 = this.findYamlDataByEnvId(loginUser, appEnvId);
         if (kubeYamlDataBoV1.getYamlFilePath().equals("")) {
             String yaml = (kubeYamlDataBoV1.getDeploymentEditableYaml());
@@ -132,24 +138,29 @@ public class KubeYamlService {
             Long appId = this.appEnvService.findAppIdById(appEnvId);
             String imageUrl = appUrlInfoService.findAppUrlInfoByAppId(appId).getImageUrl();
             yaml = yaml.replace("<IMAGE_URL>", imageUrl + ":" + buildTag);
+            logger.info("[createYamlFileForDeploy] Get yaml: yaml={}",yaml);
             return yaml;
 
         } else {
             String path = kubeYamlDataBoV1.getYamlFilePath();
+            logger.info("[createYamlFileForDeploy] Get path: path={}",path);
             String finalPath = "";
-            if (path.matches("giltab")) {
+            if (path.matches("(.*)giltab(.*)")) {
                 finalPath = path.replace("blob", "raw");
+                logger.info("[createYamlFileForDeploy] Get finalPath: finalPath={}",finalPath);
             } else {
-                if (path.matches("github")) {
+                if (path.matches("(.*)github(.*)")) {
                     String[] splitPath = path.split("blob/");
                     finalPath = "https://raw.githubusercontent.com/" + splitPath[0].split("github.com/")[1] + splitPath[1];
+                    logger.info("[createYamlFileForDeploy] Get finalPath: finalPath={}",finalPath);
                 }
             }
 
             RestTemplate restTemplate = new RestTemplate();
             String yaml = restTemplate.getForObject(finalPath, String.class);
             String buildTag = buildTagRunningIdMappingService.findBuildTagByRunningIdAndAppEnvId(loginUser, runningId, appEnvId);
-            yaml = yaml.replace("<IMAGE_URL>", buildTag);
+            yaml = yaml.replace("<BUILD_TAG>", buildTag);
+            logger.info("[createYamlFileForDeploy] Return yaml: yaml={}",yaml);
             return yaml;
         }
     }
@@ -172,6 +183,7 @@ public class KubeYamlService {
             , Long releaseBatch, String yamlFilePath) throws Exception {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateYamlData(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[CreateYamlData] Request coming: appEnvId={}, loginUser={}, nameSpace={}, service={}, deployment={}, container={}, releaseStrategy={}, replicas={}, releaseBatch={}, yamlFilePath={}",appEnvId,loginUser,nameSpace,service,deployment,container,releaseStrategy,replicas,releaseBatch,yamlFilePath);
         KubeYamlData kubeYamlData = KubeYamlData.builder()
                 .appEnvId(appEnvId)
                 .ctime(LocalDateTime.now())
@@ -211,6 +223,7 @@ public class KubeYamlService {
             , Long releaseBatch, String yamlFilePath) throws Exception {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditYamlData(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[updateYamlData] Request coming: appEnvId={}, loginUser={}, nameSpace={}, service={}, deployment={}, container={}, releaseStrategy={}, replicas={}, releaseBatch={}, yamlFilePath={}",appEnvId,loginUser,nameSpace,service,deployment,container,releaseStrategy,replicas,releaseBatch,yamlFilePath);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
         kubeYamlData.setMuser(loginUser);
@@ -232,7 +245,9 @@ public class KubeYamlService {
 
     public void generateYaml(Long appEnvId, String nameSpace, String service, String deployment, String container, String releaseStrategy, Integer replicas
             , Long releaseBatch, String yamlFilePath, KubeYamlData kubeYamlData) throws Exception {
+        logger.info("[generateYaml] Request coming: appEnvId={}, nameSpace={}, service={}, deployment={}, container={}, releaseStrategy={}, replicas={}, releaseBatch={}, yamlFilePath={}, kubeYamlData",appEnvId,nameSpace,service,deployment,container,releaseStrategy,replicas,releaseBatch,yamlFilePath);
         if (yamlFilePath.equals("")) {
+            logger.info("[generateYaml] Use the properties to generate");
             long cur = new Date().getTime();
             int random = new Random().nextInt(1000000);
             String versionId = Long.toHexString(Long.valueOf(cur + random));
@@ -240,8 +255,16 @@ public class KubeYamlService {
             List<V1Service> serviceList = coreV1Api.listNamespacedService(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
             IntOrString targetPort = serviceList.get(0).getSpec().getPorts().get(0).getTargetPort();
             AppsV1beta1Api appsV1beta1Api = getAppsV1beta1Api(appEnvId);
-            List<AppsV1beta1Deployment> deploymentList = appsV1beta1Api.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            logger.info("[generateYaml] Get appsV1beta1Api.");
+            List<AppsV1beta1Deployment> deploymentList=new ArrayList<AppsV1beta1Deployment>();
+            try {
+                deploymentList = appsV1beta1Api.listNamespacedDeployment(nameSpace, false, null, null, null, "app=" + service, Integer.MAX_VALUE, null, null, false).getItems();
+            }catch(Exception e){
+                logger.error("[generateYaml] 无法获得deployment列表！Exception",e);
+            }
+            logger.info("[generateYaml] deploymentList size={}",deploymentList.size());
             if (deploymentList.size() != 0) {
+                logger.info("[generateYaml] deploymentList is not null");
                 for (int i = 0; i < deploymentList.size(); i++) {
                     AppsV1beta1Deployment AppsV1beta1Deployment = deploymentList.get(i);
                     if (AppsV1beta1Deployment.getMetadata().getName().equals(deployment) || deployment.equals("")) {
@@ -290,6 +313,7 @@ public class KubeYamlService {
                 }
 
             } else {
+                logger.info("[generateYaml] deploymentList is null");
                 String deploymentTemplate = this.readFile("classpath:deployment-template.yaml");
                 deploymentTemplate = deploymentTemplate.replace("<NAME>", service);
                 deploymentTemplate = deploymentTemplate.replace("<NAMESPACE>", nameSpace);
@@ -304,18 +328,20 @@ public class KubeYamlService {
             kubeYamlData.setYamlFilePath("");
 
         } else {
+            logger.info("[generateYaml] Use the yamlFile to generate");
             kubeYamlData.setYamlFilePath(yamlFilePath);
             kubeYamlData.setDeploymentEditableYaml("");
         }
 
         this.kubeYamlRepository.saveAndFlush(kubeYamlData);
-
+        logger.info("[generateYaml] Save the kubeYamlData");
     }
 
     /**
      * 判断Yaml是否存在
      */
     public Boolean isExistYamlData(Long appEnvId) {
+        logger.info("[isExistYamlData] Request coming: appEnvId={}",appEnvId);
         Long yamlCount = this.kubeYamlRepository.countByAppEnvId(appEnvId);
         return yamlCount.equals(new Long(1));
     }
@@ -323,6 +349,7 @@ public class KubeYamlService {
     public KubeYamlDataBoV1 findYamlDataByEnvId(Long loginUser, Long appEnvId) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewYamlData(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[findYamlDataByEnvId] Request coming: loginUser={}, appEnvId={}",loginUser,appEnvId);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         if (kubeYamlData == null)
             return null;
@@ -334,6 +361,7 @@ public class KubeYamlService {
     public void updateDeploymentYaml(Long loginUser, Long appEnvId, String deploymentYaml) {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getEditDeploymentYaml(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[updateDeploymentYaml] Request coming: loginUser={}, appEnvId={}, deploymentYaml={}",loginUser,appEnvId,deploymentYaml);
         KubeYamlData kubeYamlData = this.kubeYamlRepository.findByAppEnvId(appEnvId).orElse(null);
         kubeYamlData.setMtime(LocalDateTime.now());
         kubeYamlData.setMuser(loginUser);
@@ -349,12 +377,16 @@ public class KubeYamlService {
      * @return ApiClient
      */
     public ApiClient getClient(Long id) {
+        logger.info("[getClient] Request coming: id={}",id);
         KubeCredentialBoV1 kubeCredentialBoV1 = this.kubeCredentialService.queryByAppEnvId(id);
         String url = kubeCredentialBoV1.getTargetClusterUrl();
         String token = kubeCredentialBoV1.getTargetClusterToken();
+        logger.info("[getClient] Get url: url={}",url);
+        logger.info("[getClient] Get token: token={}",token);
         ApiClient client = Config.fromToken(url,
                 token,
                 false);
+        logger.info("[getClient] client return");
         return client;
 
     }
@@ -367,7 +399,7 @@ public class KubeYamlService {
      * @return NetworkingV1Api
      */
     public ExtensionsV1beta1Api getExtensionsV1beta1Api(Long id) {
-
+        logger.info("[getExtensionsV1beta1Api] Request coming: id={}",id);
         return new ExtensionsV1beta1Api(getClient(id));
     }
 
@@ -379,7 +411,7 @@ public class KubeYamlService {
      * @return CoreV1Api
      */
     public CoreV1Api getCoreV1Api(Long id) {
-
+        logger.info("[getCoreV1Api] Request coming: id={}",id);
         return new CoreV1Api(getClient(id));
     }
 
@@ -391,7 +423,9 @@ public class KubeYamlService {
      * @return AppsV1beta1Api
      */
     public AppsV1beta1Api getAppsV1beta1Api(Long id) {
+        logger.info("[getAppsV1beta1Api] Request coming: id={}",id);
         getClient(id);
+        logger.info("[getAppsV1beta1Api] getClient");
         return new AppsV1beta1Api(getClient(id));
     }
 
@@ -406,6 +440,7 @@ public class KubeYamlService {
     public void createServiceByNameSpace(Long loginUser, Long id, String namespace, String name, Integer port, Integer nodePort, String host) throws Exception {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getCreateService(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[createServiceByNameSpace] Request coming: loginUser={}, id={}, namespace={}, name={}, port={}, nodePort={}, host={}",loginUser,id,namespace,name,port,nodePort,host);
         CoreV1Api coreV1Api = getCoreV1Api(id);
 
         AppsV1beta1Api AppsV1beta1Api = getAppsV1beta1Api(id);
@@ -579,6 +614,7 @@ public class KubeYamlService {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewNameSpace(), loginUser)
 //                , BizCodes.NO_PERMISSION);
         //根据用户所填集群信息获取api
+        logger.info("[findNameSpaces] Request coming: loginUser={}, id={}",loginUser,id);
         CoreV1Api api = getCoreV1Api(id);
         //查询所有命名空间
         return api.listNamespace(true, null, null, null, null, null, null, null, false)
@@ -599,6 +635,7 @@ public class KubeYamlService {
     public List<String> getServiceByNameSpace(Long loginUser, Long id, String namespace) throws Exception {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewService(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[getServiceByNameSpace] Request coming: loginUser={}, id={}, namespace={}",loginUser,id,namespace);
         CoreV1Api api = getCoreV1Api(id);
 
         return api.listNamespacedService(namespace, false, null, null, null, null, Integer.MAX_VALUE, null, null, false)
@@ -619,6 +656,7 @@ public class KubeYamlService {
     public HashMap<String, Object> getDeploymentByNameSpaceAndService(Long loginUser, Long id, String namespace, String service) throws Exception {
 //        BizAssert.authorized(this.permissionService.checkPermission(permissionConfig.getViewDeployment(), loginUser)
 //                , BizCodes.NO_PERMISSION);
+        logger.info("[getDeploymentByNameSpaceAndService] Request coming: loginUser={}, id={}, namespace={}, service={}",loginUser,id,namespace,service);
         AppsV1beta1Api api = getAppsV1beta1Api(id);
 
 

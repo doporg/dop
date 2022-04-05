@@ -3,6 +3,7 @@ package com.clsaa.dop.server.code.util;
 import com.alibaba.fastjson.JSON;
 import com.clsaa.dop.server.code.controller.UserController;
 import com.clsaa.dop.server.code.feign.UserCredentialType;
+import com.clsaa.dop.server.code.feign.UserCredentialV1;
 import com.clsaa.dop.server.code.feign.UserFeign;
 import com.clsaa.dop.server.code.model.bo.project.ProjectBo;
 import com.clsaa.dop.server.code.model.bo.user.UserIdBo;
@@ -16,6 +17,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,17 +45,19 @@ public class RequestUtil {
 //        RequestUtil.userService = userService;
 //    }
 
+    private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
+
     private static UserFeign userFeign;
 
     @Autowired
     public void setUserFeign(UserFeign userFeign){RequestUtil.userFeign=userFeign;}
 
     //api地址
-    private static final String api = "http://gitlab.dop.clsaa.com/api/v4";
+    private static final String api = "http://172.29.7.157:8090/api/v4";
 
     //    管理员的token
-    private static final String rootPrivateToken = "2Rxs9jTQEyqipmDsgscX";
-    private static final String rootAccessToken = "2Rxs9jTQEyqipmDsgscX";
+    private static final String rootPrivateToken = "bgFns8gqgd_ZSEqe3JvT";
+    private static final String rootAccessToken = "bgFns8gqgd_ZSEqe3JvT";
 
 
     /**
@@ -65,8 +70,11 @@ public class RequestUtil {
      * @return 列表
      */
     public static <T> List<T> getList(String path, Long userId, Class<T> clazz) {
+        logger.info("fetch access token by user id: " + "userID=" + userId);
+        UserCredentialV1 credential = userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN);
+        logger.info("user credential fetched: " + credential);
+        String access_token = credential.getCredential();
 
-        String access_token=userFeign.getUserCredentialV1ByUserId(userId,UserCredentialType.DOP_INNER_GITLAB_TOKEN).getCredential();
         String url = api + path;
         url += url.indexOf('?') == -1 ? "?" : "&";
         url += "access_token=" + access_token;
@@ -75,7 +83,10 @@ public class RequestUtil {
         int page=1;
         while(true){
             String temp_url=url+"&per_page=50&page="+page++;
+            logger.info("GitLab get list URL: " + temp_url);
             List<T> temp_list= JSON.parseArray(httpGet(temp_url), clazz);
+            logger.info("response: " + temp_list);
+
             if(temp_list.size()==0){
                 break;
             }else {
@@ -84,7 +95,6 @@ public class RequestUtil {
         }
 
         return list;
-
     }
 
     /**

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * 用户API接口实现类
@@ -27,9 +30,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @ApiOperation(value = "根据id查询用户", notes = "根据id查询用户")
     @GetMapping(value = "/userInfo")
     public UserV1 findUserByUserId(@ApiParam(name = "userId", value = "userId", required = true) @RequestParam(value = "userId") Long userId) {
+        logger.info("[findUserByUserId] Request coming: userId={}",userId);
         return this.userService.findUserById(userId);
     }
 
@@ -39,6 +45,7 @@ public class UserController {
             @ApiParam(value = "关键字，姓名或邮箱") @RequestParam(value = "key", required = false) String key,
             @ApiParam(name = "pageNo", value = "页号", required = true, defaultValue = "1") @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
             @ApiParam(name = "pageSize", value = "页大小", required = true, defaultValue = "10") @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        logger.info("[findUsersNotInProject] Request coming: key={}, pageNo={}, pageSize={}",key,pageNo,pageSize);
         return this.userService.findUsersNotInProject(key, pageNo, pageSize);
     }
 

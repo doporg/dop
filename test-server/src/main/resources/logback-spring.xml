@@ -79,9 +79,9 @@
     <!-- Enable FILE and STDOUT appender for all log messages. By default,
         only log at level INFO and above. -->
     <root level="INFO">
-        <springProfile name="!production">
+<!--        <springProfile name="!production">-->
             <appender-ref ref="STDOUT"/>
-        </springProfile>
+<!--        </springProfile>-->
         <appender-ref ref="INFO"/>
         <appender-ref ref="ERROR"/>
     </root>

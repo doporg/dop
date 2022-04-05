@@ -7,12 +7,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service(value = "AuditService")
 public class AuditService {
     @Autowired
     private AuditFeign auditFeign;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     public void addAuditFeign(String serviceId, String functionId, String userId, Long otime, Map<String, Object> values) {
+        logger.info("[addAuditFeign] Request coming: serviceId={}, functionId={}, otime={}, values",serviceId,functionId,otime);
         LogDtoV1 logDtoV1 = new LogDtoV1();
         logDtoV1.setServiceId(serviceId);
         logDtoV1.setFunctionId(functionId);
