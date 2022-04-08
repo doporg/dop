@@ -1,0 +1,56 @@
+server:
+  port: 13600
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  application:
+    name: pipeline-server
+  datasource:
+    url: jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS DB_DOP_USER_SERVER
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  zipkin:
+    base-url: http://zipkin-server:9000
+  sleuth:
+    sampler:
+      percentage: 1.0
+
+  #mongo配置
+  data:
+    mongodb:
+      uri: mongodb://172.29.7.157:27017/db_dop_pipeline
+
+spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS: true
+spring.jackson.serialization.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+
+project:
+  host: gateway-server:14258/pipeline-server
+  name: pipeline-server
+swagger.enable: true
+eureka:
+  instance:
+    appname: ${spring.application.name}
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
+    prefer-ip-address: true
+    #续约更新时间间隔
+    lease-renewal-interval-in-seconds: 5
+    #续约到期时间
+    lease-expiration-duration-in-seconds: 10
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka
+    registry-fetch-interval-seconds: 5 #定时刷新本地缓存
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+  ServerListRefreshInterval: 2000
+logging.path: ./logs/${spring.application.name}
+
+harbor:
+  hostAndPort: '<HARBOR_HOST_PORT>'
