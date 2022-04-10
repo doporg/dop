@@ -2,4 +2,5 @@
 **/*.iml
 **/target/
 **/.DS_Store
+**/.attach_pid*
 logs/
