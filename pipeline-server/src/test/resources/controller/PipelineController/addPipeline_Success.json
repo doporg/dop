@@ -1,0 +1,10 @@
+{
+  "request": {
+    "id": "12L",
+    "name": "echo-server",
+    "jenkinsfile": {
+      "git": "https://gitee.com/chunxu-zhang/echo-service",
+      "path": "./Jenkinsfile"
+    }
+  }
+}

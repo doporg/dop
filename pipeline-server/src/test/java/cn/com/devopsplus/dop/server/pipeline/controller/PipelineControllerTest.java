@@ -57,38 +57,53 @@ public class PipelineControllerTest {
 
     @Test
     public void testAddPipeline_Success() {
+        // get the json file
+        String path = "/controller/PipelineController/addPipeline_Success.json";
+        InputStream config = getClass().getResourceAsStream(path);
+        JSONObject json = JSON.parseObject(config, JSONObject.class);
+        Long id=Long.parseLong(JsonPath.read(json, "$.request.id"));
+        String name = JsonPath.read(json, "$.request.name");
+        String git = JsonPath.read(json, "$.request.jenkinsfile.git");
+        String path = JsonPath.read(json, "$.request.jenkinsfile.path");
         Jenkinsfile jenkinsfile = Jenkinsfile.builder()
-                .git("https://gitee.com/chunxu-zhang/echo-service")
-                .path("./Jenkinsfile")
+                .git(git)
+                .path(path)
                 .build();
 
         Pipeline pipeline = Pipeline.builder()
-                .name("echo-server")
+                .name(name)
                 .monitor(Pipeline.Monitor.ManualTrigger)
                 .config(Pipeline.Config.HasJenkinsfile)
                 .jenkinsfile(jenkinsfile)
                 .build();
 
-        pipelineController.addPipeline(12L, pipeline);
+        pipelineController.addPipeline(id, pipeline);
     }
 
     @Test
     public void testGetPipelineForTable_Success() {
+        // get the input json file
+        String path = "/controller/PipelineController/addPipeline_Success.json";
+        InputStream config = getClass().getResourceAsStream(path);
+        JSONObject json = JSON.parseObject(config, JSONObject.class);
+        Long id=Long.parseLong(JsonPath.read(json, "$.request.id"));
+        String name = JsonPath.read(json, "$.request.name");
+        String git = JsonPath.read(json, "$.request.jenkinsfile.git");
+        String path = JsonPath.read(json, "$.request.jenkinsfile.path");
         // create a pipeline
         Jenkinsfile jenkinsfile = Jenkinsfile.builder()
-                .git("https://gitee.com/chunxu-zhang/echo-service")
-                .path("./Jenkinsfile")
+                .git(git)
+                .path(path)
                 .build();
 
         Pipeline pipeline = Pipeline.builder()
-                .name("echo-server")
+                .name(name)
                 .monitor(Pipeline.Monitor.ManualTrigger)
                 .config(Pipeline.Config.HasJenkinsfile)
                 .jenkinsfile(jenkinsfile)
                 .build();
 
-        pipelineController.addPipeline(14L, pipeline);
-        pipelineController.addPipeline(12L, pipeline);
+        pipelineController.addPipeline(id, pipeline);
 
         // get pipelines
         List<PipelineVoV3> pipelines = pipelineController.getPipelineForTable();
@@ -100,8 +115,15 @@ public class PipelineControllerTest {
                 .map(PipelineVoV3::getCuser)
                 .collect(Collectors.toSet());
 
-        assertThat(pipelines).hasSize(2);
-        assertThat(pipelineNames).contains("echo-server");
-        assertThat(usernames).contains("chunxu-zhang", "yuyan-yang");
+        path = "/controller/PipelineController/getPipelineForTable_Success.json";
+        config = getClass().getResourceAsStream(path);
+        json = JSON.parseObject(config, JSONObject.class);
+        int size=Integer.parseInt(JsonPath.read(json, "$.response.size"));
+        name = JsonPath.read(json, "$.response.name");
+        String username = JsonPath.read(json, "$.response.username");
+
+        assertThat(pipelines).hasSize(size);
+        assertThat(pipelineNames).contains(name);
+        assertThat(usernames).contains(username);
     }
 }
