@@ -5,7 +5,10 @@ import cn.com.devopsplus.dop.server.pipeline.model.dto.UserV1;
 import cn.com.devopsplus.dop.server.pipeline.model.po.Jenkinsfile;
 import cn.com.devopsplus.dop.server.pipeline.model.po.Pipeline;
 import cn.com.devopsplus.dop.server.pipeline.model.vo.PipelineVoV3;
+import cn.com.devopsplus.dop.server.pipeline.util.JenkinsfileUtilTest;
+import com.jayway.jsonpath.JsonPath;
 import com.offbytwo.jenkins.JenkinsServer;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +24,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,15 +61,16 @@ public class PipelineControllerTest {
     }
 
     @Test
-    public void testAddPipeline_Success() {
+    public void testAddPipeline_Success() throws IOException {
         // get the json file
-        String path = "/controller/PipelineController/addPipeline_Success.json";
-        InputStream config = getClass().getResourceAsStream(path);
-        JSONObject json = JSON.parseObject(config, JSONObject.class);
-        Long id=Long.parseLong(JsonPath.read(json, "$.request.id"));
-        String name = JsonPath.read(json, "$.request.name");
-        String git = JsonPath.read(json, "$.request.jenkinsfile.git");
-        String path = JsonPath.read(json, "$.request.jenkinsfile.path");
+        String addPipeline = IOUtils.toString(
+                Objects.requireNonNull(JenkinsfileUtilTest.class.getResource("/controller/PipelineController/addPipeline_Success.json")),
+                StandardCharsets.UTF_8
+        );
+        Long id=Long.parseLong(JsonPath.read(addPipeline, "$.request.id"));
+        String name = JsonPath.read(addPipeline, "$.request.name");
+        String git = JsonPath.read(addPipeline, "$.request.jenkinsfile.git");
+        String path = JsonPath.read(addPipeline, "$.request.jenkinsfile.path");
         Jenkinsfile jenkinsfile = Jenkinsfile.builder()
                 .git(git)
                 .path(path)
@@ -81,15 +87,16 @@ public class PipelineControllerTest {
     }
 
     @Test
-    public void testGetPipelineForTable_Success() {
+    public void testGetPipelineForTable_Success() throws IOException {
         // get the input json file
-        String path = "/controller/PipelineController/addPipeline_Success.json";
-        InputStream config = getClass().getResourceAsStream(path);
-        JSONObject json = JSON.parseObject(config, JSONObject.class);
-        Long id=Long.parseLong(JsonPath.read(json, "$.request.id"));
-        String name = JsonPath.read(json, "$.request.name");
-        String git = JsonPath.read(json, "$.request.jenkinsfile.git");
-        String path = JsonPath.read(json, "$.request.jenkinsfile.path");
+        String addPipeline = IOUtils.toString(
+                Objects.requireNonNull(JenkinsfileUtilTest.class.getResource("/controller/PipelineController/addPipeline_Success.json")),
+                StandardCharsets.UTF_8
+        );
+        Long id=Long.parseLong(JsonPath.read(addPipeline, "$.request.id"));
+        String name = JsonPath.read(addPipeline, "$.request.name");
+        String git = JsonPath.read(addPipeline, "$.request.jenkinsfile.git");
+        String path = JsonPath.read(addPipeline, "$.request.jenkinsfile.path");
         // create a pipeline
         Jenkinsfile jenkinsfile = Jenkinsfile.builder()
                 .git(git)
@@ -115,12 +122,13 @@ public class PipelineControllerTest {
                 .map(PipelineVoV3::getCuser)
                 .collect(Collectors.toSet());
 
-        path = "/controller/PipelineController/getPipelineForTable_Success.json";
-        config = getClass().getResourceAsStream(path);
-        json = JSON.parseObject(config, JSONObject.class);
-        int size=Integer.parseInt(JsonPath.read(json, "$.response.size"));
-        name = JsonPath.read(json, "$.response.name");
-        String username = JsonPath.read(json, "$.response.username");
+        String getPipeline = IOUtils.toString(
+                Objects.requireNonNull(JenkinsfileUtilTest.class.getResource("/controller/PipelineController/getPipelineForTable_Success.json")),
+                StandardCharsets.UTF_8
+        );
+        int size=Integer.parseInt(JsonPath.read(getPipeline, "$.response.size"));
+        name = JsonPath.read(getPipeline, "$.response.name");
+        String username = JsonPath.read(getPipeline, "$.response.username");
 
         assertThat(pipelines).hasSize(size);
         assertThat(pipelineNames).contains(name);
