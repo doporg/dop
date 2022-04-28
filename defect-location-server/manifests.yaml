@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: defect-location-server
+  namespace: dop
+spec:
+  selector:
+    matchLabels:
+      app: defect-location-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: defect-location-server
+    spec:
+      containers:
+        - name: algorithm
+          imagePullPolicy: Always
+          image: 172.29.7.157:85/dop/defect-location-server-algorithm:<BUILD_TAG>
+          resources:
+            requests:
+              memory: 384Mi
+              cpu: 250m
+            limits:
+              memory: 384Mi
+              cpu: 500m
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
+          ports:
+            - containerPort: 5005
+        - name: backend
+          imagePullPolicy: Always
+          image: 172.29.7.157:85/dop/defect-location-server-backend:<BUILD_TAG>
+          resources:
+            requests:
+              memory: 384Mi
+              cpu: 250m
+            limits:
+              memory: 384Mi
+              cpu: 500m
+          volumeMounts:
+            - name: host-time
+              mountPath: /etc/localtime
+            - name: host-timezone
+              mountPath: /etc/timezone
+          ports:
+            - containerPort: 8081
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+        - name: host-timezone
+          hostPath:
+            path: /etc/timezone
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: defect-location-server
+  namespace: dop
+  labels:
+    app: defect-location-server
+spec:
+  ports:
+    - port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: defect-location-server

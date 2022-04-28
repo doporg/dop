@@ -1,6 +1,9 @@
 **/.idea/
 **/*.iml
 **/target/
+**/backend/target/
 **/.DS_Store
 **/.attach_pid*
 logs/
+__pycache__/
+*.py[cod]

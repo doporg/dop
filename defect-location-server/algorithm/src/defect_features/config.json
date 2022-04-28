@@ -1,0 +1,16 @@
+{
+  "data_root_path": "D:/",
+  "df_basic_path": "D:/JITO/JITO-Identification/data/df/",
+  "extensions": [
+    ".py",
+    ".cc",
+    ".cpp",
+    ".java"
+  ],
+  "git_log_path": "D:/JITO/JITO-Identification/data/log/",
+  "local_path": "D:/JITO/JITO-Identification/",
+  "modelName": "ABC",
+  "projects": [
+    "Feeder"
+  ]
+}

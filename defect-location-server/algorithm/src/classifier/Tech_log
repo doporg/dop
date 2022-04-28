@@ -1,0 +1,9 @@
+# commit分类器
+##使用方法
+git.py 515-580
+1.实例化一个Classifier()对象
+classifier = Classifier()
+2.调用classifier对象的categorize()方法，范围类别名（string)
+3.注意对于merge类别需特殊处理，处理方法为判断commit的parent commit数目（大于1则为merge commit)
+
+
