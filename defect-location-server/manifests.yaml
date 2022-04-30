@@ -24,11 +24,11 @@ spec:
             limits:
               memory: 384Mi
               cpu: 500m
-          volumeMounts:
-            - name: host-time
-              mountPath: /etc/localtime
-            - name: host-timezone
-              mountPath: /etc/timezone
+#          volumeMounts:
+#            - name: host-time
+#              mountPath: /etc/localtime
+#            - name: host-timezone
+#              mountPath: /etc/timezone
           ports:
             - containerPort: 5005
         - name: backend
@@ -41,11 +41,11 @@ spec:
             limits:
               memory: 384Mi
               cpu: 500m
-          volumeMounts:
-            - name: host-time
-              mountPath: /etc/localtime
-            - name: host-timezone
-              mountPath: /etc/timezone
+#          volumeMounts:
+#            - name: host-time
+#              mountPath: /etc/localtime
+#            - name: host-timezone
+#              mountPath: /etc/timezone
           ports:
             - containerPort: 8081
       volumes:
