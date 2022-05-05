@@ -22,6 +22,19 @@ class Config:
             self.local_path = conf_json['local_path']
             self.modelName = conf_json['modelName']
 
+    def updata(self):
+        with open("defect_features/config.json","r",encoding='utf-8') as conf:
+            conf_str = conf.read()
+            conf_json = simplejson.loads(conf_str)
+            self.data_path = conf_json['data_root_path']
+            self.git_log_path = conf_json['git_log_path']
+            self.projects = conf_json['projects']
+            # self.sql_config = SQLConfig(conf_json['sql'])
+            self.consider_extensions = set(conf_json['extensions'])
+            self.df_basic_path = conf_json['df_basic_path']
+            self.local_path = conf_json['local_path']
+            self.modelName = conf_json['modelName']
+
     def project_log_path(self, project_name, log_filename=None):
         #assert(project_name in self.projects)
         path = os.path.join(self.git_log_path, project_name)

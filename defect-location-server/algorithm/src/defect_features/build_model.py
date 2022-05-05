@@ -2,7 +2,6 @@ import sys
 import os
 import json
 
-             
 def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,modelName):
 
     dict_var = {
@@ -27,6 +26,7 @@ def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,mo
     from defect_features.utils.features_combination import FeatureCombination
     from defect_features.idmodel import Idmodel
 
+    conf.updata()
     for p in conf.projects:
         #print('Project', p)
         print("start gitlog")

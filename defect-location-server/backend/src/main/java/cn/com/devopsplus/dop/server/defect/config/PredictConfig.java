@@ -1,48 +1,27 @@
 package cn.com.devopsplus.dop.server.defect.config;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Component
+@Getter
 public class PredictConfig {
-    private final String projectDirectory="D:/";
-    private final String pythonInterpreterPath="D:/python/python.exe ";
+    private final String AlgorithmAddress="http://127.0.0.1:5000";
+
+    private final String dataPath="D:/Fee/";
+
     private final String pythonProjectPath="D:/JITO/JITO-Identification";
-    private final String buildModelPythonPath=pythonProjectPath+"/defect_features/build_model.py ";
-    private final String predictModelPythonPath= pythonProjectPath+"/defect_features/run_model.py ";
-    private final String locationModelPythonPath= pythonProjectPath+"/defect_features/Corpus.py ";
-    private final String sbflPythonPath= pythonProjectPath+"/defect_features/SBFL/location.py ";
-    private final String sbflresultPath= pythonProjectPath+"/defect_features/SBFL/result3.csv";
 
-    public String getSbflresultPath() {
-        return sbflresultPath;
-    }
+    private final String buildModelPythonPath=AlgorithmAddress+"/build_model";
 
-    public String getSbflPythonPath() {
-        return sbflPythonPath;
-    }
+    private final String trainDataPythonPath=AlgorithmAddress+"/get_data";
 
-    public String getProjectDirectory() {
-        return projectDirectory;
-    }
+    private final String runModelPythonPath= AlgorithmAddress+"/run_model";
 
-    public String getPythonInterpreterPath() {
-        return pythonInterpreterPath;
-    }
+    private final String locationModelPythonPath= AlgorithmAddress+"/corpus";
 
-    public String getPythonProjectPath() {
-        return pythonProjectPath;
-    }
+    private final String prflPythonPath= AlgorithmAddress+"/locate";
 
-    public String getBuildModelPythonPath() {
-        return buildModelPythonPath;
-    }
-
-    public String getPredictModelPythonPath() {
-        return predictModelPythonPath;
-    }
-
-    public String getLocationModelPythonPath() {
-        return locationModelPythonPath;
-    }
+    private final String prflFilePath= "D:/JITO/JITO-Identification/defect_features/PRFL/test.txt";
 
 }

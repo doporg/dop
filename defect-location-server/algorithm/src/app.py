@@ -1,5 +1,6 @@
 from flask import Flask,request
 from flask_cors import *
+import json
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -39,16 +40,16 @@ def build_my_model():
 @app.route("/corpus")
 def my_corpus():
     # if __name__ == '__main__':
-#     corpus(sys.argv[1],sys.argv[2],sys.argv[3])
-#     #corpus("Feeder","D:/JITO/JITO-Identification","FFFF")
-#     def corpus(projectname, pythonpath, modelName):
+    #     corpus(sys.argv[1],sys.argv[2],sys.argv[3])
+    #     #corpus("Feeder","D:/JITO/JITO-Identification","FFFF")
+    #     def corpus(projectname, pythonpath, modelName):
     from defect_features import Corpus
     locationprojectname=request.args['locationprojectname']
     projectName = request.args['projectName']
     pythonProjectPath = request.args['pythonProjectPath']
     modelName = request.args['modelName']
     res=Corpus.corpus(locationprojectname,pythonProjectPath,projectName,modelName)
-    return str(res)
+    return json.dumps(res,ensure_ascii=False)
 
 @app.route("/locate")
 def my_locate():
@@ -61,7 +62,7 @@ def my_locate():
     method = request.args['method']
     projectpath = request.args['projectpath']
     res=prfl.locate(testCoverage,method,projectpath)
-    return str(res)
+    return json.dumps(res,ensure_ascii=False)
 
 @app.route("/get_data")
 def my_get_data():
@@ -73,7 +74,7 @@ def my_get_data():
     projectName = request.args['projectName']
     pythonProjectPath = request.args['pythonProjectPath']
     res=get_data.getdata(projectName, pythonProjectPath)
-    return str(res)
+    return json.dumps(res,ensure_ascii=False)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=5005)

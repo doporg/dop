@@ -22,11 +22,11 @@ public class LocationController {
     @Autowired
     PredictConfig predictConfig;
     @RequestMapping("/locate")
-    public JSONObject sbfl(@RequestBody String data){
+    public JSONObject prfl(@RequestBody String data){
         JSONObject mapJson=JSONObject.fromObject(data);
-        System.out.println(data);
         String content=String.valueOf(mapJson.get("file"));
-        String path=predictConfig.getPythonProjectPath()+"/defect_features/SBFL/test.txt";
+        String method=String.valueOf(mapJson.get("method"));
+        String path=predictConfig.getPrflFilePath();
         try {
             FileWriter fr = new FileWriter(path);
             BufferedWriter bf = new BufferedWriter(fr);
@@ -36,6 +36,6 @@ public class LocationController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return locationService.sbfl(path);
+        return locationService.prfl(path,method);
     }
 }

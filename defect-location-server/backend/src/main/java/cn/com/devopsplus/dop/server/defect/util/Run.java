@@ -5,85 +5,135 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Component
 public class Run {
-    public String startbuildmodel(String projectName,String projectPath,String pythonenv,String pythonpath,
-                                  String pythonProjectPath,String startTime,String endTime){
-        String result = null;
+    public String startbuildmodel(String buildModelPythonPath,String projectName, String pythonProjectPath,
+                                  String dataPath,String startTime,String endTime,String modelName){
+        String result = "false";
 
         try {
-            //根目录
-            String dataPath = projectPath.substring(0, projectPath.length() - projectName.length());
-            String pythonArgs = pythonenv + pythonpath + projectName + " " + pythonProjectPath + " " + dataPath + " " + startTime + " " + endTime;
-            //String pythonArgs = pythonenv +"D:/JITO/JITO-Identification/defect_features/lianxi.py ";
-            System.out.println(pythonArgs);
+            URL url = new URL(buildModelPythonPath + "?" + "projectName=" + projectName +
+                    "&pythonProjectPath=" + pythonProjectPath + "&dataPath="+dataPath +
+                    "&start_time="+startTime+"&end_time="+endTime+"&modelName="+modelName);
 
-            Process proc = Runtime.getRuntime().exec(pythonArgs);
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
 
-            for(String line = null; (line = in.readLine()) != null; result = line) {
+            if (conn.getResponseCode() != 200) {
+                return result;
             }
-        } catch (IOException var14) {
-            var14.printStackTrace();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            result= br.readLine();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
+
         return result;
 
     }
-    public Boolean startpredict(String pythonenv,String pythonPath,String projectname,String pythonProjectPath) {
+    public String getTrainData(String trainDataPythonPath,String projectName, String pythonProjectPath){
+        String result = "false";
+
+        try {
+            URL url = new URL(trainDataPythonPath + "?" + "projectName=" + projectName +
+                    "&pythonProjectPath=" + pythonProjectPath );
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
+
+            if (conn.getResponseCode() != 200) {
+                return result;
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            result= br.readLine();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+    public Boolean startpredict(String runModelPythonPath,String predict_project,String pythonProjectPath,String model_project,String model_name) {
         String result = null;
         try {
-            String pythonArgs = pythonenv + pythonPath + projectname + " " + pythonProjectPath;
-            Process proc = Runtime.getRuntime().exec(pythonArgs);
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            URL url = new URL(runModelPythonPath + "?" + "predict_project=" + predict_project +
+                    "&pythonProjectPath=" + pythonProjectPath + "&model_project=" + model_project + "&model_name=" +model_name);
 
-            for(String line = null; (line = in.readLine()) != null; result = line) {
-            }
-            in.close();
-            proc.waitFor();
-        } catch (IOException var10) {
-            var10.printStackTrace();
-        } catch (InterruptedException var11) {
-            var11.printStackTrace();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            result= br.readLine();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
         return result.equals("1");
     }
-    public String startlocate(String pythonenv,String pythonProjectPath,String projectname,String pythonpath3) {
+    public String startlocate(String locationModelPythonPath,String locationprojectname,String projectName,String pythonProjectPath,String modelName) {
         String result = null;
         try {
+            URL url = new URL(locationModelPythonPath + "?" + "locationprojectname=" + locationprojectname +
+                    "&projectName=" + projectName + "&pythonProjectPath=" + pythonProjectPath + "&modelName=" +modelName);
 
-            String pythonArgs = pythonenv + pythonpath3 + projectname + " " + pythonProjectPath;
-            Process proc = Runtime.getRuntime().exec(pythonArgs);
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
 
-            for(String line = null; (line = in.readLine()) != null; result = line) {
-            }
-            in.close();
-            proc.waitFor();
-        } catch (IOException var10) {
-            var10.printStackTrace();
-        } catch (InterruptedException var11) {
-            var11.printStackTrace();
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            result= br.readLine();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
         }
         return result;
     }
-    public String sbfllocate(String pythonenv,String path,String pythonpath4,String pythonProjectPath) {
+    public String prfllocate(String prflPythonPath,String testCoverage,String method,String projectpath) {
         String result = null;
         try {
+            URL url = new URL(prflPythonPath + "?" + "testCoverage=" + testCoverage +
+                    "&method=" + method + "&projectpath=" + projectpath);
 
-            String pythonArgs = pythonenv + pythonpath4 + path + " " + pythonProjectPath;
-            System.out.println(pythonArgs);
-            Process proc = Runtime.getRuntime().exec(pythonArgs);
-            BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json; charset=UTF-8");
 
-            for(String line = null; (line = in.readLine()) != null; result = line) {
-            }
-            in.close();
-            proc.waitFor();
-        } catch (IOException var10) {
-            var10.printStackTrace();
-        } catch (InterruptedException var11) {
-            var11.printStackTrace();
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    (conn.getInputStream())));
+            result = br.readLine();
+            conn.disconnect();
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return result;
     }
