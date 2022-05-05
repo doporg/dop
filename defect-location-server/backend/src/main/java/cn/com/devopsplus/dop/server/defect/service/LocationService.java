@@ -17,10 +17,10 @@ public class LocationService {
     PredictConfig predictConfig;
     @Autowired
     Run run;
-    public JSONObject prfl(String path,String method){
+    public JSONObject prfl(String path,String locationMethod){
         Map<String,Object> map=new HashMap<>();
         List<Map<String,String>> mapdatalist=new ArrayList<>();
-        String res=run.prfllocate(predictConfig.getPrflPythonPath(),path,method,predictConfig.getPythonProjectPath());
+        String res=run.prfllocate(predictConfig.getPrflPythonPath(),path,locationMethod,predictConfig.getPythonProjectPath());
 
         if (res==null){
             map.put("success",false);

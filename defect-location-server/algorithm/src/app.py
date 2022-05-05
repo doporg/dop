@@ -77,4 +77,4 @@ def my_get_data():
     return json.dumps(res,ensure_ascii=False)
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5005)
+    app.run()

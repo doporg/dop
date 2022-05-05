@@ -25,7 +25,7 @@ public class LocationController {
     public JSONObject prfl(@RequestBody String data){
         JSONObject mapJson=JSONObject.fromObject(data);
         String content=String.valueOf(mapJson.get("file"));
-        String method=String.valueOf(mapJson.get("method"));
+        String locationMethod=String.valueOf(mapJson.get("method"));
         String path=predictConfig.getPrflFilePath();
         try {
             FileWriter fr = new FileWriter(path);
@@ -36,6 +36,6 @@ public class LocationController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return locationService.prfl(path,method);
+        return locationService.prfl(path,locationMethod);
     }
 }
