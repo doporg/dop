@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class PredictConfig {
     private final String AlgorithmAddress="http://127.0.0.1:5000";
 
-    private final String dataPath="/temp/projects/";
+    private final String dataPath="/tmp/";
 
     private final String pythonProjectPath="/code/algorithm/src";
 
