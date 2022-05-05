@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class PredictConfig {
-    private final String AlgorithmAddress="http://127.0.0.1:5000";
+    private final String AlgorithmAddress="http://127.0.0.1:5005";
 
     private final String dataPath="/tmp/";
 
