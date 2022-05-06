@@ -34,7 +34,7 @@ eureka:
       defaultZone: http://discovery-server:8761/eureka/
     registry-fetch-interval-seconds: 5
 ribbon:
-  ReadTimeout: 10000
-  ConnectTimeout: 10000
+  ReadTimeout: 10000000
+  ConnectTimeout: 10000000
   ServerListRefreshInterval: 2000
 logging.path: ./logs/${spring.application.name}
