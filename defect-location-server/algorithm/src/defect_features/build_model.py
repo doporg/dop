@@ -3,7 +3,7 @@ import os
 import json
 
 def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,modelName):
-
+    print("build model begin")
     dict_var = {
         "data_root_path": dataPath,
         "projects": [projectName],
@@ -38,6 +38,7 @@ def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,mo
         print("featurecombination finished, buildIdmodel start")
         Idmodel().buildIdmodel(pythonProjectPath,p)
         print('Model Build Success')
+    print("build model end")
 
 if __name__ == '__main__':
     buildmodel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])

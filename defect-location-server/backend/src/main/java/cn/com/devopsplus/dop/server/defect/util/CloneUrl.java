@@ -33,6 +33,7 @@ public class CloneUrl {
         try {
             Git git = cmd.call();
             git.close();
+            System.out.println("clone success");
             return true;
         }catch (Exception e){
             e.printStackTrace();

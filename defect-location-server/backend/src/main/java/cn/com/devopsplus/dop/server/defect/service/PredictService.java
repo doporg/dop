@@ -61,16 +61,20 @@ public class PredictService {
         }
         else {
             //构建模型
+            System.out.println("train begin");
             String result=run.startbuildmodel(predictConfig.getBuildModelPythonPath(),projectname,predictConfig.getPythonProjectPath(),
                     predictConfig.getDataPath(), starttime,endtime,modelName);
+            System.out.println("train over");
             //失败
             if (!result.equals("Model Build Success")){
+                System.out.println("train fail");
                 map.put("success",false);
                 JSONObject JO = JSONObject.fromObject(map);
                 return JO;
             }
             //成功
             else{
+                System.out.println("train success");
                 Calendar calendar= Calendar.getInstance();
                 Model model=new Model();
                 model.setModelName(modelName);
