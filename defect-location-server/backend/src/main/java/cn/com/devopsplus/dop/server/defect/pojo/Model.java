@@ -1,7 +1,5 @@
 package cn.com.devopsplus.dop.server.defect.pojo;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.github.jeffreyning.mybatisplus.anno.MppMultiId;
 import lombok.Data;
@@ -16,16 +14,16 @@ import java.util.Date;
 @Setter
 public class Model {
     //@TableId
-    @TableId(value = "modelName")
+    @MppMultiId
     private String modelName;
 
-    @TableId(value = "userId")
+    @MppMultiId
     private Integer userId;
-    @TableField(value = "modelProject")
+
     private String modelProject;
-    @TableField(value = "createTime")
+
     private Date createTime;
-    @TableField(value = "gitUrl")
+
     private String gitUrl;
 
 }
