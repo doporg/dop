@@ -3,7 +3,7 @@ import os
 import json
 
 def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,modelName):
-    print("build model begin")
+    print("build model begin",flush=True)
     dict_var = {
         "data_root_path": dataPath,
         "projects": [projectName],
@@ -29,16 +29,16 @@ def buildmodel(projectName, pythonProjectPath, dataPath, start_time, end_time,mo
     conf.updata()
     for p in conf.projects:
         #print('Project', p)
-        print("start gitlog")
+        print("start gitlog",flush=True)
         GitLog().run(p, end_time)
-        print("gitlog finished, log features start")
+        print("gitlog finished, log features start",flush=True)
         LogFeatures().log_feature(start_time)
-        print("log features finished, featurecombination start")
+        print("log features finished, featurecombination start",flush=True)
         FeatureCombination().featureCombination()
-        print("featurecombination finished, buildIdmodel start")
+        print("featurecombination finished, buildIdmodel start",flush=True)
         Idmodel().buildIdmodel(pythonProjectPath,p)
-        print('Model Build Success')
-    print("build model end")
+        print('Model Build Success',flush=True)
+    print("build model end",flush=True)
 
 if __name__ == '__main__':
     buildmodel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
