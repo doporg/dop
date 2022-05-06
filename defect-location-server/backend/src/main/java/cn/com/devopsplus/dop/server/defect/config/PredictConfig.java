@@ -10,7 +10,7 @@ public class PredictConfig {
 
     private final String dataPath="/tmp/";
 
-    private final String pythonProjectPath="/code/algorithm/src";
+    private final String pythonProjectPath="/code/src";
 
     private final String buildModelPythonPath=AlgorithmAddress+"/build_model";
 
