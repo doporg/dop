@@ -90,6 +90,9 @@ class Idmodel:
 
     def cntErrRate(self, prelabel, label):
         M = len(prelabel)
+        if M == 0:
+            return 0
+
         cnt = 0.0
 
         for i in range(M):
