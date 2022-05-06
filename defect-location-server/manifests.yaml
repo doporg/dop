@@ -24,13 +24,11 @@ spec:
             limits:
               memory: 384Mi
               cpu: 500m
-#          volumeMounts:
-#            - name: host-time
-#              mountPath: /etc/localtime
-#            - name: host-timezone
-#              mountPath: /etc/timezone
           ports:
             - containerPort: 5005
+          volumeMounts:
+            - name: project-data
+              mountPath: /tmp
         - name: backend
           imagePullPolicy: Always
           image: 172.29.7.157:85/dop/defect-location-server-backend:<BUILD_TAG>
@@ -41,20 +39,14 @@ spec:
             limits:
               memory: 384Mi
               cpu: 500m
-#          volumeMounts:
-#            - name: host-time
-#              mountPath: /etc/localtime
-#            - name: host-timezone
-#              mountPath: /etc/timezone
           ports:
             - containerPort: 8081
+          volumeMounts:
+            - name: project-data
+              mountPath: /tmp
       volumes:
-        - name: host-time
-          hostPath:
-            path: /etc/localtime
-        - name: host-timezone
-          hostPath:
-            path: /etc/timezone
+        - name: project-data
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
