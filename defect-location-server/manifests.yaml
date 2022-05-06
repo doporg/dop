@@ -17,28 +17,16 @@ spec:
         - name: algorithm
           imagePullPolicy: Always
           image: 172.29.7.157:85/dop/defect-location-server-algorithm:<BUILD_TAG>
-          resources:
-            requests:
-              memory: 384Mi
-              cpu: 250m
-            limits:
-              memory: 384Mi
-              cpu: 500m
           ports:
             - containerPort: 5005
           volumeMounts:
             - name: project-data
               mountPath: /tmp
+            - name: code-data
+              mountPath: /code/src/train
         - name: backend
           imagePullPolicy: Always
           image: 172.29.7.157:85/dop/defect-location-server-backend:<BUILD_TAG>
-          resources:
-            requests:
-              memory: 384Mi
-              cpu: 250m
-            limits:
-              memory: 384Mi
-              cpu: 500m
           ports:
             - containerPort: 8081
           volumeMounts:
@@ -46,6 +34,8 @@ spec:
               mountPath: /tmp
       volumes:
         - name: project-data
+          emptyDir: {}
+        - name: code-data
           emptyDir: {}
 ---
 apiVersion: v1
