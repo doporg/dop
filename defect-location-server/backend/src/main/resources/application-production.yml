@@ -8,6 +8,11 @@ spring:
       force: true
   application:
     name: defect-location-server
+  datasource:
+    url: jdbc:mysql://172.29.7.157:3306/db_dop_defect?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: dop
+    password: Dop_mysql_12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 project:
   host: gateway-server:14258/@project.name@
