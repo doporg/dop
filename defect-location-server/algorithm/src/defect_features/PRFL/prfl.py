@@ -289,7 +289,7 @@ def finalArray(result,rank):
     for ww in range(1,len(rank)+1):
         for www in range(len(rank)):
             if(rank[www]==ww):
-                stri="可疑度第"+str(ww)+"的分数为："+str(result[www])+" 位置为："+str(www+1)
+                stri="可疑度第"+str(ww)+"的分数为："+str(result[www])+"----位置为："+str(www+1)
                 finalarray.append(stri)
     return  finalarray
 def writeToFile(finalarray,projectpath):
