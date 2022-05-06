@@ -76,15 +76,15 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 15000
+            timeoutInMilliseconds: 15000000
 zuul:
   host:
-    socket-timeout-millis: 15000
-    connect-timeout-millis: 15000
+    socket-timeout-millis: 15000000
+    connect-timeout-millis: 15000000
   ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
 ribbon:
-  ReadTimeout: 15000
-  ConnectTimeout: 15000
+  ReadTimeout: 15000000
+  ConnectTimeout: 15000000
   ServerListRefreshInterval: 2000
   #正常上线下线客户端最大感知时间：eureka.client.registryFetchIntervalSeconds+ribbon. ServerListRefreshInterval = 7秒
   #异常下线客户端最大感知时间：
