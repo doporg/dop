@@ -37,6 +37,8 @@ public class LocationService {
             while (i<datalist.size()) {
                 str= (String) datalist.get(i);
                 Map<String,String> mapdata=new HashMap<>();
+                System.out.println("i="+i);
+                System.out.println("str="+str);
                 mapdata.put("defectgrade",str.substring(0,str.indexOf("----")));
                 mapdata.put("defectline",str.substring(str.indexOf("----")+4,str.length()));
                 mapdata.put("id",String.valueOf(i+1));
