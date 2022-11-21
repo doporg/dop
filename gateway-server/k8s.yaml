@@ -68,7 +68,7 @@ metadata:
   nginx.ingress.kubernetes.io/proxy-send-timeout: "60000"
 spec:
  rules:
-   - host: open.devopsplus.com.cn:7080
+   - host: open.devopsplus.com.cn
      http:
        paths:
          - path: /
