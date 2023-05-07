@@ -50,6 +50,7 @@ public class AccessTokenZuulFilter extends ZuulFilter {
     public boolean shouldFilter() {
         RequestContext ctx = RequestContext.getCurrentContext();
         System.out.println("should filter");
+        System.out.println("url:"+ctx.getRequest().getRequestURI());
         if (ctx.getRequest().getRequestURI().contains("swagger")
                 || ctx.getRequest().getRequestURI().contains("api-docs")
                 || ctx.getRequest().getRequestURI().contains("https://api.github.com/repos/")) {
