@@ -118,7 +118,7 @@ public class JenkinsService {
     }
 
     /**
-     * 根据流水线的名字的到运行结果
+     * 根据流水线的名字得到运行结果
      */
     public String getBuildResult(String name) {
         logger.info("[getBuildResult] Request coming: name={}",name);

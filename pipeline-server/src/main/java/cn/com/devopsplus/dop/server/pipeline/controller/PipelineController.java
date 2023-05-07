@@ -39,7 +39,7 @@ public class PipelineController {
             @RequestHeader(HttpHeadersConfig.HttpHeaders.X_LOGIN_USER) Long loginUser,
             @RequestBody Pipeline pipeline
     ){
-        logger.info("[addUserV1] Request coming: loginUser={}, pipeline",loginUser);
+        logger.info("[addPipeline] Request coming: loginUser={}, pipeline",loginUser);
         return this.pipelineService.addPipeline(pipeline, loginUser);
     }
 

@@ -57,7 +57,7 @@ public class RocketMQMessageSender implements MessageSender {
             byte[] body = data.getBytes(RemotingHelper.DEFAULT_CHARSET);
             this.send(queue, queue, messageId, body);
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error(String.format("RocketMQ producer send fail! topic:[%s],key:[%s], error:[%s]"
+            LOGGER.error(String.format("RocketMQ producer send fail! topic ,key:[%s], error:[%s]"
                     , queue, messageId, e.getMessage()));
             throw new MessageQueueException(e);
         }
