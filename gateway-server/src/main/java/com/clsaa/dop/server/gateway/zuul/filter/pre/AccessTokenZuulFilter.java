@@ -53,7 +53,7 @@ public class AccessTokenZuulFilter extends ZuulFilter {
         System.out.println("url:"+ctx.getRequest().getRequestURI());
         if (ctx.getRequest().getRequestURI().contains("swagger")
                 || ctx.getRequest().getRequestURI().contains("api-docs")
-                || ctx.getRequest().getRequestURI().contains("https://api.github.com/repos/")) {
+                || ctx.getRequest().getRequestURI().contains("/cipipeline-server/v1/cipipeline/coreScheduler/newCommitCome")) {
             System.out.println("swagger 请求放行");
             return false;
         }
